@@ -13,6 +13,7 @@ npm run dev
 ### Branches
 
 ```
+git branch                      # see current branch
 git checkout [branch-name]      # switch branches
 git checkout -b branch-name     # makes new branch and switches to that branch
 ```
