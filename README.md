@@ -4,16 +4,18 @@ This is a JumboCode Project for Dillar Academy to help manage classes and enroll
 
 ## How to run
 
-'''npm run dev'''
+```
+npm run dev
+```
 
 ## Git Commands Guide
 
 ### Branches
 
-'''
+```
 git checkout [branch-name]      # switch branches
 git checkout -b branch-name     # makes new branch and switches to that branch
-'''
+```
 
 ### Development
 
