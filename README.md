@@ -1,8 +1,26 @@
-# React + Vite
+# Dillar Academy Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a JumboCode Project for Dillar Academy to help manage classes and enrollments.
 
-Currently, two official plugins are available:
+## How to run
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+'''npm run dev'''
+
+## Git Commands Guide
+
+### Branches
+
+'''
+git checkout [branch-name]      # switch branches
+git checkout -b branch-name     # makes new branch and switches to that branch
+'''
+
+### Development
+
+```
+git pull        # get latest changes from repo
+git status      # view files you've changed and what's staged
+git add .       # stage all current changes
+git commit -m "[commit_message]"    # commit your edits with a message describing changes
+git push        # push your changes to the remote repo
+```
