@@ -1,4 +1,4 @@
-import founder from '../../assets/founder.jpg'
+import founder from '../assets/founder.jpg'
 
 
 function About() {
