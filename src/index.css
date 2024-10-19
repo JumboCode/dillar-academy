@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "AVENIR";
+    src: url("./fonts/AvenirLTStd-Light.otf");
+  }
+
+.center-div{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    height: 462px;
+    width: 494px;
+}
+
+.bg-dillar{
+    background-color: #C1E5FF;
+}
+
+.signup-btn{
+    background-color: #D9D9D9;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.signup-opacity {
+    color: rgba(0, 0, 0, 0.5)
+}
+
+.signup-opacity a {
+    color: rgba(35, 161, 251, 1);
+}
