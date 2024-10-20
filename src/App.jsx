@@ -8,7 +8,7 @@ function App() {
       <NavBar />
       <PageRoutes />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
