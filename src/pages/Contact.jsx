@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-export default function Contact( ){
+export default function Contact( ) {
 
   const [formData, setFormData] = useState({
     name: '',
@@ -15,9 +15,8 @@ export default function Contact( ){
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+    e.preventDefault();
   
-    // Create a message with form inputs
     const alertMessage = `
       Name: ${formData.name}
       Email: ${formData.email}
@@ -25,7 +24,6 @@ export default function Contact( ){
       Message: ${formData.message}
     `;
   
-    // Show the alert with the form data
     alert(alertMessage);
   
     console.log('Form submitted:', formData);
@@ -36,7 +34,6 @@ export default function Contact( ){
     <div style={{ fontFamily: 'Roboto, sans-serif' }} className="min-h-screen bg-white flex justify-center items-center">
       <div className="w-full lg:flex lg:space-x-0">
         
-        {/* Contact Info Section */}
         <div className="lg:w-1/3 bg-white p-8 flex flex-col justify-center items-start">
           <h2 className="text-3xl font-semibold mb-6 text-left">CONTACT US</h2>
           <p className="mb-2 text-lg text-left">
@@ -53,9 +50,7 @@ export default function Contact( ){
           </p>
         </div>
   
-        {/* Form Section - Make this full width */}
         <div className="lg:w-2/3 bg-blue-200 p-10">
-          {/* Form container with max width */}
           <div className="bg-white p-6 shadow-lg rounded-lg max-w-md mx-auto">
             <h2 className="text-2xl font-semibold mb-2">Get in Touch</h2>
             <p className="mb-4 text-gray-600" style={{ opacity: 0.7 }}>
