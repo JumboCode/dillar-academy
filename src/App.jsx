@@ -1,11 +1,12 @@
 
-import './App.css'
-import Home from './pages/Home'
+import NavBar from '@/components/NavBar/NavBar'
+import PageRoutes from '@/components/PageRoutes'
 
 function App() {
   return (
     <>
-      <Home />
+      <NavBar />
+      <PageRoutes />
     </>
   )
 }
