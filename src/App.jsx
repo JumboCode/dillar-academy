@@ -1,15 +1,14 @@
 
-import './App.css'
-// import Home from './pages/Home'
-import Login from './pages/Login'
+import NavBar from '@/components/NavBar/NavBar'
+import PageRoutes from '@/components/PageRoutes'
 
 function App() {
   return (
-    <div>
-      {/* <Home /> */}
-      <Login/>
-    </div>
-  )
+    <>
+      <NavBar />
+      <PageRoutes />
+    </>
+  );
 }
 
-export default App
+export default App;
