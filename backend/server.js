@@ -4,6 +4,7 @@ const mongo = require("mongodb");
 const mongoose = require("mongoose");
 require('dotenv').config();
 
+
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -54,7 +55,27 @@ const User = mongoose.model("users", UserSchema)
 // Sign up
 
 // TODO (Spencer & Tony): Create an endpoint to receive and upload sign up data to the database
-
+app.post('/api/users', async (req, res) => {
+    const { name, email, password } = req.body;
+  
+    try {
+      // Check if the email already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(409).json({ message: 'User already exists' });
+      }
+  
+      // Create a new user
+      const newUser = new User({ name, email, password });
+      await newUser.save();
+  
+      res.status(201).json(newUser);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+  
+  module.exports = router;
 
 // Login
 

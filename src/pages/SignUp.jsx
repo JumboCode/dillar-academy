@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from 'wouter'
+import Axios from "axios";
+
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -8,18 +10,35 @@ export default function SignUp() {
     password: '',
     retypedPassword: ''
   })
-
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, password, retypedPassword } = formData
+    const { username, email, password, retypedPassword} = formData
     if (password != retypedPassword) {
       alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
     } else {
-      alert(`Form submitted with\nusername: ${username}\nemail: ${email}\npassword: ${password}\nretyped password: ${retypedPassword}`)
+      try {
+        const response = await axios.post('http://localhost:5000/api/users', formData);
+        if (response.status === 201) {
+          setSuccess('User created successfully!');
+          alert('User created successfully!');
+          setError('');
+        }
+      } catch (err) {
+        if (err.response && err.response.status === 409) {
+          setError('User already exists.');
+          alert('User already exists.');
+        } else {
+          setError('An error occurred while creating the user.');
+          alert('An error occurred while creating the user.')
+        }
+      }
+      //alert(`Form submitted with\nusername: ${username}\nemail: ${email}\npassword: ${password}\nretyped password: ${retypedPassword}`)
     }
   }
 
