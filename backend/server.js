@@ -42,7 +42,14 @@ const User = mongoose.model("users", UserSchema)
 // Contact Schema
 
 // TODO (Frank & Madeline): Create a ContactSchema
+const ContactSchema = new Schema ({
+    name: { type: String, required: true},
+    email: { type: String, required: true},
+    subject: { type: String, required: true},
+    message: { type: String, required: true}
+})
 
+const Contact = mongoose.model("contact", ContactSchema)
 
 // Class Schema
 
@@ -64,7 +71,21 @@ const User = mongoose.model("users", UserSchema)
 // Contact
 
 // TODO (Frank & Madeline): Create an endpoint to receive and upload contact inquiries to the database
-
+app.post('/contact', async (req, res) => {
+    try {
+        const newContact = new Contact ({
+            name,
+            email,
+            subject,
+            message
+        })
+        await newContact.save()
+    }
+    catch (err) {
+        console.error('Error saving contact data:', err);
+        process.exit(1);
+    }
+})
 
 // Classes
 
