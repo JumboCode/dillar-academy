@@ -6,15 +6,15 @@ const Dropdown = ({ label, children }) => {
 
   return (
     <div 
-      className="relative inline-block text-left"
+      class="relative inline-block text-left"
       //use onMouseEnter and onMouseLeave to track the mouse
       //If the mouse is on the menu, turn state to true, otherwise false
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <button className="dropdown-button">{label}</button>
+      <button class="dropdown-button">{label}</button>
       {isOpen && (
-        <div className="absolute left-0">
+        <div class="absolute left-0">
           {children}
         </div>
       )}
