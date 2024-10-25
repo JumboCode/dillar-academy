@@ -1,13 +1,16 @@
-
 import './App.css'
-import Home from './pages/Home'
+import React from 'react';
+import Dropdown from './components/Dropdown'
 
-function App() {
+const App = () => {
   return (
-    <>
-      <Home />
-    </>
-  )
-}
+    <div>
+      <Dropdown label="More">
+        <a href="#level5"> Level 5 </a>
+        <a href="#conversation"> Conversation </a>
+      </Dropdown>
+    </div>
+  );
+};
 
-export default App
+export default App;
