@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
-//use isOpen to keep track of whether the dropdown menu is visible
 const Dropdown = ({ label, children }) => {
+  //use isOpen to keep track of whether the dropdown menu is visible
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div 
+      // style below for menu
       class="absolute inline-block"
       //use onMouseEnter and onMouseLeave to track the mouse
       //If the mouse is on the menu, turn state to true, otherwise false
@@ -17,9 +18,10 @@ const Dropdown = ({ label, children }) => {
         }, 1000);
       }}
     >
-      <button class="dropdown-button">{label}</button>
+      <button class="dropdown-button text-right">{label}</button>
       {isOpen && (
-        <div class="absolute text-right">
+        // style below for children
+        <div class="absolute text-right flex flex-col"> 
           {children}
         </div>
       )}
@@ -28,3 +30,5 @@ const Dropdown = ({ label, children }) => {
 };
 
 export default Dropdown;
+
+
