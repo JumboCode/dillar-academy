@@ -38,7 +38,7 @@ export default function SignUp() {
           alert('An error occurred while creating the user.')
         }
       }
-      //alert(`Form submitted with\nusername: ${username}\nemail: ${email}\npassword: ${password}\nretyped password: ${retypedPassword}`)
+      alert(`Form submitted with\nusername: ${username}\nemail: ${email}\npassword: ${password}\nretyped password: ${retypedPassword}`)
     }
   }
 
