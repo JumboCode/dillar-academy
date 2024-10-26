@@ -30,7 +30,6 @@ mongoose.connect(process.env.MONGODB_URI)
     process.exit(1); // Exit if we can't connect to the database
   });
 
-// Add this right after your mongoose.connect() to debug connection issues
 mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
@@ -46,7 +45,7 @@ const Schema = mongoose.Schema
 // User Schema
 const UserSchema = new Schema({
     firstName: { type: String, required: true },
-    lastName: { type: String, required: false }, // Changed to false
+    lastName: { type: String, required: true }, 
     email: { type: String, required: true},
     password: { type: String, required: true},
     isAdmin: { type: Boolean, required: true},
@@ -91,12 +90,12 @@ app.post('/api/users', async (req, res) => {
     // Split username for first/last name
     const nameParts = username.split(' ');
     const firstName = nameParts[0];
-    const lastName = nameParts.slice(1).join(' '); // Join remaining parts as lastName
+    const lastName = nameParts.slice(1).join(' '); 
 
     // Create new user
     const newUser = new User({
       firstName: firstName,
-      lastName: lastName || undefined, // Use undefined if no lastName
+      lastName: lastName, 
       email: email,
       password: password,
       isAdmin: false,
