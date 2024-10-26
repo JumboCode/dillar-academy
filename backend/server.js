@@ -71,19 +71,20 @@ const Contact = mongoose.model("contact", ContactSchema)
 // Contact
 
 // TODO (Frank & Madeline): Create an endpoint to receive and upload contact inquiries to the database
-app.post('/contact', async (req, res) => {
+app.post('/api/contact', async (req, res) => {
+    const{ name, email, subject, message } = req.body
     try {
-        const newContact = new Contact ({
-            name,
-            email,
-            subject,
-            message
+        await Contact.create({
+            name: name,
+            email: email,
+            subject: subject,
+            message: message
         })
-        await newContact.save()
+        res.status(201).json({message: 'Inquiry submitted successfully'})
     }
     catch (err) {
-        console.error('Error saving contact data:', err);
-        process.exit(1);
+        console.error('Error submitting inquiry:', err);
+        res.status(500).json({message: 'Error submitting inquiry'})
     }
 })
 
