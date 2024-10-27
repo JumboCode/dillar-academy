@@ -68,7 +68,7 @@ const User = mongoose.model("users", UserSchema)
 // Sign up
 app.post('/api/users', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { firstName, lastName, username, email, password } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ 
@@ -87,19 +87,14 @@ app.post('/api/users', async (req, res) => {
       }
     }
 
-    // Split username for first/last name
-    const nameParts = username.split(' ');
-    const firstName = nameParts[0];
-    const lastName = nameParts.slice(1).join(' '); 
-
-    // Create new user
+    // Create new user with separate first/last name fields
     const newUser = new User({
-      firstName: firstName,
-      lastName: lastName, 
-      email: email,
-      password: password,
+      firstName,
+      lastName,
+      email,
+      password,
       isAdmin: false,
-      username: username
+      username
     });
 
     await newUser.save();
