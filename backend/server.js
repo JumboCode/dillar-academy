@@ -60,22 +60,26 @@ const User = mongoose.model("users", UserSchema)
 
 // TODO (Donatello & John): Create an endpoint to receive login data and check if the user exists in the database
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
+    console.log('Received login request:', { username, password });
 
     try {
-        const user = await User.findOne({ email, password });
-        if (user) {
+        const user = await User.findOne({ username });
+        console.log('Database query result:', user);
+
+        if (user && user.password === password) {
             console.log('Login successful for user:', user.username);
             res.status(200).send('Login successful');
         } else {
             console.log('Login failed: User not found');
-            res.status(401).send('Invalid email or password');
+            res.status(401).send('Invalid username or password');
         }
     } catch (error) {
         console.error('Error during login', error);
         res.status(500).send({ message: 'User does not exist' });
     }
 });
+
 
 // Contact
 

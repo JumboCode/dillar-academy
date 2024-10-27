@@ -11,11 +11,34 @@ export default function Login() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const { username, password } = formData
-        alert(`Form submitted with\nusername: ${username}\nand password: ${password}`)
-    }
+        const { username, password } = formData;
+        // alert(`Form submitted with\nusername: ${username}\nand password: ${password}`)
+
+        try { 
+            const response = await fetch('http://localhost:4000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                const message = await response.text();
+                console.log(message);
+                alert("Login successful");
+            } else {
+                const errorMessage = await response.text();
+                console.error(errorMessage);
+                alert("Login failed: " + errorMessage);
+            }
+        } catch (error) {
+            console.error('Error during login: ', error);
+            alert("An error occurred during login");
+        }
+    };
     
     return (
         <>
