@@ -47,6 +47,19 @@ const User = mongoose.model("users", UserSchema)
 // Class Schema
 
 // TODO (Claire & Fahim): Create a ClassSchema
+const ClassSchema = new Schema({
+    id: {type: String, required: true},
+    title: {type: String, required: true},
+    level: {type: String, required: true},
+    ageGroup: {type: String, required: true},
+    instructor: {type: String, required: true},
+    schedule: {type: [String], required:true},
+})
+const Class = mongoose.model("class", ClassSchema)
+const math = new ClassSchema({id: "43", title: "claire", level: "100", ageGroup: "7", instructor: "fahimrbarh", schedule: ["3",'4']})
+console.log(math.id)
+
+
 
 
 //------------------ ENDPOINTS ------------------//
@@ -69,3 +82,6 @@ const User = mongoose.model("users", UserSchema)
 // Classes
 
 // TODO (Claire & Fahim): Create an endpoint to retrieve class data from the database
+app.get('/', (req, res)=>{
+    res.send("deez")
+})
