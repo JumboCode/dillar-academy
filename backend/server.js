@@ -43,13 +43,14 @@ const User = mongoose.model("users", UserSchema)
 
 // TODO (Frank & Madeline): Create a ContactSchema
 const ContactSchema = new Schema ({
-    name: { type: String, required: true},
+    name: { type: String, required: false },
     email: { type: String, required: true},
     subject: { type: String, required: true},
     message: { type: String, required: true}
 })
 
-const Contact = mongoose.model("contact", ContactSchema)
+const Contact = mongoose.model('Contact', ContactSchema);
+// export default Contact;
 
 // Class Schema
 
@@ -71,6 +72,23 @@ const Contact = mongoose.model("contact", ContactSchema)
 // Contact
 
 // TODO (Frank & Madeline): Create an endpoint to receive and upload contact inquiries to the database
+// async function uploadContact () {
+//     const article = new Contact({
+//     name: 'test user',
+//     email: 'test@example.com',
+//     subject: 'Test Inquiry',
+//     message: 'Test message'
+
+//     });
+
+//     await article.save();
+//     const firstContact = await Contact.findOne({});
+//     console.log(firstContact);
+// }
+// uploadContact().catch(console.error);
+
+// const firstArticle = await Contact.findOne({});
+// console.log(firstArticle);
 app.post('/api/contact', async (req, res) => {
     const{ name, email, subject, message } = req.body
     try {
