@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link } from 'wouter'
-import Axios from "axios";
+import axios from "axios";
 
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
-    username: '', 
+    firstName: '',
+    lastName: '', 
     email: '',
+    username: '',
     password: '',
     retypedPassword: ''
   })
@@ -23,7 +25,8 @@ export default function SignUp() {
       alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
     } else {
       try {
-        const response = await axios.post('http://localhost:5000/api/users', formData);
+        // Using environment variable for API URL
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/users`, formData);
         if (response.status === 201) {
           setSuccess('User created successfully!');
           alert('User created successfully!');
@@ -38,7 +41,6 @@ export default function SignUp() {
           alert('An error occurred while creating the user.')
         }
       }
-      alert(`Form submitted with\nusername: ${username}\nemail: ${email}\npassword: ${password}\nretyped password: ${retypedPassword}`)
     }
   }
 
@@ -56,8 +58,24 @@ export default function SignUp() {
         <form method="POST" onSubmit={handleSubmit}>
           <input
             required
-            type="name"
-            name="name"
+            type="text"
+            name="firstName"
+            placeholder="First Name"
+            className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
+            onChange={handleChange}
+          />
+          <input
+            required
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
+            className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
+            onChange={handleChange}
+          />
+          <input
+            required
+            type="text"
+            name="username"
             placeholder="Username"
             className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
             onChange={handleChange}
