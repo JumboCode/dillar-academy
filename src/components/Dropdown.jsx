@@ -8,7 +8,7 @@ const Dropdown = ({ label, children }) => {
     <div 
       // style below for menu
       class="absolute inline-block"
-      //use onMouseEnter and onMouseLeave to track the mouse
+      
       //If the mouse is on the menu, turn state to true, otherwise false
       onClick={() => {
           if(isOpen) {
@@ -18,15 +18,6 @@ const Dropdown = ({ label, children }) => {
           }
         }
       }
-      // if (isOpen ) {
-      //   onclick={() => setIsOpen(false)}
-      //   // onMouseLeave={() => {
-      //   //   // Set a 1-second delay before closing the menu
-      //   //   timeoutId = setTimeout(() => {
-      //   //     setIsOpen(false);
-      //   //   }, 1000);
-      //   // }}
-      // }
     >
       <button class="dropdown-button text-right">{label}</button>
       {isOpen && (
