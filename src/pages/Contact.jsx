@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import axios from 'axios';
 
 export default function Contact( ) {
 
@@ -14,17 +15,18 @@ export default function Contact( ) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const { name, email, subject, message } = formData
+    
     e.preventDefault();
-  
-    const alertMessage = `
-      Name: ${formData.name}
-      Email: ${formData.email}
-      Subject: ${formData.subject}
-      Message: ${formData.message}
-    `;
-  
-    alert(alertMessage);
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/contact`, formData)
+      if(response.status == 201) {
+        alert("Inquiry submitted successfully!")
+      }
+    } catch (err) {
+      alert("There was an error submitting the inquiry.")
+    }
   
     console.log('Form submitted:', formData);
   };

@@ -92,12 +92,14 @@ const Contact = mongoose.model('Contact', ContactSchema);
 app.post('/api/contact', async (req, res) => {
     const{ name, email, subject, message } = req.body
     try {
-        await Contact.create({
-            name: name,
-            email: email,
-            subject: subject,
-            message: message
+        const newContact = new Contact({
+            name,
+            email,
+            subject,
+            message
         })
+        await newContact.save()
+
         res.status(201).json({message: 'Inquiry submitted successfully'})
     }
     catch (err) {
