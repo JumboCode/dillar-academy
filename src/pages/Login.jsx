@@ -13,7 +13,7 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { username } = formData;
+        const { username, password } = formData;
         // alert(`Form submitted with\nusername: ${username}\nand password: ${password}`)
 
         try { 
@@ -22,13 +22,13 @@ export default function Login() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username }),
+                body: JSON.stringify({ username, password }),
             });
 
             if (response.ok) {
                 const message = await response.text();
                 console.log(message);
-                alert("Login successful");
+                alert("Login successful!");
             } else {
                 const errorMessage = await response.text();
                 console.error(errorMessage);
@@ -36,7 +36,7 @@ export default function Login() {
             }
         } catch (error) {
             console.error('Error during login: ', error);
-            alert("An error occurred during login");
+            alert("An error occurred during login.");
         }
     };
     
