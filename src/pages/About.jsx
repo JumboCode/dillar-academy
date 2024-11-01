@@ -1,8 +1,8 @@
 import founder from '../assets/founder.jpg'
-
+import { useTranslation } from "react-i18next";
 
 function About() {
-
+  const { t } = useTranslation();
   return (
     <>
     <div className="flex flex-col p-10 mx-5 my-10 lg:flex-row-reverse lg:justify-between">
@@ -10,7 +10,7 @@ function About() {
             <img src = {founder} alt = "dummy-founder-image" title = "dummy-image" className = "w-full h-auto"></img>
         </div>
         <div className="my-auto text-2xl lg:w-7/12 lg:text-lg lg:mr-5">
-            <h1 className ="text-5xl text-center py-5 lg:text-4xl lg:text-left">About Us</h1>
+            <h1 className ="text-5xl text-center py-5 lg:text-4xl lg:text-left">{t("about_heading")}</h1>
             <p className="text-center lg:text-left">Dillar English Academy was founded by Dilnawa and Dilziba Dilmurat 
                 Kizghin to help Uyghurs around the world learn English without cost. 
                 With the help and commitment of our volunteer teachers, our goal is 
