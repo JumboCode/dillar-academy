@@ -4,9 +4,18 @@ This is a JumboCode Project for Dillar Academy to help manage classes and enroll
 
 ## How to run
 
+To run both client and server simultaneously:
 ```
 npm run dev
 ```
+To run just client:
+```
+npm run client
+```
+To run just server:
+```
+npm run server  # in root folder
+npm run dev     # in backend folder
 
 ## Git Commands Guide
 
