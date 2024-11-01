@@ -13,7 +13,7 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { username, password } = formData;
+        const { username } = formData;
         // alert(`Form submitted with\nusername: ${username}\nand password: ${password}`)
 
         try { 
@@ -22,7 +22,7 @@ export default function Login() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username }),
             });
 
             if (response.ok) {
