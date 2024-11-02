@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors')
 const mongo = require("mongodb");
 const mongoose = require("mongoose");
-console.log(process.env)
+// console.log(process.env)
 
 const app = express()
 app.use(cors())
@@ -13,14 +13,27 @@ app.use(express.json())
 //ERROR ERRO ERROR .ENV FILE DOES NOT CONNECT
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Server listening on port ${PORT}`)
-        });
-    })
-    .catch((e) => {
-        console.log(e)
-    })
+  .then(() => {
+    console.log('Successfully connected to MongoDB database:', mongoose.connection.name);
+    const server = app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}`);
+    }).on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        console.log(`Port ${PORT} is busy, trying ${PORT + 1}`);
+        server.listen(PORT + 1);
+      } else {
+        console.error('Server error:', err);
+      }
+    });
+  })
+  .catch((error) => {
+    console.error('MongoDB connection error:', error.message);
+    process.exit(1); // Exit if we can't connect to the database
+  });
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
 
 app.get('/', (req, res) => {
   res.send('Server is running!')
