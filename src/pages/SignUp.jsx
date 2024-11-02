@@ -50,7 +50,7 @@ export default function SignUp() {
         <div>
           <h3 className="text-3xl ml-10"> Sign up </h3>
           <p className="mt-8 text-gray-500 ml-10"> Already have an account? 
-            <Link className="ml-1 font-bold text-blue-400" href="/Login"> Log In</Link>
+            <Link className="ml-1 font-bold text-blue-400" href="/login"> Log In</Link>
           </p>
         </div>
 

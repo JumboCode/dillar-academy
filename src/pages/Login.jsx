@@ -23,7 +23,7 @@ export default function Login() {
                 <div className="bg-white w-2/3 md:1/2 lg:w-2/5 py-16 px-5 sm:px-20 rounded-lg shadow-2xl min-h-min">
                     <h1 className="text-2xl sm:text-3xl mb-3">Login</h1>
                     <h3 className="text-sm sm:text-base text-slate-400 mb-6">Don't have an account?
-                        <Link href="/SignUp" className="text-blue-400"> Sign up</Link> 
+                        <Link href="/signup" className="text-blue-400"> Sign up</Link> 
                     </h3>
 
                     <form method="POST" onSubmit={handleSubmit}>
