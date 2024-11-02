@@ -1,6 +1,5 @@
 
 import { useState } from 'react';
-import axios from 'axios';
 
 export default function Contact( ) {
 
@@ -20,15 +19,25 @@ export default function Contact( ) {
     
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/contact`, formData)
-      if(response.status == 201) {
-        alert("Inquiry submitted successfully!")
+      const response = await fetch("http://localhost:4000/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({name, email, subject, message})
+      })
+
+      if(!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
       }
+      const json = await response.json()
+      console.log(json)
+      alert("Inquiry submitted successfully!")
+
     } catch (err) {
+      console.error(error.message)
       alert("There was an error submitting the inquiry.")
     }
-  
-    console.log('Form submitted:', formData);
   };
   
 
