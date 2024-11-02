@@ -1,15 +1,17 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors')
 const mongo = require("mongodb");
 const mongoose = require("mongoose");
-require('dotenv').config();
+console.log(process.env)
 
 const app = express()
 app.use(cors())
 app.use(express.json())
-
+// console.log('MongoDB URI:', process.env.MONGODB_URI);
+// console.log(process.env.PORT);
+//ERROR ERRO ERROR .ENV FILE DOES NOT CONNECT
 const PORT = process.env.PORT || 4000;
-
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
         app.listen(PORT, () => {
@@ -56,8 +58,9 @@ const ClassSchema = new Schema({
     schedule: {type: [String], required:true},
 })
 const Class = mongoose.model("class", ClassSchema)
-const math = new ClassSchema({id: "43", title: "claire", level: "100", ageGroup: "7", instructor: "fahimrbarh", schedule: ["3",'4']})
-console.log(math.id)
+//testing
+// const math = new ClassSchema({id: "43", title: "claire", level: "100", ageGroup: "7", instructor: "fahimrbarh", schedule: ["3",'4']})
+// console.log(math.id)
 
 
 
@@ -82,6 +85,13 @@ console.log(math.id)
 // Classes
 
 // TODO (Claire & Fahim): Create an endpoint to retrieve class data from the database
-app.get('/', (req, res)=>{
-    res.send("deez")
+app.get('/data', async (req, res)=>{
+    console.log("endpoint is being hit")
+    try {
+        const data = await Class.find(); // Replace YourModel with your actual model
+        res.json(data);
+        console.log(data);
+      } catch (err) {
+        res.status(500).send(err);
+      }
 })
