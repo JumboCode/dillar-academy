@@ -3,14 +3,11 @@ const express = require('express');
 const cors = require('cors')
 const mongo = require("mongodb");
 const mongoose = require("mongoose");
-// console.log(process.env)
 
 const app = express()
 app.use(cors())
 app.use(express.json())
-// console.log('MongoDB URI:', process.env.MONGODB_URI);
-// console.log(process.env.PORT);
-//ERROR ERRO ERROR .ENV FILE DOES NOT CONNECT
+
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
@@ -51,17 +48,20 @@ const UserSchema = new Schema({
     password: { type: String, required: true},
     isAdmin: { type: Boolean, required: true},
     username: { type: String, required: true},
-})
-const User = mongoose.model("users", UserSchema)
+}, { collection: 'users' })
+const User = mongoose.model("User", UserSchema)
 
 // Contact Schema
+const ContactSchema = new Schema ({
+    name: { type: String, required: false },
+    email: { type: String, required: true},
+    subject: { type: String, required: true},
+    message: { type: String, required: true}
+}, { collection: 'contacts' })
 
-// TODO (Frank & Madeline): Create a ContactSchema
-
+const Contact = mongoose.model('Contact', ContactSchema);
 
 // Class Schema
-
-// TODO (Claire & Fahim): Create a ClassSchema
 const ClassSchema = new Schema({
     _id: {type: String, required: true},
     title: {type: String, required: true},
@@ -69,44 +69,106 @@ const ClassSchema = new Schema({
     ageGroup: {type: String, required: true},
     instructor: {type: String, required: true},
     schedule: {type: [String], required:true},
-})
-const Class = mongoose.model("class", ClassSchema)
-//testing
-// const math = new ClassSchema({id: "43", title: "claire", level: "100", ageGroup: "7", instructor: "fahimrbarh", schedule: ["3",'4']})
-// console.log(math.id)
-
-
+}, { collection: 'classes' })
+const Class = mongoose.model("Class", ClassSchema)
 
 
 //------------------ ENDPOINTS ------------------//
 
 // Sign up
+app.post('/api/users', async (req, res) => {
+  try {
+    const { firstName, lastName, username, email, password } = req.body;
 
-// TODO (Spencer & Tony): Create an endpoint to receive and upload sign up data to the database
+    // Check if user already exists
+    const existingUser = await User.findOne({ 
+      $or: [
+        { email: email },
+        { username: username }
+      ]
+    });
 
+    if (existingUser) {
+      if (existingUser.email === email) {
+        return res.status(409).json({ message: 'Email already exists' });
+      }
+      if (existingUser.username === username) {
+        return res.status(409).json({ message: 'Username already exists' });
+      }
+    }
+
+    // Create new user with separate first/last name fields
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      password,
+      isAdmin: false,
+      username
+    });
+
+    await newUser.save();
+    res.status(201).json({ message: 'User created successfully' });
+
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Error creating user' });
+  }
+});
 
 // Login
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
 
-// TODO (Donatello & John): Create an endpoint to receive login data and check if the user exists in the database
+    try {
+        const user = await User.findOne({ username });
+        console.log('Database query result:', user);
 
+        if (user) {
+          if (user.password === password) {
+            console.log('Login successful for user:', username);
+            res.status(200).send('Login successful!');
+          } else {
+            console.log('Login failed: Incorrect password.');
+            res.status(401).send('Invalid password.');
+          }
+        } else {
+            console.log('Login failed: User not found');
+            res.status(401).send('Invalid username.');
+        }
+    } catch (error) {
+        console.error('Error during login.', error);
+        res.status(500).send({ message: 'Server Error.' });
+    }
+});
 
 // Contact
+app.post('/api/contact', async (req, res) => {
+    const{ name, email, subject, message } = req.body
+    try {
+        const newContact = new Contact({
+            name,
+            email,
+            subject,
+            message
+        })
+        await newContact.save()
 
-// TODO (Frank & Madeline): Create an endpoint to receive and upload contact inquiries to the database
-
+        res.status(201).json({message: 'Inquiry submitted successfully'})
+    }
+    catch (err) {
+        console.error('Error submitting inquiry:', err);
+        res.status(500).json({message: 'Error submitting inquiry'})
+    }
+})
 
 // Classes
-
-//schema for adding manipulatn and querying from database and specifies where and whichd database, middleware helps with interacting with mongo
-// TODO (Claire & Fahim): Create an endpoint to retrieve class data from the database
-app.get('/api/data', async (req, res)=>{
-    console.log("endpoint is being hit")
-    try {
-        const data = await Class.find();
-        // res.json(data);
-        console.log(data);
-        res.json(data)
-      } catch (err) {
-        res.status(500).send(err);
-      }
+app.get('/api/data', async (req, res) => {
+  try {
+    const data = await Class.find();
+    console.log(data);
+    res.json(data)
+  } catch (err) {
+    res.status(500).send(err);
+  }
 })
