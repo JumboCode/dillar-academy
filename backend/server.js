@@ -63,7 +63,7 @@ const User = mongoose.model("users", UserSchema)
 
 // TODO (Claire & Fahim): Create a ClassSchema
 const ClassSchema = new Schema({
-    id: {type: String, required: true},
+    _id: {type: String, required: true},
     title: {type: String, required: true},
     level: {type: String, required: true},
     ageGroup: {type: String, required: true},
@@ -97,13 +97,15 @@ const Class = mongoose.model("class", ClassSchema)
 
 // Classes
 
+//schema for adding manipulatn and querying from database and specifies where and whichd database, middleware helps with interacting with mongo
 // TODO (Claire & Fahim): Create an endpoint to retrieve class data from the database
-app.get('/data', async (req, res)=>{
+app.get('/api/data', async (req, res)=>{
     console.log("endpoint is being hit")
     try {
-        const data = await Class.find(); // Replace YourModel with your actual model
-        res.json(data);
+        const data = await Class.find();
+        // res.json(data);
         console.log(data);
+        res.json(data)
       } catch (err) {
         res.status(500).send(err);
       }
