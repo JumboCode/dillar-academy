@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from 'wouter'
 import axios from "axios";
 
-
 export default function SignUp() {
   const [formData, setFormData] = useState({
     firstName: '',

@@ -4,6 +4,7 @@ import About from '@/pages/About'
 import Contact from '@/pages/Contact'
 import SignUp from '@/pages/SignUp'
 import Login from '@/pages/Login'
+import Classes from '@/pages/Classes'
 
 export default function PageRoutes() {
   return (
@@ -13,6 +14,7 @@ export default function PageRoutes() {
       <Route path="/contact" component={Contact} />
       <Route path="/signup" component={SignUp} />
       <Route path="/login" component={Login} />
+      <Route path="/classes" component={Classes} />
     </div>
   );
 };

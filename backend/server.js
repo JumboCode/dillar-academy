@@ -1,16 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors')
 const mongo = require("mongodb");
 const mongoose = require("mongoose");
-require('dotenv').config();
-
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 
 const PORT = process.env.PORT || 4000;
-
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('Successfully connected to MongoDB database:', mongoose.connection.name);
@@ -50,25 +48,29 @@ const UserSchema = new Schema({
     password: { type: String, required: true},
     isAdmin: { type: Boolean, required: true},
     username: { type: String, required: true},
-})
-const User = mongoose.model("users", UserSchema)
+}, { collection: 'users' })
+const User = mongoose.model("User", UserSchema)
 
 // Contact Schema
-
-// TODO (Frank & Madeline): Create a ContactSchema
 const ContactSchema = new Schema ({
     name: { type: String, required: false },
     email: { type: String, required: true},
     subject: { type: String, required: true},
     message: { type: String, required: true}
-})
+}, { collection: 'contacts' })
 
 const Contact = mongoose.model('Contact', ContactSchema);
-// export default Contact;
 
 // Class Schema
-
-// TODO (Claire & Fahim): Create a ClassSchema
+const ClassSchema = new Schema({
+    _id: {type: String, required: true},
+    title: {type: String, required: true},
+    level: {type: String, required: true},
+    ageGroup: {type: String, required: true},
+    instructor: {type: String, required: true},
+    schedule: {type: [String], required:true},
+}, { collection: 'classes' })
+const Class = mongoose.model("Class", ClassSchema)
 
 
 //------------------ ENDPOINTS ------------------//
@@ -115,12 +117,8 @@ app.post('/api/users', async (req, res) => {
 });
 
 // Login
-
-// TODO (Donatello & John): Create an endpoint to receive login data and check if the user exists in the database
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
-
-    // DEBUG: console.log('Received login request:',  username );
 
     try {
         const user = await User.findOne({ username });
@@ -144,27 +142,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-
 // Contact
-
-// TODO (Frank & Madeline): Create an endpoint to receive and upload contact inquiries to the database
-// async function uploadContact () {
-//     const article = new Contact({
-//     name: 'test user',
-//     email: 'test@example.com',
-//     subject: 'Test Inquiry',
-//     message: 'Test message'
-
-//     });
-
-//     await article.save();
-//     const firstContact = await Contact.findOne({});
-//     console.log(firstContact);
-// }
-// uploadContact().catch(console.error);
-
-// const firstArticle = await Contact.findOne({});
-// console.log(firstArticle);
 app.post('/api/contact', async (req, res) => {
     const{ name, email, subject, message } = req.body
     try {
@@ -185,5 +163,12 @@ app.post('/api/contact', async (req, res) => {
 })
 
 // Classes
-
-// TODO (Claire & Fahim): Create an endpoint to retrieve class data from the database
+app.get('/api/data', async (req, res) => {
+  try {
+    const data = await Class.find();
+    console.log(data);
+    res.json(data)
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
