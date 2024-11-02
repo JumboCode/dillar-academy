@@ -3,7 +3,7 @@ import NavBar from '@/components/NavBar/NavBar'
 import PageRoutes from '@/components/PageRoutes'
 import "./i18n.js";
 
-function App() {
+const App = () => {
   return (
     <>
       <NavBar />
