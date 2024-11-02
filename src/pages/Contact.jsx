@@ -14,19 +14,30 @@ export default function Contact( ) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const { name, email, subject, message } = formData
+    
     e.preventDefault();
-  
-    const alertMessage = `
-      Name: ${formData.name}
-      Email: ${formData.email}
-      Subject: ${formData.subject}
-      Message: ${formData.message}
-    `;
-  
-    alert(alertMessage);
-  
-    console.log('Form submitted:', formData);
+    try {
+      const response = await fetch("http://localhost:4000/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({name, email, subject, message})
+      })
+
+      if(!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json()
+      console.log(json)
+      alert("Inquiry submitted successfully!")
+
+    } catch (err) {
+      console.error(error.message)
+      alert("There was an error submitting the inquiry.")
+    }
   };
   
 
