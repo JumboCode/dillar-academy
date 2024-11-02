@@ -13,16 +13,16 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { username, password } = formData;
+        // const { username, password } = formData;
         // alert(`Form submitted with\nusername: ${username}\nand password: ${password}`)
 
         try { 
-            const response = await fetch('http://localhost:4000/login', {
+            const response = await fetch('http://localhost:4000/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify(formData),
             });
 
             if (response.ok) {

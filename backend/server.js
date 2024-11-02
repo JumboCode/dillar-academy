@@ -109,7 +109,7 @@ app.post('/api/users', async (req, res) => {
 // Login
 
 // TODO (Donatello & John): Create an endpoint to receive login data and check if the user exists in the database
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
     // DEBUG: console.log('Received login request:',  username );
