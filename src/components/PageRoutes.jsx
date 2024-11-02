@@ -9,10 +9,10 @@ export default function PageRoutes() {
   return (
     <div>
       <Route path="/" component={Home} />
-      <Route path="/About" component={About} />
-      <Route path="/Contact" component={Contact} />
-      <Route path="/SignUp" component={SignUp} />
-      <Route path="/Login" component={Login} />
+      <Route path="/about" component={About} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/signup" component={SignUp} />
+      <Route path="/login" component={Login} />
     </div>
   );
 };

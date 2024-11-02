@@ -17,9 +17,9 @@ const NavBar = () => {
 
           {/* Desktop navigation */}
           <div className="hidden sm:flex sm:items-center sm:space-x-4">
-            <NavLink href="/About" isMobile={false}>About</NavLink>
-            <NavLink href="/Contact" isMobile={false}>Contact</NavLink>
-            <NavLink href="/SignUp" isMobile={false}>Sign Up</NavLink>
+            <NavLink href="/about" isMobile={false}>About</NavLink>
+            <NavLink href="/contact" isMobile={false}>Contact</NavLink>
+            <NavLink href="/signup" isMobile={false}>Sign Up</NavLink>
             {/* <LanguageSelector /> */}
           </div>
 
@@ -40,9 +40,9 @@ const NavBar = () => {
       {/* Mobile menu */}
       <div className={`sm:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
         <div className="pt-2 pb-3 space-y-1">
-            <NavLink href="/About" isMobile={true}>About</NavLink>
-            <NavLink href="/Contact" isMobile={true}>Contact</NavLink>
-            <NavLink href="/SignUp" isMobile={true}>Sign Up</NavLink>
+            <NavLink href="/about" isMobile={true}>About</NavLink>
+            <NavLink href="/contact" isMobile={true}>Contact</NavLink>
+            <NavLink href="/signup" isMobile={true}>Sign Up</NavLink>
         </div>
         <div className="pt-4 pb-3 border-t border-gray-200">
           {/* <LanguageSelector mobile /> */}
