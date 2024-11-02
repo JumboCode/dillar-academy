@@ -109,6 +109,32 @@ app.post('/api/users', async (req, res) => {
 // Login
 
 // TODO (Donatello & John): Create an endpoint to receive login data and check if the user exists in the database
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    // DEBUG: console.log('Received login request:',  username );
+
+    try {
+        const user = await User.findOne({ username });
+        console.log('Database query result:', user);
+
+        if (user) {
+          if (user.password === password) {
+            console.log('Login successful for user:', username);
+            res.status(200).send('Login successful!');
+          } else {
+            console.log('Login failed: Incorrect password.');
+            res.status(401).send('Invalid password.');
+          }
+        } else {
+            console.log('Login failed: User not found');
+            res.status(401).send('Invalid username.');
+        }
+    } catch (error) {
+        console.error('Error during login.', error);
+        res.status(500).send({ message: 'Server Error.' });
+    }
+});
 
 
 // Contact
