@@ -7,7 +7,7 @@ const Dropdown = ({ label, children }) => {
   return (
     <div 
       // style below for menu
-      class="absolute inline-block"
+      className="absolute inline-block"
       
       //If the mouse is on the menu, turn state to true, otherwise false
       onClick={() => {
@@ -19,10 +19,10 @@ const Dropdown = ({ label, children }) => {
         }
       }
     >
-      <button class="dropdown-button text-right">{label}</button>
+      <button className="dropdown-button text-right">{label}</button>
       {isOpen && (
         // style below for children
-        <div class="absolute text-right flex flex-col"> 
+        <div className="absolute text-right flex flex-col"> 
           {children}
         </div>
       )}
