@@ -1,17 +1,15 @@
-import './App.css'
-import React from 'react';
-import Dropdown from './components/Dropdown'
+
+import NavBar from '@/components/NavBar/NavBar'
+import PageRoutes from '@/components/PageRoutes'
+import "./i18n.js";
 
 const App = () => {
   return (
-    <div>
-      <Dropdown label="More">
-        <a href="#level5"> Level 5 </a>
-        <a href="#level5"> Level 6 </a>
-        <a href="#conversation"> Conversation </a>
-      </Dropdown>
-    </div>
+    <>
+      <NavBar />
+      <PageRoutes />
+    </>
   );
-};
+}
 
 export default App;
