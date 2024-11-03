@@ -1,42 +1,36 @@
 import { useState } from "react";
 import { Link } from 'wouter'
-import axios from "axios";
+import { postUser } from "@/api/user-wrapper";
 
+// TODO (Spencer & Madline): Add password requirements and visual feedback
 export default function SignUp() {
   const [formData, setFormData] = useState({
     firstName: '',
-    lastName: '', 
+    lastName: '',
     email: '',
     username: '',
     password: '',
     retypedPassword: ''
   })
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, password, retypedPassword} = formData
+    const { username, email, password, retypedPassword } = formData
     if (password != retypedPassword) {
       alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
     } else {
       try {
-        // Using environment variable for API URL
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/users`, formData);
+        const response = await postUser(formData)
         if (response.status === 201) {
-          setSuccess('User created successfully!');
           alert('User created successfully!');
-          setError('');
         }
-      } catch (err) {
-        if (err.response && err.response.status === 409) {
-          setError('User already exists.');
+      } catch (error) {
+        if (error.response && error.response.status === 409) {
           alert('User already exists.');
         } else {
-          setError('An error occurred while creating the user.');
           alert('An error occurred while creating the user.')
         }
       }
@@ -48,7 +42,7 @@ export default function SignUp() {
       <div id="signup" className="shadow-2xl w-2/5 h-fit bg-white rounded-xl py-10">
         <div>
           <h3 className="text-3xl ml-10"> Sign up </h3>
-          <p className="mt-8 text-gray-500 ml-10"> Already have an account? 
+          <p className="mt-8 text-gray-500 ml-10"> Already have an account?
             <Link className="ml-1 font-bold text-blue-400" href="/login"> Log In</Link>
           </p>
         </div>
