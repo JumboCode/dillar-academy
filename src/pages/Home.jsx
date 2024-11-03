@@ -1,4 +1,4 @@
-import React from 'react';
+
 import dummyBg from '../assets/dummy-bg.png';
 
 const sections = [
