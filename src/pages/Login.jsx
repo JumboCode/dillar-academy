@@ -1,75 +1,68 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { postLogin } from "../api/user-wrapper";
 
 export default function Login() {
-    const [formData, setFormData] = useState({
-        username: '', 
-        password: '',
-      })
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  })
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // const { username, password } = formData;
-        // alert(`Form submitted with\nusername: ${username}\nand password: ${password}`)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        try { 
-            const response = await fetch('http://localhost:4000/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+    try {
+      const response = await postLogin(formData)
 
-            if (response.ok) {
-                const message = await response.text();
-                console.log(message);
-                alert("Login successful!");
-            } else {
-                const errorMessage = await response.text();
-                console.error(errorMessage);
-                alert("Login failed: " + errorMessage);
-            }
-        } catch (error) {
-            console.error('Error during login: ', error);
-            alert("An error occurred during login.");
-        }
-    };
-    
-    return (
-        <>
-            <main className="bg-blue-200 h-screen flex justify-center items-center">
-                <div className="bg-white w-2/3 md:1/2 lg:w-2/5 py-16 px-5 sm:px-20 rounded-lg shadow-2xl min-h-min">
-                    <h1 className="text-2xl sm:text-3xl mb-3">Login</h1>
-                    <h3 className="text-sm sm:text-base text-slate-400 mb-6">Don't have an account?
-                        <Link href="/signup" className="text-blue-400"> Sign up</Link> 
-                    </h3>
+      if (response.ok) {
+        const message = await response.text();
+        console.log(message);
+        alert("Login successful!");
+      } else {
+        const errorMessage = await response.text();
+        console.error(errorMessage);
+        alert("Login failed: " + errorMessage);
+      }
+    } catch (error) {
+      console.error('Error during login: ', error);
+      alert("An error occurred during login.");
+    }
+  };
 
-                    <form method="POST" onSubmit={handleSubmit}>
-                        <input type="text"
-                        id="Username" 
-                        name="username" 
-                        defaultValue={formData.username} 
-                        onChange={handleChange} 
-                        className="my-4 border border-gray-500 rounded-md block w-full p-2 sm:p-2.5 text-sm sm:text-base placeholder-gray-500" 
-                        placeholder="Username" required/>
+  return (
+    <>
+      <main className="bg-blue-200 h-screen flex justify-center items-center">
+        <div className="bg-white w-2/3 md:1/2 lg:w-2/5 py-16 px-5 sm:px-20 rounded-lg shadow-2xl min-h-min">
+          <h1 className="text-2xl sm:text-3xl mb-3">Login</h1>
+          <h3 className="text-sm sm:text-base text-slate-400 mb-6">Don't have an account?
+            <Link href="/signup" className="text-blue-400"> Sign up</Link>
+          </h3>
 
-                        <input type="password" 
-                        id="Password" 
-                        name="password" 
-                        defaultValue={formData.password} 
-                        onChange={handleChange} 
-                        className="my-4 border border-gray-500 rounded-md block w-full p-2 sm:p-2.5 text-sm md:text-base placeholder-gray-500" 
-                        placeholder="Password" required/>
-                        
-                        <button className="bg-gray-200 py-2 px-4 rounded-md my-2 text-sm sm:text-base" type="submit">Login</button>
-                    </form>
-                </div>
-            </main>
-        </>
-    )
+          <form method="POST" onSubmit={handleSubmit}>
+            <input type="text"
+              id="Username"
+              name="username"
+              defaultValue={formData.username}
+              onChange={handleChange}
+              className="my-4 border border-gray-500 rounded-md block w-full p-2 sm:p-2.5 text-sm sm:text-base placeholder-gray-500"
+              placeholder="Username" required />
+
+            <input type="password"
+              id="Password"
+              name="password"
+              defaultValue={formData.password}
+              onChange={handleChange}
+              className="my-4 border border-gray-500 rounded-md block w-full p-2 sm:p-2.5 text-sm md:text-base placeholder-gray-500"
+              placeholder="Password" required />
+
+            <button className="bg-gray-200 py-2 px-4 rounded-md my-2 text-sm sm:text-base" type="submit">Login</button>
+          </form>
+        </div>
+      </main>
+    </>
+  )
 }

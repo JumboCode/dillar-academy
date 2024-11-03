@@ -3,6 +3,7 @@ import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
 
+// TODO (Tony & John): Add a dropdown to switch languages
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -40,10 +41,10 @@ const NavBar = () => {
       {/* Mobile menu */}
       <div className={`sm:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
         <div className="pt-2 pb-3 space-y-1">
-            <NavLink href="/about" isMobile={true}>About</NavLink>
-            <NavLink href="/contact" isMobile={true}>Contact</NavLink>
-            <NavLink href="/classes" isMobile={true}>Classes</NavLink>
-            <NavLink href="/signup" isMobile={true}>Sign Up</NavLink>
+          <NavLink href="/about" isMobile={true}>About</NavLink>
+          <NavLink href="/contact" isMobile={true}>Contact</NavLink>
+          <NavLink href="/classes" isMobile={true}>Classes</NavLink>
+          <NavLink href="/signup" isMobile={true}>Sign Up</NavLink>
         </div>
         <div className="pt-4 pb-3 border-t border-gray-200">
         </div>

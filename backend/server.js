@@ -1,12 +1,14 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors')
-const mongo = require("mongodb");
-const mongoose = require("mongoose");
+const cors = require('cors');
+const mongo = require('mongodb');
+const mongoose = require('mongoose');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use(mongoSanitize())
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
@@ -36,42 +38,79 @@ app.get('/', (req, res) => {
   res.send('Server is running!')
 });
 
+
+//------------------ HELPER FUNCTIONS ------------------//
+
+/*
+purpose: check that the input key is allowed
+argument types:
+  inputs: object
+  allowedFields: array
+
+example of using to get filters for classes: validateInput(req.query, classFields)
+*/
+const validateInput = (input, allowedFields) => {
+  const filteredInput = {}
+
+  for (const key in input) {
+    if (allowedFields.includes(key)) {
+      filteredInput[key] = query[key]
+    }
+  }
+
+  return filteredInput
+}
+
 //------------------ MONGOOSE SCHEMAS ------------------//
 
 const Schema = mongoose.Schema
 
 // User Schema
 const UserSchema = new Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true},
-    password: { type: String, required: true},
-    isAdmin: { type: Boolean, required: true},
-    username: { type: String, required: true},
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  isAdmin: { type: Boolean, required: true },
+  username: { type: String, required: true },
 }, { collection: 'users' })
+
 const User = mongoose.model("User", UserSchema)
 
 // Contact Schema
-const ContactSchema = new Schema ({
-    name: { type: String, required: false },
-    email: { type: String, required: true},
-    subject: { type: String, required: true},
-    message: { type: String, required: true}
+const ContactSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  subject: { type: String, required: true },
+  message: { type: String, required: true }
 }, { collection: 'contacts' })
 
 const Contact = mongoose.model('Contact', ContactSchema);
 
 // Class Schema
+const ScheduleSchema = new Schema({
+  day: { type: String, required: true },
+  time: { type: String, required: true },
+})
 const ClassSchema = new Schema({
-    _id: {type: String, required: true},
-    title: {type: String, required: true},
-    level: {type: String, required: true},
-    ageGroup: {type: String, required: true},
-    instructor: {type: String, required: true},
-    schedule: {type: [String], required:true},
+  title: { type: String, required: true },
+  level: { type: String, required: true },
+  ageGroup: { type: String, required: true },
+  instructor: { type: String, required: true },
+  schedule: { type: [ScheduleSchema], required: true, default: [] },
 }, { collection: 'classes' })
+
 const Class = mongoose.model("Class", ClassSchema)
 
+// Level Schema
+const InstructorSchema = new Schema({ name: { type: String, required: true } })
+const LevelSchema = new Schema({
+  level: { type: Number, required: true },
+  name: { type: String, required: true },
+  instructors: { type: [InstructorSchema], required: true, default: [] },
+}, { collection: 'levels' })
+
+const Level = mongoose.model("Level", LevelSchema)
 
 //------------------ ENDPOINTS ------------------//
 
@@ -81,7 +120,7 @@ app.post('/api/users', async (req, res) => {
     const { firstName, lastName, username, email, password } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({ 
+    const existingUser = await User.findOne({
       $or: [
         { email: email },
         { username: username }
@@ -118,52 +157,57 @@ app.post('/api/users', async (req, res) => {
 
 // Login
 app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
+  const { username, password } = req.body;
 
-    try {
-        const user = await User.findOne({ username });
-        console.log('Database query result:', user);
+  try {
+    const user = await User.findOne({ username });
+    console.log('Database query result:', user);
 
-        if (user) {
-          if (user.password === password) {
-            console.log('Login successful for user:', username);
-            res.status(200).send('Login successful!');
-          } else {
-            console.log('Login failed: Incorrect password.');
-            res.status(401).send('Invalid password.');
-          }
-        } else {
-            console.log('Login failed: User not found');
-            res.status(401).send('Invalid username.');
-        }
-    } catch (error) {
-        console.error('Error during login.', error);
-        res.status(500).send({ message: 'Server Error.' });
+    if (user) {
+      if (user.password === password) {
+        console.log('Login successful for user:', username);
+        res.status(200).send('Login successful!');
+      } else {
+        console.log('Login failed: Incorrect password.');
+        res.status(401).send('Invalid password.');
+      }
+    } else {
+      console.log('Login failed: User not found');
+      res.status(401).send('Invalid username.');
     }
+  } catch (error) {
+    console.error('Error during login.', error);
+    res.status(500).send({ message: 'Server Error.' });
+  }
 });
+
+// Get Users
+// TODO (Aryaa & Toki): Write an endpoint to retrieve all users from the database
+
 
 // Contact
 app.post('/api/contact', async (req, res) => {
-    const{ name, email, subject, message } = req.body
-    try {
-        const newContact = new Contact({
-            name,
-            email,
-            subject,
-            message
-        })
-        await newContact.save()
+  const { name, email, subject, message } = req.body
+  try {
+    const newContact = new Contact({
+      name,
+      email,
+      subject,
+      message
+    })
+    await newContact.save()
 
-        res.status(201).json({message: 'Inquiry submitted successfully'})
-    }
-    catch (err) {
-        console.error('Error submitting inquiry:', err);
-        res.status(500).json({message: 'Error submitting inquiry'})
-    }
+    res.status(201).json({ message: 'Inquiry submitted successfully' })
+  }
+  catch (err) {
+    console.error('Error submitting inquiry:', err);
+    res.status(500).json({ message: 'Error submitting inquiry' })
+  }
 })
 
 // Classes
-app.get('/api/data', async (req, res) => {
+// TODO (Donatello, Claire, Yi): Modify the endpoint to take in query params and filter classes with them
+app.get('/api/classes', async (req, res) => {
   try {
     const data = await Class.find();
     console.log(data);
@@ -172,3 +216,6 @@ app.get('/api/data', async (req, res) => {
     res.status(500).send(err);
   }
 })
+
+// Levels
+// TODO (Fahim & Frank): Get the levels data from the database
