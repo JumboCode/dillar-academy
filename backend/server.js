@@ -183,8 +183,16 @@ app.post('/api/login', async (req, res) => {
 
 // Get Users
 // TODO (Aryaa & Toki): Write an endpoint to retrieve all users from the database
-// need to do app.get()
+app.get('/api/users', async (req, res) => {
+  try {
+    console.log("getting the users");
+    const users = await User.find();
+    return res.status(200).json(users);
+  } catch(err) {
+    res.status(500).send(err);
+  }
 
+})
 
 // Contact
 app.post('/api/contact', async (req, res) => {
