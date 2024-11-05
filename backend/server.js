@@ -191,7 +191,7 @@ app.get('/api/users', async (req, res) => {
   } catch(err) {
     res.status(500).send(err);
   }
-
+  
 })
 
 // Contact
