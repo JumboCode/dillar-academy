@@ -183,6 +183,7 @@ app.post('/api/login', async (req, res) => {
 
 // Get Users
 // TODO (Aryaa & Toki): Write an endpoint to retrieve all users from the database
+// need to do app.get()
 
 
 // Contact
