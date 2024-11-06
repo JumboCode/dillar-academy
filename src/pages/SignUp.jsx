@@ -104,10 +104,11 @@ export default function SignUp() {
             <PasswordChecklist
                   rules={[
                       "minLength",
-                      "specialChar",
-                      "number",
                       "capital",
-                      "match",
+                      "lowercase",
+                      "number",
+                      "specialChar",
+                      "match"
                   ]}
                   minLength={10}
                   value={formData.password}
