@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
+import PasswordChecklist from "react-password-checklist"
 
 // TODO (Spencer & Madline): Add password requirements and visual feedback
 export default function SignUp() {
@@ -97,12 +98,25 @@ export default function SignUp() {
             className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
             onChange={handleChange}
           />
+          <PasswordChecklist
+                rules={[
+                    "minLength",
+                    "specialChar",
+                    "number",
+                    "capital",
+                    "match",
+                ]}
+                minLength={10}
+                value={formData.password}
+                valueAgain={formData.retypedPassword}
+          />
           <button
             type='submit'
             className="ml-10 mt-6 px-6 py-2 items-center bg-gray-300 tracking-wide text-lg rounded-lg"
           >
             Sign up
           </button>
+            
         </form>
       </div>
     </div>
