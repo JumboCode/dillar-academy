@@ -16,6 +16,7 @@ export default function SignUp() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const [isValid, setIsValid] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,22 +99,28 @@ export default function SignUp() {
             className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
             onChange={handleChange}
           />
-          <PasswordChecklist
-                rules={[
-                    "minLength",
-                    "specialChar",
-                    "number",
-                    "capital",
-                    "match",
-                ]}
-                minLength={10}
-                value={formData.password}
-                valueAgain={formData.retypedPassword}
-          />
+          <div className="ml-10 mt-2">
+
+            <PasswordChecklist
+                  rules={[
+                      "minLength",
+                      "specialChar",
+                      "number",
+                      "capital",
+                      "match",
+                  ]}
+                  minLength={10}
+                  value={formData.password}
+                  valueAgain={formData.retypedPassword}
+                  onChange={(isValid) => setIsValid(isValid)}
+            />
+          </div>
           <button
             type='submit'
-            className="ml-10 mt-6 px-6 py-2 items-center bg-gray-300 tracking-wide text-lg rounded-lg"
+            className={`ml-10 mt-6 px-6 py-2 items-center tracking-wide text-lg rounded-lg ${isValid ? 'bg-gray-300' : 'bg-gray-200 cursor-not-allowed'}`}
+            disabled={!isValid}
           >
+            
             Sign up
           </button>
             
