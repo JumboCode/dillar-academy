@@ -1,11 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
+import i18next from 'i18next';
+import Dropdown from '../Dropdown';
 
-// TODO (Tony & John): Add a dropdown to switch languages
+const langMapping = {
+  English: "en",
+  Russian: "ru",
+  Chinese: "zh",
+  Turkish: "tr",
+};
+
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState("English");
+
+  useEffect(() => {
+    const currentLang = localStorage.getItem("language") || i18next.language;
+    const currentLangName = Object.keys(langMapping).find(
+      (key) => langMapping[key] === currentLang
+    );
+    setSelectedLang(currentLangName || "English");
+  }, []);
+  
+  const handleSelectLang = (langName) => {
+    const langCode = langMapping[langName];
+    i18next.changeLanguage(langCode);
+    setSelectedLang(langName);
+    localStorage.setItem("language", langCode);
+  };
 
   return (
     <nav className="bg-white shadow-md">
@@ -22,6 +46,7 @@ const NavBar = () => {
             <NavLink href="/contact" isMobile={false}>Contact</NavLink>
             <NavLink href="/classes" isMobile={false}>Classes</NavLink>
             <NavLink href="/signup" isMobile={false}>Sign Up</NavLink>
+            <Dropdown selectedLang={selectedLang} onSelectLang={handleSelectLang} />
           </div>
 
           {/* Mobile menu button */}
@@ -29,6 +54,7 @@ const NavBar = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="sm:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
             <span className="sr-only">Open main menu</span>
             <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -39,12 +65,13 @@ const NavBar = () => {
       </div>
 
       {/* Mobile menu */}
-      <div className={`sm:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
+      <div id="mobile-menu" className={`sm:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
         <div className="pt-2 pb-3 space-y-1">
           <NavLink href="/about" isMobile={true}>About</NavLink>
           <NavLink href="/contact" isMobile={true}>Contact</NavLink>
           <NavLink href="/classes" isMobile={true}>Classes</NavLink>
           <NavLink href="/signup" isMobile={true}>Sign Up</NavLink>
+          <Dropdown selectedLang={selectedLang} onSelectLang={handleSelectLang} />
         </div>
         <div className="pt-4 pb-3 border-t border-gray-200">
         </div>
