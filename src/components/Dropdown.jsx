@@ -1,33 +1,26 @@
-import { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const Dropdown = ({ label, children }) => {
-  //use isOpen to keep track of whether the dropdown menu is visible
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div
-      className="absolute inline-block"
-
-      //If the mouse is on the menu, turn state to true, otherwise false
-      onClick={() => {
-        if (isOpen) {
-          setIsOpen(false);
-        } else {
-          setIsOpen(true);
-        }
-      }
-      }
+const Dropdown = ({ selectedLang, onSelectLang }) => (
+  <div className="dropdown">
+    <label htmlFor="language-select" className="sr-only">Select Language</label>
+    <select
+      id="language-select"
+      value={selectedLang}
+      onChange={(e) => onSelectLang(e.target.value)}
+      aria-label="Select Language"
     >
-      <button className="dropdown-button text-right">{label}</button>
-      {isOpen && (
-        <div className="absolute text-right flex flex-col">
-          {children}
-        </div>
-      )}
-    </div>
-  );
+      <option value="English">English</option>
+      <option value="Russian">Russian</option>
+      <option value="Chinese">Chinese</option>
+      <option value="Turkish">Turkish</option>
+    </select>
+  </div>
+);
+
+Dropdown.propTypes = {
+  selectedLang: PropTypes.string.isRequired,
+  onSelectLang: PropTypes.func.isRequired,
 };
 
 export default Dropdown;
-
-
