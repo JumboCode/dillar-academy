@@ -51,9 +51,9 @@ const NavBar = () => {
 
 
          <div className="hidden sm:flex sm:items-center sm:space-x-4">
+            <NavLink href="/about">About</NavLink>
            <NavLink href="/courses">Courses</NavLink>
            <NavLink href="/contact">Contact</NavLink>
-           <NavLink href="/about">About</NavLink>
            <NavLink href="/login" className="text-blue-500">Login</NavLink>
           
            <div className="h-6 w-px bg-gray-300 self-center"></div>
