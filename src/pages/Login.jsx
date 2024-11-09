@@ -35,7 +35,7 @@ export default function Login() {
 
   return (
     <>
-      <main className="bg-blue-200 h-screen flex justify-center items-center">
+      <main className="bg-blue-200 h-full flex justify-center items-center">
         <div className="bg-white w-2/3 md:1/2 lg:w-2/5 py-16 px-5 sm:px-20 rounded-lg shadow-2xl min-h-min">
           <h1 className="text-2xl sm:text-3xl mb-3">Login</h1>
           <h3 className="text-sm sm:text-base text-slate-400 mb-6">Don't have an account?

@@ -1,5 +1,6 @@
 
 import dummyBg from '../assets/dummy-bg.png';
+import Button from '../components/Button';
 
 const sections = [
     {
@@ -24,14 +25,22 @@ const sections = [
 
 const Home = () => {
     return (
-        <div className="min-h-screen">
-            <div className="bg-sky-200 p-4">
+        <>
+            <div className="bg-sky-200 p-4 min-h-[60dvh] flex items-center">
                 <div className="text-center md:text-left mb-12 mt-12 px-5">
                     <h1 className="text-4xl font-bold mb-2">Dillar Academy</h1>
                     <p className="text-lg mb-4">Free English education for Uyghurs around the world.</p>
                     <div className="flex flex-col md:flex-row items-center">
-                        <button className="bg-white border-2 border-white text-black font-semibold mb-2 px-2 rounded mr-2 hover:bg-slate-100 hover:border-slate-100" onClick={() => alert('Dummy button-1 clicked!')}>Start Learning</button>
-                        <button className="bg-transparent border-2 border-sky-400 text-black font-semibold mb-2 px-2 rounded mr-2 hover:bg-sky-400" onClick={() => alert('Dummy button-2 clicked!')}>Learn More</button>
+                        <Button
+                            label={"Start Learning"}
+                            onClick={() => alert('Dummy button-1 clicked!')}
+                            isOutline={false}
+                        />
+                        <Button
+                            label={"Learn More"}
+                            onClick={() => alert('Dummy button-2 clicked!')}
+                            isOutline={true}
+                        />
                     </div>
                 </div>
             </div>
@@ -47,7 +56,7 @@ const Home = () => {
                     </div>
                 ))}
             </div>
-        </div>
+        </>
     );
 };
 

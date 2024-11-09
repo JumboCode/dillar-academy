@@ -38,14 +38,12 @@ export default function SignUp() {
   }
 
   return (
-    <div className='bg-blue-200 h-screen flex items-center justify-center'>
+    <div className='bg-blue-200 h-full flex items-center justify-center'>
       <div id="signup" className="shadow-2xl w-2/5 h-fit bg-white rounded-xl py-10">
-        <div>
-          <h3 className="text-3xl ml-10"> Sign up </h3>
-          <p className="mt-8 text-gray-500 ml-10"> Already have an account?
-            <Link className="ml-1 font-bold text-blue-400" href="/login"> Log In</Link>
-          </p>
-        </div>
+        <h3 className="text-3xl ml-10"> Sign up </h3>
+        <p className="mt-8 text-gray-500 ml-10"> Already have an account?
+          <Link className="ml-1 font-bold text-blue-400" href="/login"> Log In</Link>
+        </p>
 
         {/* Form Values and the Borders */}
         <form method="POST" onSubmit={handleSubmit}>

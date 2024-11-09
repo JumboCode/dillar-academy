@@ -8,14 +8,13 @@ const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo and brand name */}
+    <div>
+      <nav className="w-full fixed top-0 bg-white h-20 shadow-md ">
+        {/* Navbar content */}
+        <div className='flex justify-between sm:px-8 px-3 h-full'>
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <img className="h-8 w-auto" src={dillarLogo} alt="Dillar English Academy" />
+            <img className="h-10 w-auto" src={dillarLogo} alt="Dillar English Academy" />
           </Link>
-
           {/* Desktop navigation */}
           <div className="hidden sm:flex sm:items-center sm:space-x-4">
             <NavLink href="/about" isMobile={false}>About</NavLink>
@@ -23,7 +22,6 @@ const NavBar = () => {
             <NavLink href="/classes" isMobile={false}>Classes</NavLink>
             <NavLink href="/signup" isMobile={false}>Sign Up</NavLink>
           </div>
-
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -36,20 +34,16 @@ const NavBar = () => {
             </svg>
           </button>
         </div>
-      </div>
-
-      {/* Mobile menu */}
-      <div className={`sm:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
-        <div className="pt-2 pb-3 space-y-1">
+        {/* Mobile menu */}
+        <div className={`sm:hidden w-full shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
           <NavLink href="/about" isMobile={true}>About</NavLink>
           <NavLink href="/contact" isMobile={true}>Contact</NavLink>
           <NavLink href="/classes" isMobile={true}>Classes</NavLink>
           <NavLink href="/signup" isMobile={true}>Sign Up</NavLink>
+          <div className="h-7 mt-2 mx-3 border-t border-gray-200"></div>
         </div>
-        <div className="pt-4 pb-3 border-t border-gray-200">
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 };
 
