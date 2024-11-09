@@ -3,7 +3,7 @@ import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
 import i18next from 'i18next';
-import Dropdown from '../Dropdown';
+import Dropdown from '../Dropdown/Dropdown';
 import { Globe } from 'lucide-react';
 
 
