@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { postLogin } from "../api/user-wrapper";
 
+// TODO (Spencer & Claire): implement the Welcome page and check for if it should be displayed
 export default function Login() {
   const [formData, setFormData] = useState({
     username: '',

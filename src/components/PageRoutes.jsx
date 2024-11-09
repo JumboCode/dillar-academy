@@ -7,6 +7,7 @@ import Login from '@/pages/Login'
 import Classes from '@/pages/Classes'
 import StyleGuide from "@/pages/StyleGuide";
 
+// TODO (John & Frank): add routes for Page Not Found and student and admin pages
 export default function PageRoutes() {
   return (
     <Switch>
