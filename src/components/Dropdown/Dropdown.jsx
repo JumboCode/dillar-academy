@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const Dropdown = ({ label, selected, children, buttonClassName = "dropdown-button text-right" }) => {
+const Dropdown = ({ label, children, buttonClassName = "dropdown-button text-right" }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -11,7 +11,7 @@ const Dropdown = ({ label, selected, children, buttonClassName = "dropdown-butto
         onClick={() => setIsOpen(!isOpen)}
         type="button"
       >
-        <span>{selected || label}</span>
+        {label}
         <svg 
           className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           viewBox="0 0 20 20"
@@ -36,8 +36,7 @@ const Dropdown = ({ label, selected, children, buttonClassName = "dropdown-butto
 };
 
 Dropdown.propTypes = {
-  label: PropTypes.string.isRequired,
-  selected: PropTypes.string,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
   children: PropTypes.node.isRequired,
   buttonClassName: PropTypes.string
 };
