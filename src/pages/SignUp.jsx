@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
 import PasswordChecklist from "react-password-checklist"
+import Form from "@/components/Form/Form"
+import FormInput from "@/components/Form/FormInput";
+import FormSubmit from "../components/Form/FormSubmit";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -13,6 +16,7 @@ export default function SignUp() {
     retypedPassword: ''
   })
   const handleChange = (e) => {
+    console.log(formData)
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const [isValid, setIsValid] = useState(false);
@@ -39,70 +43,72 @@ export default function SignUp() {
   }
 
   return (
-    <div className='bg-blue-200 h-full flex items-center justify-center'>
-      <div id="signup" className="shadow-2xl w-2/5 h-fit bg-white rounded-xl py-10">
-        <h3 className="text-3xl ml-10"> Sign up </h3>
-        <p className="mt-8 text-gray-500 ml-10"> Already have an account?
+    <div className='bg-blue-200 h-full py-8 flex items-center justify-center'>
+      <Form
+        width={"w-2/5"}
+      >
+        <h3 className="text-3xl"> Sign up </h3>
+        <p className="my-3 text-gray-500"> Already have an account?
           <Link className="ml-1 font-bold text-blue-400" href="/login"> Log In</Link>
         </p>
 
         {/* Form Values and the Borders */}
-        <form method="POST" onSubmit={handleSubmit}>
-          <input
-            required
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
-            onChange={handleChange}
-          />
-          <input
-            required
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
-            onChange={handleChange}
-          />
-          <input
-            required
+        <form method="POST" onSubmit={handleSubmit} className="space-y-3">
+          <div className="flex space-y-3 sm:space-y-0 sm:space-x-3 sm:flex-row flex-col">
+            <FormInput
+              isRequired={true}
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              placeholder="First Name"
+              onChange={handleChange}
+            />
+            <FormInput
+              isRequired={true}
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              placeholder="Last Name"
+              onChange={handleChange}
+            />
+          </div>
+          <FormInput
+            isRequired={true}
             type="text"
             name="username"
+            value={formData.username}
             placeholder="Username"
-            className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
             onChange={handleChange}
           />
-          <input
-            required
+          <FormInput
+            isRequired={true}
             type="email"
             name="email"
+            value={formData.email}
             placeholder="Email"
-            className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
             onChange={handleChange}
           />
-          <input
-            required
+          <FormInput
+            isRequired={true}
             type="password"
             name="password"
+            value={formData.password}
             placeholder="Password"
-            className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
             onChange={handleChange}
           />
-          <input
-            required
+          <FormInput
+            isRequired={true}
             type="password"
             name="retypedPassword"
+            value={formData.retypedPassword}
             placeholder="Retype Password"
-            className="mt-2 w-10/12 ml-10 p-3 text-lg border-2 border-black border-opacity-20 h-10 rounded-lg"
             onChange={handleChange}
           />
-          <div className="ml-10 mt-2">
-
+          <div className="mt-2">
             <PasswordChecklist
               rules={[
                 "minLength",
-                "capital",
-                "lowercase",
+                "capitalAndLowercase",
                 "number",
                 "specialChar",
                 "match"
@@ -113,17 +119,9 @@ export default function SignUp() {
               onChange={(isValid) => setIsValid(isValid)}
             />
           </div>
-          <button
-            type='submit'
-            className={`ml-10 mt-6 px-6 py-2 items-center tracking-wide text-lg rounded-lg ${isValid ? 'bg-gray-300' : 'bg-gray-200 cursor-not-allowed'}`}
-            disabled={!isValid}
-          >
-
-            Sign up
-          </button>
-
+          <FormSubmit label={"Sign Up"} isDisabled={!isValid} />
         </form>
-      </div>
+      </Form>
     </div>
   )
 }

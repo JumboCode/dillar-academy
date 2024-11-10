@@ -1,6 +1,9 @@
 
 import { useState } from 'react';
 import { postContact } from '@/api/contact-wrapper';
+import Form from "@/components/Form/Form"
+import FormInput from '@/components/Form/FormInput';
+import FormSubmit from '@/components/Form/FormSubmit';
 
 export default function Contact() {
 
@@ -52,57 +55,52 @@ export default function Contact() {
         </p>
       </div>
 
-      <div className="sm:w-2/3 w-full bg-blue-200 p-10">
+      <div className="sm:w-2/3 w-full bg-blue-200 p-10 flex justify-center">
         {/* form box */}
-        <div className="bg-white p-6 shadow-lg rounded-lg max-w-md mx-auto">
+        <Form width="w-3/5">
           <h2 className="text-2xl font-semibold mb-2">Get in Touch</h2>
           <p className="mb-4 text-gray-600 opacity-70">
             Let us know if you have questions or concerns.
           </p>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-3"
+          >
+            <FormInput
               type="text"
               name="name"
               placeholder="Name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-500"
-              required
+              isRequired={true}
             />
-            <input
+            <FormInput
               type="email"
               name="email"
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-500"
-              required
+              isRequired={true}
             />
-            <input
+            <FormInput
               type="text"
               name="subject"
               placeholder="Subject"
               value={formData.subject}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-500"
-              required
+              isRequired={true}
             />
-            <textarea
+            <FormInput
+              type="textarea"
               name="message"
               placeholder="Message"
               value={formData.message}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 h-32 placeholder-gray-500"
               required
             />
-            <button
-              type="submit"
-              className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300"
-            >
-              Submit
-            </button>
+            <FormSubmit label={"Submit"} />
           </form>
-        </div>
+        </Form>
       </div>
     </div>
   );
