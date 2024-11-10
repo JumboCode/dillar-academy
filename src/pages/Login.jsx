@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { postLogin } from "../api/user-wrapper";
+import Form from "@/components/Form/Form";
+import FormInput from '@/components/Form/FormInput';
+import FormSubmit from "../components/Form/FormSubmit";
+
 
 // TODO (Spencer & Claire): implement the Welcome page and check for if it should be displayed
 export default function Login() {
@@ -37,32 +41,35 @@ export default function Login() {
   return (
     <>
       <main className="bg-blue-200 h-full flex justify-center items-center">
-        <div className="bg-white w-2/3 md:1/2 lg:w-2/5 py-16 px-5 sm:px-20 rounded-lg shadow-2xl min-h-min">
-          <h1 className="text-2xl sm:text-3xl mb-3">Login</h1>
-          <h3 className="text-sm sm:text-base text-slate-400 mb-6">Don't have an account?
+        <Form width="w-2/5">
+          <h1 className="text-2xl sm:text-3xl">Login</h1>
+          <h3 className="text-sm sm:text-base text-slate-400 my-3">Don't have an account?
             <Link href="/signup" className="text-blue-400"> Sign up</Link>
           </h3>
 
-          <form method="POST" onSubmit={handleSubmit}>
-            <input type="text"
-              id="Username"
+          <form method="POST"
+            onSubmit={handleSubmit}
+            className="space-y-3"
+          >
+            <FormInput
+              type="text"
               name="username"
-              defaultValue={formData.username}
+              value={formData.username}
               onChange={handleChange}
-              className="my-4 border border-gray-500 rounded-md block w-full p-2 sm:p-2.5 text-sm sm:text-base placeholder-gray-500"
-              placeholder="Username" required />
+              placeholder="Username"
+              isRequired={true} />
 
-            <input type="password"
-              id="Password"
+            <FormInput
+              type="password"
               name="password"
-              defaultValue={formData.password}
+              value={formData.password}
               onChange={handleChange}
-              className="my-4 border border-gray-500 rounded-md block w-full p-2 sm:p-2.5 text-sm md:text-base placeholder-gray-500"
-              placeholder="Password" required />
+              placeholder="Password"
+              isRequired={true} />
 
-            <button className="bg-gray-200 py-2 px-4 rounded-md my-2 text-sm sm:text-base" type="submit">Login</button>
+            <FormSubmit label={"Login"} />
           </form>
-        </div>
+        </Form>
       </main>
     </>
   )
