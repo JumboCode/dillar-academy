@@ -120,10 +120,6 @@ const StyleGuide = () => {
             name: "neutral",
             variations: [
                 {
-                    number: 100,
-                    hex: "#FFFFFF",
-                },
-                {
                     number: 200,
                     hex: "#E8E8ED",
                 },
@@ -146,10 +142,6 @@ const StyleGuide = () => {
                 {
                     number: 700,
                     hex: "#2A2A37",
-                },
-                {
-                    number: 800,
-                    hex: "#000000",
                 },
             ]
         },
