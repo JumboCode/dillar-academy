@@ -19,7 +19,7 @@ const StyleGuide = () => {
                 },
                 {
                     number: 400,
-                    hex: "#0F084B",
+                    hex: "#59BCF5",
                 },
                 {
                     number: 500,
@@ -187,7 +187,8 @@ const StyleGuide = () => {
             {/* color palette */}
             <section className={`${sectionStyle} bg-indigo-100`}>
                 <h2 className={h2Style}>Color Palette</h2>
-                <p>Lists the tailwind color name, opacities, and hex codes </p>
+                <p>Lists the tailwind color name, opacities, and hex codes. The colors have all been added to the Tailwind config so you can use them like any Tailwind color class</p>
+                <p>Ex: <code className="bg-blue-200 text-dark-blue-500">className="bg-blue-200 text-dark-blue-500"</code></p>
                 <div className="flex">
                     {colorPalette.map((color, index) => (
                         <div key={index} className="flex-auto flex flex-col gap-y-4 items-center p-5 min-h-fit">
