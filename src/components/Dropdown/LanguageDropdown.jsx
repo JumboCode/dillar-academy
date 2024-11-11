@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Globe } from 'lucide-react';
+import { IoGlobeOutline } from "react-icons/io5";
 import Dropdown from './Dropdown';
 
 const langMapping = {
@@ -32,7 +32,7 @@ const LanguageDropdown = () => {
     <Dropdown
       label={
         <div className="flex items-center space-x-1">
-          <Globe size={18} className="text-gray-600" />
+          <IoGlobeOutline size={18} className="text-gray-600" />
           <span>{selectedLang}</span>
         </div>
       }
