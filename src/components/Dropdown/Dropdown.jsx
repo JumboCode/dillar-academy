@@ -24,7 +24,7 @@ const Dropdown = ({ label, children, buttonClassName = "dropdown-button text-rig
         </svg>
       </button>
       {isOpen && (
-        <div className="absolute mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
           <div className="py-1" role="menu" aria-orientation="vertical">
             {children}
           </div>

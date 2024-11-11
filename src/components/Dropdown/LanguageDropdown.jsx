@@ -36,7 +36,7 @@ const LanguageDropdown = () => {
           <span>{selectedLang}</span>
         </div>
       }
-      buttonClassName="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-gray-900 min-w-[90px]"
+      buttonClassName="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-gray-900 min-w-[90px] pl-3 pr-4 py-2 sm:px-3 sm:py-2"
     >
       {/* drop down links */}
       {Object.keys(langMapping).map((lang) => (

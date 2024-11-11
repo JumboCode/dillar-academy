@@ -1,11 +1,12 @@
 
-const Button = ({ isOutline, label }) => {
+const Button = ({ label, isOutline, onClick }) => {
   return (
     <button
       className={`px-4 py-2 font-semibold rounded-lg transition-colors duration-300 ${isOutline
-        ? 'border border-blue-500 text-black-500 bg-white'
-        : 'bg-blue-700 text-black'
+        ? 'border border-cerulean text-black-500 bg-white'
+        : 'bg-cerulean text-black'
         }`}
+      onClick={onClick}
     >
       {label}
     </button>

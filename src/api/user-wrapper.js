@@ -27,7 +27,18 @@ const postLogin = async (body) => {
   }
 }
 
+const getUsers = async () => {
+  try {
+    const response = await fetch('http://localhost:4000/api/users')
+    const jsonData = await response.json() // Converting data to json
+    return jsonData
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
 export {
   postUser,
-  postLogin
+  postLogin,
+  getUsers,
 }
