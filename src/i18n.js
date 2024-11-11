@@ -11,16 +11,13 @@ i18next
   .use(initReactI18next)
   .init({
     fallbackLng: "en",
+
     ns: ["default"],
     defaultNS: "default",
+
     supportedLngs: ["en", "ru", "tr", "zh"],
-    detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage']
-    },
+
     backend: {
       loadPath: loadPath
     }
-  });
-
-export default i18next;
+  })

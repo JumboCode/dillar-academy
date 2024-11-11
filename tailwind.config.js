@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        avenir: ["AVENIR", "sans-serif"],
+        avenir: ["Avenir", "sans-serif"],
       },
       colors: {
         "night-blue": "#0F084B",
