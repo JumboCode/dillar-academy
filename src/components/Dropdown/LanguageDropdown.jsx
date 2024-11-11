@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { Globe } from 'lucide-react';
 import Dropdown from './Dropdown';
 
@@ -12,26 +11,25 @@ const langMapping = {
 };
 
 const LanguageDropdown = () => {
-  const [selectedLang, setSelectedLang] = useState("English");
+  const [selectedLang, setSelectedLang] = useState();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("language");
+    const savedLang = i18n.language;
     if (savedLang) {
       const langName = Object.keys(langMapping).find(key => langMapping[key] === savedLang);
-      setSelectedLang(langName || "English");
-      i18next.changeLanguage(savedLang);
+      setSelectedLang(langName);
     }
   }, []);
 
   const handleSelectLang = (langName) => {
     const langCode = langMapping[langName];
-    i18next.changeLanguage(langCode);
+    i18n.changeLanguage(langCode);
     setSelectedLang(langName);
-    localStorage.setItem("language", langCode);
   };
 
   return (
-    <Dropdown 
+    <Dropdown
       label={
         <div className="flex items-center space-x-1">
           <Globe size={18} className="text-gray-600" />
@@ -40,12 +38,12 @@ const LanguageDropdown = () => {
       }
       buttonClassName="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-gray-900 min-w-[90px]"
     >
+      {/* drop down links */}
       {Object.keys(langMapping).map((lang) => (
         <button
           key={lang}
-          className={`block w-full text-left px-4 py-2 text-sm ${
-            selectedLang === lang ? 'text-blue-500 bg-gray-50' : 'text-gray-700'
-          } hover:bg-gray-50`}
+          className={`block w-full text-left px-4 py-2 text-sm ${selectedLang === lang ? 'text-blue-500 bg-gray-50' : 'text-gray-700'
+            } hover:bg-gray-50`}
           role="menuitem"
           onClick={() => handleSelectLang(lang)}
         >

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
-import LanguageDropdown from '../Dropdown/Dropdown_Language';
+import LanguageDropdown from '../Dropdown/LanguageDropdown';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,9 +21,9 @@ const NavBar = () => {
             <NavLink href="/courses">Courses</NavLink>
             <NavLink href="/contact">Contact</NavLink>
             <NavLink href="/login" className="text-blue-500">Login</NavLink>
-            
+
             <div className="h-6 w-px bg-gray-300 self-center"></div>
-            
+
             <LanguageDropdown />
           </div>
 
