@@ -174,7 +174,7 @@ const StyleGuide = () => {
     const sectionStyle = `py-6 px-8`
 
     return (
-        <div className="py-6 h-full font-avenir">
+        <div className="py-6 h-full">
             <h1 className="px-8 text-4xl my-6 font-bold">Style Guide</h1>
             {/* color palette */}
             <section className={`${sectionStyle} bg-indigo-100`}>
@@ -218,6 +218,7 @@ const StyleGuide = () => {
                     ))}
                 </div>
             </section>
+            {/* icons */}
             <section className={`${sectionStyle}`}>
                 <h2 className={h2Style}>Icon pack: Ionicons 5</h2>
                 <a href="https://react-icons.github.io/react-icons/icons/io5/" className="text-blue-500 text-xl">Link to icons</a>
