@@ -219,3 +219,12 @@ app.get('/api/classes', async (req, res) => {
 
 // Levels
 // TODO (Fahim & Frank): Get the levels data from the database
+app.get("/api/levels", async (req, res)=>{
+  try{
+    const data = await Level.find();
+    console.log(data);
+    res.json(data);
+  }catch(err){
+    res.status(500).send(err);
+  }
+})
