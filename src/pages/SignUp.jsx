@@ -47,9 +47,9 @@ export default function SignUp() {
       <Form
         width={"w-2/5"}
       >
-        <h3 className="text-3xl"> Sign up </h3>
-        <p className="my-3 text-gray-500"> Already have an account?
-          <Link className="ml-1 font-bold text-blue-400" href="/login"> Log In</Link>
+        <h3 className="text-3xl">Sign up</h3>
+        <p className="my-3 text-gray-500">Already have an account?
+          <Link className="ml-1 font-bold text-blue-400" href="/login">Log In</Link>
         </p>
 
         {/* Form Values and the Borders */}

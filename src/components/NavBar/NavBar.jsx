@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
@@ -21,7 +21,7 @@ const NavBar = () => {
             <NavLink href="/about">About</NavLink>
             <NavLink href="/levels">Courses</NavLink>
             <NavLink href="/contact">Contact</NavLink>
-            <NavLink href="/login" className="text-blue-500">Login</NavLink>
+            <NavLink href="/signup">Sign Up</NavLink>
 
             <div className="h-6 w-px bg-gray-300 self-center"></div>
 
