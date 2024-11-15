@@ -12,7 +12,7 @@ const NavBar = () => {
     <div>
       <nav className="w-full fixed top-0 bg-white h-20 shadow-md ">
         {/* Navbar content */}
-        <div className='flex justify-between sm:px-8 px-3 h-full'>
+        <div className='flex justify-between items-center sm:px-8 px-3 h-full'>
           <Link href="/" className="flex-shrink-0 flex items-center">
             <img className="h-10 w-auto" src={dillarLogo} alt="Dillar English Academy" />
           </Link>
@@ -22,9 +22,8 @@ const NavBar = () => {
             <NavLink href="/levels">Courses</NavLink>
             <NavLink href="/contact">Contact</NavLink>
             <NavLink href="/signup">Sign Up</NavLink>
-
-            <div className="h-6 w-px bg-gray-300 self-center"></div>
-
+          </div>
+          <div className='hidden sm:inline'>
             <LanguageDropdown />
           </div>
           {/* Mobile menu button */}

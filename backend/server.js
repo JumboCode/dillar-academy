@@ -54,7 +54,8 @@ const validateInput = (input, allowedFields) => {
 
   for (const key in input) {
     if (allowedFields.includes(key)) {
-      filteredInput[key] = query[key]
+      // capitalize the value
+      filteredInput[key] = input[key].charAt(0).toUpperCase() + input[key].slice(1)
     }
   }
 
@@ -183,13 +184,11 @@ app.post('/api/login', async (req, res) => {
 // Get Users
 app.get('/api/users', async (req, res) => {
   try {
-    console.log("getting the users");
     const users = await User.find();
     return res.status(200).json(users);
   } catch (err) {
     res.status(500).send(err);
   }
-
 })
 
 // Contact
@@ -213,22 +212,26 @@ app.post('/api/contact', async (req, res) => {
 })
 
 // Classes
-// TODO (Donatello, Claire, Yi): Modify the endpoint to take in query params and filter classes with them
 app.get('/api/classes', async (req, res) => {
   try {
-    const data = await Class.find();
-    console.log(data);
+    const allowedFields = ['level', 'instructor', 'ageGroup'];
+    const filters = validateInput(req.query, allowedFields);
+
+    //apply the filters directly to the database query
+    const data = await Class.find(filters);
     res.json(data)
+
   } catch (err) {
     res.status(500).send(err);
   }
 })
 
 // Levels
-// TODO (Fahim & Frank): Get the levels data from the database
 app.get("/api/levels", async (req, res) => {
   try {
-    const data = await Level.find();
+    const allowedFields = ['level']
+    const filters = validateInput(req.query, allowedFields)
+    const data = await Level.find(filters);
     res.json(data);
   } catch (err) {
     res.status(500).send(err);

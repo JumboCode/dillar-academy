@@ -6,7 +6,7 @@
   "scripts": {
     "client": "vite",
     "server": "npm run dev --prefix backend",
-    "dev": "concurrently \"npm run client\" \"npm run server\"",
+    "dev": "concurrently \"npm run client\" \"npm run server\" \"npm i\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
