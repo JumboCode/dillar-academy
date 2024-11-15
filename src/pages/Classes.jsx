@@ -1,36 +1,47 @@
 import { useState, useEffect } from 'react';
+import { useSearch, useLocation } from 'wouter';
 import Class from '../components/Class';
+import { getClasses, getLevels } from '../api/class-wrapper';
 
 const Classes = () => {
-  const [classes, setClasses] = useState(null);
+  const [classes, setClasses] = useState([]);
+  const [level, setLevel] = useState()
+  const [loading, setLoading] = useState(true)
+  const queryString = useSearch()
+  const [location, setLocation] = useLocation()
+  const classFilter = new URLSearchParams(queryString)
 
   useEffect(() => {
-    const fetchClass = async () => {
-      const response = await fetch('http://localhost:5173/classes')
-      // if (!response.ok) {
-      //   throw new Error('Network response was not ok');
-      // }
-      const data = await response.json();
-      console.log(data);
-      setClasses(data);
+    // make sure level query exists otherwise redirect to level page
+    if (queryString === "") {
+      setLocation("/levels")
     }
-    fetchClass();
+
+    const fetchData = async () => {
+      setLoading(true)
+      // fetch classes
+      const classData = await getClasses(classFilter.toString())
+      setClasses(classData);
+      // fetch level
+      const levelData = await getLevels(classFilter.toString())
+      setLevel(levelData[0])
+      setLoading(false)
+    }
+    fetchData();
   }, []);
-  
+
+  if (loading || !level) {
+    return <></>
+  }
 
   return (
-    <div>
-      <h1>Open Classes</h1>
-      <div className='ClassList'>
-      {classes.map((classItem) =>(
-        <Class
-          key={classItem.id || 'na'} 
-          Level = {classItem.level}
-          Instructor = {classItem.instructor}
-          ageGroup= {classItem.ageGroup}
-          schedule= {classItem.schedule}
-        />
-      ))}
+    <div className='px-8 py-6'>
+      <h3>Level {level.level}</h3>
+      <h1 className='text-4xl font-bold'>{level.name}</h1>
+      <div className='flex gap-3 mt-4'>
+        {classes.map((classObj, classIndex) => (
+          <Class key={classIndex} classObj={classObj} />
+        ))}
       </div>
     </div>
   );
