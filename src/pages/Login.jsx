@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { postLogin } from "../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
@@ -17,6 +17,8 @@ export default function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const [, setLocation] = useLocation();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,6 +29,11 @@ export default function Login() {
         const message = await response.text();
         console.log(message);
         alert("Login successful!");
+        if (response.isAdmin === true) {
+          setLocation("/admin");
+        } else {
+          setLocation("/student");
+        }
       } else {
         const errorMessage = await response.text();
         console.error(errorMessage);
