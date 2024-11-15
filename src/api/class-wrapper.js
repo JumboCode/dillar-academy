@@ -11,6 +11,16 @@ const getClasses = async () => {
   }
 }
 
+const getLevels = async () => {
+  try {
+    const response = await axios.get(apiUrl("/api/levels"));
+    return response.data
+  } catch (error) {
+    console.error('Error fetching levels:', error);
+  }
+}
+
 export {
-  getClasses
+  getClasses,
+  getLevels
 }

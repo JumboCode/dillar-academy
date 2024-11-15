@@ -2,53 +2,31 @@ import { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
-import i18next from 'i18next';
-import Dropdown from '../Dropdown';
-
-const langMapping = {
-  English: "en",
-  Russian: "ru",
-  Chinese: "zh",
-  Turkish: "tr",
-};
+import LanguageDropdown from '../Dropdown/LanguageDropdown';
+import { IoMenuOutline } from "react-icons/io5";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedLang, setSelectedLang] = useState("English");
-
-  useEffect(() => {
-    const currentLang = localStorage.getItem("language") || i18next.language;
-    const currentLangName = Object.keys(langMapping).find(
-      (key) => langMapping[key] === currentLang
-    );
-    setSelectedLang(currentLangName || "English");
-  }, []);
-  
-  const handleSelectLang = (langName) => {
-    const langCode = langMapping[langName];
-    i18next.changeLanguage(langCode);
-    setSelectedLang(langName);
-    localStorage.setItem("language", langCode);
-  };
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo and brand name */}
+    <div>
+      <nav className="w-full fixed top-0 bg-white h-20 shadow-md ">
+        {/* Navbar content */}
+        <div className='flex justify-between sm:px-8 px-3 h-full'>
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <img className="h-8 w-auto" src={dillarLogo} alt="Dillar English Academy" />
+            <img className="h-10 w-auto" src={dillarLogo} alt="Dillar English Academy" />
           </Link>
-
           {/* Desktop navigation */}
           <div className="hidden sm:flex sm:items-center sm:space-x-4">
-            <NavLink href="/about" isMobile={false}>About</NavLink>
-            <NavLink href="/contact" isMobile={false}>Contact</NavLink>
-            <NavLink href="/classes" isMobile={false}>Classes</NavLink>
-            <NavLink href="/signup" isMobile={false}>Sign Up</NavLink>
-            <Dropdown selectedLang={selectedLang} onSelectLang={handleSelectLang} />
-          </div>
+            <NavLink href="/about">About</NavLink>
+            <NavLink href="/levels">Courses</NavLink>
+            <NavLink href="/contact">Contact</NavLink>
+            <NavLink href="/login" className="text-blue-500">Login</NavLink>
 
+            <div className="h-6 w-px bg-gray-300 self-center"></div>
+
+            <LanguageDropdown />
+          </div>
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -57,26 +35,20 @@ const NavBar = () => {
             aria-controls="mobile-menu"
           >
             <span className="sr-only">Open main menu</span>
-            <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <IoMenuOutline size={32} color='black' />
           </button>
         </div>
-      </div>
-
-      {/* Mobile menu */}
-      <div id="mobile-menu" className={`sm:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
-        <div className="pt-2 pb-3 space-y-1">
+        {/* Mobile menu */}
+        <div className={`sm:hidden w-full pb-3 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
           <NavLink href="/about" isMobile={true}>About</NavLink>
+          <NavLink href="/levels" isMobile={true}>Classes</NavLink>
           <NavLink href="/contact" isMobile={true}>Contact</NavLink>
-          <NavLink href="/classes" isMobile={true}>Classes</NavLink>
           <NavLink href="/signup" isMobile={true}>Sign Up</NavLink>
-          <Dropdown selectedLang={selectedLang} onSelectLang={handleSelectLang} />
+          <div className="h-2 mt-2 mx-3 border-t border-gray-200"></div>
+          <LanguageDropdown />
         </div>
-        <div className="pt-4 pb-3 border-t border-gray-200">
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 };
 

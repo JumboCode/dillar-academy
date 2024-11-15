@@ -103,11 +103,10 @@ const ClassSchema = new Schema({
 const Class = mongoose.model("Class", ClassSchema)
 
 // Level Schema
-const InstructorSchema = new Schema({ name: { type: String, required: true } })
 const LevelSchema = new Schema({
   level: { type: Number, required: true },
   name: { type: String, required: true },
-  instructors: { type: [InstructorSchema], required: true, default: [] },
+  instructors: { type: [String], required: true, default: [] },
 }, { collection: 'levels' })
 
 const Level = mongoose.model("Level", LevelSchema)
@@ -182,8 +181,16 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Get Users
-// TODO (Aryaa & Toki): Write an endpoint to retrieve all users from the database
+app.get('/api/users', async (req, res) => {
+  try {
+    console.log("getting the users");
+    const users = await User.find();
+    return res.status(200).json(users);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 
+})
 
 // Contact
 app.post('/api/contact', async (req, res) => {
@@ -219,12 +226,11 @@ app.get('/api/classes', async (req, res) => {
 
 // Levels
 // TODO (Fahim & Frank): Get the levels data from the database
-app.get("/api/levels", async (req, res)=>{
-  try{
+app.get("/api/levels", async (req, res) => {
+  try {
     const data = await Level.find();
-    console.log(data);
     res.json(data);
-  }catch(err){
+  } catch (err) {
     res.status(500).send(err);
   }
 })
