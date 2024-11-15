@@ -26,10 +26,10 @@ export default function Login() {
       const response = await postLogin(formData)
 
       if (response.ok) {
-        const message = await response.text();
-        console.log(message);
+        const data = await response.json();
+        console.log(data.message);
         alert("Login successful!");
-        if (response.isAdmin === true) {
+        if (data.isAdmin) {
           setLocation("/admin");
         } else {
           setLocation("/student");
