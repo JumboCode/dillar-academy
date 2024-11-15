@@ -3,12 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
-const mongoSanitize = require('express-mongo-sanitize');
+// const mongoSanitize = require('express-mongo-sanitize');
 
 const app = express()
 app.use(cors())
 app.use(express.json())
-app.use(mongoSanitize())
+// app.use(mongoSanitize())
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
@@ -209,9 +209,14 @@ app.post('/api/contact', async (req, res) => {
 // TODO (Donatello, Claire, Yi): Modify the endpoint to take in query params and filter classes with them
 app.get('/api/classes', async (req, res) => {
   try {
-    const data = await Class.find();
+    const allowedFields = ['level', 'instructor', 'title', 'ageGroup', 'schedule'];
+    const filters = validateInput(req.query, allowedFields);
+
+    //apply the filters directly to the database query
+    const data = await Class.find(filters);
     console.log(data);
     res.json(data)
+
   } catch (err) {
     res.status(500).send(err);
   }
