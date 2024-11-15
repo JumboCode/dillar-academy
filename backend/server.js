@@ -74,6 +74,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   isAdmin: { type: Boolean, required: true },
   username: { type: String, required: true },
+  enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
 }, { collection: 'users' })
 
 const User = mongoose.model("User", UserSchema)
@@ -99,6 +100,7 @@ const ClassSchema = new Schema({
   ageGroup: { type: String, required: true },
   instructor: { type: String, required: true },
   schedule: { type: [ScheduleSchema], required: true, default: [] },
+  roster: { type: [Schema.Types.ObjectId], default: [] }
 }, { collection: 'classes' })
 
 const Class = mongoose.model("Class", ClassSchema)
