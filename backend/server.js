@@ -79,6 +79,7 @@ const UserSchema = new Schema({
 
 const User = mongoose.model("User", UserSchema)
 
+
 // Contact Schema
 const ContactSchema = new Schema({
   name: { type: String, required: true },
@@ -89,11 +90,14 @@ const ContactSchema = new Schema({
 
 const Contact = mongoose.model('Contact', ContactSchema);
 
-// Class Schema
+
+// Schedule Schema
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
   time: { type: String, required: true },
 })
+
+// Class Schema
 const ClassSchema = new Schema({
   title: { type: String, required: true },
   level: { type: String, required: true },
@@ -104,6 +108,18 @@ const ClassSchema = new Schema({
 }, { collection: 'classes' })
 
 const Class = mongoose.model("Class", ClassSchema)
+
+
+// Conversation Schema
+const ConversationSchema = new Schema({
+  instructor: { type: String, required: true },
+  ageGroup: { type: String, required: true },
+  schedule: { type: [ScheduleSchema], required: true, default: [] },
+  roster: { type: [Schema.Types.ObjectId], default: [] }
+}, { collection: 'conversations' })
+
+const Conversation = mongoose.model("Conversation", ConversationSchema)
+
 
 // Level Schema
 const LevelSchema = new Schema({
@@ -193,7 +209,7 @@ app.get('/api/users', async (req, res) => {
   }
 })
 
-// Contact
+// Post Contact
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body
   try {
@@ -208,12 +224,11 @@ app.post('/api/contact', async (req, res) => {
     res.status(201).json({ message: 'Inquiry submitted successfully' })
   }
   catch (err) {
-    console.error('Error submitting inquiry:', err);
-    res.status(500).json({ message: 'Error submitting inquiry' })
+    res.status(500).json({ message: 'Error submitting inquiry' });
   }
 })
 
-// Classes
+// Get Classes
 app.get('/api/classes', async (req, res) => {
   try {
     const allowedFields = ['level', 'instructor', 'ageGroup'];
@@ -221,21 +236,30 @@ app.get('/api/classes', async (req, res) => {
 
     //apply the filters directly to the database query
     const data = await Class.find(filters);
-    res.json(data)
-
+    res.json(data);
   } catch (err) {
     res.status(500).send(err);
   }
 })
 
-// Levels
+// Get Levels
 app.get("/api/levels", async (req, res) => {
   try {
-    const allowedFields = ['level']
-    const filters = validateInput(req.query, allowedFields)
+    const allowedFields = ['level'];
+    const filters = validateInput(req.query, allowedFields);
     const data = await Level.find(filters);
     res.json(data);
   } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Get Conversation classes
+app.get("/api/conversations", async (req, res) => {
+  try {
+    const data = await Conversation.find();
+    res.status(200).json(data);
+  } catch (error) {
     res.status(500).send(err);
   }
 })
