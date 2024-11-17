@@ -44,7 +44,7 @@ export default function Login() {
         <Form width="w-2/5">
           <h1 className="text-2xl sm:text-3xl">Login</h1>
           <h3 className="text-sm sm:text-base text-slate-400 my-3">Don't have an account?
-            <Link href="/signup" className="ml-1 font-bold text-blue-400">Sign up</Link>
+            <Link href="/signup" className="ml-1 font-extrabold text-blue-400">Sign up</Link>
           </h3>
 
           <form method="POST"

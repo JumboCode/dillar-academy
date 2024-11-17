@@ -31,7 +31,7 @@ const Dropdown = ({ label, children, buttonClassName = "dropdown-button text-rig
         type="button"
       >
         {label}
-        <IoChevronDownOutline className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+        <IoChevronDownOutline className={`h-4 w-4 text-black transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       {/* dropdown */}
       {isOpen && (
