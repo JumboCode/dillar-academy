@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiUrl = (endpoint) => `${import.meta.env.VITE_API_URL}${endpoint}`
+const apiUrl = (endpoint) => `${endpoint}`
 
 // query should be a string
 const getClasses = async (query = "") => {
