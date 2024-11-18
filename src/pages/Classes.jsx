@@ -35,7 +35,7 @@ const Classes = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Banner Section */}
-      <div className="bg-gradient-to-br from-blue-50 to-blue-100 py-12">
+      <div className="bg-gradient-to-r from-[#FFFFFF] from-5% via-[#D3EDFC] via-35% via-[#B2A0FA] via-75% via-[#8AC7F4] to-[#3F96EA] py-12">
         <div className="max-w-7xl mx-auto px-8">
           <p className="text-lg text-dark-blue-700 mb-2">Level {level.level}</p>
           <h1 className='text-4xl font-bold text-dark-blue-800 mb-4'>{level.name}</h1>
@@ -72,7 +72,7 @@ const Classes = () => {
           <p className="text-neutral-600 mb-8">
             Here are the open classes in this level. More information will be given by the instructor after you sign up!
           </p>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
             {classes.map((classObj, classIndex) => (
               <Class key={classIndex} classObj={classObj} />
             ))}
@@ -89,7 +89,7 @@ const Classes = () => {
             {allLevels
               .filter(l => l.level !== level.level)
               .map((level, index) => (
-                <div key={index} className="bg-white rounded-lg border border-neutral-100 overflow-hidden hover:shadow-md transition-shadow">
+                <div key={index} className="bg-white shadow-level rounded-lg border border-neutral-100 overflow-hidden hover:shadow-md transition-shadow">
                   <div className="p-6">
                     <h3 className="text-lg font-semibold text-dark-blue-800 mb-2">Level {level.level}</h3>
                     <p className="text-neutral-600 text-sm mb-4">{level.description || "New Concept Book 1 -- Ch. 1-72"}</p>

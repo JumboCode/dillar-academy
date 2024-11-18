@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      boxShadow:{
+        'level': 'inset 0.5em 0em #A5D3E9',
+      },
       fontFamily: {
         avenir: ["Avenir", "sans-serif"],
       },
