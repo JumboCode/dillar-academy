@@ -3,6 +3,10 @@
     {
       "source": "/((?!api/)[^./]+)",
       "destination": "/"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
     }
   ],
   "headers": [
