@@ -43,8 +43,8 @@ const Levels = () => {
           {levels.map((level, levelIndex) => {
             params.set("level", level.level)
             return (
-              <Link href={`/classes?${params.toString()}`}>
-                <Level key={levelIndex} level={level} />
+              <Link key={levelIndex} href={`/classes?${params.toString()}`}>
+                <Level level={level} />
               </Link>
             )
           })}

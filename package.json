@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "client": "vite",
-    "server": "npm run dev --prefix backend",
+    "server": "npm run dev --prefix api",
     "dev": "concurrently \"npm run client\" \"npm run server\" \"npm i\"",
     "build": "vite build",
     "lint": "eslint .",
@@ -40,6 +40,6 @@
     "vite": "^5.4.9"
   },
   "workspaces": [
-    "backend"
+    "api"
   ]
 }
