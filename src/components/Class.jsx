@@ -1,4 +1,4 @@
-import Button from '@/components/Button'
+import EnrollButton from '@/components/EnrollButton'
 
 const Class = ({ classObj }) => {
     const ageGroup = classObj.ageGroup.toString()
@@ -9,7 +9,7 @@ const Class = ({ classObj }) => {
             {classObj.schedule.map((schedule, index) => (
                 <p key={index}>{schedule.day} {schedule.time}</p>
             ))}
-            <Button label={"Register"} />
+            <EnrollButton classId={classObj} />
         </div>
     )
 };

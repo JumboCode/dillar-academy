@@ -239,3 +239,20 @@ app.get("/api/levels", async (req, res) => {
     res.status(500).send(err);
   }
 })
+
+//Enroll in class
+app.put('/update/enroll', async (req, res) => {
+  const { classId } = req.body
+  const studentId = new ObjectId('671edb6d31e448b23d0dc384')
+  try {
+      await User.findByIdAndUpdate(
+        studentID,
+        {$addToSet: {enrolledClasses: classId}},
+        {new: true}
+      )
+      res.status(201).json({ message: 'Enrolled successfully!' })
+  } catch (error) {
+    console.error('Error enrolling into class:', err);
+    res.status(500).json({ message: 'Error enrolling into class' })
+  }
+})

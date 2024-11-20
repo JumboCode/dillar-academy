@@ -1,11 +1,18 @@
 import Button from '@/components/Button'
 import { useState } from 'react';
 
+const UnenrollButton = ({ userId, classId }) => {
+    const onClick = async () => {
+        await fetch('/api/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, classId }),
+        });
+    };
 
-const UnenrollButton = ({ classObj }) => {
-    return (
-        <Button label={"Unenroll"} onClick={onClick}></Button>
-    )
-}
+    return <Button label={"Unenroll"} onClick={onClick} />;
+};
 
-export {UnenrollButton};
+export default UnenrollButton;
