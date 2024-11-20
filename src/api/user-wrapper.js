@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-const apiUrl = (endpoint) => `${endpoint}`
-
 const postUser = async (body) => {
   try {
-    const response = await axios.post(apiUrl("/api/users"), body)
+    const response = await axios.post("/api/users", body)
     return response
   } catch (error) {
     throw error
@@ -13,7 +11,7 @@ const postUser = async (body) => {
 
 const postLogin = async (body) => {
   try {
-    const response = await fetch(apiUrl("/api/login"), {
+    const response = await fetch("/api/login", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

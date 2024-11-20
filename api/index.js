@@ -39,6 +39,7 @@ app.get('/', (req, res) => {
 });
 
 
+
 //------------------ HELPER FUNCTIONS ------------------//
 
 /*
@@ -61,6 +62,8 @@ const validateInput = (input, allowedFields) => {
 
   return filteredInput
 }
+
+
 
 //------------------ MONGOOSE SCHEMAS ------------------//
 
@@ -130,6 +133,8 @@ const LevelSchema = new Schema({
 
 const Level = mongoose.model("Level", LevelSchema)
 
+
+
 //------------------ ENDPOINTS ------------------//
 
 // Sign up
@@ -173,6 +178,7 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+
 // Login
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
@@ -199,6 +205,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+
 // Get Users
 app.get('/api/users', async (req, res) => {
   try {
@@ -208,6 +215,7 @@ app.get('/api/users', async (req, res) => {
     res.status(500).send(err);
   }
 })
+
 
 // Post Contact
 app.post('/api/contact', async (req, res) => {
@@ -228,6 +236,7 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
+
 // Get Classes
 app.get('/api/classes', async (req, res) => {
   try {
@@ -242,6 +251,7 @@ app.get('/api/classes', async (req, res) => {
   }
 })
 
+
 // Get Levels
 app.get("/api/levels", async (req, res) => {
   try {
@@ -253,6 +263,7 @@ app.get("/api/levels", async (req, res) => {
     res.status(500).send(err);
   }
 })
+
 
 // Get Conversation classes
 app.get("/api/conversations", async (req, res) => {

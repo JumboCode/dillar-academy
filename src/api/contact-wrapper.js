@@ -1,8 +1,7 @@
-const apiUrl = (endpoint) => `${endpoint}`
 
 const postContact = async (body) => {
   try {
-    const response = await fetch(apiUrl("/api/contact"), {
+    const response = await fetch("/api/contact", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
