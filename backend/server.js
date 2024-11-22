@@ -166,7 +166,7 @@ app.post('/api/login', async (req, res) => {
     if (user) {
       if (user.password === password) {
         console.log('Login successful for user:', username);
-        res.status(200).json({ message: 'Login successful', isAdmin: user.isAdmin });
+        res.status(200).json(user);
       } else {
         console.log('Login failed: Incorrect password.');
         res.status(401).send('Invalid password.');
@@ -227,3 +227,14 @@ app.get('/api/classes', async (req, res) => {
 
 // Levels
 // TODO (Fahim & Frank): Get the levels data from the database
+
+
+// app.get('/api/users', async (req, res) => {
+//     try {
+//       const data = await Class.find();
+//       console.log(data);
+//       res.json(data)
+//     } catch (err) {
+//       res.status(500).send(err);
+//     }
+//   })
