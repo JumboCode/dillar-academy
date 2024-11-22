@@ -21,6 +21,7 @@ const PageNotFound = () => {
                     </button>
                     <button className="p-2 px-5 " style={{
                         borderRadius: '10px',
+                        borderWidth: '1px',
                         borderColor: 'black'
                     }} onClick={
                         () => {
