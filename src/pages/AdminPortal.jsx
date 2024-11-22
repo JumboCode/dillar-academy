@@ -6,26 +6,19 @@ function AdminPortal() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const userData = await postLogin();
+            const userData = await postLogin('adminUser', 'adminPass');
             setData(userData);
-        }
+        };
         fetchData();
     }, []);
 
     return (
         <div>
-            <h1>admin:</h1>
-            <div className = "getData">
-                <ul>
-                    {data ? (
-                        data.map(user => (
-                            <li key={user.id}>{user.firstName}</li>
-                        ))
-                    ) : (
-                        <p>Loading...</p> // Show a loading state
-                    )}
-                </ul>
-            </div>
+            {data ? (
+                <h1>{data.firstName}</h1>
+            ) : (
+                <p>Loading...</p> // Show a loading state
+            ) }
         </div>
     );
 }

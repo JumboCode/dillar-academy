@@ -1,5 +1,6 @@
     import { useState, useEffect } from 'react';
     import { getUsers } from '../api/user-wrapper';
+    import axios from 'axios';
 
     function StudentPortal() {
         const [data, setData] = useState(null);
@@ -14,16 +15,13 @@
 
         return (
             <div>
-                <h1>Student:</h1>
-                <ul>
+               <div>
                     {data ? (
-                        data.map(user => (
-                            <li key={user.id}>{user.username}</li>
-                        ))
+                    <h1>user: {data.email}</h1>
                     ) : (
-                        <p>Loading...</p> // Show a loading state
-                    )}
-                </ul>
+                    <p>Loading...</p> // Show a loading state
+                    ) }
+                </div>
             </div>
         );
     }
