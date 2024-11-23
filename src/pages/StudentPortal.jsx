@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 
 const StudentPortal = () => {
-    const [location] = useLocation();
+    // const [location] = useLocation();
     const [user, setUser] = useState(null);
 
     useEffect(() => {
@@ -22,4 +22,4 @@ const StudentPortal = () => {
     );
 };
 
-export default StudentPortal
+export default StudentPortal;

@@ -1,10 +1,6 @@
-import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 
-const AdminPortal = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [, setLocation] = useLocation();
+const AdminView = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
@@ -24,4 +20,4 @@ const AdminPortal = () => {
     );
 };
 
-export default AdminPortal
+export default AdminView;

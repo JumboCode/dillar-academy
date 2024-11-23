@@ -19,7 +19,7 @@ const postLogin = async (body) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-    })
+    });
 
     return response
   } catch (error) {
