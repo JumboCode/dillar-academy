@@ -4,6 +4,7 @@ const StudentPortal = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        const params = new URLSearchParams(location.search);
         const user = {
           firstName: params.get('firstName'),
           lastName: params.get('lastName'),
