@@ -132,7 +132,7 @@ app.post('/api/users', async (req, res) => {
         return res.status(409).json({ message: 'Email already exists' });
       }
       if (existingUser.username === username) {
-        return res.status(409).json({ message: 'Username already exists' });
+        return res.status(409).json({ messagfe: 'Username already exists' });
       }
     }
 
@@ -166,7 +166,16 @@ app.post('/api/login', async (req, res) => {
     if (user) {
       if (user.password === password) {
         console.log('Login successful for user:', username);
-        res.status(200).json({ message: 'Login successful', isAdmin: user.isAdmin });
+        res.status(200).json({ 
+          message: 'Login successful', 
+          user: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            username: user.username
+          },
+      });
       } else {
         console.log('Login failed: Incorrect password.');
         res.status(401).send('Invalid password.');

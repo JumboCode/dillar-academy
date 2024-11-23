@@ -29,10 +29,11 @@ export default function Login() {
         const data = await response.json();
         console.log(data.message);
         alert("Login successful!");
-        if (data.isAdmin) {
-          setLocation("/admin");
+        const userQuery = `?firstName=${encodeURIComponent(data.user.firstName)}&lastName=${encodeURIComponent(data.user.lastName)}&username=${encodeURIComponent(data.user.username)}`;
+        if (data.user.isAdmin) {
+          setLocation(`/admin${userQuery}`);
         } else {
-          setLocation("/student");
+          setLocation(`/student${userQuery}`);
         }
       } else {
         const errorMessage = await response.text();
