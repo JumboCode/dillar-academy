@@ -31,8 +31,40 @@ const getConversations = async () => {
   }
 }
 
+const enrollInClass = async (classId, userId) => {
+  try {
+    const response = await fetch(`/api/users/${userId}/enroll`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ classId })
+    })
+    return response
+  } catch (error) {
+    console.error('Enroll endpoint put error:', error);
+  }
+}
+
+const unenrollInClass = async (classId, userId) => {
+  try {
+    const response = await fetch(`/api/users/${userId}/unenroll`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ classId })
+    })
+    return response
+  } catch (error) {
+    console.error('Enroll endpoint put error:', error);
+  }
+}
+
 export {
   getClasses,
   getLevels,
   getConversations,
+  enrollInClass,
+  unenrollInClass
 }
