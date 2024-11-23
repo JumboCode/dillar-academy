@@ -8,7 +8,7 @@ const Classes = () => {
   const [level, setLevel] = useState()
   const [loading, setLoading] = useState(true)
   const queryString = useSearch()
-  const [location, setLocation] = useLocation()
+  const [, setLocation] = useLocation()
   const classFilter = new URLSearchParams(queryString)
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Classes = () => {
   return (
     <div className='px-8 py-6'>
       <h3>Level {level.level}</h3>
-      <h1 className='text-4xl font-bold'>{level.name}</h1>
+      <h1 className='text-4xl font-extrabold'>{level.name}</h1>
       <div className='flex gap-3 mt-4'>
         {classes.map((classObj, classIndex) => (
           <Class key={classIndex} classObj={classObj} />

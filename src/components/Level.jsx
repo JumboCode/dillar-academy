@@ -1,28 +1,22 @@
-import { Link } from "wouter"
 
 const Level = ({ level, isSimplified }) => {
-  const params = new URLSearchParams()
-  params.set("level", level.level)
-
-  return (
-    <Link href={`/classes?${params.toString()}`} className="bg-white px-4 py-3 rounded-lg w-1/4 h-1/4 shadow-md">
-      {isSimplified ?
-        // TODO (Fahim & Tony): work on the simplified version of the Level component seen on the Class pages
-        <div></div>
-        :
+  return isSimplified ? (
+    // TODO (Fahim & Tony): work on the simplified version of the Level component seen on the Class pages
+    <div></div>
+  ) : (
+    <div className="w-full h-full rounded-2xl shadow-lg grid grid-rows-[2fr_3fr]">
+      <div className="bg-[url('/images/blue_mountains.png')] bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
+      <div className="bg-white px-6 py-5 row-start-2 rounded-b-2xl">
+        <h4 className='text-2xl font-semibold'>Level: {level.level}</h4>
+        <p className="">{level.name}</p>
         <div>
-          <h3 className='text-2xl font-semibold'>Level: {level.level}</h3>
-          <p>{level.name}</p>
-          <div>
-            <p>Instructors:</p>
-            {level.instructors.map((instructor, instructorIndex) => (
-              <p key={instructorIndex}>{instructor}</p>
-            ))}
-          </div>
+          <p>Instructors:</p>
+          {level.instructors.map((instructor, instructorIndex) => (
+            <p key={instructorIndex}>{instructor}</p>
+          ))}
         </div>
-      }
-
-    </Link>
+      </div>
+    </div>
   )
 }
 
