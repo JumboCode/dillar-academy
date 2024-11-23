@@ -240,19 +240,50 @@ app.get("/api/levels", async (req, res) => {
   }
 })
 
-//Enroll in class
-app.put('/update/enroll', async (req, res) => {
+// Enroll in a class
+app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
-  const studentId = new ObjectId('671edb6d31e448b23d0dc384')
+  const studentId = new mongoose.Types.ObjectId('671edb6d31e448b23d0dc384') // hardcode userId
   try {
+    // add class id to user's classes
       await User.findByIdAndUpdate(
-        studentID,
+        studentId,
         {$addToSet: {enrolledClasses: classId}},
         {new: true}
       )
+
+      // add student id to class's roster
+      await Class.findByIdAndUpdate(
+        classId,
+        {$addToSet: {roster: studentId}},
+        {new: true}
+      )
       res.status(201).json({ message: 'Enrolled successfully!' })
-  } catch (error) {
+  } catch (err) {
     console.error('Error enrolling into class:', err);
     res.status(500).json({ message: 'Error enrolling into class' })
+  }
+})
+
+// Unenroll in a class
+app.put('/api/users/:id/unenroll', async (req, res) => {
+  const { classId } = req.body
+  const studentId = new mongoose.Types.ObjectId('671edb6d31e448b23d0dc384') // hardcode userId
+  try {
+    // add class id to user's classes
+      await User.findByIdAndUpdate(
+        studentId,
+        {$pull: {enrolledClasses: classId}},
+      )
+
+      // add student id to class's roster
+      await Class.findByIdAndUpdate(
+        classId,
+        {$pull: {roster: studentId}},
+      )
+      res.status(201).json({ message: 'Unenrolled successfully!' })
+  } catch (err) {
+    console.error('Error unenrolling into class:', err);
+    res.status(500).json({ message: 'Error unenrolling into class' })
   }
 })
