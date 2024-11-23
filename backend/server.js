@@ -239,3 +239,33 @@ app.get("/api/levels", async (req, res) => {
     res.status(500).send(err);
   }
 })
+
+// Student's Classes
+app.get('/api/users-classes', async (req, res) => {
+  try {
+    const allowedFields = ['_id'];
+    const filters = validateInput(req.query, allowedFields);
+
+    //apply the filters directly to the database query
+    const data = await User.find(filters, {enrolledClasses:1, _id:0});
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// get classes by their IDs
+app.get('/api/classes-ID', async (req, res) => {
+  try {
+    const allowedFields = ['_id'];
+    const filters = validateInput(req.query, allowedFields);
+
+    //apply the filters directly to the database query
+    const data = await Class.find(filters);
+    res.json(data)
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
