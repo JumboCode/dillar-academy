@@ -11,7 +11,6 @@ import StudentPortal from '@/pages/StudentPortal'
 import AdminView from '@/pages/AdminView'
 import PageNotFound from '@/pages/PageNotFound'
 
-// TODO (John & Frank): add routes for Page Not Found and student and admin pages
 export default function PageRoutes() {
   return (
     <Switch>
