@@ -5,6 +5,7 @@ import Contact from '@/pages/Contact'
 import SignUp from '@/pages/SignUp'
 import Login from '@/pages/Login'
 import Classes from '@/pages/Classes'
+import Levels from '@/pages/Levels'
 import StyleGuide from "@/pages/StyleGuide";
 import StudentPortal from '@/pages/StudentPortal'
 import AdminView from '@/pages/AdminView'
@@ -19,6 +20,7 @@ export default function PageRoutes() {
       <Route path="/contact" component={Contact} />
       <Route path="/signup" component={SignUp} />
       <Route path="/login" component={Login} />
+      <Route path="/levels" component={Levels} />
       <Route path="/classes" component={Classes} />
       <Route path="/style" component={StyleGuide} />
       <Route path="/student" component={StudentPortal} />
