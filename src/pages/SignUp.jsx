@@ -51,7 +51,6 @@ export default function SignUp() {
         <p className="my-3 text-gray-500">Already have an account?
           <Link className="ml-1 font-extrabold text-blue-400" href="/login">Log In</Link>
         </p>
-
         {/* Form Values and the Borders */}
         <form method="POST" onSubmit={handleSubmit} className="space-y-3">
           <div className="flex space-y-3 sm:space-y-0 sm:space-x-3 sm:flex-row flex-col">

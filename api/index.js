@@ -180,11 +180,10 @@ app.post('/api/login', async (req, res) => {
   try {
     const user = await User.findOne({ username });
     console.log('Database query result:', user);
-
     if (user) {
       if (user.password === password) {
         console.log('Login successful for user:', username);
-        res.status(200).send('Login successful!');
+        res.status(200).json({ user });
       } else {
         console.log('Login failed: Incorrect password.');
         res.status(401).send('Invalid password.');
