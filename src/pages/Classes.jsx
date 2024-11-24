@@ -8,7 +8,7 @@ const Classes = () => {
   const [level, setLevel] = useState()
   const [loading, setLoading] = useState(true)
   const queryString = useSearch()
-  const [location, setLocation] = useLocation()
+  const [, setLocation] = useLocation()
   const classFilter = new URLSearchParams(queryString)
 
   useEffect(() => {

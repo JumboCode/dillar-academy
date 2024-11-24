@@ -1,4 +1,4 @@
-import Button from '@/components/Button'
+import EnrollButton from '@/components/Button/EnrollButton'
 
 const Class = ({ classObj }) => {
     const ageGroup = classObj.ageGroup.toString()
@@ -9,7 +9,19 @@ const Class = ({ classObj }) => {
             {classObj.schedule.map((schedule, index) => (
                 <p key={index}>{schedule.day} {schedule.time}</p>
             ))}
-            <Button label={"Register"} />
+            <div className='grid grid-cols-2 gap-3'>
+                <EnrollButton
+                    userId={null}
+                    classId={classObj._id}
+                    isEnroll={true}
+                />
+                <EnrollButton
+                    userId={null}
+                    classId={classObj._id}
+                    isEnroll={false}
+                />
+            </div>
+
         </div>
     )
 };

@@ -1,6 +1,6 @@
 
-import dummyBg from '../assets/dummy-bg.png';
-import Button from '../components/Button';
+import dummyBg from '@/assets/dummy-bg.png';
+import Button from '@/components/Button/Button';
 
 const sections = [
     {
