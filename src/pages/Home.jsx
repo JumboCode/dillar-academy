@@ -1,6 +1,6 @@
 
-import dummyBg from '../assets/dummy-bg.png';
-import Button from '../components/Button';
+import dummyBg from '@/assets/dummy-bg.png';
+import Button from '@/components/Button/Button';
 
 const sections = [
     {
@@ -28,7 +28,7 @@ const Home = () => {
         <>
             <div className="bg-sky-200 p-4 min-h-[60dvh] flex items-center">
                 <div className="text-center md:text-left mb-12 mt-12 px-5">
-                    <h1 className="text-4xl font-bold mb-2">Dillar Academy</h1>
+                    <h1 className="text-4xl font-extrabold mb-2">Dillar Academy</h1>
                     <p className="text-lg mb-4">Free English education for Uyghurs around the world.</p>
                     <div className="flex flex-col md:flex-row items-center">
                         <Button
@@ -45,7 +45,7 @@ const Home = () => {
                 </div>
             </div>
             <div className="bg-white p-4 mt-4">
-                <h1 className="text-4xl font-bold mb-10 text-center">How It Works</h1>
+                <h1 className="text-4xl font-extrabold mb-10 text-center">How It Works</h1>
                 {sections.map((section, index) => (
                     <div key={index} className={`flex flex-col md:flex-row items-center justify-evenly px-4 md:px-2 mb-4 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
                         <img src={section.imgSrc} alt={section.imgAlt} className="mb-4 md:mb-8 md:w-1/3 rounded-lg shadow-md" />

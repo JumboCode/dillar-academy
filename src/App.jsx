@@ -8,6 +8,7 @@ const App = () => {
     <>
       <div className='min-h-screen grid grid-rows-[5rem_1fr] font-avenir'>
         <NavBar />
+        <div className='hidden'></div>
         <div className='w-full'>
           <PageRoutes />
         </div>

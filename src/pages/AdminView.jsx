@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const StudentPortal = () => {
+const AdminView = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
@@ -15,9 +15,9 @@ const StudentPortal = () => {
 
     return (
         <div>
-            <h1>Student: {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}</h1>
+            <h1>Admin: {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}</h1>
         </div>
     );
 };
 
-export default StudentPortal;
+export default AdminView;

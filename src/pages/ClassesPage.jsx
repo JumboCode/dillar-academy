@@ -1,26 +1,28 @@
 import { useState, useEffect } from 'react';
-import { useSearch, useLocation } from 'wouter';
+import { useSearch, useLocation, Link } from 'wouter';
 import Class from '../components/Class';
 import Level from '../components/Level';
 import { getClasses, getLevels } from '../api/class-wrapper';
 
-const Classes = () => {
+const ClassesPage = () => {
   const [classes, setClasses] = useState([]);
   const [level, setLevel] = useState();
   const [allLevels, setAllLevels] = useState([]);
   const [loading, setLoading] = useState(true);
   const queryString = useSearch();
-  const [location, setLocation] = useLocation();
-  const classFilter = new URLSearchParams(queryString);
+  const [, setLocation] = useLocation();
+  console.log(queryString.toString())
 
   useEffect(() => {
-    if (queryString === "") {
+    if (queryString === "" || queryString.split("=")[1] === "") {
       setLocation("/levels");
     }
 
+    const classFilter = new URLSearchParams(queryString);
+
     const fetchData = async () => {
       setLoading(true);
-      const classData = await getClasses(classFilter.toString());
+      const classData = await getClasses(queryString.toString());
       setClasses(classData);
       const levelData = await getLevels();
       setAllLevels(levelData);
@@ -28,7 +30,7 @@ const Classes = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [queryString]);
 
   if (loading || !level) return <></>;
 
@@ -39,17 +41,17 @@ const Classes = () => {
         <div className="max-w-7xl mx-auto px-8">
           <p className="text-lg text-dark-blue-700 mb-2">Level {level.level}</p>
           <h1 className='text-4xl font-bold text-dark-blue-800 mb-4'>{level.name}</h1>
-          
+
           <div className="flex items-center gap-2 mb-6">
             <div className="flex -space-x-2">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-300 to-blue-400 border-2 border-white"></div>
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-200 to-blue-300 border-2 border-white"></div>
             </div>
-            <span className="text-neutral-400">{level.enrolledCount || 46} students enrolled</span>
+            <p className="text-neutral-400">{level.enrolledCount || 46} students enrolled</p>
           </div>
 
           <p className="text-neutral-600 max-w-2xl mb-8">
-            This class is for those with little to no experience in English. It will be going over 
+            This class is for those with little to no experience in English. It will be going over
             the alphabet, basic vocabulary, and simple grammar rules.
           </p>
 
@@ -88,9 +90,14 @@ const Classes = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {allLevels
               .filter(l => l.level !== level.level)
-              .map((level, index) => (
-               <Level key={index} level= {level} isSimplified={true}/>
-              ))}
+              .map((level, index) => {
+                const classFilter = new URLSearchParams({ level: level.level });
+                return (
+                  <Link key={index} href={`/classes?${classFilter.toString()}`}>
+                    <Level level={level} isSimplified={true} />
+                  </Link>
+                )
+              })}
           </div>
         </div>
       </div>
@@ -98,4 +105,4 @@ const Classes = () => {
   );
 };
 
-export default Classes;
+export default ClassesPage;

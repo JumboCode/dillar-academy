@@ -15,7 +15,7 @@ npm run client
 To run just server:
 ```
 npm run server  # in root folder
-npm run dev     # in backend folder
+npm run dev     # in api folder
 ```
 
 ## Git Commands Guide

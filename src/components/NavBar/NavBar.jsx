@@ -39,10 +39,10 @@ const NavBar = () => {
         </div>
         {/* Mobile menu */}
         <div className={`sm:hidden w-full pb-3 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <NavLink href="/about" isMobile={true}>About</NavLink>
           <NavLink href="/levels" isMobile={true}>Classes</NavLink>
           <NavLink href="/contact" isMobile={true}>Contact</NavLink>
-          <NavLink href="/signup" isMobile={true}>Sign Up</NavLink>
+          <NavLink href="/about" isMobile={true}>About</NavLink>
+          <NavLink href="/login" isMobile={true}>Login</NavLink>
           <div className="h-2 mt-2 mx-3 border-t border-gray-200"></div>
           <LanguageDropdown />
         </div>

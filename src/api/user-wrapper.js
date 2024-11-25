@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = (endpoint) => `${import.meta.env.VITE_API_URL}${endpoint}`
+const apiUrl = (endpoint) => `${endpoint}`
 
 const postUser = async (body) => {
   try {
@@ -19,7 +19,7 @@ const postLogin = async (body) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-    })
+    });
 
     return response
   } catch (error) {

@@ -79,6 +79,7 @@ const UserSchema = new Schema({
 
 const User = mongoose.model("User", UserSchema)
 
+
 // Contact Schema
 const ContactSchema = new Schema({
   name: { type: String, required: true },
@@ -89,11 +90,14 @@ const ContactSchema = new Schema({
 
 const Contact = mongoose.model('Contact', ContactSchema);
 
-// Class Schema
+
+// Schedule Schema
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
   time: { type: String, required: true },
 })
+
+// Class Schema
 const ClassSchema = new Schema({
   title: { type: String, required: true },
   level: { type: String, required: true },
@@ -104,6 +108,18 @@ const ClassSchema = new Schema({
 }, { collection: 'classes' })
 
 const Class = mongoose.model("Class", ClassSchema)
+
+
+// Conversation Schema
+const ConversationSchema = new Schema({
+  instructor: { type: String, required: true },
+  ageGroup: { type: String, required: true },
+  schedule: { type: [ScheduleSchema], required: true, default: [] },
+  roster: { type: [Schema.Types.ObjectId], default: [] }
+}, { collection: 'conversations' })
+
+const Conversation = mongoose.model("Conversation", ConversationSchema)
+
 
 // Level Schema
 const LevelSchema = new Schema({
@@ -164,11 +180,10 @@ app.post('/api/login', async (req, res) => {
   try {
     const user = await User.findOne({ username });
     console.log('Database query result:', user);
-
     if (user) {
       if (user.password === password) {
         console.log('Login successful for user:', username);
-        res.status(200).send('Login successful!');
+        res.status(200).json({ user });
       } else {
         console.log('Login failed: Incorrect password.');
         res.status(401).send('Invalid password.');
@@ -193,7 +208,7 @@ app.get('/api/users', async (req, res) => {
   }
 })
 
-// Contact
+// Post Contact
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body
   try {
@@ -208,12 +223,11 @@ app.post('/api/contact', async (req, res) => {
     res.status(201).json({ message: 'Inquiry submitted successfully' })
   }
   catch (err) {
-    console.error('Error submitting inquiry:', err);
-    res.status(500).json({ message: 'Error submitting inquiry' })
+    res.status(500).json({ message: 'Error submitting inquiry' });
   }
 })
 
-// Classes
+// Get Classes
 app.get('/api/classes', async (req, res) => {
   try {
     const allowedFields = ['level', 'instructor', 'ageGroup'];
@@ -221,21 +235,78 @@ app.get('/api/classes', async (req, res) => {
 
     //apply the filters directly to the database query
     const data = await Class.find(filters);
-    res.json(data)
-
+    res.json(data);
   } catch (err) {
     res.status(500).send(err);
   }
 })
 
-// Levels
+// Get Levels
 app.get("/api/levels", async (req, res) => {
   try {
-    const allowedFields = ['level']
-    const filters = validateInput(req.query, allowedFields)
+    const allowedFields = ['level'];
+    const filters = validateInput(req.query, allowedFields);
     const data = await Level.find(filters);
     res.json(data);
   } catch (err) {
     res.status(500).send(err);
+  }
+})
+
+// Get Conversation classes
+app.get("/api/conversations", async (req, res) => {
+  try {
+    const data = await Conversation.find();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).send(err);
+  }
+})
+
+// Enroll in a class
+app.put('/api/users/:id/enroll', async (req, res) => {
+  const { classId } = req.body
+  const studentId = new mongoose.Types.ObjectId('671edb6d31e448b23d0dc384') // hardcode userId
+  try {
+    // add class id to user's classes
+    await User.findByIdAndUpdate(
+      studentId,
+      { $addToSet: { enrolledClasses: classId } },
+      { new: true }
+    )
+
+    // add student id to class's roster
+    await Class.findByIdAndUpdate(
+      classId,
+      { $addToSet: { roster: studentId } },
+      { new: true }
+    )
+    res.status(201).json({ message: 'Enrolled successfully!' })
+  } catch (err) {
+    console.error('Error enrolling into class:', err);
+    res.status(500).json({ message: 'Error enrolling into class' })
+  }
+})
+
+// Unenroll in a class
+app.put('/api/users/:id/unenroll', async (req, res) => {
+  const { classId } = req.body
+  const studentId = new mongoose.Types.ObjectId('671edb6d31e448b23d0dc384') // hardcode userId
+  try {
+    // remove class id from user's classes
+    await User.findByIdAndUpdate(
+      studentId,
+      { $pull: { enrolledClasses: classId } },
+    )
+
+    // remove student id from class's roster
+    await Class.findByIdAndUpdate(
+      classId,
+      { $pull: { roster: studentId } },
+    )
+    res.status(201).json({ message: 'Unenrolled successfully!' })
+  } catch (err) {
+    console.error('Error unenrolling into class:', err);
+    res.status(500).json({ message: 'Error unenrolling into class' })
   }
 })
