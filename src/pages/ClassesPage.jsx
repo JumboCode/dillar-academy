@@ -35,7 +35,7 @@ const ClassesPage = () => {
   if (loading || !level) return <></>;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-full bg-white">
       {/* Banner Section */}
       <div className="bg-gradient-to-r from-[#FFFFFF] from-5% via-[#D3EDFC] via-35% via-[#B2A0FA] via-75% via-[#8AC7F4] to-[#3F96EA] py-12">
         <div className="max-w-7xl mx-auto px-8">
