@@ -1,34 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import Class from '../components/Class';
+import { useEffect, useState } from 'react';
+import Class from '@/components/Class';
+import { getClassById, getStudentClasses } from '@/api/class-wrapper';
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchData = async() => {
-      // fetch a specific user
-      const response = await fetch('http://localhost:4000/api/users-classes?_id=671edb6d31e448b23d0dc384');
-      const jsonData = await response.json(); 
+    const params = new URLSearchParams(location.search);
+    const user = {
+      firstName: params.get('firstName'),
+      lastName: params.get('lastName'),
+      username: params.get('username')
+    };
+    setUser(user);
 
-      const classDetails = await Promise.all(
-        jsonData.enrolledClasses.map(async (classID) => {
-          let url = 'http://localhost:4000/api/classes-ID?_id=' + classID;
-          const classResponse = await fetch(url);
-          return classResponse.json(); // Return the class details
+    // get classes for student
+    const fetchData = async () => {
+      // fetch a specific user
+      const response = await getStudentClasses("671edb6d31e448b23d0dc384");
+      const classes = await Promise.all(
+        response.enrolledClasses.map(async (classID) => {
+          const classResponse = await getClassById(classID);
+          return classResponse; // Return the class details
         })
       );
-
-      setClasses(classDetails);
+      setClasses(classes);
     };
 
     fetchData();
   }, []);
 
-  return(
-    <div>
-      {classes.map((classObj, classIndex) => (
-        <Class key={classIndex} classObj={classObj} />
-      ))}
+  return (
+    <div className='h-full'>
+      <h1>Student: {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}</h1>
+      <div className='grid grid-cols-3'>
+        {classes.map((classObj, classIndex) => (
+          <Class key={classIndex} classObj={classObj} />
+        ))}
+      </div>
     </div>
   );
 

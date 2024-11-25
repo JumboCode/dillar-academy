@@ -1,28 +1,37 @@
-import { Link } from "wouter"
 
 const Level = ({ level, isSimplified }) => {
-  const params = new URLSearchParams()
-  params.set("level", level.level)
+  const levelColorMapping = {
+    1: "shadow-[inset_0.5em_0_theme(colors.turquoise.200)]",
+    2: "shadow-[inset_0.5em_0_theme(colors.turquoise.300)]",
+    3: "shadow-[inset_0.5em_0_theme(colors.turquoise.500)]",
+    4: "shadow-[inset_0.5em_0_theme(colors.turquoise.700)]",
+    5: "shadow-[inset_0.5em_0_theme(colors.turquoise.800)]"
+  }
 
-  return (
-    <Link href={`/classes?${params.toString()}`} className="bg-white px-4 py-3 rounded-lg w-1/4 h-1/4 shadow-md">
-      {isSimplified ?
-        // TODO (Fahim & Tony): work on the simplified version of the Level component seen on the Class pages
-        <div></div>
-        :
+  return isSimplified ? (
+    <div className="shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-2xl">
+      <div className={`py-6 pl-7 bg-white ${levelColorMapping[level.level]} rounded-2xl overflow-hidden transition-shadow`}>
+        <h3 className="text-xl font-extrabold text-dark-blue-800 mb-1">Level {level.level}</h3>
+        <p className="text-neutral-600 text-sm mb-2">{level.description || "New Concept Book 1 -- Ch. 1-72"}</p>
+        <p className="text-blue-500 text-sm font-medium">
+          View Level →
+        </p>
+      </div>
+    </div>
+  ) : (
+    <div className="w-full h-full rounded-2xl shadow-shadow hover:shadow-shadow-hover transition-shadow grid grid-rows-[2fr_3fr]">
+      <div className="bg-[url('/images/blue_mountains.png')] bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
+      <div className="bg-white px-6 py-5 row-start-2 rounded-b-2xl">
+        <h4 className='text-2xl font-semibold'>Level: {level.level}</h4>
+        <p className="">{level.name}</p>
         <div>
-          <h3 className='text-2xl font-semibold'>Level: {level.level}</h3>
-          <p>{level.name}</p>
-          <div>
-            <p>Instructors:</p>
-            {level.instructors.map((instructor, instructorIndex) => (
-              <p key={instructorIndex}>{instructor}</p>
-            ))}
-          </div>
+          <p>Instructors:</p>
+          {level.instructors.map((instructor, instructorIndex) => (
+            <p key={instructorIndex}>{instructor}</p>
+          ))}
         </div>
-      }
-
-    </Link>
+      </div>
+    </div>
   )
 }
 
