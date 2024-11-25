@@ -6,7 +6,7 @@ const Class = ({ classObj }) => {
   const ageGroup = classObj.ageGroup.toString();
 
   return (
-    <div className="p-6 bg-white rounded-lg border border-neutral-100 overflow-hidden hover:shadow-md transition-shadow">
+    <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
       <div className="flex flex-col gap-4">
         {/* Header */}
         <div>

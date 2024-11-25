@@ -22,7 +22,7 @@ const ClassesPage = () => {
 
     const fetchData = async () => {
       setLoading(true);
-      const classData = await getClasses(queryString.toString());
+      const classData = await getClasses(classFilter.toString());
       setClasses(classData);
       const levelData = await getLevels();
       setAllLevels(levelData);

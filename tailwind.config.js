@@ -6,9 +6,6 @@ export default {
   ],
   theme: {
     extend: {
-      boxShadow:{
-        'level': 'inset 0.5em 0em #A5D3E9',
-      },
       fontFamily: {
         avenir: ["Avenir", "sans-serif"],
       },
@@ -51,8 +48,15 @@ export default {
           600: '#4C4B63',
           700: '#2A2A37',
         },
+      },
+      boxShadow: {
+        "shadow": "0 0.25rem 24px 0 rgba(76, 75, 99, 0.18)",
+        "shadow-hover": "0px 4px 16px 0px rgba(74, 73, 96, 30%), 0px 6px 36px 0px rgba(74, 73, 96, 16%)"
       }
     },
+  },
+  future: {
+    hoverOnlyWhenSupported: true,
   },
   plugins: [],
 }
