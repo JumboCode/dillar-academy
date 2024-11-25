@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearch, useLocation, Link } from 'wouter';
+import { useLocation, Link, useParams } from 'wouter';
 import Class from '../components/Class';
 import Level from '../components/Level';
 import { getClasses, getLevels } from '../api/class-wrapper';
@@ -9,16 +9,16 @@ const ClassesPage = () => {
   const [level, setLevel] = useState();
   const [allLevels, setAllLevels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const queryString = useSearch();
+  const params = useParams();
+  const levelNum = decodeURIComponent(params.id);
   const [, setLocation] = useLocation();
-  console.log(queryString.toString())
 
   useEffect(() => {
-    if (queryString === "" || queryString.split("=")[1] === "") {
+    if (params === "" || levelNum === "") {
       setLocation("/levels");
     }
 
-    const classFilter = new URLSearchParams(queryString);
+    const classFilter = new URLSearchParams(`level=${levelNum}`);
 
     const fetchData = async () => {
       setLoading(true);
@@ -30,7 +30,7 @@ const ClassesPage = () => {
       setLoading(false);
     };
     fetchData();
-  }, [queryString]);
+  }, [levelNum]);
 
   if (loading || !level) return <></>;
 
@@ -90,14 +90,11 @@ const ClassesPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {allLevels
               .filter(l => l.level !== level.level)
-              .map((level, index) => {
-                const classFilter = new URLSearchParams({ level: level.level });
-                return (
-                  <Link key={index} href={`/classes?${classFilter.toString()}`}>
-                    <Level level={level} isSimplified={true} />
-                  </Link>
-                )
-              })}
+              .map((level, index) => (
+                <Link key={index} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
+                  <Level level={level} isSimplified={true} />
+                </Link>
+              ))}
           </div>
         </div>
       </div>

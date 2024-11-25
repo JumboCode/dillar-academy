@@ -20,7 +20,7 @@ export default function PageRoutes() {
       <Route path="/signup" component={SignUp} />
       <Route path="/login" component={Login} />
       <Route path="/levels" component={LevelsPage} />
-      <Route path="/classes" component={ClassesPage} />
+      <Route path="/levels/:id/classes" component={ClassesPage} />
       <Route path="/style" component={StyleGuide} />
       <Route path="/student" component={StudentPortal} />
       <Route path="/admin" component={AdminView} />

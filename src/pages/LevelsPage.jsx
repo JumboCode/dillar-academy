@@ -8,7 +8,6 @@ import { Link } from "wouter"
 const LevelsPage = () => {
   const [levels, setLevels] = useState([]);
   const [conversations, setConversations] = useState([]);
-  const params = new URLSearchParams()
 
   // styles
   const h3Style = "text-3xl font-extrabold"
@@ -40,14 +39,11 @@ const LevelsPage = () => {
         <h3 className={h3Style}>Levels</h3>
         <p className={descriptionStyle}>Browse levels to determine which one is most suitable for you!</p>
         <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 flex flex-col`}>
-          {levels.map((level, levelIndex) => {
-            params.set("level", level.level)
-            return (
-              <Link key={levelIndex} href={`/classes?${params.toString()}`}>
-                <Level level={level} />
-              </Link>
-            )
-          })}
+          {levels.map((level, levelIndex) => (
+            <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
+              <Level level={level} />
+            </Link>
+          ))}
         </div>
       </section>
       <section className={sectionStyle}>
