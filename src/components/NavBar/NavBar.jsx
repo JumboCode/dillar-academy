@@ -18,10 +18,10 @@ const NavBar = () => {
           </Link>
           {/* Desktop navigation */}
           <div className="hidden sm:flex sm:items-center sm:space-x-4">
-            <NavLink href="/about">About</NavLink>
-            <NavLink href="/levels">Courses</NavLink>
+            <NavLink href="/levels">Classes</NavLink>
             <NavLink href="/contact">Contact</NavLink>
-            <NavLink href="/signup">Sign Up</NavLink>
+            <NavLink href="/about">About</NavLink>
+            <NavLink href="/login">Login</NavLink>
           </div>
           <div className='hidden sm:inline'>
             <LanguageDropdown />
