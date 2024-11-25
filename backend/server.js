@@ -228,6 +228,64 @@ app.get('/api/classes', async (req, res) => {
   }
 })
 
+// Create or Edit Class
+app.post('/api/classes', async (req, res) => {
+  try {
+    const { title, level, ageGroup, instructor, schedule } = req.body;
+
+    // Validate required fields
+    if (!title || !level || !ageGroup || !instructor || !schedule) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    // Check if class already exists by title (assuming title is unique)
+    const existingClass = await Class.findOne({ title });
+
+    if (existingClass) {
+      // If class exists, update it while preserving the roster
+      const updatedClass = await Class.findOneAndUpdate(
+        { title },
+        {
+          $set: {
+            level,
+            ageGroup,
+            instructor,
+            schedule
+          }
+        },
+        { 
+          new: true,  // Return the updated document
+          runValidators: true  // Run schema validators
+        }
+      );
+
+      return res.status(200).json({
+        message: 'Class updated successfully',
+        class: updatedClass
+      });
+    } else {
+      // If class doesn't exist, create a new one with empty roster
+      const newClass = new Class({
+        title,
+        level,
+        ageGroup,
+        instructor,
+        schedule,
+        roster: [] // Initialize with empty roster
+      });
+
+      await newClass.save();
+      return res.status(201).json({
+        message: 'Class created successfully',
+        class: newClass
+      });
+    }
+  } catch (error) {
+    console.error('Error creating/updating class:', error);
+    return res.status(500).json({ message: 'Error creating/updating class' });
+  }
+});
+
 // Levels
 app.get("/api/levels", async (req, res) => {
   try {

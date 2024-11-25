@@ -22,7 +22,19 @@ const getLevels = async (query) => {
   }
 }
 
+// classData should be an object containing title, level, ageGroup, instructor, and schedule
+const createOrUpdateClass = async (classData) => {
+  try {
+    const response = await axios.post(apiUrl('/api/classes'), classData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating/updating class:', error);
+    throw error;
+  }
+}
+
 export {
   getClasses,
-  getLevels
+  getLevels,
+  createOrUpdateClass
 }

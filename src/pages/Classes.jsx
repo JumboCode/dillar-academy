@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearch, useLocation } from 'wouter';
 import Class from '../components/Class';
 import Level from '../components/Level';
+import CreateClassForm from '../components/CreateClassForm';
 import { getClasses, getLevels } from '../api/class-wrapper';
 
 const Classes = () => {
@@ -66,6 +67,11 @@ const Classes = () => {
 
       {/* Content Section */}
       <div className="max-w-7xl mx-auto px-8 py-12">
+        {/* Create/Edit Class Form */}
+        <div className="mb-20">
+          <CreateClassForm />
+        </div>
+
         {/* Open Classes */}
         <div className="mb-20">
           <h2 className="text-2xl font-bold text-dark-blue-800 mb-4">Open Classes</h2>
