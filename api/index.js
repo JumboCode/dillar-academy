@@ -77,6 +77,8 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   isAdmin: { type: Boolean, required: true },
   username: { type: String, required: true },
+  clerkId: { type: String, required: true },
+  creationDate: { type: Date, default: Date.now },
   enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
 }, { collection: 'users' })
 
