@@ -139,6 +139,8 @@ const Level = mongoose.model("Level", LevelSchema)
 
 //------------------ ENDPOINTS ------------------//
 
+/* USER RELATED ENDPOINTS */
+
 // Sign up
 app.post('/api/users', async (req, res) => {
   try {
@@ -218,6 +220,8 @@ app.get('/api/users', async (req, res) => {
 })
 
 
+/* CONTACT RELATED ENDPOINTS */
+
 // Post Contact
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body
@@ -237,6 +241,8 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
+
+/* CLASS RELATED ENDPOINTS */
 
 // Get Classes
 app.get('/api/classes', async (req, res) => {
@@ -272,6 +278,36 @@ app.get("/api/conversations", async (req, res) => {
     const data = await Conversation.find();
     res.status(200).json(data);
   } catch (error) {
+    res.status(500).send(err);
+  }
+})
+
+// Get Student's classes
+app.get('/api/students-classes', async (req, res) => {
+  try {
+    const allowedFields = ['_id'];
+    const filters = validateInput(req.query, allowedFields);
+
+    //apply the filters directly to the database query
+    const data = await User.findOne(filters, { enrolledClasses: 1, _id: 0 });
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Get class by ID
+app.get('/api/class', async (req, res) => {
+  try {
+    const allowedFields = ['_id'];
+    const filters = validateInput(req.query, allowedFields);
+
+    //apply the filters directly to the database query
+    const data = await Class.findOne(filters);
+    res.json(data)
+
+  } catch (err) {
     res.status(500).send(err);
   }
 })

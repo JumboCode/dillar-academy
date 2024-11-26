@@ -59,10 +59,32 @@ const unenrollInClass = async (classId, userId) => {
   }
 }
 
+const getStudentClasses = async (studentId) => {
+  const queryString = new URLSearchParams(`_id=${studentId}`);
+  try {
+    const response = await axios.get(`/api/students-classes?${queryString.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching student's classes:", error);
+  }
+}
+
+const getClassById = async (classId) => {
+  const queryString = new URLSearchParams(`_id=${classId}`);
+  try {
+    const response = await axios.get(`/api/class?${queryString.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching class from id:", error);
+  }
+}
+
 export {
   getClasses,
   getLevels,
   getConversations,
   enrollInClass,
-  unenrollInClass
+  unenrollInClass,
+  getStudentClasses,
+  getClassById,
 }
