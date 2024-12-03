@@ -2,8 +2,6 @@ import { Link, useLocation } from 'wouter';
 
 const NavLink = ({ href, isMobile, children }) => {
   const [location] = useLocation();
-  console.log("location:", location)
-  console.log("href:", href)
 
   return (
     <Link

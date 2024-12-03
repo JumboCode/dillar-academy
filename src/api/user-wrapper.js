@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const postUser = async (body) => {
   try {
-    const response = await axios.post("/api/users", body)
+    console.log("body", body)
+    const response = await axios.post("/api/sign-up", body)
     return response
   } catch (error) {
     throw error

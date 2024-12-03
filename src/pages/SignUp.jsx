@@ -1,43 +1,67 @@
 import { useState } from "react";
-import { Link } from 'wouter'
+import { Link, useLocation } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
 import PasswordChecklist from "react-password-checklist"
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
 import FormSubmit from "../components/Form/FormSubmit";
+import { useSignUp } from '@clerk/clerk-react'
 
 export default function SignUp() {
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const [, setLocation] = useLocation();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     username: '',
     password: '',
-    retypedPassword: ''
+    retypedPassword: '',
   })
+  const [isValid, setIsValid] = useState(false);
+
+  if (!isLoaded) return;
+
   const handleChange = (e) => {
-    console.log(formData)
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const [isValid, setIsValid] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, password, retypedPassword } = formData
-    if (password != retypedPassword) {
-      alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
-    } else {
-      try {
-        const response = await postUser(formData)
+    if (!isLoaded) return;
+
+    try {
+      const { email, password } = formData;
+      // create Clerk user
+      const createUser = await signUp.create({
+        emailAddress: email,
+        password: password
+      });
+
+      // placeholder for possible account verification?
+
+      if (createUser.status === "complete") {
+        await setActive({ session: createUser.createdSessionId });
+        console.log(createUser.createdUserId);
+        const userData = { ...formData, clerkId: createUser.createdUserId };
+        console.log(userData)
+        const response = await postUser(userData);
         if (response.status === 201) {
-          alert('User created successfully!');
+          // alert('User created successfully!');
+          console.log('User created successfully!')
         }
-      } catch (error) {
-        if (error.response && error.response.status === 409) {
-          alert('User already exists.');
-        } else {
-          alert('An error occurred while creating the user.')
-        }
+        setLocation("/")
+      } else {
+        console.log("Failed to create Clerk user:", JSON.stringify(createUser, null, 2));
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        // alert('User already exists.');
+        console.log('User already exists.')
+      } else {
+        // alert('An error occurred while creating the user.')
+        console.log('An error occurred while creating the user', error)
       }
     }
   }

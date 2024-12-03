@@ -4,6 +4,7 @@ import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
 import LanguageDropdown from '../Dropdown/LanguageDropdown';
 import { IoMenuOutline } from "react-icons/io5";
+import { SignOutButton } from '@clerk/clerk-react';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,6 +23,7 @@ const NavBar = () => {
             <NavLink href="/contact">Contact</NavLink>
             <NavLink href="/about">About</NavLink>
             <NavLink href="/login">Login</NavLink>
+            <SignOutButton />
           </div>
           <div className='hidden sm:inline'>
             <LanguageDropdown />

@@ -18,7 +18,7 @@ const StudentPortal = () => {
     // get classes for student
     const fetchData = async () => {
       // fetch a specific user
-      const response = await getStudentClasses("671edb6d31e448b23d0dc384");
+      const response = await getStudentClasses("674f72531d7f25e7213721cd");
       const classes = await Promise.all(
         response.enrolledClasses.map(async (classID) => {
           const classResponse = await getClassById(classID);

@@ -142,9 +142,9 @@ const Level = mongoose.model("Level", LevelSchema)
 /* USER RELATED ENDPOINTS */
 
 // Sign up
-app.post('/api/users', async (req, res) => {
+app.post('/api/sign-up', async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password } = req.body;
+    const { firstName, lastName, username, email, password, clerkId } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({
@@ -170,7 +170,8 @@ app.post('/api/users', async (req, res) => {
       email,
       password,
       isAdmin: false,
-      username
+      username,
+      clerkId
     });
 
     await newUser.save();
@@ -315,7 +316,7 @@ app.get('/api/class', async (req, res) => {
 // Enroll in a class
 app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
-  const studentId = new mongoose.Types.ObjectId('671edb6d31e448b23d0dc384') // hardcode userId
+  const studentId = new mongoose.Types.ObjectId('674f72531d7f25e7213721cd') // hardcode userId
   try {
     // add class id to user's classes
     await User.findByIdAndUpdate(
@@ -340,7 +341,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 // Unenroll in a class
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
-  const studentId = new mongoose.Types.ObjectId('671edb6d31e448b23d0dc384') // hardcode userId
+  const studentId = new mongoose.Types.ObjectId('674f72531d7f25e7213721cd') // hardcode userId
   try {
     // remove class id from user's classes
     await User.findByIdAndUpdate(
