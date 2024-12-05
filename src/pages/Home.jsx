@@ -26,11 +26,13 @@ const sections = [
 const Home = () => {
     return (
         <>
-            <div className="bg-sky-200 p-4 min-h-[60dvh] flex items-center">
-                <div className="text-center md:text-left mb-12 mt-12 px-5">
-                    <h1 className="text-4xl font-extrabold mb-2">Dillar Academy</h1>
-                    <p className="text-lg mb-4">Free English education for Uyghurs around the world.</p>
-                    <div className="flex flex-col md:flex-row items-center">
+            <div className="bg-gradient-to-r from-white via-blue-1000 to-blue-900 p-4 min-h-[60dvh] flex items-center justify-center">
+                <div className="text-center md:text-left mb-12 mt-12 px-5 justify-items-center">
+                    <p className="text-2xl text-blue-600 mb-3">Stop Learning. Start Knowing.</p>
+                    <h1 className="text-5xl font-extrabold mb-6 ">Dillar English Academy</h1>
+                    <p className="text-lg">Free English education for Uyghurs around the world.</p>
+                    <p className="text-sm mb-4"><b>300+</b> students and growing!</p>
+                    <div className="flex flex-col md:flex-row items-center space-x-3">
                         <Button
                             label={"Start Learning"}
                             onClick={() => alert('Dummy button-1 clicked!')}
