@@ -214,7 +214,7 @@ app.get('/api/classes', async (req, res) => {
 
     //apply the filters directly to the database query
     const data = await Class.find(filters);
-    console.log(data);
+    console.log(data); 
     res.json(data)
 
   } catch (err) {
