@@ -18,8 +18,8 @@ const sections = [
     {
         imgSrc: dummyBg,
         imgAlt: "dummy-bg3",
-        title: "Start Learning!",
-        description: "Go to class and start learning English. You'll be fluent in no time!",
+        title: "Start Learning",
+        description: "Attend class and start learning right away!",
     },
 ];
 
@@ -47,17 +47,23 @@ const Home = () => {
                 </div>
             </div>
             <div className="bg-white p-4 mt-4">
-                <h1 className="text-4xl font-extrabold mb-10 text-center">How It Works</h1>
+                {/* <h1 className="text-4xl font-extrabold mb-10 text-center">How It Works</h1> */}
                 {sections.map((section, index) => (
                     <div key={index} className={`flex flex-col md:flex-row items-center justify-evenly px-4 md:px-2 mb-4 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
                         <img src={section.imgSrc} alt={section.imgAlt} className="mb-4 md:mb-8 md:w-1/3 rounded-lg shadow-md" />
                         <div className={`px-2 md:px-0 text-center md:text-left md:w-1/3`}>
-                            <h2 className="text-3xl font-semibold mb-5">{section.title}</h2>
-                            <p className="text-lg mb-4">{section.description}</p>
+                            <h2 className="text-4xl font-semibold mb-5">{section.title}</h2>
+                            <p className="text-2xl mb-4">{section.description}</p>
                         </div>
                     </div>
                 ))}
             </div>
+            <footer className="h-80 bg-dark-blue-800 text-white flex flex-col justify-center gap-y-5">
+                {/* is there a better way of doing this so that mx-20 isn't repeated 3 times? */}
+                <p className="text-4xl font-extrabold mx-20">Dillar English Academy</p>
+                <p className="text-lg mx-20">Email: dillarenglish@gmail.com</p>
+                <p className = "text-lg mx-20">Instagram: @dillaracademy</p>
+            </footer>
         </>
     );
 };
