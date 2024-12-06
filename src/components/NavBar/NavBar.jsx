@@ -4,9 +4,12 @@ import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
 import LanguageDropdown from '../Dropdown/LanguageDropdown';
 import { IoMenuOutline } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
+
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div>
