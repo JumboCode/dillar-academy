@@ -14,7 +14,7 @@ export default {
           100: '#ECF7FE',
           200: '#B7E2FB',
           300: '#87CEF8',
-          400: '#0F084B',
+          400: '#59BCF5',
           500: '#22A6F2',
           600: '#0D8ED8',
           700: '#0A6FA8',
@@ -48,8 +48,15 @@ export default {
           600: '#4C4B63',
           700: '#2A2A37',
         },
+      },
+      boxShadow: {
+        "shadow": "0 0.25rem 24px 0 rgba(76, 75, 99, 0.18)",
+        "shadow-hover": "0px 4px 16px 0px rgba(74, 73, 96, 30%), 0px 6px 36px 0px rgba(74, 73, 96, 16%)"
       }
     },
+  },
+  future: {
+    hoverOnlyWhenSupported: true,
   },
   plugins: [],
 }

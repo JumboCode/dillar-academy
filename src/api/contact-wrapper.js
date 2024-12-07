@@ -1,4 +1,4 @@
-const apiUrl = (endpoint) => `${import.meta.env.VITE_API_URL}${endpoint}`
+const apiUrl = (endpoint) => `${endpoint}`
 
 const postContact = async (body) => {
   try {

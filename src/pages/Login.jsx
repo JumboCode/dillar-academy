@@ -24,11 +24,9 @@ export default function Login() {
 
     try {
       const response = await postLogin(formData)
-
       if (response.ok) {
         const data = await response.json();
         console.log(data.message);
-        alert("Login successful!");
         const userQuery = `?firstName=${encodeURIComponent(data.user.firstName)}&lastName=${encodeURIComponent(data.user.lastName)}&username=${encodeURIComponent(data.user.username)}`;
         if (data.user.isAdmin) {
           setLocation(`/admin${userQuery}`);
@@ -52,9 +50,8 @@ export default function Login() {
         <Form width="w-2/5">
           <h1 className="text-2xl sm:text-3xl">Login</h1>
           <h3 className="text-sm sm:text-base text-slate-400 my-3">Don't have an account?
-            <Link href="/signup" className="text-blue-400"> Sign up</Link>
+            <Link href="/signup" className="ml-1 font-extrabold text-blue-400">Sign up</Link>
           </h3>
-
           <form method="POST"
             onSubmit={handleSubmit}
             className="space-y-3"
@@ -66,7 +63,6 @@ export default function Login() {
               onChange={handleChange}
               placeholder="Username"
               isRequired={true} />
-
             <FormInput
               type="password"
               name="password"
@@ -74,7 +70,6 @@ export default function Login() {
               onChange={handleChange}
               placeholder="Password"
               isRequired={true} />
-
             <FormSubmit label={"Login"} />
           </form>
         </Form>

@@ -12,19 +12,18 @@ const NavBar = () => {
     <div>
       <nav className="w-full fixed top-0 bg-white h-20 shadow-md ">
         {/* Navbar content */}
-        <div className='flex justify-between sm:px-8 px-3 h-full'>
+        <div className='flex justify-between items-center sm:px-8 px-3 h-full'>
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <img className="h-10 w-auto" src={dillarLogo} alt="Dillar English Academy" />
+            <img className="h-14 w-auto" src={dillarLogo} alt="Dillar English Academy" />
           </Link>
           {/* Desktop navigation */}
-          <div className="hidden sm:flex sm:items-center sm:space-x-4">
-            <NavLink href="/about">About</NavLink>
-            <NavLink href="/courses">Courses</NavLink>
+          <div className="hidden sm:flex sm:items-center lg:space-x-20 md:space-x-10">
+            <NavLink href="/levels">Classes</NavLink>
             <NavLink href="/contact">Contact</NavLink>
-            <NavLink href="/login" className="text-blue-500">Login</NavLink>
-
-            <div className="h-6 w-px bg-gray-300 self-center"></div>
-
+            <NavLink href="/about">About</NavLink>
+            <NavLink href="/login">Login</NavLink>
+          </div>
+          <div className='hidden sm:inline'>
             <LanguageDropdown />
           </div>
           {/* Mobile menu button */}
@@ -40,10 +39,10 @@ const NavBar = () => {
         </div>
         {/* Mobile menu */}
         <div className={`sm:hidden w-full pb-3 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <NavLink href="/about" isMobile={true}>About</NavLink>
+          <NavLink href="/levels" isMobile={true}>Classes</NavLink>
           <NavLink href="/contact" isMobile={true}>Contact</NavLink>
-          <NavLink href="/classes" isMobile={true}>Classes</NavLink>
-          <NavLink href="/signup" isMobile={true}>Sign Up</NavLink>
+          <NavLink href="/about" isMobile={true}>About</NavLink>
+          <NavLink href="/login" isMobile={true}>Login</NavLink>
           <div className="h-2 mt-2 mx-3 border-t border-gray-200"></div>
           <LanguageDropdown />
         </div>
