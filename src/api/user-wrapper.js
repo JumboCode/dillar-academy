@@ -37,6 +37,17 @@ const getUsers = async () => {
   }
 }
 
+//added 12/7
+const getUserPassword = async () => {
+  try {
+    const response = await fetch('http://localhost:4000/api/users/password')
+    const jsonData = await response.json() 
+    return jsonData
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
 export {
   postUser,
   postLogin,

@@ -1,6 +1,6 @@
 
 const FormInput = ({ type, name, placeholder, value, onChange, isRequired }) => {
-    const styles = "w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-500";
+    const styles = "w-full py-3 px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-500 placeholder:text-lg";
 
     return (
         type === "textarea" ?

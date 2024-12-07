@@ -40,11 +40,11 @@ export default function Login() {
 
   return (
     <>
-      <main className="bg-blue-200 h-full flex justify-center items-center">
-        <Form width="w-2/5">
-          <h1 className="text-2xl sm:text-3xl">Login</h1>
-          <h3 className="text-sm sm:text-base text-slate-400 my-3">Don't have an account?
-            <Link href="/signup" className="ml-1 font-extrabold text-blue-400">Sign up</Link>
+      <main className="bg-gradient-to-tr from-blue-100 to-blue-500 h-full flex justify-center items-center">
+        <Form width="w-1/3 h-3/5">
+          <h1 className="text-4xl font-semibold">Login</h1>
+          <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5">Don't have an account?
+            <Link href="/signup" className="ml-2 font-extrabold text-blue-500">Sign up</Link>
           </h3>
 
           <form method="POST"
@@ -66,6 +66,8 @@ export default function Login() {
               onChange={handleChange}
               placeholder="Password"
               isRequired={true} />
+
+            <p className="text-sm flex justify-end text-black opacity-50"><Link>Forgot password?</Link></p>
 
             <FormSubmit label={"Login"} />
           </form>
