@@ -3,7 +3,7 @@
 ## Issue ticket number and link
 
 ## Does your code meet the acceptance criteria?
-- [] Yes
+- [] Yes    # put an x in the brackets to checkmark!
 
 ## Testing done and screenshots (if relevant)
 
