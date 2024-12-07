@@ -1,6 +1,10 @@
 
 import dummyBg from '@/assets/dummy-bg.png';
 import Button from '@/components/Button/Button';
+import Level from '@/components/Level.jsx';
+import Class from '@/components/Class.jsx';
+import Confirmation from '@/components/Confirmation.jsx';
+import { useLocation } from 'wouter';
 
 const sections = [
     {
@@ -23,7 +27,41 @@ const sections = [
     },
 ];
 
+const class1 = {
+    level: "1",
+    ageGroup: "adults",
+    instructor: "Ehtibar",
+    schedule: [
+      {
+        day: "Saturday",
+        time: "10:00 AM CST"
+      },
+      {
+        day: "Sunday",
+        time: "10:00 AM CST"
+      }
+    ]
+};
+
+const class2 = {
+    level: "1",
+    ageGroup: "children",
+    instructor: "Subat",
+    schedule: [
+      {
+        day: "Saturday",
+        time: "11:00 AM CST"
+      },
+      {
+        day: "Sunday",
+        time: "11:00 AM CST"
+      }
+    ]
+  };
+
 const Home = () => {
+    const [, setLocation] = useLocation();
+
     return (
         <>
             <div className="bg-gradient-to-r from-white via-blue-1000 to-blue-900 p-4 min-h-[60dvh] flex items-center justify-center">
@@ -35,22 +73,45 @@ const Home = () => {
                     <div className="flex flex-col md:flex-row items-center space-x-3">
                         <Button
                             label={"Start Learning"}
-                            onClick={() => alert('Dummy button-1 clicked!')}
+                            onClick={() => setLocation("/signup")}
                             isOutline={false}
                         />
                         <Button
                             label={"Learn More"}
-                            onClick={() => alert('Dummy button-2 clicked!')}
+                            onClick={() => setLocation("/about")}
                             isOutline={true}
                         />
                     </div>
                 </div>
             </div>
+
             <div className="bg-white p-4 mt-4">
                 {/* <h1 className="text-4xl font-extrabold mb-10 text-center">How It Works</h1> */}
                 {sections.map((section, index) => (
                     <div key={index} className={`flex flex-col md:flex-row items-center justify-evenly px-4 md:px-2 mb-4 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-                        <img src={section.imgSrc} alt={section.imgAlt} className="mb-4 md:mb-8 md:w-1/3 rounded-lg shadow-md" />
+                    
+                        {section.title === "Choose your class level" && (
+                            <div className="flex flex-col items-center  md:flex-row space-x-4 md:w-2/3">
+                                <Level level="1" isSimplified={true} className="w-48 h-32 md:w-56 md:h-40"/>
+                                <Level level="2" isSimplified={true} className="w-48 h-32 md:w-56 md:h-40"/>
+                            </div>
+                        )}
+
+                        {section.title === "Find a time and instructor" && (
+                            <div className="flex flex-col items-center  md:flex-row space-x-4 md:w-2/3">
+                                <Class classObj={class1} className="w-48 h-32 md:w-56 md:h-40"/>
+                                <Class classObj={class2} className="w-48 h-32 md:w-56 md:h-40"/>
+                            </div>
+                        )}
+
+                        {/* could be slower with the if checks so we shouldn't do it like that */}
+                        {section.title === "Start Learning" && (
+                            <div className="flex flex-col items-center  md:flex-row space-x-4 md:w-2/3">
+                                <Confirmation classObj={class1} className="w-48 h-32 md:w-56 md:h-40"/>
+                            </div>
+                        )}  
+
+                        {/* <img src={section.imgSrc} alt={section.imgAlt} className="mb-4 md:mb-8 md:w-1/3 rounded-lg shadow-md" /> */}
                         <div className={`px-2 md:px-0 text-center md:text-left md:w-1/3`}>
                             <h2 className="text-4xl font-semibold mb-5">{section.title}</h2>
                             <p className="text-2xl mb-4">{section.description}</p>
