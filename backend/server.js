@@ -198,10 +198,6 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body
 
-  if (!name || !email || !subject || !message) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
-
   try {
     const newContact = new Contact({
       name,
