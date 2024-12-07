@@ -4,8 +4,10 @@ import { postContact } from '@/api/contact-wrapper';
 import Form from "@/components/Form/Form"
 import FormInput from '@/components/Form/FormInput';
 import FormSubmit from '@/components/Form/FormSubmit';
+import { useTranslation } from 'react-i18next';
 
 export default function Contact() {
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -20,19 +22,24 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const contactData = {
+      name: e.target.name.value,
+      email: e.target.email.value,
+      subject: e.target.subject.value,
+      message: e.target.message.value
+    };
     try {
-      const response = await postContact(formData)
+      const response = await postContact(contactData);
 
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
+      if (response.ok) {
+        alert("Message submitted successfully!");
+      } else {
+        const errorResponse = await response.json();
+        alert(`Failed to send message: ${errorResponse.message}`);
       }
-      const json = await response.json()
-      console.log(json)
-      alert("Inquiry submitted successfully!")
-
     } catch (err) {
-      console.error(error.message)
-      alert("There was an error submitting the inquiry.")
+      console.error('Error in handleSubmit:', err);
+      alert("There was an error submitting the inquiry.");
     }
   };
 
@@ -40,9 +47,9 @@ export default function Contact() {
   return (
     <div className="w-full h-full bg-white flex flex-col sm:flex-row justify-center items-center">
       <div className="sm:w-1/3 w-full p-8">
-        <h2 className="text-3xl font-semibold mb-6">CONTACT US</h2>
+        <h2 className="text-3xl font-semibold mb-6">{t("contact_heading")}</h2>
         <p className="mb-2 text-lg">
-          Email:
+          {t("email_field")}:
           <a href="mailto:dillarenglish@gmail.com" className="text-black">
             dillarenglish@gmail.com
           </a>
@@ -58,9 +65,9 @@ export default function Contact() {
       <div className="sm:w-2/3 w-full bg-blue-200 p-10 flex justify-center">
         {/* form box */}
         <Form width="w-3/5">
-          <h2 className="text-2xl font-semibold mb-2">Get in Touch</h2>
+          <h2 className="text-2xl font-semibold mb-2">{t("form_heading")}</h2>
           <p className="mb-4 text-gray-600 opacity-70">
-            Let us know if you have questions or concerns.
+            {t("form_description")}
           </p>
           <form
             onSubmit={handleSubmit}
@@ -69,7 +76,7 @@ export default function Contact() {
             <FormInput
               type="text"
               name="name"
-              placeholder="Name"
+              placeholder={t("name_field")}
               value={formData.name}
               onChange={handleChange}
               isRequired={true}
@@ -77,7 +84,7 @@ export default function Contact() {
             <FormInput
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder={t("email_field")}
               value={formData.email}
               onChange={handleChange}
               isRequired={true}
@@ -85,7 +92,7 @@ export default function Contact() {
             <FormInput
               type="text"
               name="subject"
-              placeholder="Subject"
+              placeholder={t("subject_field")}
               value={formData.subject}
               onChange={handleChange}
               isRequired={true}
@@ -93,12 +100,12 @@ export default function Contact() {
             <FormInput
               type="textarea"
               name="message"
-              placeholder="Message"
+              placeholder={t("message_field")}
               value={formData.message}
               onChange={handleChange}
               required
             />
-            <FormSubmit label={"Submit"} />
+            <FormSubmit label={t("submit_button")} />
           </form>
         </Form>
       </div>
