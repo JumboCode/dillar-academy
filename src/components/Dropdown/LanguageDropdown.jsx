@@ -10,9 +10,6 @@ const langMapping = {
   Türkçe: "tr",
 };
 
-
-
-
 const LanguageDropdown = () => {
   const [selectedLang, setSelectedLang] = useState();
   const { i18n } = useTranslation();
@@ -20,12 +17,10 @@ const LanguageDropdown = () => {
   useEffect(() => {
     const savedLang = i18n.language;
     if (savedLang) {
-      const langName = Object.keys(langMapping).find(key => langMapping[key] === savedLang); 
+      const langName = Object.keys(langMapping).find(key => langMapping[key] === savedLang);
       setSelectedLang(langName);
-      
     }
-    
-  }, [selectedLang]);
+  }, [i18n.language]);
 
   const handleSelectLang = (langName) => {
     const langCode = langMapping[langName];
