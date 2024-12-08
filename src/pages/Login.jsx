@@ -6,6 +6,7 @@ import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
 
 
+
 // TODO (Spencer & Claire): implement the Welcome page and check for if it should be displayed
 export default function Login() {
   const [formData, setFormData] = useState({
