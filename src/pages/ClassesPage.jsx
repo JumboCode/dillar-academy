@@ -38,27 +38,19 @@ const ClassesPage = () => {
     <div className="h-full bg-white">
       {/* Banner Section */}
       <div className="header-gradient py-28 px-14">
-        <p className="text-lg text-dark-blue-700 mb-2">Level {level.level}</p>
-        <h1 className='text-4xl font-bold text-dark-blue-800 mb-4'>{level.name}</h1>
+        <p className="text-2xl text-dark-blue-700 mb-2">Level {level.level}</p>
+        <h1 className='text-4xl font-bold text-dark-blue-800 mb-6'>{level.name}</h1>
 
-        <div className="flex items-center gap-2 mb-6">
-          <div className="flex -space-x-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-300 to-blue-400 border-2 border-white"></div>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-200 to-blue-300 border-2 border-white"></div>
-          </div>
-          <p className="text-neutral-400">{level.enrolledCount || 46} students enrolled</p>
-        </div>
-
-        <p className="text-neutral-600 max-w-2xl mb-8">
+        <p className="text-neutral-600 text-lg max-w-2xl mb-8">
           This class is for those with little to no experience in English. It will be going over
           the alphabet, basic vocabulary, and simple grammar rules.
         </p>
 
         <div className="flex gap-4">
-          <span className="px-6 py-2.5 bg-white rounded-full text-neutral-500 text-sm hover:bg-opacity-90 transition-colors">
+          <span className="px-6 py-2.5 bg-white rounded-full text-neutral-500 text-sm">
             Basic Conversations
           </span>
-          <span className="px-6 py-2.5 bg-white rounded-full text-neutral-500 text-sm hover:bg-opacity-90 transition-colors">
+          <span className="px-6 py-2.5 bg-white rounded-full text-neutral-500 text-sm">
             The Alphabet
           </span>
         </div>
