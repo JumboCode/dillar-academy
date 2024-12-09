@@ -1,8 +1,6 @@
 
 import dummyBg from '@/assets/dummy-bg.png';
 import Button from '@/components/Button/Button';
-import { useTranslation } from "react-i18next";
-
 
 const sections = [
     {

@@ -6,11 +6,9 @@ import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
 import { useTranslation } from "react-i18next";
 
-
-// TODO (Spencer & Claire): implement the Welcome page and check for if it should be displayed
 export default function Login() {
-    const { t } = useTranslation();
-    const [formData, setFormData] = useState({
+  const { t } = useTranslation();
+  const [formData, setFormData] = useState({
     username: '',
     password: '',
   })
