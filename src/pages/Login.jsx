@@ -67,7 +67,7 @@ export default function Login() {
               placeholder="Password"
               isRequired={true} />
 
-            <p className="text-sm flex justify-end text-black opacity-50"><Link>Forgot password?</Link></p>
+            <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgotpassword" >Forgot password?</Link></p>
 
             <FormSubmit label={"Login"} />
           </form>
