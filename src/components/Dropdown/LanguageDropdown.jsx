@@ -31,8 +31,8 @@ const LanguageDropdown = () => {
   return (
     <Dropdown
       label={
-        <div className="flex items-center justify-center space-x-1 w-full">
-          <IoGlobeOutline size={18} className="text-black" />
+        <div className="flex items-center justify-center space-x-1">
+          <IoGlobeOutline size={24} className="text-black" />
           <span className="text-center w-full">{selectedLang}</span>
         </div>
       }
@@ -43,8 +43,8 @@ const LanguageDropdown = () => {
         <button
           key={lang}
           className={`block w-full text-center px-4 py-2 text-sm ${selectedLang === lang
-              ? 'text-blue-500 bg-gray-50'
-              : 'text-gray-700'
+            ? 'text-blue-500 bg-gray-50'
+            : 'text-gray-700'
             } hover:bg-gray-50`}
           role="menuitem"
           onClick={() => handleSelectLang(lang)}

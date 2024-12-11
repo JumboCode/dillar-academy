@@ -6,7 +6,7 @@ const Welcome = ({ onComplete }) => {
     const [, setLocation] = useLocation();
 
     return (
-        <div className="bg-blue-200 p-4 h-full min-h-[60vh] flex items-center justify-center">
+        <div className="header-gradient p-4 h-screen flex items-center justify-center">
             <div className="text-center mb-12 mt-12 px-5">
                 <h1 className="text-6xl font-bold mb-4">Dillar Academy</h1>
                 <p className="mb-8 text-lg">Free English education for Uyghurs around the world.</p>
