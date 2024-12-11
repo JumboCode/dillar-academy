@@ -29,7 +29,7 @@ const postLogin = async (body) => {
 
 const getUsers = async () => {
   try {
-    const response = await fetch('http://localhost:4000/api/users')
+    const response = await fetch('/api/users')
     const jsonData = await response.json() // Converting data to json
     return jsonData
   } catch (error) {
@@ -40,8 +40,8 @@ const getUsers = async () => {
 //added 12/7
 const getUserPassword = async () => {
   try {
-    const response = await fetch('http://localhost:4000/api/users/password')
-    const jsonData = await response.json() 
+    const response = await fetch('/api/users/password')
+    const jsonData = await response.json()
     return jsonData
   } catch (error) {
     console.error('Error fetching user password:', error);

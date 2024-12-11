@@ -102,8 +102,6 @@ export default function SignUp() {
               onChange={(isValid) => setIsValid(isValid)}
             />
           </div>
-          <p className="text-xs flex justify-end text-black opacity-50"><Link href="/forgotpassword">Forgot password?</Link></p>
-          
           <FormSubmit label={"Sign Up"} isDisabled={!isValid} />
         </form>
       </Form>

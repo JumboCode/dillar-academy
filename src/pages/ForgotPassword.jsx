@@ -8,15 +8,13 @@ import FormSubmit from "../components/Form/FormSubmit";
 //Fetching first
 
 const getUserPassword = async () => {
-    try {
-      const response = await fetch('http://localhost:4000/api/users/password')
-      const jsonData = await response.json() // Converting data to json
-      return jsonData
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+  try {
+    const response = await getUserPassword();
+    return response;
+  } catch (error) {
+    console.error('Error fetching data:', error);
   }
-
+}
 
 //Updating the person's password property
 
@@ -52,7 +50,7 @@ export default function ForgotPassword() {
           alert("Reset failed: " + errorMessage);
         }
       } catch (error) {
-          alert('An error occurred while resetting the password.')
+        alert('An error occurred while resetting the password.')
       }
     }
   };
@@ -90,7 +88,7 @@ export default function ForgotPassword() {
               onChange={handleChange}
               placeholder="Retype New Password"
               isRequired={true} />
-           
+
             <div className="mt-2">
               <PasswordChecklist
                 rules={[
@@ -105,9 +103,9 @@ export default function ForgotPassword() {
                 valueAgain={formData.retypedPassword}
                 onChange={(isValid) => setIsValid(isValid)}
               />
-          </div>            
+            </div>
 
-            <FormSubmit label={"Reset Password"} isDisabled={!isValid}/>
+            <FormSubmit label={"Reset Password"} isDisabled={!isValid} />
           </form>
         </Form>
       </main>
