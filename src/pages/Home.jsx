@@ -45,7 +45,7 @@ const Home = () => {
 
     return (
         <>
-            <div className="bg-gradient-to-r from-white via-blue-1000 to-blue-900 p-4 min-h-[60dvh] flex items-center justify-center">
+            <div className="header-gradient p-4 min-h-[60dvh] flex items-center justify-center">
                 <div className="text-center md:text-left mb-12 mt-12 px-5 justify-items-center">
                     <p className="text-2xl text-blue-600 mb-3">{t("home_motto")}</p>
                     <h1 className="text-5xl font-extrabold mb-6">{t("home_title")}</h1>
