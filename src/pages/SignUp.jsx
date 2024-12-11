@@ -49,30 +49,12 @@ export default function SignUp() {
         width={"w-2/5"}
       >
         <h3 className="text-4xl font-semibold">Sign up</h3>
-        <p className="my-3 text-gray-500">Already have an account?
+        <p className="mt-3 mb-5 text-gray-500">Already have an account?
           <Link className="ml-2 font-extrabold text-blue-500" href="/login">Log In</Link>
         </p>
 
         {/* Form Values and the Borders */}
         <form method="POST" onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex space-y-3 sm:space-y-0 sm:space-x-3 sm:flex-row flex-col">
-            <FormInput
-              isRequired={true}
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              placeholder="First Name"
-              onChange={handleChange}
-            />
-            <FormInput
-              isRequired={true}
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              placeholder="Last Name"
-              onChange={handleChange}
-            />
-          </div>
           <FormInput
             isRequired={true}
             type="text"
