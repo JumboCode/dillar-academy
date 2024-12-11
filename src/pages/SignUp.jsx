@@ -45,13 +45,13 @@ export default function SignUp() {
   }
 
   return (
-    <div className='bg-blue-200 h-full py-8 flex items-center justify-center'>
+    <div className='header-gradient h-full py-8 flex items-center justify-center'>
       <Form
         width={"w-2/5"}
       >
-        <h3 className="text-3xl">{t("sign_up_text")}</h3>
-        <p className="my-3 text-gray-500">{t("sign_up_login1")}
-          <Link className="ml-1 font-extrabold text-blue-400" href="/login">{t("sign_up_text")}</Link>
+        <h3 className="text-4xl font-semibold">{t("sign_up_text")}</h3>
+        <p className="mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
+          <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("sign_up_text")}</Link>
         </p>
         {/* Form Values and the Borders */}
         <form method="POST" onSubmit={handleSubmit} className="space-y-3">

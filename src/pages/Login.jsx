@@ -46,11 +46,11 @@ export default function Login() {
 
   return (
     <>
-      <main className="bg-blue-200 h-full flex justify-center items-center">
+      <main className="header-gradient h-full flex justify-center items-center">
         <Form width="w-2/5">
-          <h1 className="text-2xl sm:text-3xl">{t("sign_up_login2")}</h1>
-          <h3 className="text-sm sm:text-base text-slate-400 my-3">{t("login_signup1")}
-            <Link href="/signup" className="ml-1 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
+          <h1 className="text-4xl font-semibold sm:text-3xl">{t("sign_up_login2")}</h1>
+          <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
+            <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
           </h3>
           <form method="POST"
             onSubmit={handleSubmit}
@@ -70,10 +70,11 @@ export default function Login() {
               onChange={handleChange}
               placeholder={t("password_field")}
               isRequired={true} />
+            <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgotpassword" >Forgot password?</Link></p>
             <FormSubmit label={t("sign_up_login2")} />
-          </form>
-        </Form>
-      </main>
+          </form >
+        </Form >
+      </main >
     </>
   )
 }
