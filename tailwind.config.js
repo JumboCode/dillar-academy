@@ -19,6 +19,8 @@ export default {
           600: '#0D8ED8',
           700: '#0A6FA8',
           800: '#074F78',
+          900: '#3F96EA',
+          1000: '#B2E0FA',
         },
         "dark-blue": {
           100: '#EEEDFD',
