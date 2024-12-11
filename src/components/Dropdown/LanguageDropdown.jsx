@@ -20,7 +20,7 @@ const LanguageDropdown = () => {
       const langName = Object.keys(langMapping).find(key => langMapping[key] === savedLang);
       setSelectedLang(langName);
     }
-  }, []);
+  }, [i18n.language]);
 
   const handleSelectLang = (langName) => {
     const langCode = langMapping[langName];

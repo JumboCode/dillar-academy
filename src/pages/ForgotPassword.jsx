@@ -57,7 +57,7 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <main className="bg-gradient-to-tr from-blue-100 to-blue-500 h-full flex justify-center items-center">
+      <main className="header-gradient h-full flex justify-center items-center">
         <Form width="w-2/5">
           <h1 className="text-4xl font-semibold my-3">Forgot Your Password?</h1>
 

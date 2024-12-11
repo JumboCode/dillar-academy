@@ -19,6 +19,8 @@ export default {
           600: '#0D8ED8',
           700: '#0A6FA8',
           800: '#074F78',
+          900: '#3F96EA',
+          1000: '#B2E0FA',
         },
         "dark-blue": {
           100: '#EEEDFD',
@@ -48,8 +50,15 @@ export default {
           600: '#4C4B63',
           700: '#2A2A37',
         },
+      },
+      boxShadow: {
+        "shadow": "0 0.25rem 24px 0 rgba(76, 75, 99, 0.18)",
+        "shadow-hover": "0px 4px 16px 0px rgba(74, 73, 96, 30%), 0px 6px 36px 0px rgba(74, 73, 96, 16%)"
       }
     },
+  },
+  future: {
+    hoverOnlyWhenSupported: true,
   },
   plugins: [],
 }

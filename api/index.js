@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
 const mongoSanitize = require('express-mongo-sanitize');
+const nodemailer = require('nodemailer');
 
 const app = express()
 app.use(cors())
@@ -132,6 +133,8 @@ const Level = mongoose.model("Level", LevelSchema)
 
 //------------------ ENDPOINTS ------------------//
 
+/* USER RELATED ENDPOINTS */
+
 // Sign up
 app.post('/api/users', async (req, res) => {
   try {
@@ -180,11 +183,10 @@ app.post('/api/login', async (req, res) => {
   try {
     const user = await User.findOne({ username });
     console.log('Database query result:', user);
-
     if (user) {
       if (user.password === password) {
         console.log('Login successful for user:', username);
-        res.status(200).send('Login successful!');
+        res.status(200).json({ user });
       } else {
         console.log('Login failed: Incorrect password.');
         res.status(401).send('Invalid password.');
@@ -209,24 +211,65 @@ app.get('/api/users', async (req, res) => {
   }
 })
 
+
+/* CONTACT RELATED ENDPOINTS */
+
 // Post Contact
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body
+
   try {
     const newContact = new Contact({
       name,
       email,
       subject,
       message
-    })
-    await newContact.save()
+    });
+    await newContact.save();
 
-    res.status(201).json({ message: 'Inquiry submitted successfully' })
+    // Nodemailer setup
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.ADMIN_EMAIL,
+        pass: process.env.ADMIN_PASSWORD,
+      },
+    });
+
+    transporter.verify((error, success) => {
+      if (error) {
+        console.error('Error initializing transporter:', error);
+      } else {
+        console.log('Transporter is ready to send emails', success);
+      }
+    });
+
+
+    const mailOptions = {
+      from: email,
+      to: process.env.ADMIN_EMAIL,
+      subject: `Contact Form: ${subject}`,
+      html: `
+        <p><strong>From:</strong> ${name} (${email})</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).json({ message: 'Inquiry and email submitted successfully' });
   }
   catch (err) {
-    res.status(500).json({ message: 'Error submitting inquiry' });
+    console.error('Error submitting inquiry:', err);
+    res.status(500).json({ message: 'Error submitting inquiry', error: err.message });
   }
-})
+});
+
+
+/* CLASS RELATED ENDPOINTS */
 
 // Get Classes
 app.get('/api/classes', async (req, res) => {
@@ -263,6 +306,89 @@ app.get("/api/conversations", async (req, res) => {
     res.status(500).send(err);
   }
 })
+
+// Get Student's classes
+app.get('/api/students-classes', async (req, res) => {
+  try {
+    const allowedFields = ['_id'];
+    const filters = validateInput(req.query, allowedFields);
+
+    //apply the filters directly to the database query
+    const data = await User.findOne(filters, { enrolledClasses: 1, _id: 0 });
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Get class by ID
+app.get('/api/class', async (req, res) => {
+  try {
+    const allowedFields = ['_id'];
+    const filters = validateInput(req.query, allowedFields);
+
+    //apply the filters directly to the database query
+    const data = await Class.findOne(filters);
+    res.json(data)
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Create or Edit Class
+app.post('/api/classes', async (req, res) => {
+  try {
+    const { title, level, ageGroup, instructor, schedule } = req.body;
+
+    // Check if class already exists by title (assuming title is unique)
+    const existingClass = await Class.findOne({ title });
+
+    if (existingClass) {
+      // If class exists, update it while preserving the roster
+      const updatedClass = await Class.findByIdAndUpdate(
+        existingClass._id,
+        {
+          $set: {
+            title,
+            level,
+            ageGroup,
+            instructor,
+            schedule
+          }
+        },
+        {
+          new: true,  // Return the updated document
+          runValidators: true  // Run schema validators
+        }
+      );
+
+      return res.status(200).json({
+        message: 'Class updated successfully',
+        class: updatedClass
+      });
+    } else {
+      // If class doesn't exist, create a new one with empty roster
+      const newClass = new Class({
+        title,
+        level,
+        ageGroup,
+        instructor,
+        schedule,
+      });
+
+      await newClass.save();
+      return res.status(201).json({
+        message: 'Class created successfully',
+        class: newClass
+      });
+    }
+  } catch (error) {
+    console.error('Error creating/updating class:', error);
+    return res.status(500).json({ message: 'Error creating/updating class' });
+  }
+});
 
 // Enroll in a class
 app.put('/api/users/:id/enroll', async (req, res) => {

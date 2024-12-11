@@ -1,11 +1,9 @@
 import axios from 'axios'
 
-const apiUrl = (endpoint) => `${endpoint}`
-
 // query should be a string
 const getClasses = async (query = "") => {
   try {
-    const response = await axios.get(apiUrl(`/api/classes?${query}`))
+    const response = await axios.get(`/api/classes?${query}`)
     return response.data
   } catch (error) {
     console.error('Error fetching courses:', error)
@@ -15,16 +13,27 @@ const getClasses = async (query = "") => {
 // query should be a string
 const getLevels = async (query = "") => {
   try {
-    const response = await axios.get(apiUrl(`/api/levels?${query}`));
+    const response = await axios.get(`/api/levels?${query}`);
     return response.data
   } catch (error) {
     console.error('Error fetching levels:', error);
   }
 }
 
+// classData should be an object containing title, level, ageGroup, instructor, and schedule
+const createOrUpdateClass = async (classData) => {
+  try {
+    const response = await axios.post(apiUrl('/api/classes'), classData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating/updating class:', error);
+    throw error;
+  }
+}
+
 const getConversations = async () => {
   try {
-    const response = await axios.get(apiUrl("/api/conversations/"))
+    const response = await axios.get("/api/conversations/")
     return response.data
   } catch (error) {
     console.error('Error fetching conversations:', error)
@@ -61,10 +70,33 @@ const unenrollInClass = async (classId, userId) => {
   }
 }
 
+const getStudentClasses = async (studentId) => {
+  const queryString = new URLSearchParams(`_id=${studentId}`);
+  try {
+    const response = await axios.get(`/api/students-classes?${queryString.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching student's classes:", error);
+  }
+}
+
+const getClassById = async (classId) => {
+  const queryString = new URLSearchParams(`_id=${classId}`);
+  try {
+    const response = await axios.get(`/api/class?${queryString.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching class from id:", error);
+  }
+}
+
 export {
   getClasses,
   getLevels,
+  createOrUpdateClass,
   getConversations,
   enrollInClass,
-  unenrollInClass
+  unenrollInClass,
+  getStudentClasses,
+  getClassById,
 }
