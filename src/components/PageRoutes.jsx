@@ -4,11 +4,13 @@ import About from '@/pages/About'
 import Contact from '@/pages/Contact'
 import SignUp from '@/pages/SignUp'
 import Login from '@/pages/Login'
-import Classes from '@/pages/Classes'
-import Levels from '@/pages/Levels'
+import ClassesPage from '@/pages/ClassesPage'
+import LevelsPage from '@/pages/LevelsPage'
 import StyleGuide from "@/pages/StyleGuide";
+import StudentPortal from '@/pages/StudentPortal'
+import AdminView from '@/pages/AdminView'
+import PageNotFound from '@/pages/PageNotFound'
 
-// TODO (John & Frank): add routes for Page Not Found and student and admin pages
 export default function PageRoutes() {
   return (
     <Switch>
@@ -17,9 +19,12 @@ export default function PageRoutes() {
       <Route path="/contact" component={Contact} />
       <Route path="/signup" component={SignUp} />
       <Route path="/login" component={Login} />
-      <Route path="/levels" component={Levels} />
-      <Route path="/classes" component={Classes} />
+      <Route path="/levels" component={LevelsPage} />
+      <Route path="/levels/:id/classes" component={ClassesPage} />
       <Route path="/style" component={StyleGuide} />
+      <Route path="/student" component={StudentPortal} />
+      <Route path="/admin" component={AdminView} />
+      <Route component={PageNotFound} />
     </Switch>
   );
 };

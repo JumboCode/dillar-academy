@@ -20,7 +20,7 @@ const LanguageDropdown = () => {
       const langName = Object.keys(langMapping).find(key => langMapping[key] === savedLang);
       setSelectedLang(langName);
     }
-  }, []);
+  }, [i18n.language]);
 
   const handleSelectLang = (langName) => {
     const langCode = langMapping[langName];
@@ -32,11 +32,11 @@ const LanguageDropdown = () => {
     <Dropdown
       label={
         <div className="flex items-center space-x-1">
-          <IoGlobeOutline size={18} className="text-gray-600" />
+          <IoGlobeOutline size={18} className="text-black" />
           <span>{selectedLang}</span>
         </div>
       }
-      buttonClassName="flex items-center space-x-1 text-sm font-medium text-gray-600 hover:text-gray-900 min-w-[90px] pl-3 pr-4 py-2 sm:px-3 sm:py-2"
+      buttonClassName="flex items-center space-x-1 text-base font-normal text-black min-w-fit pl-3 pr-4 py-2 sm:px-3 sm:py-2"
     >
       {/* drop down links */}
       {Object.keys(langMapping).map((lang) => (
