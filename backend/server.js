@@ -233,27 +233,23 @@ app.post('/api/classes', async (req, res) => {
   try {
     const { title, level, ageGroup, instructor, schedule } = req.body;
 
-    // Validate required fields
-    if (!title || !level || !ageGroup || !instructor || !schedule) {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-
     // Check if class already exists by title (assuming title is unique)
     const existingClass = await Class.findOne({ title });
 
     if (existingClass) {
       // If class exists, update it while preserving the roster
-      const updatedClass = await Class.findOneAndUpdate(
-        { title },
+      const updatedClass = await Class.findByIdAndUpdate(
+        existingClass._id,
         {
           $set: {
+            title,
             level,
             ageGroup,
             instructor,
             schedule
           }
         },
-        { 
+        {
           new: true,  // Return the updated document
           runValidators: true  // Run schema validators
         }
@@ -271,7 +267,6 @@ app.post('/api/classes', async (req, res) => {
         ageGroup,
         instructor,
         schedule,
-        roster: [] // Initialize with empty roster
       });
 
       await newClass.save();
