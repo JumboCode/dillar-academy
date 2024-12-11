@@ -12,14 +12,14 @@ const class1 = {
     ageGroup: "Children",
     instructor: "Subhat",
     schedule: [
-      {
-        day: "Saturday",
-        time: "10:00 AM PST"
-      },
-      {
-        day: "Sunday",
-        time: "10:00 AM CST"
-      }
+        {
+            day: "Saturday",
+            time: "10:00 AM PST"
+        },
+        {
+            day: "Sunday",
+            time: "10:00 AM CST"
+        }
     ]
 };
 
@@ -28,16 +28,16 @@ const class2 = {
     ageGroup: "Adult",
     instructor: "Ehtibar",
     schedule: [
-      {
-        day: "Saturday",
-        time: "11:00 AM PST"
-      },
-      {
-        day: "Sunday",
-        time: "11:00 AM CST"
-      }
+        {
+            day: "Saturday",
+            time: "11:00 AM PST"
+        },
+        {
+            day: "Sunday",
+            time: "11:00 AM CST"
+        }
     ]
-  };
+};
 
 const Home = () => {
     const [, setLocation] = useLocation();
@@ -48,7 +48,7 @@ const Home = () => {
             <div className="bg-gradient-to-r from-white via-blue-1000 to-blue-900 p-4 min-h-[60dvh] flex items-center justify-center">
                 <div className="text-center md:text-left mb-12 mt-12 px-5 justify-items-center">
                     <p className="text-2xl text-blue-600 mb-3">{t("home_motto")}</p>
-                    <h1 className="text-5xl font-extrabold mb-6">{t("home_title")}</h1> 
+                    <h1 className="text-5xl font-extrabold mb-6">{t("home_title")}</h1>
                     <p className="text-lg">{t("home_purpose")}</p>
                     <p className="text-sm mb-4"><b>300+</b> {t("home_student_desc")}</p>
                     <div className="flex flex-col md:flex-row items-center space-x-3">
@@ -66,7 +66,7 @@ const Home = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col bg-white p-4 gap-32 mx-auto max-w-7xl">
+            <div className="flex flex-col bg-white px-4 py-40 gap-32 mx-auto max-w-7xl">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     <div className="flex flex-wrap justify-center gap-8 md:gap-4 lg:gap-6 mb-6 md:mb-0">
                         <LevelCard
@@ -96,14 +96,14 @@ const Home = () => {
                     </div>
 
                     <div className="flex flex-col first-line:items-center md:flex-row space-x-4">
-                        <HomeClass classObj={class1} className=" w-48 h-32 md:w-26 md:h-40"/>
-                        <HomeClass classObj={class2} className="w-48 h-32 md:w-26 md:h-40"/>
+                        <HomeClass classObj={class1} className=" w-48 h-32 md:w-26 md:h-40" />
+                        <HomeClass classObj={class2} className="w-48 h-32 md:w-26 md:h-40" />
                     </div>
                 </div>
 
                 <div className="flex flex-row justify-around items-center">
                     <div className="flex flex-col items-center  md:flex-row space-x-4">
-                        <Confirmation classObj={class1} className="w-48 h-32 md:w-56 md:h-40"/>
+                        <Confirmation classObj={class1} className="w-48 h-32 md:w-56 md:h-40" />
                     </div>
 
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
@@ -116,7 +116,7 @@ const Home = () => {
             <footer className="h-80 bg-dark-blue-800 text-white flex flex-col justify-center gap-y-5">
                 <p className="text-4xl font-extrabold mx-20">{t("home_title")}</p>
                 <p className="text-lg mx-20">Email: dillarenglish@gmail.com</p>
-                <p className = "text-lg mx-20">Instagram: @dillaracademy</p>
+                <p className="text-lg mx-20">Instagram: @dillaracademy</p>
             </footer>
         </>
     );

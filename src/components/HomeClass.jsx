@@ -1,68 +1,14 @@
 
-// import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
-// import EnrollButton from '@/components/Button/EnrollButton'
-
-// const HomeClass = ({ classObj }) => {
-//   const ageGroup = classObj.ageGroup.toString();
-
-//   return (
-//     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
-//       <div className="flex flex-col gap-4">
-//         {/* Header */}
-//         <div>
-//           <h3 className="text-xl font-extrabold text-dark-blue-800 mb-1">
-//             {ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}'s Class
-//           </h3>
-//           <span className="text-sm text-neutral-400">w/ {classObj.instructor}</span>
-//         </div>
-
-//         {/* Schedule */}
-//         <div className="space-y-3">
-//           {classObj.schedule.map((schedule, index) => (
-//             <div key={index} className="flex items-center text-neutral-400 text-sm">
-//               <div className="flex items-center gap-2 w-1/2">
-//                 <IoCalendarOutline className="text-lg" />
-//                 <span>{schedule.day}</span>
-//               </div>
-//               <div className="flex items-center gap-2">
-//                 <IoTimeOutline className="text-lg" />
-//                 <span>{schedule.time}</span>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//         <div className='grid grid-cols-2 gap-3'>
-//           <EnrollButton
-//             userId={null}
-//             classId={classObj._id}
-//             isEnroll={true}
-//           />
-//           <EnrollButton
-//             userId={null}
-//             classId={classObj._id}
-//             isEnroll={false}
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default HomeClass;
-
-
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
-import Button from '@/components/Button/Button'
 
 const HomeClass = ({ classObj }) => {
-  const ageGroup = classObj.ageGroup.toString();
   const day1 = classObj.schedule[0].day.toString();
-  const subDay1 = day1.substr(0,3);
+  const subDay1 = day1.substr(0, 3);
 
   const time = classObj.schedule[0].time.toString();
 
   const day2 = classObj.schedule[1].day.toString();
-  const subDay2 = day2.substr(0,3);
+  const subDay2 = day2.substr(0, 3);
 
 
   return (
@@ -90,7 +36,7 @@ const HomeClass = ({ classObj }) => {
           <button
             className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 px-2 py-2 rounded-lg text-neutral-400 font-semibold transition-colors duration-300 w-full`}
           >
-          Register
+            Register
           </button>
         </div>
       </div>
