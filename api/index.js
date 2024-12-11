@@ -297,6 +297,34 @@ app.get("/api/levels", async (req, res) => {
   }
 })
 
+app.post("/api/levels", async (req, res) => {
+  try {
+    const { level, name, instructors } = req.body;
+    const newLevel = new Level({
+      level,
+      name,
+      instructors
+    });
+    await newLevel.save();
+
+    const response = await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+      },
+      body: JSON.stringify({
+        "key": `level_name_${newLevel._id}`,
+        "value": name,
+        "namespace": "default"
+      })
+    });
+    res.status(201).json(newLevel);
+  } catch (error) {
+    res.status(500).send(err);
+  }
+})
+
 // Get Conversation classes
 app.get("/api/conversations", async (req, res) => {
   try {
