@@ -4,9 +4,11 @@ import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
 import LanguageDropdown from '../Dropdown/LanguageDropdown';
 import { IoMenuOutline } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -18,10 +20,10 @@ const NavBar = () => {
           </Link>
           {/* Desktop navigation */}
           <div className="hidden sm:flex sm:items-center lg:space-x-20 md:space-x-10">
-            <NavLink href="/levels">Classes</NavLink>
-            <NavLink href="/contact">Contact</NavLink>
-            <NavLink href="/about">About</NavLink>
-            <NavLink href="/login">Login</NavLink>
+            <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
+            <NavLink href="/contact">{t("nav_link_contact")}</NavLink>
+            <NavLink href="/about">{t("nav_link_about")}</NavLink>
+            <NavLink href="/login">{t("nav_link_login")}</NavLink>
           </div>
           <div className='hidden sm:inline'>
             <LanguageDropdown />
@@ -39,10 +41,10 @@ const NavBar = () => {
         </div>
         {/* Mobile menu */}
         <div className={`sm:hidden w-full pb-3 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <NavLink href="/levels" isMobile={true}>Classes</NavLink>
-          <NavLink href="/contact" isMobile={true}>Contact</NavLink>
-          <NavLink href="/about" isMobile={true}>About</NavLink>
-          <NavLink href="/login" isMobile={true}>Login</NavLink>
+          <NavLink href="/levels" isMobile={true}>{t("nav_link_classes")}</NavLink>
+          <NavLink href="/contact" isMobile={true}>{t("nav_link_contact")}</NavLink>
+          <NavLink href="/about" isMobile={true}>{t("nav_link_about")}</NavLink>
+          <NavLink href="/login" isMobile={true}>{t("nav_link_login")}</NavLink>
           <div className="h-2 mt-2 mx-3 border-t border-gray-200"></div>
           <LanguageDropdown />
         </div>
