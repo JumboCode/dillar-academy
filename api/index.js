@@ -311,3 +311,28 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
     res.status(500).json({ message: 'Error unenrolling into class' })
   }
 })
+
+//Forgot Password
+app.post('/api/users/reset-password', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  try{
+    if (user) {
+        const user = { username: username };
+        const updatedPassword = { password: password };
+        const options = { returnDocument: 'after' };
+        await User.findOneAndUpdate(user, updatedPassword, options);
+    
+        res.status(200).send("Password updated successfully.");
+      
+    } else {
+      console.log('Login failed: User not found');
+      res.status(401).send('Invalid username.');
+    }
+  } catch (err){
+    console.error('Error resetting password');
+    res.status(500).send("Server error resetting password.");
+  }
+
+
+});

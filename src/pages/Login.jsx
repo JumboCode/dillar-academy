@@ -40,7 +40,8 @@ export default function Login() {
 
   return (
     <>
-      <main className="bg-gradient-to-tr from-blue-100 to-blue-500 h-full flex justify-center items-center">
+      <main className="bg-[radial-gradient(circle_at_-2.34%_126.57%,rgba(255,255,255,0.8)_0%,rgba(211,237,252,0.8)_35.46%,rgba(178,224,250,0.8)_57.09%,rgba(138,199,244,0.8)_76.71%,rgba(63,150,234,0.8)_100%)]
+                       h-full flex justify-center items-center">
         <Form width="w-1/3 h-3/5">
           <h1 className="text-4xl font-semibold">Login</h1>
           <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5">Don't have an account?

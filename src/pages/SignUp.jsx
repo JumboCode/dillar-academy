@@ -43,13 +43,14 @@ export default function SignUp() {
   }
 
   return (
-    <div className='bg-blue-200 h-full py-8 flex items-center justify-center'>
+    <div className='bg-[radial-gradient(circle_at_-2.34%_126.57%,rgba(255,255,255,0.8)_0%,rgba(211,237,252,0.8)_35.46%,rgba(178,224,250,0.8)_57.09%,rgba(138,199,244,0.8)_76.71%,rgba(63,150,234,0.8)_100%)] 
+                    h-full py-8 flex items-center justify-center'>
       <Form
         width={"w-2/5"}
       >
         <h3 className="text-4xl font-semibold">Sign up</h3>
         <p className="my-3 text-gray-500">Already have an account?
-          <Link className="ml-1 font-extrabold text-blue-400" href="/login">Log In</Link>
+          <Link className="ml-2 font-extrabold text-blue-500" href="/login">Log In</Link>
         </p>
 
         {/* Form Values and the Borders */}
@@ -119,7 +120,7 @@ export default function SignUp() {
               onChange={(isValid) => setIsValid(isValid)}
             />
           </div>
-          <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgotpassword">Forgot password?</Link></p>
+          <p className="text-xs flex justify-end text-black opacity-50"><Link href="/forgotpassword">Forgot password?</Link></p>
           
           <FormSubmit label={"Sign Up"} isDisabled={!isValid} />
         </form>
