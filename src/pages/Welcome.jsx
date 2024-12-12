@@ -1,15 +1,17 @@
 import Button from '../components/Button/Button';
 import LanguageDropdown from '../components/Dropdown/LanguageDropdown';
 import { Link, useLocation } from 'wouter';
+import { useTranslation } from "react-i18next";
 
 const Welcome = ({ onComplete }) => {
+    const { t } = useTranslation();
     const [, setLocation] = useLocation();
 
     return (
         <div className="header-gradient p-4 h-screen flex items-center justify-center">
             <div className="text-center mb-12 mt-12 px-5">
-                <h1 className="text-6xl font-bold mb-4">Dillar Academy</h1>
-                <p className="mb-8 text-lg">Free English education for Uyghurs around the world.</p>
+                <h1 className="text-6xl font-bold mb-4">{t("home_title")}</h1>
+                <p className="mb-8 text-lg">{t("home_purpose")}</p>
                 <div className="flex flex-col items-center gap-y-4 mb-6">
                     {/* Language Dropdown with border */}
                     <div className="w-full max-w-xs border border-dark-blue-800 rounded-lg bg-white">
@@ -23,13 +25,13 @@ const Welcome = ({ onComplete }) => {
                             setLocation("/signup");
                         }}
                     >
-                        Start Learning
+                        {t("home_learn_title")}
                     </button>
                 </div>
                 {/* Login Link */}
                 <p className="text-blue-500 hover:underline">
                     <Link href="/login" onClick={onComplete}>
-                        Already have an account?
+                    {t("sign_up_login1")}
                     </Link>
                 </p>
             </div>
