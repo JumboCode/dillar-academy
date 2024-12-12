@@ -21,7 +21,9 @@ const App = () => {
   return (
     <>
       <div className='min-h-screen grid grid-rows-[5rem_1fr] font-avenir box-border'>
-        <NavBar />
+        <div className={`${isNew ? 'hidden' : ''}`}>
+          <NavBar />
+        </div>
         <div className='hidden'></div>
         <div className='w-full'>
           {isNew ? (
