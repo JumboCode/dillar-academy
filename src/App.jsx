@@ -33,7 +33,9 @@ const App = () => {
             <PageRoutes />
           )}
         </div>
-        <Footer />
+        <div className={`${isNew ? 'hidden' : ''}`}>
+          <Footer />
+        </div>
       </div>
     </>
   );
