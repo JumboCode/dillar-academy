@@ -53,12 +53,12 @@ const Home = () => {
                     <p className="text-sm mb-4"><b>300+</b> {t("home_student_desc")}</p>
                     <div className="flex flex-col md:flex-row items-center space-x-3">
                         <Button
-                            label={"Start Learning"}
+                            label={t("home_learn_title")}
                             onClick={() => setLocation("/signup")}
                             isOutline={false}
                         />
                         <Button
-                            label={"Learn More"}
+                            label={t("learn_more")}
                             onClick={() => setLocation("/about")}
                             isOutline={true}
                         />
@@ -112,12 +112,6 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-
-            <footer className="h-80 bg-dark-blue-800 text-white flex flex-col justify-center gap-y-5">
-                <p className="text-4xl font-extrabold mx-20">{t("home_title")}</p>
-                <p className="text-lg mx-20">Email: dillarenglish@gmail.com</p>
-                <p className="text-lg mx-20">Instagram: @dillaracademy</p>
-            </footer>
         </>
     );
 };
