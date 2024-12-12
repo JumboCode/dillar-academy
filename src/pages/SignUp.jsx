@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
-import PasswordChecklist from "react-password-checklist"
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
 import FormSubmit from "../components/Form/FormSubmit";
 import { useTranslation } from "react-i18next";
+import PasswordReqs from "./PasswordReqs";
 
 export default function SignUp() {
   const { t } = useTranslation();
@@ -51,7 +51,7 @@ export default function SignUp() {
       >
         <h3 className="text-4xl font-semibold">{t("sign_up_text")}</h3>
         <p className="mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
-          <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("sign_up_text")}</Link>
+          <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("login_text")}</Link>
         </p>
         {/* Form Values and the Borders */}
         <form method="POST" onSubmit={handleSubmit} className="space-y-3">
@@ -106,26 +106,7 @@ export default function SignUp() {
             onChange={handleChange}
           />
           <div className="mt-2">
-            <PasswordChecklist
-              rules={[
-                "minLength",
-                "capitalAndLowercase",
-                "number",
-                "specialChar",
-                "match"
-              ]}
-              minLength={10}
-              value={formData.password}
-              valueAgain={formData.retypedPassword}
-              onChange={(isValid) => setIsValid(isValid)}
-              messages={{
-                minLength: t("password_qual1_text"),
-                capitalAndLowercase: t("password_qual2_text"),
-                number: t("password_qual3_text"),
-                specialChar: t("password_qual4_text"),
-                match: t("password_qual5_text"),
-              }}
-            />
+            <PasswordReqs formData={formData} setIsValid={setIsValid} />
           </div>
           <FormSubmit label={t("sign_up_text")} isDisabled={!isValid} />
         </form>

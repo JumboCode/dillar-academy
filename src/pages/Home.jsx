@@ -2,7 +2,6 @@ import Button from '@/components/Button/Button';
 import Level from '@/components/Level.jsx';
 import Class from '@/components/Class.jsx';
 import Confirmation from '@/components/Confirmation.jsx';
-import LevelCard from '@/components/HomeLevel.jsx';
 import HomeClass from '@/components/HomeClass.jsx';
 import { useTranslation } from "react-i18next";
 import { useLocation } from 'wouter';
@@ -39,6 +38,18 @@ const class2 = {
     ]
 };
 
+const level1 = {
+    level: "1",
+    name: "Alphabet and Phonetics",
+    instructors: ["Subat", "Ehtibar"]
+}
+
+const level4 = {
+    level: "4",
+    name: "Higher Level Writing",
+    instructors: ["Dilziba"]
+}
+
 const Home = () => {
     const [, setLocation] = useLocation();
     const { t } = useTranslation();
@@ -53,12 +64,12 @@ const Home = () => {
                     <p className="text-sm mb-4"><b>300+</b> {t("home_student_desc")}</p>
                     <div className="flex flex-col md:flex-row items-center space-x-3">
                         <Button
-                            label={"Start Learning"}
+                            label={t("home_learn_title")}
                             onClick={() => setLocation("/signup")}
                             isOutline={false}
                         />
                         <Button
-                            label={"Learn More"}
+                            label={t("learn_more")}
                             onClick={() => setLocation("/about")}
                             isOutline={true}
                         />
@@ -67,20 +78,10 @@ const Home = () => {
             </div>
 
             <div className="flex flex-col bg-white px-4 py-40 gap-32 mx-auto max-w-7xl">
-                <div className="flex flex-col md:flex-row justify-between items-center">
-                    <div className="flex flex-wrap justify-center gap-8 md:gap-4 lg:gap-6 mb-6 md:mb-0">
-                        <LevelCard
-                            imageSource="src/assets/level-1-img.png"
-                            title="Level 1"
-                            subtitle="Alphabet & Phonetics"
-                            topics={['Alphabet', 'Basic Conversations', 'Basic Vocabulary']}
-                        />
-                        <LevelCard
-                            imageSource="src/assets/level2-image.png"
-                            title="Level 5"
-                            subtitle="Advanced Reading & Writing"
-                            topics={['Advanced Reading', 'Essays', 'Basic Vocabulary']}
-                        />
+                <div className="flex flex-col sm:flex-row justify-between items-center">
+                    <div className="grid grid-cols-2 justify-center w-1/2 gap-8 md:gap-4 lg:gap-6 mb-6 md:mb-0">
+                        <Level level={level1} isSimplified={false} />
+                        <Level level={level4} isSimplified={false} />
                     </div>
 
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
@@ -89,7 +90,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-row justify-around items-center">
+                <div className="flex flex-col sm:flex-row justify-around items-center">
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
                         <h2 className="text-4xl font-semibold mb-5">{t("home_level_title")}</h2>
                         <p className="text-2xl mb-4">{t("home_level_desc")}</p>
@@ -112,12 +113,6 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-
-            <footer className="h-80 bg-dark-blue-800 text-white flex flex-col justify-center gap-y-5">
-                <p className="text-4xl font-extrabold mx-20">{t("home_title")}</p>
-                <p className="text-lg mx-20">Email: dillarenglish@gmail.com</p>
-                <p className="text-lg mx-20">Instagram: @dillaracademy</p>
-            </footer>
         </>
     );
 };

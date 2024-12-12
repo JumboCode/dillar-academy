@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { resetPassword } from "../api/user-wrapper";
-import PasswordChecklist from "react-password-checklist"
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
+import PasswordReqs from "./PasswordReqs";
+import { useTranslation } from "react-i18next";
 
 //Fetching first
 
@@ -20,6 +21,8 @@ const getUserPassword = async () => {
 
 // Implement the Welcome page and check for if it should be displayed
 export default function ForgotPassword() {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -59,7 +62,7 @@ export default function ForgotPassword() {
     <>
       <main className="header-gradient h-full flex justify-center items-center">
         <Form width="w-2/5">
-          <h1 className="text-4xl font-semibold my-3">Forgot Your Password?</h1>
+          <h1 className="text-4xl font-semibold my-3">{t("forgot_your_pass")}</h1>
 
           <form method="POST"
             onSubmit={handleSubmit}
@@ -70,7 +73,7 @@ export default function ForgotPassword() {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="Username"
+              placeholder={t("username_field")}
               isRequired={true} />
 
             <FormInput
@@ -78,7 +81,7 @@ export default function ForgotPassword() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="New Password"
+              placeholder={t("reset_new_pass")}
               isRequired={true} />
 
             <FormInput
@@ -86,23 +89,11 @@ export default function ForgotPassword() {
               name="retypedPassword"
               value={formData.retypedPassword}
               onChange={handleChange}
-              placeholder="Retype New Password"
+              placeholder={t("reset_retype_pass")}
               isRequired={true} />
 
             <div className="mt-2">
-              <PasswordChecklist
-                rules={[
-                  "minLength",
-                  "capitalAndLowercase",
-                  "number",
-                  "specialChar",
-                  "match"
-                ]}
-                minLength={10}
-                value={formData.password}
-                valueAgain={formData.retypedPassword}
-                onChange={(isValid) => setIsValid(isValid)}
-              />
+              <PasswordReqs formData={formData} setIsValid={setIsValid} />
             </div>
 
             <FormSubmit label={"Reset Password"} isDisabled={!isValid} />

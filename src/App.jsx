@@ -4,6 +4,7 @@ import NavBar from '@/components/NavBar/NavBar'
 import PageRoutes from '@/components/PageRoutes'
 import Welcome from '@/pages/Welcome';
 import "./i18n.js";
+import Footer from './components/Footer.jsx';
 
 const App = () => {
   const [isNew, setNew] = useState(false);
@@ -32,6 +33,7 @@ const App = () => {
             <PageRoutes />
           )}
         </div>
+        <Footer />
       </div>
     </>
   );

@@ -5,7 +5,7 @@ import { IoStar } from "react-icons/io5";
 function About() {
     const { t } = useTranslation();
     return (
-        <div className="flex flex-col sm:flex-row-reverse sm:justify-between h-full xl:px-16 md:px-6 px-4">
+        <div className="flex flex-col sm:flex-row-reverse sm:justify-between h-full py-40 xl:px-16 md:px-6 px-4">
             <div className="flex items-center justify-center sm:w-1/3">
                 <img src={stepping_stones_landscape} alt="stepping_stones_landscape" className="rounded-3xl shadow-xl aspect-square" title="stepping_stones_landscape"></img>
             </div>
