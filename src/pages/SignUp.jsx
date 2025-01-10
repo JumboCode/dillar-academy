@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
 import PasswordChecklist from "react-password-checklist"
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
 import FormSubmit from "../components/Form/FormSubmit";
-import { useSignUp } from '@clerk/clerk-react'
+import { useSignUp, useAuth } from '@clerk/clerk-react'
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [, setLocation] = useLocation();
+  const { isSignedIn } = useAuth();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -20,6 +21,12 @@ export default function SignUp() {
     retypedPassword: '',
   })
   const [isValid, setIsValid] = useState(false);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      setLocation("/");
+    }
+  }, [isSignedIn])
 
   if (!isLoaded) return;
 

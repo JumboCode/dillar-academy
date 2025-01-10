@@ -186,14 +186,14 @@ app.post('/api/sign-up', async (req, res) => {
 
 // Login
 app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     console.log('Database query result:', user);
     if (user) {
       if (user.password === password) {
-        console.log('Login successful for user:', username);
+        console.log('Login successful for user:', email);
         res.status(200).json({ user });
       } else {
         console.log('Login failed: Incorrect password.');
@@ -201,7 +201,7 @@ app.post('/api/login', async (req, res) => {
       }
     } else {
       console.log('Login failed: User not found');
-      res.status(401).send('Invalid username.');
+      res.status(401).send('Invalid email.');
     }
   } catch (error) {
     console.error('Error during login.', error);

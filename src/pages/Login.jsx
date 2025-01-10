@@ -1,43 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { postLogin } from "../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
+import { useSignIn, useAuth } from "@clerk/clerk-react";
 
 
 // TODO (Spencer & Claire): implement the Welcome page and check for if it should be displayed
 export default function Login() {
+  const { isLoaded, signIn, setActive } = useSignIn();
+  const [, setLocation] = useLocation();
+  const { isSignedIn } = useAuth();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   })
+
+  useEffect(() => {
+    if (isSignedIn) {
+      setLocation("/");
+    }
+  }, [isSignedIn])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const [, setLocation] = useLocation();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isLoaded) return;
 
     try {
-      const response = await postLogin(formData)
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.message);
-        const userQuery = `?firstName=${encodeURIComponent(data.user.firstName)}&lastName=${encodeURIComponent(data.user.lastName)}&username=${encodeURIComponent(data.user.username)}`;
-        if (data.user.isAdmin) {
-          setLocation(`/admin${userQuery}`);
-        } else {
-          setLocation(`/student${userQuery}`);
-        }
+      const { email, password } = formData;
+      const userLogin = await signIn.create({
+        identifier: email,
+        password: password
+      })
+
+      if (userLogin.status === "complete") {
+        await setActive({ session: userLogin.createdSessionId });
+        setLocation("/")
       } else {
-        const errorMessage = await response.text();
-        console.error(errorMessage);
-        alert("Login failed: " + errorMessage);
+        console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
       }
+
+      // const response = await postLogin(formData)
+      // if (response.ok) {
+      //   const data = await response.json();
+      //   console.log(data.message);
+      //   const userQuery = `?firstName=${encodeURIComponent(data.user.firstName)}&lastName=${encodeURIComponent(data.user.lastName)}&email=${encodeURIComponent(data.user.email)}`;
+      //   if (data.user.isAdmin) {
+      //     setLocation(`/admin${userQuery}`);
+      //   } else {
+      //     setLocation(`/student${userQuery}`);
+      //   }
+      // } else {
+      //   const errorMessage = await response.text();
+      //   console.error(errorMessage);
+      //   alert("Login failed: " + errorMessage);
+      // }
     } catch (error) {
       console.error('Error during login: ', error);
       alert("An error occurred during login.");
@@ -57,11 +79,11 @@ export default function Login() {
             className="space-y-3"
           >
             <FormInput
-              type="text"
-              name="username"
-              value={formData.username}
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
-              placeholder="Username"
+              placeholder="Email"
               isRequired={true} />
             <FormInput
               type="password"

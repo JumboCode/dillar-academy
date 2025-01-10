@@ -20,7 +20,6 @@ const Main = () => {
       routerReplace={(to) => setLocation(to, { replace: true })}
       publishableKey={PUBLISHABLE_KEY}
       afterSignOutUrl={"/"}
-      debug
     >
       <App />
     </ClerkProvider>
