@@ -1,9 +1,13 @@
 
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import EnrollButton from '@/components/Button/EnrollButton'
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { SignedIn } from '@clerk/clerk-react';
 
 const Class = ({ classObj }) => {
   const ageGroup = classObj.ageGroup.toString();
+  const { user, } = useContext(UserContext);
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
@@ -31,18 +35,20 @@ const Class = ({ classObj }) => {
             </div>
           ))}
         </div>
-        <div className='grid grid-cols-2 gap-3'>
-          <EnrollButton
-            userId={null}
-            classId={classObj._id}
-            isEnroll={true}
-          />
-          <EnrollButton
-            userId={null}
-            classId={classObj._id}
-            isEnroll={false}
-          />
-        </div>
+        <SignedIn>
+          <div className='grid grid-cols-2 gap-3'>
+            <EnrollButton
+              userId={user?._id}
+              classId={classObj._id}
+              isEnroll={true}
+            />
+            <EnrollButton
+              userId={user?._id}
+              classId={classObj._id}
+              isEnroll={false}
+            />
+          </div>
+        </SignedIn>
       </div>
     </div>
   );

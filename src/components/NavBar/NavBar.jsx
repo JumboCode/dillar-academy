@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
 import LanguageDropdown from '../Dropdown/LanguageDropdown';
 import { IoMenuOutline } from "react-icons/io5";
 import { SignOutButton, SignedIn, SignedOut } from '@clerk/clerk-react';
+import { UserContext } from '../../contexts/UserContext';
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, } = useContext(UserContext)
 
   return (
     <div>
@@ -27,6 +29,7 @@ const NavBar = () => {
             </SignedOut>
             <SignedIn>
               <SignOutButton />
+              <NavLink href={`/${user?.privilege}`}>Dashboard</NavLink>
             </SignedIn>
           </div>
           <div className='hidden sm:inline'>
@@ -48,7 +51,13 @@ const NavBar = () => {
           <NavLink href="/levels" isMobile={true}>Classes</NavLink>
           <NavLink href="/contact" isMobile={true}>Contact</NavLink>
           <NavLink href="/about" isMobile={true}>About</NavLink>
-          <NavLink href="/login" isMobile={true}>Login</NavLink>
+          <SignedOut>
+            <NavLink href="/login" isMobile={true}>Login</NavLink>
+          </SignedOut>
+          <SignedIn>
+            <SignOutButton />
+            <NavLink href={`/${user?.privilege}`}>Dashboard</NavLink>
+          </SignedIn>
           <div className="h-2 mt-2 mx-3 border-t border-gray-200"></div>
           <LanguageDropdown />
         </div>

@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useLocation } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
 import PasswordChecklist from "react-password-checklist"
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
-import FormSubmit from "../components/Form/FormSubmit";
+import FormSubmit from "@/components/Form/FormSubmit";
 import { useSignUp, useAuth } from '@clerk/clerk-react'
+import { UserContext } from '@/contexts/UserContext.jsx';
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [, setLocation] = useLocation();
   const { isSignedIn } = useAuth();
+  const { user, setUser } = useContext(UserContext)
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -23,10 +25,10 @@ export default function SignUp() {
   const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
-    if (isSignedIn) {
-      setLocation("/");
+    if (isSignedIn && user) {
+      setLocation(`/${user?.privilege}`);
     }
-  }, [isSignedIn])
+  }, [isSignedIn, user])
 
   if (!isLoaded) return;
 
@@ -49,16 +51,15 @@ export default function SignUp() {
       // placeholder for possible account verification?
 
       if (createUser.status === "complete") {
-        await setActive({ session: createUser.createdSessionId });
-        console.log(createUser.createdUserId);
+        await setActive({ session: createUser.createdSessionId })
         const userData = { ...formData, clerkId: createUser.createdUserId };
-        console.log(userData)
         const response = await postUser(userData);
         if (response.status === 201) {
-          // alert('User created successfully!');
-          console.log('User created successfully!')
+          setUser(response.data);
+        } else {
+          // TODO
         }
-        setLocation("/")
+        setLocation(`/${response.data.privilege}`);
       } else {
         console.log("Failed to create Clerk user:", JSON.stringify(createUser, null, 2));
       }

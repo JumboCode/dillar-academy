@@ -7,8 +7,9 @@ import Login from '@/pages/Login'
 import ClassesPage from '@/pages/ClassesPage'
 import LevelsPage from '@/pages/LevelsPage'
 import StyleGuide from "@/pages/StyleGuide";
-import StudentPortal from '@/pages/StudentPortal'
-import AdminView from '@/pages/AdminView'
+import StudentPortal from '@/pages/dashboards/StudentPortal'
+import AdminView from '@/pages/dashboards/AdminView'
+import TeacherView from '@/pages/dashboards/TeacherView'
 import PageNotFound from '@/pages/PageNotFound'
 
 export default function PageRoutes() {
@@ -24,6 +25,7 @@ export default function PageRoutes() {
       <Route path="/style" component={StyleGuide} />
       <Route path="/student" component={StudentPortal} />
       <Route path="/admin" component={AdminView} />
+      <Route path="/teacher" component={TeacherView} />
       <Route component={PageNotFound} />
     </Switch>
   );

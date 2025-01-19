@@ -1,8 +1,10 @@
+
 import founder from '../assets/founder.jpg';
 import { useTranslation } from "react-i18next";
 
 function About() {
     const { t } = useTranslation();
+
     return (
         <div className="flex flex-col sm:flex-row-reverse sm:justify-between h-full xl:px-16 md:px-6 px-4">
             <div className="flex items-center justify-center sm:w-1/3">

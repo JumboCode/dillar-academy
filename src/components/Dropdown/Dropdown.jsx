@@ -23,7 +23,7 @@ const Dropdown = ({ label, children, buttonClassName = "dropdown-button text-rig
   }, [isOpen])
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div ref={dropdownRef} className="relative sm:w-auto w-full">
       {/* dropdown button */}
       <button
         className={buttonClassName}

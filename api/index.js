@@ -55,8 +55,7 @@ const validateInput = (input, allowedFields) => {
 
   for (const key in input) {
     if (allowedFields.includes(key)) {
-      // capitalize the value
-      filteredInput[key] = input[key].charAt(0).toUpperCase() + input[key].slice(1)
+      filteredInput[key] = input[key]
     }
   }
 
@@ -75,7 +74,7 @@ const UserSchema = new Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  isAdmin: { type: Boolean, required: true },
+  privilege: { type: String, required: true, default: "student", enum: ["admin", "teacher", "student"] },
   username: { type: String, required: true },
   clerkId: { type: String, required: true },
   creationDate: { type: Date, default: Date.now },
@@ -169,19 +168,18 @@ app.post('/api/sign-up', async (req, res) => {
       lastName,
       email,
       password,
-      isAdmin: false,
       username,
       clerkId
     });
 
     await newUser.save();
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json(newUser);
 
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ message: 'Error creating user' });
   }
-});
+})
 
 
 // Login
@@ -190,11 +188,10 @@ app.post('/api/login', async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    console.log('Database query result:', user);
     if (user) {
       if (user.password === password) {
         console.log('Login successful for user:', email);
-        res.status(200).json({ user });
+        res.status(200).json(user);
       } else {
         console.log('Login failed: Incorrect password.');
         res.status(401).send('Invalid password.');
@@ -207,7 +204,7 @@ app.post('/api/login', async (req, res) => {
     console.error('Error during login.', error);
     res.status(500).send({ message: 'Server Error.' });
   }
-});
+})
 
 
 // Get Users
@@ -215,6 +212,21 @@ app.get('/api/users', async (req, res) => {
   try {
     const users = await User.find();
     return res.status(200).json(users);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+
+// Get User
+app.get('/api/user', async (req, res) => {
+  const allowedFields = ['email']
+  const filters = validateInput(req.query, allowedFields)
+
+  try {
+    console.log(filters)
+    const user = await User.findOne(filters);
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -278,19 +290,21 @@ app.get("/api/conversations", async (req, res) => {
   try {
     const data = await Conversation.find();
     res.status(200).json(data);
-  } catch (error) {
+  } catch (err) {
     res.status(500).send(err);
   }
 })
 
-// Get Student's classes
-app.get('/api/students-classes', async (req, res) => {
+// Get Student's classes by ID
+app.get('/api/students-classes/:id', async (req, res) => {
   try {
-    const allowedFields = ['_id'];
-    const filters = validateInput(req.query, allowedFields);
+    const { id } = req.params;
 
-    //apply the filters directly to the database query
-    const data = await User.findOne(filters, { enrolledClasses: 1, _id: 0 });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
     res.json(data);
 
   } catch (err) {
@@ -299,13 +313,15 @@ app.get('/api/students-classes', async (req, res) => {
 })
 
 // Get class by ID
-app.get('/api/class', async (req, res) => {
+app.get('/api/class/:id', async (req, res) => {
   try {
-    const allowedFields = ['_id'];
-    const filters = validateInput(req.query, allowedFields);
+    const { id } = req.params;
 
-    //apply the filters directly to the database query
-    const data = await Class.findOne(filters);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await Class.findOne({ _id: id });
     res.json(data)
 
   } catch (err) {
@@ -316,11 +332,16 @@ app.get('/api/class', async (req, res) => {
 // Enroll in a class
 app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
-  const studentId = new mongoose.Types.ObjectId('674f72531d7f25e7213721cd') // hardcode userId
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
   try {
     // add class id to user's classes
     await User.findByIdAndUpdate(
-      studentId,
+      id,
       { $addToSet: { enrolledClasses: classId } },
       { new: true }
     )
@@ -328,7 +349,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
     // add student id to class's roster
     await Class.findByIdAndUpdate(
       classId,
-      { $addToSet: { roster: studentId } },
+      { $addToSet: { roster: id } },
       { new: true }
     )
     res.status(201).json({ message: 'Enrolled successfully!' })
@@ -341,18 +362,23 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 // Unenroll in a class
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
-  const studentId = new mongoose.Types.ObjectId('674f72531d7f25e7213721cd') // hardcode userId
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
   try {
     // remove class id from user's classes
     await User.findByIdAndUpdate(
-      studentId,
+      id,
       { $pull: { enrolledClasses: classId } },
     )
 
     // remove student id from class's roster
     await Class.findByIdAndUpdate(
       classId,
-      { $pull: { roster: studentId } },
+      { $pull: { roster: id } },
     )
     res.status(201).json({ message: 'Unenrolled successfully!' })
   } catch (err) {
