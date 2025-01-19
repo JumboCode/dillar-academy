@@ -25,7 +25,7 @@ const LevelsPage = () => {
     fetchLevels();
   }, []);
 
-  if (levels.length == 0 || conversations.length == 0) {
+  if (levels?.length == 0 || conversations?.length == 0) {
     return <></>
   }
 

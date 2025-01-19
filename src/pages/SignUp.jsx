@@ -1,13 +1,19 @@
-import { useState } from "react";
-import { Link } from 'wouter'
+import { useState, useEffect, useContext } from "react";
+import { Link, useLocation } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
-import FormSubmit from "../components/Form/FormSubmit";
-import { useTranslation } from "react-i18next";
+import FormSubmit from "@/components/Form/FormSubmit";
 import PasswordReqs from "./PasswordReqs";
+import { useSignUp, useAuth } from '@clerk/clerk-react'
+import { UserContext } from '@/contexts/UserContext.jsx';
+import { useTranslation } from "react-i18next";
 
 export default function SignUp() {
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const [, setLocation] = useLocation();
+  const { isSignedIn } = useAuth();
+  const { user, setUser } = useContext(UserContext)
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     firstName: '',
@@ -15,31 +21,56 @@ export default function SignUp() {
     email: '',
     username: '',
     password: '',
-    retypedPassword: ''
+    retypedPassword: '',
   })
+  const [isValid, setIsValid] = useState(false);
+
+  useEffect(() => {
+    if (isSignedIn && user) {
+      setLocation(`/${user?.privilege}`);
+    }
+  }, [isSignedIn, user])
+
+  if (!isLoaded) return;
+
   const handleChange = (e) => {
-    console.log(formData)
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const [isValid, setIsValid] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, password, retypedPassword } = formData
-    if (password != retypedPassword) {
-      alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
-    } else {
-      try {
-        const response = await postUser(formData)
+    if (!isLoaded) return;
+
+    try {
+      const { email, password } = formData;
+      // create Clerk user
+      const createUser = await signUp.create({
+        emailAddress: email,
+        password: password
+      });
+
+      // placeholder for possible account verification?
+
+      if (createUser.status === "complete") {
+        await setActive({ session: createUser.createdSessionId })
+        const userData = { ...formData, clerkId: createUser.createdUserId };
+        const response = await postUser(userData);
         if (response.status === 201) {
-          alert('User created successfully!');
-        }
-      } catch (error) {
-        if (error.response && error.response.status === 409) {
-          alert('User already exists.');
+          setUser(response.data);
         } else {
-          alert('An error occurred while creating the user.')
+          // TODO
         }
+        setLocation(`/${response.data.privilege}`);
+      } else {
+        console.log("Failed to create Clerk user:", JSON.stringify(createUser, null, 2));
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        // alert('User already exists.');
+        console.log('User already exists.')
+      } else {
+        // alert('An error occurred while creating the user.')
+        console.log('An error occurred while creating the user', error)
       }
     }
   }

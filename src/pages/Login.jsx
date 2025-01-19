@@ -1,42 +1,56 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { postLogin } from "../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
+import { useSignIn, useAuth } from "@clerk/clerk-react";
+import { UserContext } from '@/contexts/UserContext.jsx';
 import { useTranslation } from "react-i18next";
 
 export default function Login() {
+  const { isLoaded, signIn, setActive } = useSignIn();
+  const [, setLocation] = useLocation();
+  const { isSignedIn } = useAuth();
+  const { user, setUser } = useContext(UserContext);
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   })
+
+  useEffect(() => {
+    if (isSignedIn && user) {
+      setLocation(`/${user?.privilege}`);
+    }
+  }, [isSignedIn, user])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const [, setLocation] = useLocation();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isLoaded) return;
 
     try {
-      const response = await postLogin(formData)
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.message);
-        const userQuery = `?firstName=${encodeURIComponent(data.user.firstName)}&lastName=${encodeURIComponent(data.user.lastName)}&username=${encodeURIComponent(data.user.username)}`;
-        if (data.user.isAdmin) {
-          setLocation(`/admin${userQuery}`);
+      const { email, password } = formData;
+      const userLogin = await signIn.create({
+        identifier: email,
+        password: password
+      })
+
+      if (userLogin.status === "complete") {
+        await setActive({ session: userLogin.createdSessionId });
+        const response = await postLogin(formData);
+        if (response.status === 200) {
+          setUser(response.data)
         } else {
-          setLocation(`/student${userQuery}`);
+          // TODO
         }
+        setLocation(`/${response.data.privilege}`);
       } else {
-        const errorMessage = await response.text();
-        console.error(errorMessage);
-        alert("Login failed: " + errorMessage);
+        console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
       }
     } catch (error) {
       console.error('Error during login: ', error);
@@ -57,9 +71,9 @@ export default function Login() {
             className="space-y-3"
           >
             <FormInput
-              type="text"
-              name="username"
-              value={formData.username}
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               placeholder={t("username_field")}
               isRequired={true} />

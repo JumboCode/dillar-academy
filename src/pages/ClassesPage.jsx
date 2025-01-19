@@ -32,7 +32,7 @@ const ClassesPage = () => {
     fetchData();
   }, [levelNum]);
 
-  if (loading || !level) return <></>;
+  if (loading || !level) return;
 
   return (
     <div className="h-full bg-white">

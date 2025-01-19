@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-const apiUrl = (endpoint) => `${endpoint}`
-
 const postUser = async (body) => {
   try {
-    const response = await axios.post(apiUrl("/api/users"), body)
+    const response = await axios.post("/api/sign-up", body)
     return response
   } catch (error) {
     throw error
@@ -13,12 +11,10 @@ const postUser = async (body) => {
 
 const postLogin = async (body) => {
   try {
-    const response = await fetch(apiUrl("/api/login"), {
-      method: 'POST',
+    const response = await axios.post('/api/login', body, {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body),
     });
 
     return response
@@ -29,9 +25,17 @@ const postLogin = async (body) => {
 
 const getUsers = async () => {
   try {
-    const response = await fetch('/api/users')
-    const jsonData = await response.json() // Converting data to json
-    return jsonData
+    const response = await axios.get('/api/users');
+    return response;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+const getUser = async (query = "") => {
+  try {
+    const response = await axios.get(`/api/user?${query}`);
+    return response;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -68,6 +72,7 @@ export {
   postUser,
   postLogin,
   getUsers,
+  getUser,
   getUserPassword,
   resetPassword
 }
