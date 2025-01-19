@@ -43,7 +43,7 @@ const StudentPortal = () => {
   }
 
   if (user?.privilege !== "student") {
-    return <div>Unauthorized</div> // in future maybe redirect to unauthorized page? so /admin isn't in url
+    return <div>Unauthorized</div>
   }
 
   return (

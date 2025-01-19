@@ -24,7 +24,7 @@ const AdminView = () => {
   }
 
   if (user?.privilege !== "admin") {
-    return <div>Unauthorized</div> // in future maybe redirect to unauthorized page? so /admin isn't in url
+    return <div>Unauthorized</div>
   }
 
   return (

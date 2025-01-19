@@ -10,7 +10,7 @@ const Welcome = ({ onComplete }) => {
     return (
         <div className="header-gradient p-4 h-screen flex items-center justify-center">
             <div className="text-center mb-12 mt-12 px-5">
-                <h1 className="text-6xl font-bold mb-4">{t("home_title")}</h1>
+                <h1 className="text-6xl font-bold mb-4">Dillar English Academy</h1>
                 <p className="mb-8 text-lg">{t("home_purpose")}</p>
                 <div className="flex flex-col items-center gap-y-4 mb-6">
                     {/* Language Dropdown with border */}
@@ -31,7 +31,7 @@ const Welcome = ({ onComplete }) => {
                 {/* Login Link */}
                 <p className="text-blue-500 hover:underline">
                     <Link href="/login" onClick={onComplete}>
-                    {t("sign_up_login1")}
+                        {t("sign_up_login1")}
                     </Link>
                 </p>
             </div>

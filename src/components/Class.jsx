@@ -42,11 +42,11 @@ const Class = ({ classObj }) => {
               classId={classObj._id}
               isEnroll={true}
             />
-            <EnrollButton
+            {/* <EnrollButton
               userId={user?._id}
               classId={classObj._id}
               isEnroll={false}
-            />
+            /> */}
           </div>
         </SignedIn>
       </div>
