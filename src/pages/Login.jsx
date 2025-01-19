@@ -6,19 +6,20 @@ import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
 import { useSignIn, useAuth } from "@clerk/clerk-react";
 import { UserContext } from '@/contexts/UserContext.jsx';
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [, setLocation] = useLocation();
   const { isSignedIn } = useAuth();
   const { user, setUser } = useContext(UserContext);
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   })
 
   useEffect(() => {
-    console.log(user)
     if (isSignedIn && user) {
       setLocation(`/${user?.privilege}`);
     }
@@ -42,9 +43,7 @@ export default function Login() {
       if (userLogin.status === "complete") {
         await setActive({ session: userLogin.createdSessionId });
         const response = await postLogin(formData);
-        console.log(response)
         if (response.status === 200) {
-          console.log(response.data)
           setUser(response.data)
         } else {
           // TODO
@@ -53,22 +52,6 @@ export default function Login() {
       } else {
         console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
       }
-
-      // const response = await postLogin(formData)
-      // if (response.ok) {
-      //   const data = await response.json();
-      //   console.log(data.message);
-      //   const userQuery = `?firstName=${encodeURIComponent(data.user.firstName)}&lastName=${encodeURIComponent(data.user.lastName)}&email=${encodeURIComponent(data.user.email)}`;
-      //   if (data.user.privilege) {
-      //     setLocation(`/admin${userQuery}`);
-      //   } else {
-      //     setLocation(`/student${userQuery}`);
-      //   }
-      // } else {
-      //   const errorMessage = await response.text();
-      //   console.error(errorMessage);
-      //   alert("Login failed: " + errorMessage);
-      // }
     } catch (error) {
       console.error('Error during login: ', error);
       alert("An error occurred during login.");
@@ -77,11 +60,11 @@ export default function Login() {
 
   return (
     <>
-      <main className="bg-blue-200 h-full flex justify-center items-center">
+      <main className="header-gradient h-full py-40 flex justify-center items-center">
         <Form width="w-2/5">
-          <h1 className="text-2xl sm:text-3xl">Login</h1>
-          <h3 className="text-sm sm:text-base text-slate-400 my-3">Don't have an account?
-            <Link href="/signup" className="ml-1 font-extrabold text-blue-400">Sign up</Link>
+          <h1 className="text-4xl font-semibold sm:text-3xl">{t("login_text")}</h1>
+          <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
+            <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
           </h3>
           <form method="POST"
             onSubmit={handleSubmit}
@@ -92,19 +75,20 @@ export default function Login() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Email"
+              placeholder={t("username_field")}
               isRequired={true} />
             <FormInput
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Password"
+              placeholder={t("password_field")}
               isRequired={true} />
-            <FormSubmit label={"Login"} />
-          </form>
-        </Form>
-      </main>
+            <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgotpassword">{t("forgot_pass")}</Link></p>
+            <FormSubmit label={t("login_text")} />
+          </form >
+        </Form >
+      </main >
     </>
   )
 }

@@ -6,7 +6,7 @@ const NavLink = ({ href, isMobile, children }) => {
   return (
     <Link
       href={href}
-      className={`font-normal text-base ${(location == href || location.startsWith(href + "/")) ? "text-blue-700 hover:text-blue-400" : "text-black hover:text-neutral-300"} ${isMobile ? "block pl-3 pr-4 py-2 border-l-4 border-transparent" : "px-3 py-2 rounded-md"}`}
+      className={`font-normal text-base ${(location == href || location.startsWith(href + "/")) ? "text-blue-700 hover:text-blue-400" : "text-black hover:text-neutral-300"} ${isMobile ? "block py-2 border-l-4 border-transparent" : "px-3 py-2 rounded-md"}`}
     >
       {children}
     </Link>

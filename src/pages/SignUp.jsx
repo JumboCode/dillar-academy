@@ -1,19 +1,20 @@
 import { useState, useEffect, useContext } from "react";
 import { Link, useLocation } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
-import PasswordChecklist from "react-password-checklist"
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
 import FormSubmit from "@/components/Form/FormSubmit";
+import PasswordReqs from "./PasswordReqs";
 import { useSignUp, useAuth } from '@clerk/clerk-react'
 import { UserContext } from '@/contexts/UserContext.jsx';
+import { useTranslation } from "react-i18next";
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [, setLocation] = useLocation();
   const { isSignedIn } = useAuth();
   const { user, setUser } = useContext(UserContext)
-
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -75,13 +76,13 @@ export default function SignUp() {
   }
 
   return (
-    <div className='bg-blue-200 h-full py-8 flex items-center justify-center'>
+    <div className='header-gradient h-full py-8 flex items-center justify-center'>
       <Form
         width={"w-2/5"}
       >
-        <h3 className="text-3xl">Sign up</h3>
-        <p className="my-3 text-gray-500">Already have an account?
-          <Link className="ml-1 font-extrabold text-blue-400" href="/login">Log In</Link>
+        <h3 className="text-4xl font-semibold">{t("sign_up_text")}</h3>
+        <p className="mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
+          <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("login_text")}</Link>
         </p>
         {/* Form Values and the Borders */}
         <form method="POST" onSubmit={handleSubmit} className="space-y-3">
@@ -91,7 +92,7 @@ export default function SignUp() {
               type="text"
               name="firstName"
               value={formData.firstName}
-              placeholder="First Name"
+              placeholder={t("f_name_field")}
               onChange={handleChange}
             />
             <FormInput
@@ -99,7 +100,7 @@ export default function SignUp() {
               type="text"
               name="lastName"
               value={formData.lastName}
-              placeholder="Last Name"
+              placeholder={t("l_name_field")}
               onChange={handleChange}
             />
           </div>
@@ -108,7 +109,7 @@ export default function SignUp() {
             type="text"
             name="username"
             value={formData.username}
-            placeholder="Username"
+            placeholder={t("username_field")}
             onChange={handleChange}
           />
           <FormInput
@@ -116,7 +117,7 @@ export default function SignUp() {
             type="email"
             name="email"
             value={formData.email}
-            placeholder="Email"
+            placeholder={t("email_field")}
             onChange={handleChange}
           />
           <FormInput
@@ -124,7 +125,7 @@ export default function SignUp() {
             type="password"
             name="password"
             value={formData.password}
-            placeholder="Password"
+            placeholder={t("password_field")}
             onChange={handleChange}
           />
           <FormInput
@@ -132,25 +133,13 @@ export default function SignUp() {
             type="password"
             name="retypedPassword"
             value={formData.retypedPassword}
-            placeholder="Retype Password"
+            placeholder={t("retype_password_field")}
             onChange={handleChange}
           />
           <div className="mt-2">
-            <PasswordChecklist
-              rules={[
-                "minLength",
-                "capitalAndLowercase",
-                "number",
-                "specialChar",
-                "match"
-              ]}
-              minLength={10}
-              value={formData.password}
-              valueAgain={formData.retypedPassword}
-              onChange={(isValid) => setIsValid(isValid)}
-            />
+            <PasswordReqs formData={formData} setIsValid={setIsValid} />
           </div>
-          <FormSubmit label={"Sign Up"} isDisabled={!isValid} />
+          <FormSubmit label={t("sign_up_text")} isDisabled={!isValid} />
         </form>
       </Form>
     </div>

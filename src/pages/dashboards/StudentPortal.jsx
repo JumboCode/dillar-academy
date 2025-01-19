@@ -24,7 +24,6 @@ const StudentPortal = () => {
     const fetchData = async () => {
       if (user) {
         const response = await getStudentsClasses(user?._id);
-        console.log(response)
         const classes = await Promise.all(
           response.enrolledClasses.map(async (classID) => {
             const classResponse = await getClassById(classID);

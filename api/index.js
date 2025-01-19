@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
 const mongoSanitize = require('express-mongo-sanitize');
+const nodemailer = require('nodemailer');
 
 const app = express()
 app.use(cors())
@@ -224,7 +225,6 @@ app.get('/api/user', async (req, res) => {
   const filters = validateInput(req.query, allowedFields)
 
   try {
-    console.log(filters)
     const user = await User.findOne(filters);
     res.status(200).json(user);
   } catch (err) {
@@ -238,21 +238,56 @@ app.get('/api/user', async (req, res) => {
 // Post Contact
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body
+
   try {
     const newContact = new Contact({
       name,
       email,
       subject,
       message
-    })
-    await newContact.save()
+    });
+    await newContact.save();
 
-    res.status(201).json({ message: 'Inquiry submitted successfully' })
+    // Nodemailer setup
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.ADMIN_EMAIL,
+        pass: process.env.ADMIN_PASSWORD,
+      },
+    });
+
+    transporter.verify((error, success) => {
+      if (error) {
+        console.error('Error initializing transporter:', error);
+      } else {
+        console.log('Transporter is ready to send emails', success);
+      }
+    });
+
+
+    const mailOptions = {
+      from: email,
+      to: process.env.ADMIN_EMAIL,
+      subject: `Contact Form: ${subject}`,
+      html: `
+        <p><strong>From:</strong> ${name} (${email})</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).json({ message: 'Inquiry and email submitted successfully' });
   }
   catch (err) {
-    res.status(500).json({ message: 'Error submitting inquiry' });
+    console.error('Error submitting inquiry:', err);
+    res.status(500).json({ message: 'Error submitting inquiry', error: err.message });
   }
-})
+});
 
 
 /* CLASS RELATED ENDPOINTS */
@@ -329,6 +364,59 @@ app.get('/api/class/:id', async (req, res) => {
   }
 })
 
+// Create or Edit Class
+app.post('/api/classes', async (req, res) => {
+  try {
+    const { title, level, ageGroup, instructor, schedule } = req.body;
+
+    // Check if class already exists by title (assuming title is unique)
+    const existingClass = await Class.findOne({ title });
+
+    if (existingClass) {
+      // If class exists, update it while preserving the roster
+      const updatedClass = await Class.findByIdAndUpdate(
+        existingClass._id,
+        {
+          $set: {
+            title,
+            level,
+            ageGroup,
+            instructor,
+            schedule
+          }
+        },
+        {
+          new: true,  // Return the updated document
+          runValidators: true  // Run schema validators
+        }
+      );
+
+      return res.status(200).json({
+        message: 'Class updated successfully',
+        class: updatedClass
+      });
+    } else {
+      // If class doesn't exist, create a new one with empty roster
+      const newClass = new Class({
+        title,
+        level,
+        ageGroup,
+        instructor,
+        schedule,
+      });
+
+      await newClass.save();
+      return res.status(201).json({
+        message: 'Class created successfully',
+        class: newClass
+      });
+    }
+  } catch (error) {
+    console.error('Error creating/updating class:', error);
+    return res.status(500).json({ message: 'Error creating/updating class' });
+  }
+});
+
 // Enroll in a class
 app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
@@ -386,3 +474,28 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
     res.status(500).json({ message: 'Error unenrolling into class' })
   }
 })
+
+//Forgot Password
+app.post('/api/users/reset-password', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  try {
+    if (user) {
+      const user = { username: username };
+      const updatedPassword = { password: password };
+      const options = { returnDocument: 'after' };
+      await User.findOneAndUpdate(user, updatedPassword, options);
+
+      res.status(200).send("Password updated successfully.");
+
+    } else {
+      console.log('Login failed: User not found');
+      res.status(401).send('Invalid username.');
+    }
+  } catch (err) {
+    console.error('Error resetting password');
+    res.status(500).send("Server error resetting password.");
+  }
+
+
+});
