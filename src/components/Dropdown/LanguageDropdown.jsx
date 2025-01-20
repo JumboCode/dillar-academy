@@ -11,16 +11,16 @@ const langMapping = {
 };
 
 const LanguageDropdown = () => {
-  const [selectedLang, setSelectedLang] = useState();
+  const [selectedLang, setSelectedLang] = useState("Language"); // Default text
   const { i18n } = useTranslation();
 
   useEffect(() => {
     const savedLang = i18n.language;
     if (savedLang) {
       const langName = Object.keys(langMapping).find(key => langMapping[key] === savedLang);
-      setSelectedLang(langName);
+      setSelectedLang(langName || "Language"); // Fallback to "Language" if no match
     }
-  }, []);
+  }, [i18n.language]);
 
   const handleSelectLang = (langName) => {
     const langCode = langMapping[langName];
@@ -31,18 +31,20 @@ const LanguageDropdown = () => {
   return (
     <Dropdown
       label={
-        <div className="flex items-center space-x-1">
-          <IoGlobeOutline size={18} className="text-black" />
-          <span>{selectedLang}</span>
+        <div className="flex items-center justify-center space-x-1">
+          <IoGlobeOutline size={24} className="text-black" />
+          <span className="text-center w-full">{selectedLang}</span>
         </div>
       }
-      buttonClassName="flex items-center space-x-1 text-base font-normal text-black min-w-fit pl-3 pr-4 py-2 sm:px-3 sm:py-2"
+      buttonClassName="flex items-center justify-center w-full text-base font-normal text-black min-w-fit px-4 py-2 sm:px-5 sm:py-3 rounded-lg bg-white"
     >
-      {/* drop down links */}
+      {/* Dropdown options */}
       {Object.keys(langMapping).map((lang) => (
         <button
           key={lang}
-          className={`block w-full text-left px-4 py-2 text-sm ${selectedLang === lang ? 'text-blue-500 bg-gray-50' : 'text-gray-700'
+          className={`block w-full text-center px-4 py-2 text-sm ${selectedLang === lang
+            ? 'text-blue-500 bg-gray-50'
+            : 'text-gray-700'
             } hover:bg-gray-50`}
           role="menuitem"
           onClick={() => handleSelectLang(lang)}

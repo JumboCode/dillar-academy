@@ -17,7 +17,7 @@
     "express": "^4.21.1",
     "express-mongo-sanitize": "^2.2.0",
     "mongodb": "^6.9.0",
-    "mongoose": "^8.7.2"
+    "mongoose": "^8.9.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
