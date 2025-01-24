@@ -38,8 +38,8 @@ export default function Contact() {
 
 
   return (
-    <div className="w-full h-full bg-white flex flex-col sm:flex-row justify-center items-center">
-      <div className="sm:w-1/3 w-full p-8">
+    <div className="w-full h-full bg-white flex flex-col lg:flex-row justify-center items-center">
+      <div className="w-full md:w-1/3 p-8">
         <h2 className="text-3xl font-semibold mb-6">CONTACT US</h2>
         <p className="mb-2 text-lg">
           Email:
@@ -55,9 +55,9 @@ export default function Contact() {
         </p>
       </div>
 
-      <div className="sm:w-2/3 w-full bg-blue-200 p-10 flex justify-center">
+      <div className="lg:w-2/3 w-full bg-blue-200 p-10 flex justify-center">
         {/* form box */}
-        <Form width="w-3/5">
+         <Form width="w-8/9 md:w-5/6 lg:w-4/5">
           <h2 className="text-2xl font-semibold mb-2">Get in Touch</h2>
           <p className="mb-4 text-gray-600 opacity-70">
             Let us know if you have questions or concerns.

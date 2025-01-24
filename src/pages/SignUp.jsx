@@ -45,7 +45,7 @@ export default function SignUp() {
   return (
     <div className='bg-blue-200 h-full py-8 flex items-center justify-center'>
       <Form
-        width={"w-2/5"}
+        width={"w-8/9 mx-10 lg:w-3/5 xl:w-2/5"}
       >
         <h3 className="text-3xl">Sign up</h3>
         <p className="my-3 text-gray-500">Already have an account?

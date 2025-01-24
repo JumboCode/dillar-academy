@@ -47,7 +47,7 @@ export default function Login() {
   return (
     <>
       <main className="bg-blue-200 h-full flex justify-center items-center">
-        <Form width="w-2/5">
+        <Form width="w-8/9 mx-10 sm:w-3/5 l:w-1/2 xl:w-2/5">
           <h1 className="text-2xl sm:text-3xl">Login</h1>
           <h3 className="text-sm sm:text-base text-slate-400 my-3">Don't have an account?
             <Link href="/signup" className="ml-1 font-extrabold text-blue-400">Sign up</Link>
