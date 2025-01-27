@@ -13,6 +13,6 @@ jobs:
         with:
           cache: "npm"
       - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+        run: npm install --global vercel
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }}

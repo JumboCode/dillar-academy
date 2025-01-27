@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
 const mongoSanitize = require('express-mongo-sanitize');
+const nodemailer = require('nodemailer');
 
 const app = express()
 app.use(cors())
@@ -39,6 +40,7 @@ app.get('/', (req, res) => {
 });
 
 
+
 //------------------ HELPER FUNCTIONS ------------------//
 
 /*
@@ -54,13 +56,14 @@ const validateInput = (input, allowedFields) => {
 
   for (const key in input) {
     if (allowedFields.includes(key)) {
-      // capitalize the value
-      filteredInput[key] = input[key].charAt(0).toUpperCase() + input[key].slice(1)
+      filteredInput[key] = input[key]
     }
   }
 
   return filteredInput
 }
+
+
 
 //------------------ MONGOOSE SCHEMAS ------------------//
 
@@ -72,8 +75,10 @@ const UserSchema = new Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  isAdmin: { type: Boolean, required: true },
+  privilege: { type: String, required: true, default: "student", enum: ["admin", "teacher", "student"] },
   username: { type: String, required: true },
+  clerkId: { type: String, required: true },
+  creationDate: { type: Date, default: Date.now },
   enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
 }, { collection: 'users' })
 
@@ -130,14 +135,16 @@ const LevelSchema = new Schema({
 
 const Level = mongoose.model("Level", LevelSchema)
 
+
+
 //------------------ ENDPOINTS ------------------//
 
 /* USER RELATED ENDPOINTS */
 
 // Sign up
-app.post('/api/users', async (req, res) => {
+app.post('/api/sign-up', async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password } = req.body;
+    const { firstName, lastName, username, email, password, clerkId } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({
@@ -162,43 +169,44 @@ app.post('/api/users', async (req, res) => {
       lastName,
       email,
       password,
-      isAdmin: false,
-      username
+      username,
+      clerkId
     });
 
     await newUser.save();
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json(newUser);
 
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ message: 'Error creating user' });
   }
-});
+})
+
 
 // Login
 app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
-    console.log('Database query result:', user);
+    const user = await User.findOne({ email });
     if (user) {
       if (user.password === password) {
-        console.log('Login successful for user:', username);
-        res.status(200).json({ user });
+        console.log('Login successful for user:', email);
+        res.status(200).json(user);
       } else {
         console.log('Login failed: Incorrect password.');
         res.status(401).send('Invalid password.');
       }
     } else {
       console.log('Login failed: User not found');
-      res.status(401).send('Invalid username.');
+      res.status(401).send('Invalid email.');
     }
   } catch (error) {
     console.error('Error during login.', error);
     res.status(500).send({ message: 'Server Error.' });
   }
-});
+})
+
 
 // Get Users
 app.get('/api/users', async (req, res) => {
@@ -211,26 +219,75 @@ app.get('/api/users', async (req, res) => {
 })
 
 
+// Get User
+app.get('/api/user', async (req, res) => {
+  const allowedFields = ['email']
+  const filters = validateInput(req.query, allowedFields)
+
+  try {
+    const user = await User.findOne(filters);
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+
 /* CONTACT RELATED ENDPOINTS */
 
 // Post Contact
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body
+
   try {
     const newContact = new Contact({
       name,
       email,
       subject,
       message
-    })
-    await newContact.save()
+    });
+    await newContact.save();
 
-    res.status(201).json({ message: 'Inquiry submitted successfully' })
+    // Nodemailer setup
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.ADMIN_EMAIL,
+        pass: process.env.ADMIN_PASSWORD,
+      },
+    });
+
+    transporter.verify((error, success) => {
+      if (error) {
+        console.error('Error initializing transporter:', error);
+      } else {
+        console.log('Transporter is ready to send emails', success);
+      }
+    });
+
+
+    const mailOptions = {
+      from: email,
+      to: process.env.ADMIN_EMAIL,
+      subject: `Contact Form: ${subject}`,
+      html: `
+        <p><strong>From:</strong> ${name} (${email})</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).json({ message: 'Inquiry and email submitted successfully' });
   }
   catch (err) {
-    res.status(500).json({ message: 'Error submitting inquiry' });
+    console.error('Error submitting inquiry:', err);
+    res.status(500).json({ message: 'Error submitting inquiry', error: err.message });
   }
-})
+});
 
 
 /* CLASS RELATED ENDPOINTS */
@@ -249,6 +306,7 @@ app.get('/api/classes', async (req, res) => {
   }
 })
 
+
 // Get Levels
 app.get("/api/levels", async (req, res) => {
   try {
@@ -261,24 +319,27 @@ app.get("/api/levels", async (req, res) => {
   }
 })
 
+
 // Get Conversation classes
 app.get("/api/conversations", async (req, res) => {
   try {
     const data = await Conversation.find();
     res.status(200).json(data);
-  } catch (error) {
+  } catch (err) {
     res.status(500).send(err);
   }
 })
 
-// Get Student's classes
-app.get('/api/students-classes', async (req, res) => {
+// Get Student's classes by ID
+app.get('/api/students-classes/:id', async (req, res) => {
   try {
-    const allowedFields = ['_id'];
-    const filters = validateInput(req.query, allowedFields);
+    const { id } = req.params;
 
-    //apply the filters directly to the database query
-    const data = await User.findOne(filters, { enrolledClasses: 1, _id: 0 });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
     res.json(data);
 
   } catch (err) {
@@ -287,13 +348,15 @@ app.get('/api/students-classes', async (req, res) => {
 })
 
 // Get class by ID
-app.get('/api/class', async (req, res) => {
+app.get('/api/class/:id', async (req, res) => {
   try {
-    const allowedFields = ['_id'];
-    const filters = validateInput(req.query, allowedFields);
+    const { id } = req.params;
 
-    //apply the filters directly to the database query
-    const data = await Class.findOne(filters);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await Class.findOne({ _id: id });
     res.json(data)
 
   } catch (err) {
@@ -301,14 +364,72 @@ app.get('/api/class', async (req, res) => {
   }
 })
 
+// Create or Edit Class
+app.post('/api/classes', async (req, res) => {
+  try {
+    const { title, level, ageGroup, instructor, schedule } = req.body;
+
+    // Check if class already exists by title (assuming title is unique)
+    const existingClass = await Class.findOne({ title });
+
+    if (existingClass) {
+      // If class exists, update it while preserving the roster
+      const updatedClass = await Class.findByIdAndUpdate(
+        existingClass._id,
+        {
+          $set: {
+            title,
+            level,
+            ageGroup,
+            instructor,
+            schedule
+          }
+        },
+        {
+          new: true,  // Return the updated document
+          runValidators: true  // Run schema validators
+        }
+      );
+
+      return res.status(200).json({
+        message: 'Class updated successfully',
+        class: updatedClass
+      });
+    } else {
+      // If class doesn't exist, create a new one with empty roster
+      const newClass = new Class({
+        title,
+        level,
+        ageGroup,
+        instructor,
+        schedule,
+      });
+
+      await newClass.save();
+      return res.status(201).json({
+        message: 'Class created successfully',
+        class: newClass
+      });
+    }
+  } catch (error) {
+    console.error('Error creating/updating class:', error);
+    return res.status(500).json({ message: 'Error creating/updating class' });
+  }
+});
+
 // Enroll in a class
 app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
-  const studentId = new mongoose.Types.ObjectId('671edb6d31e448b23d0dc384') // hardcode userId
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
   try {
     // add class id to user's classes
     await User.findByIdAndUpdate(
-      studentId,
+      id,
       { $addToSet: { enrolledClasses: classId } },
       { new: true }
     )
@@ -316,7 +437,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
     // add student id to class's roster
     await Class.findByIdAndUpdate(
       classId,
-      { $addToSet: { roster: studentId } },
+      { $addToSet: { roster: id } },
       { new: true }
     )
     res.status(201).json({ message: 'Enrolled successfully!' })
@@ -329,18 +450,23 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 // Unenroll in a class
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
-  const studentId = new mongoose.Types.ObjectId('671edb6d31e448b23d0dc384') // hardcode userId
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
   try {
     // remove class id from user's classes
     await User.findByIdAndUpdate(
-      studentId,
+      id,
       { $pull: { enrolledClasses: classId } },
     )
 
     // remove student id from class's roster
     await Class.findByIdAndUpdate(
       classId,
-      { $pull: { roster: studentId } },
+      { $pull: { roster: id } },
     )
     res.status(201).json({ message: 'Unenrolled successfully!' })
   } catch (err) {
@@ -348,3 +474,28 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
     res.status(500).json({ message: 'Error unenrolling into class' })
   }
 })
+
+//Forgot Password
+app.post('/api/users/reset-password', async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  try {
+    if (user) {
+      const user = { username: username };
+      const updatedPassword = { password: password };
+      const options = { returnDocument: 'after' };
+      await User.findOneAndUpdate(user, updatedPassword, options);
+
+      res.status(200).send("Password updated successfully.");
+
+    } else {
+      console.log('Login failed: User not found');
+      res.status(401).send('Invalid username.');
+    }
+  } catch (err) {
+    console.error('Error resetting password');
+    res.status(500).send("Server error resetting password.");
+  }
+
+
+});
