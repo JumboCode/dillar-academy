@@ -61,8 +61,8 @@ export default function ForgotPassword() {
   return (
     <>
       <main className="header-gradient h-full flex justify-center items-center">
-        <Form width="w-2/5">
-          <h1 className="text-4xl font-semibold my-3">{t("forgot_your_pass")}</h1>
+        <Form width="w-2/5 lg: w-4/5">
+          <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("forgot_your_pass")}</h1>
 
           <form method="POST"
             onSubmit={handleSubmit}

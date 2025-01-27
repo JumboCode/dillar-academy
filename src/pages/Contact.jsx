@@ -40,8 +40,8 @@ export default function Contact() {
   return (
     <div className="w-full h-full py-12 bg-[url('/images/ice_water.png')] bg-no-repeat bg-center bg-cover flex flex-col sm:flex-row justify-center items-center">
       {/* form box */}
-      <Form width="w-1/3">
-        <h2 className="text-2xl font-semibold mb-2">{t("contact_heading")}</h2>
+      <Form width="w-1/3 sm: w-3/4">
+        <h2 className="text-2xl sm: text-1xl font-semibold mb-2">{t("contact_heading")}</h2>
         <p className="mb-4 text-gray-600 opacity-70">
           {t("contact_form_description")}
         </p >
