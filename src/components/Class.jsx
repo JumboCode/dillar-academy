@@ -15,24 +15,20 @@ const Class = ({ classObj }) => {
         {/* Header */}
         <div>
           <h3 className="text-xl font-extrabold text-dark-blue-800 mb-1">
-            {ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}'s Class
+            {ageGroup === "all" ? 'All Ages' : `${ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}'s Class`}
           </h3>
           <span className="text-sm text-neutral-400">w/ {classObj.instructor}</span>
         </div>
-
         {/* Schedule */}
-        <div className="space-y-3">
+        <div className="grid grid-rows-2 grid-cols-[min-content] items-center gap-x-2 gap-y-1">
+          <IoTimeOutline className="text-xl row-start-1" />
+          <IoCalendarOutline className="text-xl row-start-2" />
           {classObj.schedule.map((schedule, index) => (
-            <div key={index} className="flex items-center text-neutral-400 text-sm">
-              <div className="flex items-center gap-2 w-1/2">
-                <IoCalendarOutline className="text-lg" />
-                <span>{schedule.day}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <IoTimeOutline className="text-lg" />
-                <span>{schedule.time}</span>
-              </div>
-            </div>
+            <>
+              {index === 1 && <div className="row-span-full w-0 h-full border-[1px]"></div>}
+              <p className="row-start-1">{schedule.time}</p>
+              <p className="row-start-2">{schedule.day}</p>
+            </>
           ))}
         </div>
         <SignedIn>

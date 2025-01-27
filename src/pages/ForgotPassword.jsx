@@ -62,11 +62,11 @@ export default function ForgotPassword() {
     <>
       <main className="header-gradient h-full flex justify-center items-center">
         <Form width="w-2/5">
-          <h1 className="text-4xl font-semibold my-3">{t("forgot_your_pass")}</h1>
+          <h1 className="text-4xl font-extrabold my-3">{t("forgot_your_pass")}</h1>
 
           <form method="POST"
             onSubmit={handleSubmit}
-            className="space-y-3"
+            className="gap-y-3"
           >
             <FormInput
               type="text"

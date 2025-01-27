@@ -80,13 +80,13 @@ export default function SignUp() {
       <Form
         width={"w-2/5"}
       >
-        <h3 className="text-4xl font-semibold">{t("sign_up_text")}</h3>
+        <h3 className="text-4xl font-extrabold">{t("sign_up_text")}</h3>
         <p className="mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
           <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("login_text")}</Link>
         </p>
         {/* Form Values and the Borders */}
-        <form method="POST" onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex space-y-3 sm:space-y-0 sm:space-x-3 sm:flex-row flex-col">
+        <form method="POST" onSubmit={handleSubmit} className="gap-y-3">
+          <div className="flex gap-y-3 sm:gap-y-0 sm:gap-x-3 sm:flex-row flex-col">
             <FormInput
               isRequired={true}
               type="text"
