@@ -417,6 +417,46 @@ app.post('/api/classes', async (req, res) => {
   }
 });
 
+// Update Class
+app.put('/api/classes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const updatedClass = await Class.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedClass) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+
+    res.status(200).json(updatedClass);
+  } catch (error) {
+    console.error('Error updating class:', error);
+    res.status(500).json({ message: 'Error updating class' });
+  }
+});
+
+// Delete Class
+app.delete('/api/classes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedClass = await Class.findByIdAndDelete(id);
+
+    if (!deletedClass) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+
+    res.status(200).json({ message: 'Class deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting class:', error);
+    res.status(500).json({ message: 'Error deleting class' });
+  }
+});
+
 // Enroll in a class
 app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
@@ -474,6 +514,8 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
     res.status(500).json({ message: 'Error unenrolling into class' })
   }
 })
+
+
 
 //Forgot Password
 app.post('/api/users/reset-password', async (req, res) => {
