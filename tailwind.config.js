@@ -9,6 +9,17 @@ export default {
       fontFamily: {
         avenir: ["Avenir", "sans-serif"],
       },
+      borderRadius: {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "12px",
+        "lg": "16px",
+        "xl": "20px"
+      },
+      boxShadow: {
+        "shadow": "0 0.25rem 24px 0 rgba(76, 75, 99, 0.18)",
+        "shadow-hover": "0px 4px 16px 0px rgba(74, 73, 96, 30%), 0px 6px 36px 0px rgba(74, 73, 96, 16%)"
+      },
       colors: {
         "blue": {
           100: '#ECF7FE',
@@ -50,10 +61,6 @@ export default {
           600: '#4C4B63',
           700: '#2A2A37',
         },
-      },
-      boxShadow: {
-        "shadow": "0 0.25rem 24px 0 rgba(76, 75, 99, 0.18)",
-        "shadow-hover": "0px 4px 16px 0px rgba(74, 73, 96, 30%), 0px 6px 36px 0px rgba(74, 73, 96, 16%)"
       }
     },
   },

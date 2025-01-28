@@ -51,7 +51,7 @@ const App = () => {
 
   return (
     <>
-      <div className='min-h-screen grid grid-rows-[5rem_1fr] font-avenir box-border'>
+      <div className='min-h-screen grid grid-rows-[5rem_1fr] font-avenir font-normal box-border'>
         <UserContext.Provider value={{ user: userData, setUser: setUser }}>
           <div className={`${isNew ? 'hidden' : ''}`}>
             <NavBar />

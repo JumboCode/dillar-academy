@@ -41,13 +41,13 @@ export default function Contact() {
     <div className="w-full h-full py-12 bg-[url('/images/ice_water.png')] bg-no-repeat bg-center bg-cover flex flex-col sm:flex-row justify-center items-center">
       {/* form box */}
       <Form width="w-1/3">
-        <h2 className="text-2xl font-semibold mb-2">{t("contact_heading")}</h2>
+        <h2 className="text-2xl font-extrabold mb-2">{t("contact_heading")}</h2>
         <p className="mb-4 text-gray-600 opacity-70">
           {t("contact_form_description")}
         </p >
         <form
           onSubmit={handleSubmit}
-          className="space-y-3"
+          className="gap-y-3"
         >
           <FormInput
             type="text"
