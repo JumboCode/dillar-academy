@@ -60,7 +60,7 @@ export default function Login() {
 
   return (
     <>
-      <main className="bg-blue-200 h-full flex justify-center items-center">
+      <main className="bg-blue-200 h-full flex justify-center items-center p-10">
         <Form width="w-8/9 mx-10 sm:w-3/5 l:w-1/2">
           <h1 className="text-2xl sm:text-3xl">{t("login_text")}</h1>
           <h3 className="text-sm sm:text-base text-slate-400 my-3">{t("login_signup1")}

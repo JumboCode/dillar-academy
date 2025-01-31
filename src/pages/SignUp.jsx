@@ -80,7 +80,7 @@ export default function SignUp() {
       <Form
         width={"w-8/9 mx-10 lg:w-3/5 xl:w-2/5"}
       >
-        <h3 className="text-4xl font-semibold">{t("sign_up_text")}</h3>
+        <h3 className="text-3xl md:text-4xl font-semibold">{t("sign_up_text")}</h3>
         <p className="mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
           <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("login_text")}</Link>
         </p>
