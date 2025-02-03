@@ -20,6 +20,17 @@ const getLevels = async (query = "") => {
   }
 }
 
+// classData should be an object containing title, level, ageGroup, instructor, and schedule
+const createOrUpdateClass = async (classData) => {
+  try {
+    const response = await axios.post(apiUrl('/api/classes'), classData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating/updating class:', error);
+    throw error;
+  }
+}
+
 const getConversations = async () => {
   try {
     const response = await axios.get("/api/conversations/")
@@ -59,10 +70,9 @@ const unenrollInClass = async (classId, userId) => {
   }
 }
 
-const getStudentClasses = async (studentId) => {
-  const queryString = new URLSearchParams(`_id=${studentId}`);
+const getStudentsClasses = async (studentId) => {
   try {
-    const response = await axios.get(`/api/students-classes?${queryString.toString()}`);
+    const response = await axios.get(`/api/students-classes/${studentId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching student's classes:", error);
@@ -70,9 +80,8 @@ const getStudentClasses = async (studentId) => {
 }
 
 const getClassById = async (classId) => {
-  const queryString = new URLSearchParams(`_id=${classId}`);
   try {
-    const response = await axios.get(`/api/class?${queryString.toString()}`);
+    const response = await axios.get(`/api/class/${classId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching class from id:", error);
@@ -82,9 +91,10 @@ const getClassById = async (classId) => {
 export {
   getClasses,
   getLevels,
+  createOrUpdateClass,
   getConversations,
   enrollInClass,
   unenrollInClass,
-  getStudentClasses,
+  getStudentsClasses,
   getClassById,
 }

@@ -23,10 +23,10 @@ const Dropdown = ({ label, children, buttonClassName = "dropdown-button text-rig
   }, [isOpen])
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div ref={dropdownRef} className="relative sm:w-auto w-full">
       {/* dropdown button */}
       <button
-        className={buttonClassName}
+        className={`box-border ${buttonClassName}`}
         onClick={() => setIsOpen(!isOpen)}
         type="button"
       >
@@ -35,7 +35,7 @@ const Dropdown = ({ label, children, buttonClassName = "dropdown-button text-rig
       </button>
       {/* dropdown */}
       {isOpen && (
-        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+        <div className="absolute mt-2 w-full rounded-md shadow-lg bg-white z-50 outline outline-white">
           <div className="py-1" role="menu" aria-orientation="vertical">
             {children}
           </div>

@@ -4,7 +4,7 @@ const FormSubmit = ({ label, isDisabled }) => {
     return (
         <button
             type="submit"
-            className={`w-full py-3 ${isDisabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 transition duration-300'} text-white font-semibold rounded-lg`}
+            className={`mw-1/5 px-6 py-2 ${isDisabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-dark-blue-800 hover:bg-dark-blue-700 transition duration-300'} text-white font-normal rounded-lg`}
             disabled={isDisabled}
         >
             {label}
