@@ -3,6 +3,7 @@ import { getClassById, getStudentsClasses } from '@/api/class-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
+import Class from '@/components/Class'
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
@@ -48,7 +49,53 @@ const StudentPortal = () => {
 
   return (
     <div className='h-full'>
-      <h1>Student</h1>
+      <br></br>
+      <h1 className='text-4xl font-bold mb-4' >
+        Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}! 
+      </h1>
+
+      <section>
+        <h1 className='text-3xl mb-4'> Your courses </h1>
+        <div className='grid grid-cols-3'>
+          {classes.map((classObj, classIndex) => (
+            <Class key={classIndex} classObj={classObj} />
+            
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <br></br>
+        <h1 className='text-3xl mb-4'>Schedule</h1>
+        <div className="table w-full table-fixed">
+          <div className="table-header-group">
+            <div className="table-row">
+              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
+                <div key={day} className="table-cell text-center font-semibold p-2">
+                  {day}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="table-row-group">
+            <div className="table-row h-24">
+              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
+                <div key={day} className="table-cell p-2">
+                  {(day === 'MON' || day === 'FRI' || day === 'SUN') && (
+                    <div className="bg-blue-200 rounded p-2">
+                      <div className="text-gray-600 text-sm">10 - 11am EST</div>
+                      <div>LVL1 - Adults</div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+    </section>
+
+
+
     </div>
   );
 
