@@ -73,10 +73,11 @@ const Schema = mongoose.Schema
 const UserSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
+  gender: { type: String },
+  age: { type: Number },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  privilege: { type: String, required: true, default: "student", enum: ["admin", "teacher", "student"] },
-  username: { type: String, required: true },
+  privilege: { type: String, default: "student", enum: ["admin", "teacher", "student"] },
   clerkId: { type: String, required: true },
   creationDate: { type: Date, default: Date.now },
   enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
@@ -90,7 +91,8 @@ const ContactSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   subject: { type: String, required: true },
-  message: { type: String, required: true }
+  message: { type: String, required: true },
+  creationDate: { type: Date, default: Date.now },
 }, { collection: 'contacts' })
 
 const Contact = mongoose.model('Contact', ContactSchema);
@@ -104,11 +106,11 @@ const ScheduleSchema = new Schema({
 
 // Class Schema
 const ClassSchema = new Schema({
-  title: { type: String, required: true },
-  level: { type: String, required: true },
+  level: { type: Number, required: true },
   ageGroup: { type: String, required: true },
   instructor: { type: String, required: true },
-  schedule: { type: [ScheduleSchema], required: true, default: [] },
+  classroomLink: { type: String, default: "" },
+  schedule: { type: [ScheduleSchema], default: [] },
   roster: { type: [Schema.Types.ObjectId], default: [] }
 }, { collection: 'classes' })
 
@@ -119,7 +121,7 @@ const Class = mongoose.model("Class", ClassSchema)
 const ConversationSchema = new Schema({
   instructor: { type: String, required: true },
   ageGroup: { type: String, required: true },
-  schedule: { type: [ScheduleSchema], required: true, default: [] },
+  schedule: { type: [ScheduleSchema], default: [] },
   roster: { type: [Schema.Types.ObjectId], default: [] }
 }, { collection: 'conversations' })
 
@@ -144,23 +146,13 @@ const Level = mongoose.model("Level", LevelSchema)
 // Sign up
 app.post('/api/sign-up', async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password, clerkId } = req.body;
+    const { firstName, lastName, email, password, clerkId } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({
-      $or: [
-        { email: email },
-        { username: username }
-      ]
-    });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      if (existingUser.email === email) {
-        return res.status(409).json({ message: 'Email already exists' });
-      }
-      if (existingUser.username === username) {
-        return res.status(409).json({ message: 'Username already exists' });
-      }
+      return res.status(409).json({ message: 'Email already exists' });
     }
 
     // Create new user with separate first/last name fields
@@ -169,7 +161,6 @@ app.post('/api/sign-up', async (req, res) => {
       lastName,
       email,
       password,
-      username,
       clerkId
     });
 
@@ -221,7 +212,7 @@ app.get('/api/users', async (req, res) => {
 
 // Get User
 app.get('/api/user', async (req, res) => {
-  const allowedFields = ['email']
+  const allowedFields = ['email', '_id']
   const filters = validateInput(req.query, allowedFields)
 
   try {
@@ -364,41 +355,25 @@ app.get('/api/class/:id', async (req, res) => {
   }
 })
 
-// Create or Edit Class
+// Create class
 app.post('/api/classes', async (req, res) => {
   try {
-    const { title, level, ageGroup, instructor, schedule } = req.body;
+    const { level, ageGroup, instructor, schedule } = req.body;
 
-    // Check if class already exists by title (assuming title is unique)
-    const existingClass = await Class.findOne({ title });
+    // Check if class already exists
+    const query = { level, ageGroup, instructor };
+    if (schedule) {
+      query.$expr = { $setEquals: ["$schedule", schedule] };
+    }
+    const existingClass = await Class.findOne(query);
 
     if (existingClass) {
-      // If class exists, update it while preserving the roster
-      const updatedClass = await Class.findByIdAndUpdate(
-        existingClass._id,
-        {
-          $set: {
-            title,
-            level,
-            ageGroup,
-            instructor,
-            schedule
-          }
-        },
-        {
-          new: true,  // Return the updated document
-          runValidators: true  // Run schema validators
-        }
-      );
-
-      return res.status(200).json({
-        message: 'Class updated successfully',
-        class: updatedClass
+      return res.status(409).json({
+        message: 'Class already exists',
+        class: existingClass
       });
     } else {
-      // If class doesn't exist, create a new one with empty roster
       const newClass = new Class({
-        title,
         level,
         ageGroup,
         instructor,
@@ -412,8 +387,31 @@ app.post('/api/classes', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error creating/updating class:', error);
-    return res.status(500).json({ message: 'Error creating/updating class' });
+    console.error('Error creating:', error);
+    return res.status(500).json({ message: 'Error creating class' });
+  }
+});
+
+// Update class
+app.put('/api/classes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const updatedClass = await Class.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedClass) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+
+    res.status(200).json(updatedClass);
+  } catch (error) {
+    console.error('Error updating class:', error);
+    res.status(500).json({ message: 'Error updating class' });
   }
 });
 
@@ -475,27 +473,23 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
   }
 })
 
-//Forgot Password
-app.post('/api/users/reset-password', async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
+// Forgot Password
+app.put('/api/users/reset-password', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
   try {
     if (user) {
-      const user = { username: username };
+      const user = { email: email };
       const updatedPassword = { password: password };
       const options = { returnDocument: 'after' };
       await User.findOneAndUpdate(user, updatedPassword, options);
 
       res.status(200).send("Password updated successfully.");
-
     } else {
-      console.log('Login failed: User not found');
-      res.status(401).send('Invalid username.');
+      res.status(401).send('Invalid email.');
     }
   } catch (err) {
     console.error('Error resetting password');
     res.status(500).send("Server error resetting password.");
   }
-
-
 });

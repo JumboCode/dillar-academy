@@ -24,7 +24,7 @@ export default function ForgotPassword() {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
     retypedPassword: ''
   })
@@ -36,7 +36,7 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, password, retypedPassword } = formData
+    const { email, password, retypedPassword } = formData
     if (password != retypedPassword) {
       alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
     } else {
@@ -69,9 +69,9 @@ export default function ForgotPassword() {
             className="gap-y-3"
           >
             <FormInput
-              type="text"
-              name="username"
-              value={formData.username}
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               placeholder={t("username_field")}
               isRequired={true} />
