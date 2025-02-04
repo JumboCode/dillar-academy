@@ -62,13 +62,13 @@ export default function Login() {
     <>
       <main className="header-gradient h-full py-40 flex justify-center items-center">
         <Form width="w-2/5">
-          <h1 className="text-4xl font-semibold sm:text-3xl">{t("login_text")}</h1>
+          <h1 className="text-4xl font-extrabold sm:text-3xl">{t("login_text")}</h1>
           <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
             <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
           </h3>
           <form method="POST"
             onSubmit={handleSubmit}
-            className="space-y-3"
+            className="gap-y-3"
           >
             <FormInput
               type="email"

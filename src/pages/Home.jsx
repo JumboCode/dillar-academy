@@ -17,7 +17,7 @@ const HomeClass = ({ classObj }) => {
             <div className="flex flex-col gap-1.5">
                 {/* Header */}
                 <div>
-                    <h3 className="text-2xl font-bold mb-1">{classObj.ageGroup}'s Class</h3>
+                    <h3 className="text-2xl font-extrabold mb-1">{classObj.ageGroup}'s Class</h3>
                     <p>  w/ {classObj.instructor} </p>
                 </div>
                 {/* Schedule */}
@@ -33,7 +33,7 @@ const HomeClass = ({ classObj }) => {
                 </div>
                 <div className='gap-3 w-24'>
                     <button
-                        className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 px-2 py-2 rounded-lg text-neutral-400 font-semibold transition-colors duration-300 w-full`}
+                        className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 px-2 py-2 rounded-lg text-neutral-400 font-extrabold transition-colors duration-300 w-full`}
                     >
                         Register
                     </button>
@@ -98,7 +98,7 @@ const Home = () => {
                     <h1 className="text-5xl font-extrabold mb-6">Dillar English Academy</h1>
                     <p className="text-lg">{t("home_purpose")}</p>
                     <p className="text-sm mb-4"><b>300+</b> {t("home_student_desc")}</p>
-                    <div className="flex flex-col md:flex-row items-center space-x-3">
+                    <div className="flex flex-col md:flex-row items-center gap-x-3">
                         <Button
                             label={t("home_learn_title")}
                             onClick={() => setLocation("/signup")}
@@ -121,28 +121,28 @@ const Home = () => {
                         <Level level={level4} isSimplified={false} />
                     </div>
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
-                        <h2 className="text-4xl font-semibold mb-5">{t("home_class_level_title")}</h2>
+                        <h2 className="text-4xl font-extrabold mb-5">{t("home_class_level_title")}</h2>
                         <p className="text-2xl mb-4">{t("home_class_level_desc")}</p>
                     </div>
                 </div>
                 {/* About classes */}
                 <div className="flex flex-col sm:flex-row justify-around items-center">
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
-                        <h2 className="text-4xl font-semibold mb-5">{t("home_level_title")}</h2>
+                        <h2 className="text-4xl font-extrabold mb-5">{t("home_level_title")}</h2>
                         <p className="text-2xl mb-4">{t("home_level_desc")}</p>
                     </div>
-                    <div className="flex flex-col first-line:items-center md:flex-row space-x-4">
+                    <div className="flex flex-col first-line:items-center md:flex-row gap-x-4">
                         <HomeClass classObj={class1} className=" w-48 h-32 md:w-26 md:h-40" />
                         <HomeClass classObj={class2} className="w-48 h-32 md:w-26 md:h-40" />
                     </div>
                 </div>
                 {/* About registering */}
                 <div className="flex flex-row justify-around items-center">
-                    <div className="flex flex-col items-center  md:flex-row space-x-4">
+                    <div className="flex flex-col items-center  md:flex-row gap-x-4">
                         <Confirmation classObj={class1} className="w-48 h-32 md:w-56 md:h-40" />
                     </div>
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
-                        <h2 className="text-4xl font-semibold mb-5">{t("home_learn_title")}</h2>
+                        <h2 className="text-4xl font-extrabold mb-5">{t("home_learn_title")}</h2>
                         <p className="text-2xl mb-4">{t("home_learn_desc")}</p>
                     </div>
                 </div>
