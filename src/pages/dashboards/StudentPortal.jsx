@@ -1,9 +1,11 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState} from 'react';
 import { getClassById, getStudentsClasses } from '@/api/class-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
 import Class from '@/components/Class'
+import { Link } from "wouter"
+
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
@@ -56,13 +58,23 @@ const StudentPortal = () => {
 
       <section>
         <h1 className='text-3xl mb-4'> Your courses </h1>
-        <div className='grid grid-cols-3'>
+        <div className='grid grid-cols-3 gap-6'>
           {classes.map((classObj, classIndex) => (
             <Class key={classIndex} classObj={classObj} />
-            
           ))}
+          <div className="flex items-center">
+          <Link
+            to="/levels"
+            className="ml-4 w-12 h-12 bg-blue-500 text-white text-3xl 
+            font-bold rounded-full shadow-md flex items-center justify-center
+            hover:bg-blue-600 transition"
+          >
+            +
+          </Link>
+        </div>
         </div>
       </section>
+
 
       <section>
         <br></br>
