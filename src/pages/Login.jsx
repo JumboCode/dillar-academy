@@ -61,7 +61,7 @@ export default function Login() {
   return (
     <>
       <main className="bg-blue-200 h-full flex justify-center items-center p-10">
-        <Form width="w-8/9 sm:w-3/5 l:w-1/2">
+        <Form width="w-8/9 sm:w-3/5 lg:w-2/5">
           <h1 className="text-2xl sm:text-3xl">{t("login_text")}</h1>
           <h3 className="text-sm sm:text-base text-slate-400 my-3">{t("login_signup1")}
             <Link href="/signup" className="ml-1 font-extrabold text-blue-400">{t("sign_up_text")}</Link>

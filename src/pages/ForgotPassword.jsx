@@ -61,7 +61,7 @@ export default function ForgotPassword() {
   return (
     <>
       <main className="header-gradient h-full py-10 flex justify-center items-center">
-        <Form width="w-3/5 px-5 lg:w-2/5">
+        <Form width="w-4/5 px-5 lg:w-2/5">
           <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("forgot_your_pass")}</h1>
 
           <form method="POST"

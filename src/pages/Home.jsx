@@ -96,9 +96,9 @@ const Home = () => {
                 <div className="text-center md:text-left mb-12 mt-12 px-5 justify-items-center">
                     <p className="text-2xl text-blue-600 mb-3">{t("home_motto")}</p>
                     <h1 className="text-5xl font-extrabold mb-6">Dillar English Academy</h1>
-                    <p className="text-lg">{t("home_purpose")}</p>
-                    <p className="text-sm mb-4"><b>300+</b> {t("home_student_desc")}</p>
-                    <div className="flex flex-col md:flex-row items-center space-x-3">
+                    <p className="text-xl">{t("home_purpose")}</p>
+                    <p className="text-l mb-4"><b>300+</b> {t("home_student_desc")}</p>
+                    <div className="flex flex-col space-y-2 md:flex-row items-center md:space-y-0 md:space-x-3">
                         <Button
                             label={t("home_learn_title")}
                             onClick={() => setLocation("/signup")}
@@ -113,10 +113,11 @@ const Home = () => {
                 </div>
             </div>
             {/* Learn more section */}
-            <div className="flex flex-col bg-white px-4 py-20 gap-20 md:gap-32 mx-auto max-w-7xl">
+            <div className="flex flex-col bg-white px-4 py-20 gap-y-20 md:gap-32 mx-auto max-w-7xl">
                 {/* About levels */}
-                <div className="flex flex-col-reverse sm:flex-row justify-between items-center">
-                    <div className="gap-y-4  justify-center w-8/9 gap-8 md:gap-4 lg:gap-6 mb-6">
+                <div className="flex flex-col-reverse sm:flex-row justify-around items-center">
+                    {/* <div className="flex flex-col justify-center sm:flex-row w-8/9 gap-8 "> */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 justify-center w-8/9 gap-8 ">
                         <Level level={level1} isSimplified={false} />
                         <Level level={level4} isSimplified={false} />
                     </div>
@@ -126,7 +127,7 @@ const Home = () => {
                     </div>
                 </div>
                 {/* About classes */}
-                <div className="flex flex-col sm:flex-row justify-around items-center">
+                <div className="flex flex-col gap-2 sm:flex-row justify-around items-center">
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
                         <h2 className="text-4xl font-semibold mb-5">{t("home_level_title")}</h2>
                         <p className="text-2xl mb-4">{t("home_level_desc")}</p>
