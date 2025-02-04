@@ -116,7 +116,7 @@ const Home = () => {
             <div className="flex flex-col bg-white px-4 py-20 gap-20 md:gap-32 mx-auto max-w-7xl">
                 {/* About levels */}
                 <div className="flex flex-col-reverse sm:flex-row justify-between items-center">
-                    <div className="grid grid-cols-2 justify-center w-8/9 p-0 gap-8 md:gap-4 lg:gap-6 mb-6">
+                    <div className="gap-y-4  justify-center w-8/9 gap-8 md:gap-4 lg:gap-6 mb-6">
                         <Level level={level1} isSimplified={false} />
                         <Level level={level4} isSimplified={false} />
                     </div>
