@@ -20,8 +20,7 @@ const getLevels = async (query = "") => {
   }
 }
 
-// classData should be an object containing title, level, ageGroup, instructor, and schedule
-const createOrUpdateClass = async (classData) => {
+const createClass = async (classData) => {
   try {
     const response = await axios.post(apiUrl('/api/classes'), classData);
     return response.data;
@@ -91,7 +90,7 @@ const getClassById = async (classId) => {
 export {
   getClasses,
   getLevels,
-  createOrUpdateClass,
+  createClass,
   getConversations,
   enrollInClass,
   unenrollInClass,

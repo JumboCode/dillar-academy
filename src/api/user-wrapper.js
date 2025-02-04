@@ -55,7 +55,7 @@ const getUserPassword = async () => {
 const resetPassword = async (body) => {
   try {
     const response = await fetch(apiUrl("/api/users/reset-password"), {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -64,7 +64,7 @@ const resetPassword = async (body) => {
 
     return response
   } catch (error) {
-    console.error('Reset password endpoint post error:', error);
+    console.error('Reset password endpoint error:', error);
   }
 }
 

@@ -19,7 +19,6 @@ export default function SignUp() {
     firstName: '',
     lastName: '',
     email: '',
-    username: '',
     password: '',
     retypedPassword: '',
   })
@@ -104,14 +103,6 @@ export default function SignUp() {
               onChange={handleChange}
             />
           </div>
-          <FormInput
-            isRequired={true}
-            type="text"
-            name="username"
-            value={formData.username}
-            placeholder={t("username_field")}
-            onChange={handleChange}
-          />
           <FormInput
             isRequired={true}
             type="email"
