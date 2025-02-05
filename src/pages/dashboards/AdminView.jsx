@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/clerk-react';
 import Button from '@/components/Button/Button';
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
+import { getClasses, createOrUpdateClass, updateClass, deleteClass } from '../../api/class-wrapper';
 
 const AdminView = () => {
   const { user } = useContext(UserContext);
@@ -40,8 +41,7 @@ const AdminView = () => {
 
   const fetchClasses = async () => {
     try {
-      const response = await fetch('/api/classes');
-      const data = await response.json();
+      const data = await getClasses();
       setClasses(data);
     } catch (error) {
       console.error('Error fetching classes:', error);
@@ -58,18 +58,10 @@ const AdminView = () => {
   const handleCreateClass = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/classes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        setShowCreateModal(false);
-        setFormData({ title: '', level: '', ageGroup: '', instructor: '' });
-        await fetchClasses();
-      }
+      await createOrUpdateClass(formData);
+      setShowCreateModal(false);
+      setFormData({ title: '', level: '', ageGroup: '', instructor: '' });
+      await fetchClasses();
     } catch (error) {
       console.error('Error creating class:', error);
     }
@@ -78,19 +70,11 @@ const AdminView = () => {
   const handleEditClass = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`/api/classes/${selectedClass._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        setShowEditModal(false);
-        setSelectedClass(null);
-        setFormData({ title: '', level: '', ageGroup: '', instructor: '' });
-        await fetchClasses();
-      }
+      await updateClass(selectedClass._id, formData);
+      setShowEditModal(false);
+      setSelectedClass(null);
+      setFormData({ title: '', level: '', ageGroup: '', instructor: '' });
+      await fetchClasses();
     } catch (error) {
       console.error('Error updating class:', error);
     }
@@ -98,12 +82,8 @@ const AdminView = () => {
 
   const handleDeleteClass = async (classId) => {
     try {
-      const response = await fetch(`/api/classes/${classId}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        await fetchClasses();
-      }
+      await deleteClass(classId);
+      await fetchClasses();
     } catch (error) {
       console.error('Error deleting class:', error);
     }

@@ -23,7 +23,7 @@ const getLevels = async (query = "") => {
 // classData should be an object containing title, level, ageGroup, instructor, and schedule
 const createOrUpdateClass = async (classData) => {
   try {
-    const response = await axios.post(apiUrl('/api/classes'), classData);
+    const response = await axios.post('/api/classes', classData);
     return response.data;
   } catch (error) {
     console.error('Error creating/updating class:', error);
@@ -42,31 +42,21 @@ const getConversations = async () => {
 
 const enrollInClass = async (classId, userId) => {
   try {
-    const response = await fetch(`/api/users/${userId}/enroll`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ classId })
-    })
-    return response
+    const response = await axios.put(`/api/users/${userId}/enroll`, { classId });
+    return response.data;
   } catch (error) {
     console.error('Enroll endpoint put error:', error);
+    throw error;
   }
 }
 
 const unenrollInClass = async (classId, userId) => {
   try {
-    const response = await fetch(`/api/users/${userId}/unenroll`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ classId })
-    })
-    return response
+    const response = await axios.put(`/api/users/${userId}/unenroll`, { classId });
+    return response.data;
   } catch (error) {
-    console.error('Enroll endpoint put error:', error);
+    console.error('Unenroll endpoint put error:', error);
+    throw error;
   }
 }
 
@@ -88,10 +78,32 @@ const getClassById = async (classId) => {
   }
 }
 
+const updateClass = async (classId, classData) => {
+  try {
+    const response = await axios.put(`/api/classes/${classId}`, classData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating class:', error);
+    throw error;
+  }
+};
+
+const deleteClass = async (classId) => {
+  try {
+    const response = await axios.delete(`/api/classes/${classId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting class:', error);
+    throw error;
+  }
+};
+
 export {
   getClasses,
   getLevels,
   createOrUpdateClass,
+  updateClass,
+  deleteClass,
   getConversations,
   enrollInClass,
   unenrollInClass,
