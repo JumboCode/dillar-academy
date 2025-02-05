@@ -60,11 +60,11 @@ export default function Login() {
 
   return (
     <>
-      <main className="header-gradient h-full py-40 flex justify-center items-center">
-        <Form width="w-2/5">
-          <h1 className="text-4xl font-extrabold sm:text-3xl">{t("login_text")}</h1>
-          <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
-            <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
+      <main className="header-gradient h-full flex justify-center items-center px-8 py-24 sm:py-40">
+        <Form width="w-8/9 sm:w-3/5 lg:w-2/5">
+          <h1 className="text-2xl sm:text-3xl">{t("login_text")}</h1>
+          <h3 className="text-sm sm:text-base text-slate-400 my-3">{t("login_signup1")}
+            <Link href="/signup" className="ml-1 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
           </h3>
           <form method="POST"
             onSubmit={handleSubmit}
