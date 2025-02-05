@@ -50,8 +50,8 @@ const StudentPortal = () => {
   return (
     <div className='h-full'>
       <br></br>
-      <h1 className='text-4xl font-bold mb-4' >
-        Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}! 
+      <h1 className='text-4xl font-bold mb-4'>
+        Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}!
       </h1>
 
       <section>
@@ -59,7 +59,6 @@ const StudentPortal = () => {
         <div className='grid grid-cols-3'>
           {classes.map((classObj, classIndex) => (
             <Class key={classIndex} classObj={classObj} />
-            
           ))}
         </div>
       </section>
@@ -81,21 +80,20 @@ const StudentPortal = () => {
             <div className="table-row h-24">
               {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
                 <div key={day} className="table-cell p-2">
-                  {(day === 'MON' || day === 'FRI' || day === 'SUN') && (
-                    <div className="bg-blue-200 rounded p-2">
-                      <div className="text-gray-600 text-sm">10 - 11am EST</div>
-                      <div>LVL1 - Adults</div>
-                    </div>
-                  )}
+                  {classes
+                    .filter((classObj) => classObj.schedule.includes(day))
+                    .map((classObj, index) => (
+                      <div key={index} className="bg-blue-200 rounded p-2 mb-2">
+                        <div className="text-gray-600 text-sm">{classObj.time}</div>
+                        <div>{classObj.name}</div>
+                      </div>
+                    ))}
                 </div>
               ))}
             </div>
           </div>
         </div>
-    </section>
-
-
-
+      </section>
     </div>
   );
 
