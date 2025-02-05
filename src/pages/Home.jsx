@@ -17,7 +17,7 @@ const HomeClass = ({ classObj }) => {
             <div className="flex flex-col gap-1.5">
                 {/* Header */}
                 <div>
-                    <h3 className="text-2xl font-bold mb-1">{classObj.ageGroup}'s Class</h3>
+                    <h3 className="text-2xl font-extrabold mb-1">{classObj.ageGroup}'s Class</h3>
                     <p>  w/ {classObj.instructor} </p>
                 </div>
                 {/* Schedule */}
@@ -33,7 +33,7 @@ const HomeClass = ({ classObj }) => {
                 </div>
                 <div className='gap-3 w-24'>
                     <button
-                        className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 px-2 py-2 rounded-lg text-neutral-400 font-semibold transition-colors duration-300 w-full`}
+                        className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 px-2 py-2 rounded-lg text-neutral-400 font-extrabold transition-colors duration-300 w-full`}
                     >
                         Register
                     </button>
@@ -113,7 +113,7 @@ const Home = () => {
                 </div>
             </div>
             {/* Learn more section */}
-            <div className="flex flex-col bg-white px-4 py-20 gap-y-20 md:gap-32 mx-auto max-w-7xl">
+            <div className="flex flex-col bg-white px-4 py-20 sm:py-40 gap-y-20 md:gap-32 mx-auto max-w-7xl">
                 {/* About levels */}
                 <div className="flex flex-col-reverse gap-4 sm:flex-row justify-around items-center">
                     <div className="grid grid-cols-1 w-4/5 sm:gap-4 sm:w-auto sm:grid-cols-2 justify-center gap-8 ">
@@ -141,10 +141,10 @@ const Home = () => {
                 {/* About registering */}
                 <div className="flex flex-col-reverse gap-4 sm:flex-row justify-around items-center">
                     <div className="flex flex-col items-center md:flex-row space-x-4">
-                        <Confirmation classObj={class1} className="w-48 h-32 md:w-56 md:h-40"/>
+                        <Confirmation classObj={class1} className="w-48 h-32 md:w-56 md:h-40" />
                     </div>
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
-                        <h2 className="text-4xl font-semibold mb-5">{t("home_learn_title")}</h2>
+                        <h2 className="text-4xl font-extrabold mb-5">{t("home_learn_title")}</h2>
                         <p className="text-2xl mb-4">{t("home_learn_desc")}</p>
                     </div>
                 </div>

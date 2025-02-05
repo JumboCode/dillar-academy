@@ -31,7 +31,7 @@ const LanguageDropdown = () => {
   return (
     <Dropdown
       label={
-        <div className="flex items-center justify-center space-x-1">
+        <div className="flex items-center justify-center gap-x-1">
           <IoGlobeOutline size={24} className="text-black" />
           <span className="text-center w-full">{selectedLang}</span>
         </div>

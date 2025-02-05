@@ -22,7 +22,7 @@ const NavBar = () => {
             <img className="h-14 w-auto" src={dillarLogo} alt="Dillar English Academy" />
           </Link>
           {/* Desktop navigation */}
-          <div className="hidden sm:flex sm:items-center lg:space-x-20 md:space-x-10">
+          <div className="hidden sm:flex sm:items-center lg:gap-x-20 md:gap-x-10">
             <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
             <NavLink href="/contact">{t("nav_link_contact")}</NavLink>
             <NavLink href="/about">{t("nav_link_about")}</NavLink>

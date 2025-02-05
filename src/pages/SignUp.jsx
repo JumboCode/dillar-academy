@@ -19,7 +19,6 @@ export default function SignUp() {
     firstName: '',
     lastName: '',
     email: '',
-    username: '',
     password: '',
     retypedPassword: '',
   })
@@ -76,17 +75,17 @@ export default function SignUp() {
   }
 
   return (
-    <div className='header-gradient h-full py-8 flex items-center justify-center'>
+    <div className='header-gradient w-full h-full py-8 sm:py-24 flex items-center justify-center'>
       <Form
-        width={"w-8/9 mx-10 lg:w-3/5 xl:w-2/5"}
+        width={"mx-10 w-full sm:w-2/5"}
       >
         <h3 className="text-3xl md:text-4xl font-semibold">{t("sign_up_text")}</h3>
         <p className="mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
           <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("login_text")}</Link>
         </p>
         {/* Form Values and the Borders */}
-        <form method="POST" onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex space-y-3 sm:space-y-0 sm:space-x-3 sm:flex-row flex-col">
+        <form method="POST" onSubmit={handleSubmit} className="gap-y-3">
+          <div className="flex gap-y-3 sm:gap-y-0 sm:gap-x-3 sm:flex-row flex-col">
             <FormInput
               isRequired={true}
               type="text"
@@ -104,14 +103,6 @@ export default function SignUp() {
               onChange={handleChange}
             />
           </div>
-          <FormInput
-            isRequired={true}
-            type="text"
-            name="username"
-            value={formData.username}
-            placeholder={t("username_field")}
-            onChange={handleChange}
-          />
           <FormInput
             isRequired={true}
             type="email"

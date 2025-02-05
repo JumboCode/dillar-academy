@@ -60,7 +60,7 @@ export default function Login() {
 
   return (
     <>
-      <main className="bg-blue-200 h-full flex justify-center items-center p-10">
+      <main className="header-gradient h-full flex justify-center items-center px-8 py-24 sm:py-40">
         <Form width="w-8/9 sm:w-3/5 lg:w-2/5">
           <h1 className="text-2xl sm:text-3xl">{t("login_text")}</h1>
           <h3 className="text-sm sm:text-base text-slate-400 my-3">{t("login_signup1")}
@@ -68,7 +68,7 @@ export default function Login() {
           </h3>
           <form method="POST"
             onSubmit={handleSubmit}
-            className="space-y-3"
+            className="gap-y-3"
           >
             <FormInput
               type="email"
