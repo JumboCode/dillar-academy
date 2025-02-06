@@ -161,17 +161,17 @@ const StyleGuide = () => {
       weightStyle: "font-extrabold",
       weightNum: 800,
     },
-    // {
-    //   name: "Medium",
-    //   weightStyle: "font-medium",
-    // },
+    {
+      name: "Medium",
+      weightStyle: "font-medium",
+    },
     {
       name: "Roman",
       weightStyle: "text-normal",
       weightNum: 400,
     },
     {
-      name: "Book",
+      name: "Light",
       weightStyle: "text-light",
       weightNum: 300,
     },
@@ -194,7 +194,7 @@ const StyleGuide = () => {
               <h3 className="text-xl whitespace-nowrap">Color name: {color.name}</h3>
               {color.variations ? (
                 color.variations.map((variation, variationIndex) => (
-                  <div key={variationIndex} className="flex items-center space-x-5">
+                  <div key={variationIndex} className="flex items-center gap-x-5">
                     <div style={{ backgroundColor: variation.hex }} className={`h-20 w-20`}></div>
                     <div className="flex flex-col">
                       <p>Number: {variation.number}</p>
@@ -203,7 +203,7 @@ const StyleGuide = () => {
                   </div>
                 ))
               ) : (
-                <div className="flex items-center space-x-5 whitespace-nowrap">
+                <div className="flex items-center gap-x-5 whitespace-nowrap">
                   <div style={{ backgroundColor: color.hex }} className={`h-20 w-20`}></div>
                   <p>Hex: {color.hex}</p>
                 </div>
@@ -216,9 +216,9 @@ const StyleGuide = () => {
       <section className={`${sectionStyle}`}>
         <h2 className={h2Style}>Font: Avenir</h2>
         <p>Font styles</p>
-        <div className="flex flex-col my-3 space-y-3">
+        <div className="flex flex-col my-3 gap-y-3">
           {fontStyles.map((style, index) => (
-            <div className={`flex space-x-2 items-end ${style.weightStyle}`}>
+            <div key={index} className={`flex gap-x-2 items-end ${style.weightStyle}`}>
               <p className={`text-2xl leading-tight`}>{style.name}</p>
               <p>Tailwind weight style: {style.weightStyle}</p>
               <p>Weight Number: {style.weightNum}</p>
@@ -232,6 +232,35 @@ const StyleGuide = () => {
         <a href="https://react-icons.github.io/react-icons/icons/io5/" className="text-blue-500 text-xl">Link to icons</a>
         <p>To access the Ionicons 5 icons we will be using the react-icon library. To add an icon, click on the icon on the page, copy the import statement, and then use the icon like a regular component.</p>
         <p className="text-red-400 text-xl mt-3">Note: react-icons is a library containing a bunch of icon packs, make sure the icon you import is from <code>react-icons/io5</code>!</p>
+      </section>
+      <section className={`${sectionStyle}`}>
+        <h2 className={h2Style}>Border Radius</h2>
+        <div className="flex gap-6">
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-24 h-24 bg-blue-200 rounded-xs"></div>
+            <p className="text-lg">xs</p>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-24 h-24 bg-blue-200 rounded-sm"></div>
+            <p className="text-lg">sm</p>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-24 h-24 bg-blue-200 rounded-md"></div>
+            <p className="text-lg">md</p>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-24 h-24 bg-blue-200 rounded-lg"></div>
+            <p className="text-lg">lg</p>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-24 h-24 bg-blue-200 rounded-xl"></div>
+            <p className="text-lg">xl</p>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-24 h-24 bg-blue-200 rounded-full"></div>
+            <p className="text-lg">full</p>
+          </div>
+        </div>
       </section>
     </div>
   )

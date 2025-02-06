@@ -20,8 +20,16 @@ const getLevels = async (query = "") => {
   }
 }
 
-// classData should be an object containing title, level, ageGroup, instructor, and schedule
-const createOrUpdateClass = async (classData) => {
+const getConversations = async () => {
+  try {
+    const response = await axios.get("/api/conversations/")
+    return response.data
+  } catch (error) {
+    console.error('Error fetching conversations:', error)
+  }
+}
+
+const createClass = async (classData) => {
   try {
     const response = await axios.post('/api/classes', classData);
     return response.data;
@@ -31,12 +39,23 @@ const createOrUpdateClass = async (classData) => {
   }
 }
 
-const getConversations = async () => {
+const updateClass = async (classId, classData) => {
   try {
-    const response = await axios.get("/api/conversations/")
-    return response.data
+    const response = await axios.put(`/api/classes/${classId}`, classData);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching conversations:', error)
+    console.error('Error updating class:', error);
+    throw error;
+  }
+}
+
+const deleteClass = async (classId) => {
+  try {
+    const response = await axios.delete(`/api/classes/${classId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting class:', error);
+    throw error;
   }
 }
 
@@ -78,30 +97,10 @@ const getClassById = async (classId) => {
   }
 }
 
-const updateClass = async (classId, classData) => {
-  try {
-    const response = await axios.put(`/api/classes/${classId}`, classData);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating class:', error);
-    throw error;
-  }
-};
-
-const deleteClass = async (classId) => {
-  try {
-    const response = await axios.delete(`/api/classes/${classId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error deleting class:', error);
-    throw error;
-  }
-};
-
 export {
   getClasses,
   getLevels,
-  createOrUpdateClass,
+  createClass,
   updateClass,
   deleteClass,
   getConversations,
