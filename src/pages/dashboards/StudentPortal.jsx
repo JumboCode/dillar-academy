@@ -52,8 +52,8 @@ const StudentPortal = () => {
   return (
     <div className='h-full'>
       <br></br>
-      <h1 className='text-4xl font-bold mb-4' >
-        Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}! 
+      <h1 className='text-4xl font-bold mb-4'>
+        Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}!
       </h1>
 
       <section>
@@ -93,21 +93,22 @@ const StudentPortal = () => {
             <div className="table-row h-24">
               {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
                 <div key={day} className="table-cell p-2">
-                  {(day === 'MON' || day === 'FRI' || day === 'SUN') && (
-                    <div className="bg-blue-200 rounded p-2">
-                      <div className="text-gray-600 text-sm">10 - 11am EST</div>
-                      <div>LVL1 - Adults</div>
-                    </div>
+                  {classes.map((classObj) =>
+                    classObj.schedule.map((schedule, index) =>
+                      schedule.day.slice(0, 3).toUpperCase() === day  ? (
+                        <div key={index} className="bg-blue-200 rounded p-2 mb-2">
+                          <div className="text-gray-600 text-sm">{schedule.day} {schedule.time} </div>
+                          <div>Class with {classObj.instructor}</div>
+                        </div>
+                      ) : null
+                    )
                   )}
                 </div>
               ))}
             </div>
           </div>
         </div>
-    </section>
-
-
-
+      </section>
     </div>
   );
 
