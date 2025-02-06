@@ -321,6 +321,7 @@ app.get("/api/conversations", async (req, res) => {
   }
 })
 
+
 // Get Student's classes by ID
 app.get('/api/students-classes/:id', async (req, res) => {
   try {
@@ -338,6 +339,7 @@ app.get('/api/students-classes/:id', async (req, res) => {
   }
 })
 
+
 // Get class by ID
 app.get('/api/class/:id', async (req, res) => {
   try {
@@ -354,6 +356,7 @@ app.get('/api/class/:id', async (req, res) => {
     res.status(500).send(err);
   }
 })
+
 
 // Create class
 app.post('/api/classes', async (req, res) => {
@@ -392,11 +395,16 @@ app.post('/api/classes', async (req, res) => {
   }
 });
 
-// Update class
+
+// Update Class
 app.put('/api/classes/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
 
     const updatedClass = await Class.findByIdAndUpdate(
       id,
@@ -415,6 +423,39 @@ app.put('/api/classes/:id', async (req, res) => {
   }
 });
 
+
+// Delete Class
+app.delete('/api/classes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedClass = await Class.findOne({ _id: id });
+    if (!deletedClass) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+
+    // remove class from student's enrolled classes
+    await Promise.all(
+      deletedClass.roster.map(studentId =>
+        User.findByIdAndUpdate(studentId, { $pull: { enrolledClasses: id } })
+          .catch(err => console.error(`Failed to update student ${studentId}:`, err))
+      )
+    );
+
+    // delete class
+    await Class.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Class deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting class:', error);
+    res.status(500).json({ message: 'Error deleting class' });
+  }
+});
+
+
 // Enroll in a class
 app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
@@ -428,15 +469,13 @@ app.put('/api/users/:id/enroll', async (req, res) => {
     // add class id to user's classes
     await User.findByIdAndUpdate(
       id,
-      { $addToSet: { enrolledClasses: classId } },
-      { new: true }
+      { $addToSet: { enrolledClasses: classId } }
     )
 
     // add student id to class's roster
     await Class.findByIdAndUpdate(
       classId,
-      { $addToSet: { roster: id } },
-      { new: true }
+      { $addToSet: { roster: id } }
     )
     res.status(201).json({ message: 'Enrolled successfully!' })
   } catch (err) {
@@ -444,6 +483,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
     res.status(500).json({ message: 'Error enrolling into class' })
   }
 })
+
 
 // Unenroll in a class
 app.put('/api/users/:id/unenroll', async (req, res) => {
@@ -472,6 +512,7 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
     res.status(500).json({ message: 'Error unenrolling into class' })
   }
 })
+
 
 // Forgot Password
 app.put('/api/users/reset-password', async (req, res) => {

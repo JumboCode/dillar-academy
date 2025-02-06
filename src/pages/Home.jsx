@@ -13,7 +13,7 @@ const HomeClass = ({ classObj }) => {
     const subDay2 = day2.substr(0, 3);
 
     return (
-        <div className="p-4 bg-white rounded-xl shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow w-60">
+        <div className="p-4 bg-white rounded-xl shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow w-full">
             <div className="flex flex-col gap-1.5">
                 {/* Header */}
                 <div>
@@ -96,9 +96,9 @@ const Home = () => {
                 <div className="text-center md:text-left mb-12 mt-12 px-5 justify-items-center">
                     <p className="text-2xl text-blue-600 mb-3">{t("home_motto")}</p>
                     <h1 className="text-5xl font-extrabold mb-6">Dillar English Academy</h1>
-                    <p className="text-lg">{t("home_purpose")}</p>
-                    <p className="text-sm mb-4"><b>300+</b> {t("home_student_desc")}</p>
-                    <div className="flex flex-col md:flex-row items-center gap-x-3">
+                    <p className="text-xl">{t("home_purpose")}</p>
+                    <p className="text-l mb-4"><b>300+</b> {t("home_student_desc")}</p>
+                    <div className="flex flex-col space-y-2 sm:flex-row items-center sm:space-y-0 sm:space-x-3">
                         <Button
                             label={t("home_learn_title")}
                             onClick={() => setLocation("/signup")}
@@ -113,32 +113,34 @@ const Home = () => {
                 </div>
             </div>
             {/* Learn more section */}
-            <div className="flex flex-col bg-white px-4 py-40 gap-32 mx-auto max-w-7xl">
+            <div className="flex flex-col bg-white px-4 py-20 sm:py-40 gap-y-20 md:gap-32 mx-auto max-w-7xl">
                 {/* About levels */}
-                <div className="flex flex-col sm:flex-row justify-between items-center">
-                    <div className="grid grid-cols-2 justify-center w-1/2 gap-8 md:gap-4 lg:gap-6 mb-6 md:mb-0">
+                <div className="flex flex-col-reverse gap-4 sm:flex-row justify-around items-center">
+                    <div className="grid grid-cols-1 w-4/5 sm:gap-4 sm:w-auto sm:grid-cols-2 justify-center gap-8 ">
                         <Level level={level1} isSimplified={false} />
                         <Level level={level4} isSimplified={false} />
                     </div>
-                    <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
-                        <h2 className="text-4xl font-extrabold mb-5">{t("home_class_level_title")}</h2>
+                    <div className={`px-2 md:px-0 text-center w-[484px] sm:text-left`}>
+                        <h2 className="text-4xl font-semibold mb-5">{t("home_class_level_title")}</h2>
                         <p className="text-2xl mb-4">{t("home_class_level_desc")}</p>
                     </div>
                 </div>
                 {/* About classes */}
-                <div className="flex flex-col sm:flex-row justify-around items-center">
-                    <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
-                        <h2 className="text-4xl font-extrabold mb-5">{t("home_level_title")}</h2>
+                <div className="flex flex-col gap-4 sm:flex-row justify-around items-center">
+                    <div className={"px-2 md:px-0 text-center w-[484px] md:text-left"}>
+                        <h2 className="text-4xl font-semibold mb-5">{t("home_level_title")}</h2>
                         <p className="text-2xl mb-4">{t("home_level_desc")}</p>
                     </div>
-                    <div className="flex flex-col first-line:items-center md:flex-row gap-x-4">
-                        <HomeClass classObj={class1} className=" w-48 h-32 md:w-26 md:h-40" />
-                        <HomeClass classObj={class2} className="w-48 h-32 md:w-26 md:h-40" />
+                    <div className="flex flex-col w-4/5 sm:w-auto sm:gap-4 gap-8 sm:flex-row md:space-x-4">
+                        <HomeClass classObj={class1} />
+                        <HomeClass classObj={class2} />
+                        {/* <HomeClass classObj={class1} className= "w-48 h-32 md:w-26  md:h-40" />
+                        <HomeClass classObj={class2} className= "w-48 h-32 md:w-26 md:h-40" /> */}
                     </div>
                 </div>
                 {/* About registering */}
-                <div className="flex flex-row justify-around items-center">
-                    <div className="flex flex-col items-center  md:flex-row gap-x-4">
+                <div className="flex flex-col-reverse gap-4 sm:flex-row justify-around items-center">
+                    <div className="flex flex-col items-center md:flex-row space-x-4">
                         <Confirmation classObj={class1} className="w-48 h-32 md:w-56 md:h-40" />
                     </div>
                     <div className={`px-2 md:px-0 text-center w-[484px] md:text-left`}>
