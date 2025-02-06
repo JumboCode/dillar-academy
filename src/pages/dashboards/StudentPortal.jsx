@@ -97,8 +97,8 @@ const StudentPortal = () => {
                     classObj.schedule.map((schedule, index) =>
                       schedule.day.slice(0, 3).toUpperCase() === day  ? (
                         <div key={index} className="bg-blue-200 rounded p-2 mb-2">
-                          <div>{schedule.name}</div>
-                          <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
+                          <div className="text-gray-600 text-sm">{schedule.day} {schedule.time} </div>
+                          <div>Class with {classObj.instructor}</div>
                         </div>
                       ) : null
                     )
