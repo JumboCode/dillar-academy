@@ -93,14 +93,16 @@ const StudentPortal = () => {
             <div className="table-row h-24">
               {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
                 <div key={day} className="table-cell p-2">
-                  {classes
-                    .filter((classObj) => classObj.schedule.includes(day))
-                    .map((classObj, index) => (
-                      <div key={index} className="bg-blue-200 rounded p-2 mb-2">
-                        <div className="text-gray-600 text-sm">{classObj.time}</div>
-                        <div>{classObj.name}</div>
-                      </div>
-                    ))}
+                  {classes.map((classObj) =>
+                    classObj.schedule.map((schedule, index) =>
+                      schedule.day.slice(0, 3).toUpperCase() === day  ? (
+                        <div key={index} className="bg-blue-200 rounded p-2 mb-2">
+                          <div>{schedule.name}</div>
+                          <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
+                        </div>
+                      ) : null
+                    )
+                  )}
                 </div>
               ))}
             </div>
