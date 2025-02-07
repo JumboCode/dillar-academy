@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { getClassById, getStudentsClasses } from '@/api/class-wrapper';
-import { updateInfo } from '@/api/user-wrapper';
+import { updateInfo, getUser } from '@/api/user-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
@@ -53,13 +53,38 @@ const StudentPortal = () => {
     fetchData();
   }, [isLoaded, isSignedIn, user]);
 
+  // const fetchData = async () => {
+  //   if (user) {
+  //     const response = await getStudentsClasses(user?._id);
+  //     const classes = await Promise.all(
+  //       response.enrolledClasses.map(async (classID) => {
+  //         const classResponse = await getClassById(classID);
+  //         return classResponse; // Return the class details
+  //       })
+  //     );
+  //     setClasses(classes);
+  //     console.log(classes)
+  //   }
+  // };
+
+  const fetchUser = async () => {
+    try {
+      const data = await getUser(user);
+      // setUser(data);
+    } catch (error) {
+      console.error('Error fetching classes:', error);
+    }
+  };
+
   const handleEditInfo = async (e) => {
     e.preventDefault();
     try {
       await updateInfo(user, formData);
       setShowEditModal(false);
-      setFormData({ level: '', ageGroup: '', instructor: '' });
-      await fetchData();
+      await fetchUser();
+      setFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
+    
+      
     } catch (error) {
       console.error('Error updating data:', error);
     }
@@ -67,10 +92,13 @@ const StudentPortal = () => {
 
   const openEditStudent = (user) => {
 
+    // below was adjsuted
     setFormData({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.email || '',
+      age: user.age || '',
+      gender: user.gender || '',
     });
     setShowEditModal(true);
   };
