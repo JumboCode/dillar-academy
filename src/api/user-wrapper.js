@@ -68,11 +68,22 @@ const resetPassword = async (body) => {
   }
 }
 
+const updateInfo = async (user, userData) => {
+  try {
+    const response = await axios.put(`/api/user/${user._id}`, userData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+}
+
 export {
   postUser,
   postLogin,
   getUsers,
   getUser,
   getUserPassword,
-  resetPassword
+  resetPassword,
+  updateInfo
 }
