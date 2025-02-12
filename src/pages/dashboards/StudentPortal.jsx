@@ -14,6 +14,7 @@ import FormInput from '@/components/Form/FormInput';
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
   const { user, } = useContext(UserContext);
+  const [currUser, setCurrUser] = useState(null);
   const [, setLocation] = useLocation();
   const { isLoaded, isSignedIn } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
@@ -33,11 +34,17 @@ const StudentPortal = () => {
         setAllowRender(true);
       }
     }
-
     
     // get student's classes
     const fetchData = async () => {
       if (user) {
+        console.log("id: " + user?._id);
+        const userFilter = new URLSearchParams(`_id=${user._id}`);
+        const data = await getUser(userFilter);
+        console.log("data: " + data);
+        setCurrUser(data);
+
+        console.log("meee: " + data.firstName);
         const response = await getStudentsClasses(user?._id);
         const classes = await Promise.all(
           response.enrolledClasses.map(async (classID) => {
@@ -70,6 +77,7 @@ const StudentPortal = () => {
   const fetchUser = async () => {
     try {
       const data = await getUser(user);
+
       // setUser(data);
     } catch (error) {
       console.error('Error fetching classes:', error);
