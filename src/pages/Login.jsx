@@ -8,6 +8,8 @@ import { useSignIn, useAuth } from "@clerk/clerk-react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useTranslation } from "react-i18next";
 
+import Alert from '@/components/Alert';
+
 export default function Login() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [, setLocation] = useLocation();
@@ -61,6 +63,7 @@ export default function Login() {
   return (
     <>
       <main className="header-gradient h-full py-40 flex justify-center items-center">
+        <Alert message="testerasiodjfoijasdiofjiofs" visible={true}></Alert>
         <Form width="w-2/5">
           <h1 className="text-4xl font-extrabold sm:text-3xl">{t("login_text")}</h1>
           <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
