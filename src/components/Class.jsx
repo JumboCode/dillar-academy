@@ -1,4 +1,5 @@
 
+import React from 'react'
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import EnrollButton from '@/components/Button/EnrollButton'
 import { useContext } from "react";
@@ -24,11 +25,11 @@ const Class = ({ classObj }) => {
           <IoTimeOutline className="text-xl row-start-1" />
           <IoCalendarOutline className="text-xl row-start-2" />
           {classObj.schedule.map((schedule, index) => (
-            <>
+            <React.Fragment key={index}>
               {index === 1 && <div className="row-span-full w-0 h-full border-[1px]"></div>}
               <p className="row-start-1">{schedule.time}</p>
               <p className="row-start-2">{schedule.day}</p>
-            </>
+            </React.Fragment>
           ))}
         </div>
         <SignedIn>

@@ -3,6 +3,7 @@ import { useLocation, Link, useParams } from 'wouter';
 import Class from '../components/Class';
 import Level from '../components/Level';
 import { getClasses, getLevels } from '../api/class-wrapper';
+import Button from '@/components/Button/Button';
 
 const ClassesPage = () => {
   const [classes, setClasses] = useState([]);
@@ -70,24 +71,18 @@ const ClassesPage = () => {
             ))}
           </div>
         </div>
-
-        {/* Other Levels */}
-        <div>
-          <h2 className="text-2xl font-extrabold text-dark-blue-800 mb-4">Other Levels</h2>
-          <p className="text-neutral-600 mb-8">
-            If this level isn't a good fit for you, take a look at the other available levels!
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {allLevels
-              .filter(l => l.level !== level.level)
-              .map((level, index) => (
-                <Link key={index} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
-                  <Level level={level} isSimplified={true} />
-                </Link>
-              ))}
-          </div>
-        </div>
       </div>
+      {levelNum > 1 && <Button
+        label={("Previous Level")}
+        onClick={() => setLocation(`/levels/${Number(levelNum) - 1}/classes`)}
+        isOutline={false}
+      />}
+      {levelNum < allLevels.length && <Button
+        label={("Next Level")}
+        onClick={() => setLocation(`/levels/${Number(levelNum) + 1}/classes`)}
+        isOutline={false}
+      />}
+
     </div>
   );
 };
