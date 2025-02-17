@@ -3,6 +3,9 @@ import { getClassById, getStudentsClasses } from '@/api/class-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
+import Class from '@/components/Class'
+import { Link } from "wouter"
+
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
@@ -48,7 +51,63 @@ const StudentPortal = () => {
 
   return (
     <div className='h-full'>
-      <h1>Student</h1>
+      <br></br>
+      <h1 className='text-4xl font-bold mb-4'>
+        Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}!
+      </h1>
+
+      <section>
+        <h1 className='text-3xl mb-4'> Your courses </h1>
+        <div className='grid grid-cols-3 gap-6'>
+          {classes.map((classObj, classIndex) => (
+            <Class key={classIndex} classObj={classObj} />
+          ))}
+          <div className="flex items-center">
+            <Link
+              to="/levels"
+              className="ml-4 w-12 h-12 bg-blue-500 text-white text-3xl 
+            font-bold rounded-full shadow-md flex items-center justify-center
+            hover:bg-blue-600 transition"
+            >
+              +
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <br></br>
+        <h1 className='text-3xl mb-4'>Schedule</h1>
+        <div className="table w-full table-fixed">
+          <div className="table-header-group">
+            <div className="table-row">
+              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
+                <div key={day} className="table-cell text-center font-semibold p-2">
+                  {day}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="table-row-group">
+            <div className="table-row h-24">
+              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
+                <div key={day} className="table-cell p-2">
+                  {classes
+                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor })))
+                    .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
+                    .sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`)) // Sort by time
+                    .map((schedule, index) => (
+                      <div key={index} className="bg-blue-200 rounded p-2 mb-2">
+                        <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
+                        <div>Class with {schedule.instructor}</div>
+                      </div>
+                    ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 

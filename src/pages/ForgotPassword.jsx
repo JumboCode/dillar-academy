@@ -24,7 +24,7 @@ export default function ForgotPassword() {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
     retypedPassword: ''
   })
@@ -36,7 +36,7 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, password, retypedPassword } = formData
+    const { email, password, retypedPassword } = formData
     if (password != retypedPassword) {
       alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
     } else {
@@ -60,18 +60,18 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <main className="header-gradient h-full flex justify-center items-center">
-        <Form width="w-2/5">
-          <h1 className="text-4xl font-semibold my-3">{t("forgot_your_pass")}</h1>
+      <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
+        <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
+          <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("forgot_your_pass")}</h1>
 
           <form method="POST"
             onSubmit={handleSubmit}
-            className="space-y-3"
+            className="gap-y-3"
           >
             <FormInput
-              type="text"
-              name="username"
-              value={formData.username}
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               placeholder={t("username_field")}
               isRequired={true} />

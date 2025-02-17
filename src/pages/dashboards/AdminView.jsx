@@ -2,21 +2,17 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getUser } from '@/api/user-wrapper';
+import Button from '@/components/Button/Button';
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
-import { enrollInClass } from '@/api/class-wrapper';
-import FormSubmit from "@/components/Form/FormSubmit";
+import { getUsers } from '@/api/user-wrapper.js'
+import { getClasses, createClass, updateClass, deleteClass } from '@/api/class-wrapper.js';
 
 const AdminView = () => {
-  const { user, } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-  const [email, setEmail] = useState("");
-  const [classId, setClassId] = useState("");
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     if (isLoaded) {
@@ -26,14 +22,86 @@ const AdminView = () => {
         setAllowRender(true);
       }
     }
+
+    const fetchData = async () => {
+      const userData = await getUsers();
+      setUsers(userData.data);
+    }
+    fetchData();
   }, [isLoaded, isSignedIn, user]);
 
+  useEffect(() => {
+    if (allowRender) {
+      fetchClasses();
+    }
+  }, [allowRender]);
+
+  const fetchClasses = async () => {
+    try {
+      const data = await getClasses();
+      setClasses(data);
+    } catch (error) {
+      console.error('Error fetching classes:', error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCreateClass = async (e) => {
+    e.preventDefault();
+    try {
+      await createClass(formData);
+      setShowCreateModal(false);
+      setFormData({ level: '', ageGroup: '', instructor: '' });
+      await fetchClasses();
+    } catch (error) {
+      console.error('Error creating class:', error);
+    }
+  };
+
+  const handleEditClass = async (e) => {
+    e.preventDefault();
+    try {
+      await updateClass(selectedClass._id, formData);
+      setShowEditModal(false);
+      setSelectedClass(null);
+      setFormData({ level: '', ageGroup: '', instructor: '' });
+      await fetchClasses();
+    } catch (error) {
+      console.error('Error updating class:', error);
+    }
+  };
+
+  const handleDeleteClass = async (classId) => {
+    try {
+      await deleteClass(classId);
+      await fetchClasses();
+    } catch (error) {
+      console.error('Error deleting class:', error);
+    }
+  };
+
+  const openEditModal = (classData) => {
+    setSelectedClass(classData);
+    setFormData({
+      level: classData.level,
+      ageGroup: classData.ageGroup,
+      instructor: classData.instructor,
+    });
+    setShowEditModal(true);
+  };
+
   if (!allowRender) {
-    return <div></div>
+    return <div></div>;
   }
 
   if (user?.privilege !== "admin") {
-    return <div>Unauthorized</div>
+    return <div>Unauthorized</div>;
   }
 
 
@@ -73,15 +141,6 @@ const AdminView = () => {
   return (
     <div className="h-full">
       <h1>Admin</h1>
-      <Form width="w-1/2">
-        <form onSubmit={ handleEnrollment }>
-          <FormInput type="email" name="email" placeholder="Student Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <FormInput type="text" name="classId" placeholder="Class ID" value={classId} onChange={(e) => setClassId(e.target.value)} />
-          <FormSubmit label={"Enroll"} isDisabled={false} />
-        </form>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-        {success && <p className="text-green-500 mt-2">{success}</p>}
-      </Form>
     </div>
   );
 };

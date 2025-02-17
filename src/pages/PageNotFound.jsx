@@ -10,10 +10,10 @@ const PageNotFound = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <h1 className="text-6xl mb-2 font-bold pt-5 py-5" >{t("page_not_found_text")}</h1>
-      <h2 className="text-3xl mb-2 font-normal"> {t("page_not_found_desc")}</h2>
-      <div className='flex space-x-5 whitespace-nowrap pt-8'>
+    <div className="w-full flex flex-col items-center justify-center h-full text-center">
+      <h1 className="text-4xl md:text-6xl mb-2 mx-2 font-bold pt-5 py-5" >{t("page_not_found_text")}</h1>
+      <h2 className="text-2xl md:text-3xl mx-2 font-normal"> {t("page_not_found_desc")}</h2>
+      <div className='flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-5 items-center justify-center text-center whitespace-nowrap pt-8'>
         <Button
           label={t("return_home_text")}
           onClick={() => setLocation("/")}

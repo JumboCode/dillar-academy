@@ -8,7 +8,6 @@ const PasswordReqs = ({ formData, setIsValid }) => {
         <PasswordChecklist
             rules={[
                 "minLength",
-                "capitalAndLowercase",
                 "number",
                 "specialChar",
                 "match"
