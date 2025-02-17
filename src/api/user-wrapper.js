@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useSignIn } from '@clerk/clerk-react';
 
 const postUser = async (body) => {
   try {
@@ -52,19 +53,32 @@ const getUserPassword = async () => {
   }
 }
 
+// Updated for Clerk Connection
 const resetPassword = async (body) => {
   try {
-    const response = await fetch(apiUrl("/api/users/reset-password"), {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
+    // Update password in MongoDB
+    const mongoResponse = await axios.post("/api/users/reset-password", {
+      headers: { 
+        "Content-Type": "application/json",
+       },
+    });
 
-    return response
+    if (!mongoResponse || mongoResponse.status !== 200) {
+      throw new Error("Failed to update password in MongoDB.");
+    }
+
+    // Update password in Clerk
+    const signIn = useSignIn();
+    if (!signIn) {
+      throw new Error("Clerk sign-in instance not found.");
+    }
+
+    await signIn.updatePassword({ password: body.password  });
+
+    return { success: true };
   } catch (error) {
-    console.error('Reset password endpoint error:', error);
+    console.error("Reset password error:", error);
+    return { success: false, error: error.message };
   }
 }
 

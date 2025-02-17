@@ -1,27 +1,29 @@
 import { useState } from "react";
-import { resetPassword } from "../api/user-wrapper";
+import { resetPassword, getUserPassword } from "../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
 import PasswordReqs from "./PasswordReqs";
 import { useTranslation } from "react-i18next";
+import { useSignIn } from "@clerk/clerk-react";
 
 //Fetching first
 
-const getUserPassword = async () => {
-  try {
-    const response = await getUserPassword();
-    return response;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-}
+// const fetchUserPassword = async () => {
+//   try {
+//     const response = await getUserPassword();
+//     return response;
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//   }
+// }
 
 //Updating the person's password property
 
 // Implement the Welcome page and check for if it should be displayed
 export default function ForgotPassword() {
   const { t } = useTranslation();
+  const { isLoaded, signIn } = useSignIn();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -36,25 +38,29 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password, retypedPassword } = formData
-    if (password != retypedPassword) {
-      alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
-    } else {
-      try {
-        const response = await resetPassword(formData)
+    const { email, password, retypedPassword } = formData;
 
-        if (response.ok) {
-          const message = await response.text();
-          console.log(message);
-          alert("Reset successful!");
-        } else {
-          const errorMessage = await response.text();
-          console.error(errorMessage);
-          alert("Reset failed: " + errorMessage);
-        }
-      } catch (error) {
-        alert('An error occurred while resetting the password.')
+    if (password !== retypedPassword) {
+      alert(`Passwords do not match:\npassword: ${password}\nretyped password: ${retypedPassword}`)
+      return;
+    }
+
+    try {
+      console.log("Sending request to reset password..."); // Debug
+
+      const response = await resetPassword({ email, password });
+
+      console.log("Reset Password Response:", response); // Debug
+
+      if (response.success) {
+        const message = await response.text();
+        console.log(message);
+        alert("Reset successful! You can now log in with your new password.");
+      } else {
+        alert("Failed to update password.")
       }
+    } catch (error) {
+      alert('An error occurred while resetting the password.')
     }
   };
 
@@ -73,7 +79,7 @@ export default function ForgotPassword() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder={t("username_field")}
+              placeholder={t("email_field")}
               isRequired={true} />
 
             <FormInput
