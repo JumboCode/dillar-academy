@@ -97,6 +97,25 @@ const getClassById = async (classId) => {
   }
 }
 
+const adminEnrollStudent = async (email, classId) => {
+  console.log(`📡 Sending request to enroll: Email - ${email}, Class ID - ${classId}`); // Debugging log
+
+  try {
+    const response = await axios.post("/api/enroll-student", { email, classId });
+
+    console.log("🔄 Server response:", response); // Debugging log
+
+    if (response.status !== 200) {
+      throw new Error(response.data.message || "Error enrolling student.");
+    }
+
+    return response.data.message;
+  } catch (error) {
+    console.error("Error enrolling student:", error.response?.data?.message || error.message);
+    throw new Error(error.response?.data?.message || "Error enrolling student.");
+  }
+};
+
 export {
   getClasses,
   getLevels,
@@ -108,4 +127,5 @@ export {
   unenrollInClass,
   getStudentsClasses,
   getClassById,
+  adminEnrollStudent
 }
