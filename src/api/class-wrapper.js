@@ -42,6 +42,7 @@ const getConversations = async () => {
 
 const enrollInClass = async (classId, userId) => {
   try {
+    console.log(userId);
     const response = await fetch(`/api/users/${userId}/enroll`, {
       method: "PUT",
       headers: {

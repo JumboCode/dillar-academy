@@ -6,7 +6,7 @@ import { getUser } from '@/api/user-wrapper';
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
 import { enrollInClass } from '@/api/class-wrapper';
-import EnrollButton from "@/components/Button/EnrollButton";
+import FormSubmit from "@/components/Form/FormSubmit";
 
 const AdminView = () => {
   const { user, } = useContext(UserContext);
@@ -43,14 +43,12 @@ const AdminView = () => {
     setSuccess(null);
 
     try {
+      // 1. Move errors to backend in EnrollUser rather than frontend (use alert instead)
+      // 2. Use App.jsx for {email}
       // Fetch student's email
-      const response = await getUser(`email=${email}`);
-      const student = response.data; // response?.data
-
-      // Validate if the user is a student or exists at all
-      if (!student || student.privilege !== "student") {
-        throw new Error("User is not a student or does not exist");
-      }
+      const userFilter = new URLSearchParams(`email=${email}`);
+      const response = await getUser(userFilter);
+      const student = response.data;
 
       const studentId = student._id;
 
@@ -77,9 +75,9 @@ const AdminView = () => {
       <h1>Admin</h1>
       <Form width="w-1/2">
         <form onSubmit={ handleEnrollment }>
-          <FormInput type="email" name="email" placeholder="Student Email" value={null} onChange={(e) => setEmail(e.target.value)} />
-          <FormInput type="text" name="classId" placeholder="Class ID" value={null} onChange={(e) => setClassId(e.target.value)} />
-          <EnrollButton userId={email} classId={classId} isEnroll={true} />
+          <FormInput type="email" name="email" placeholder="Student Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <FormInput type="text" name="classId" placeholder="Class ID" value={classId} onChange={(e) => setClassId(e.target.value)} />
+          <FormSubmit label={"Enroll"} isDisabled={false} />
         </form>
         {error && <p className="text-red-500 mt-2">{error}</p>}
         {success && <p className="text-green-500 mt-2">{success}</p>}

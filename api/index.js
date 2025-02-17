@@ -221,7 +221,7 @@ app.get('/api/users', async (req, res) => {
 
 // Get User
 app.get('/api/user', async (req, res) => {
-  const allowedFields = ['email']
+  const allowedFields = ['email', '_id']
   const filters = validateInput(req.query, allowedFields)
 
   try {
@@ -341,6 +341,11 @@ app.get('/api/students-classes/:id', async (req, res) => {
 
     const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
     res.json(data);
+
+    // Validate if the user is a student or exists at all
+    if (!student || student.privilege !== "student") {
+      throw new Error("User is not a student or does not exist");
+    }
 
   } catch (err) {
     res.status(500).send(err);
