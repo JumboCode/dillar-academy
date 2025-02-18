@@ -3,10 +3,11 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import Button from '@/components/Button/Button';
+import AdminEnrollButton from "@/components/Button/AdminEnrollButton";
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
 import { getUsers } from '@/api/user-wrapper.js'
-import { getClasses, createClass, updateClass, deleteClass } from '@/api/class-wrapper.js';
+import { getClasses, createClass, updateClass, deleteClass, adminEnrollStudent } from '@/api/class-wrapper.js';
 
 const AdminView = () => {
   const { user } = useContext(UserContext);
@@ -15,6 +16,8 @@ const AdminView = () => {
   const [allowRender, setAllowRender] = useState(false);
   const [users, setUsers] = useState([]);
   const [classes, setClasses] = useState([]);
+  const [email, setEmail] = useState("");
+  const [classId, setClassId] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
@@ -114,9 +117,33 @@ const AdminView = () => {
     return <div>Unauthorized</div>;
   }
 
+
   return (
     <div className="h-full p-8 space-y-10">
       <h1 className="text-3xl font-bold">Admin</h1>
+      <section>
+        <h2 className="text-2xl font-bold mb-4">Enroll Student</h2>
+        
+        <Form>
+          <FormInput
+            type="email"
+            name="email"
+            placeholder="Student Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            isRequired={true}
+          />
+          <FormInput
+            type="text"
+            name="classId"
+            placeholder="Class ID"
+            value={classId}
+            onChange={(e) => setClassId(e.target.value)}
+            isRequired={true}
+          />
+          <AdminEnrollButton email={email} classId={classId} />
+        </Form>
+      </section>
       <section>
         <table className="table-auto w-full text-left">
           <thead className="bg-neutral-200 text-lg">

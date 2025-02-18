@@ -223,6 +223,60 @@ app.get('/api/user', async (req, res) => {
   }
 })
 
+// Enroll Student
+app.post('/api/enroll-student', async (req, res) => {
+  console.log("📩 Received request to enroll student:", req.body); // Debugging log
+
+  const { email, classId } = req.body;
+
+  try {
+    // Validate inputs
+    if (!email || !classId) {
+      console.log("📩 Received request to enroll student:", req.body); // Debugging log
+      return res.status(400).json({ message: "Email and class ID are required." });
+    }
+
+    // Find the student by email
+    const student = await User.findOne({ email });
+
+    if (!student) {
+      console.log("❌ Student not found:", email); // Debugging log
+      return res.status(404).json({ message: "Student not found." });
+    }
+
+    // Check if the student is already enrolled
+    if (student.enrolledClasses.includes(classId)) {
+      console.log("❌ Student already enrolled:", classId); // Debugging log
+      return res.status(400).json({ message: "Student is already enrolled in this class." });
+    }
+
+    if (student.privilege !== "student") {
+      console.log("❌ User is not a student:", student.privilege); // Debugging log
+      return res.status(403).json({ message: "Only students can be enrolled" });
+    }
+
+    // Add class to student's enrolled classes
+    await User.findByIdAndUpdate(
+      student._id,
+      { $addToSet: { enrolledClasses: classId } },
+      { new: true }
+    );
+
+    // Add student to class roster
+    await Class.findByIdAndUpdate(
+      classId,
+      { $addToSet: { roster: student._id } },
+      { new: true }
+    );
+
+    console.log("✅ Student successfully enrolled:", student.email);
+    return res.status(200).json({ message: "Student successfully enrolled to class." });
+
+  } catch (error) {
+    console.error("Enrollment error:", error);
+    return res.status(500).json({ message: "Server error during enrollment." });
+  }
+});
 
 /* CONTACT RELATED ENDPOINTS */
 
@@ -333,6 +387,11 @@ app.get('/api/students-classes/:id', async (req, res) => {
 
     const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
     res.json(data);
+
+    // Validate if the user is a student or exists at all
+    if (!student || student.privilege !== "student") {
+      throw new Error("User is not a student or does not exist");
+    }
 
   } catch (err) {
     res.status(500).send(err);
