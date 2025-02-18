@@ -36,7 +36,10 @@ export default function Contact() {
       }
     } catch (err) {
       // console.error('Error in handleSubmit:', err);
-      setAlertData({message: "There was an error submitting the inquiry."})
+      setAlertData({message: ""});
+      setTimeout(() => {
+        setAlertData({ message: "Error: " + (error.message || "There was an error submitting the inquiry.") });
+      }, 10);
     }
   };
 

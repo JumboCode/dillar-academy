@@ -67,11 +67,15 @@ export default function SignUp() {
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        setAlertData({message: "Error: User already exists."});
-        console.log('User already exists.')
+          setAlertData({message: ""});
+          setTimeout(() => {
+            setAlertData({ message: "Error: " + (error.message || "There was an error during sign in.") });
+          }, 10);
       } else {
-        setAlertData({message: "Error: " + error.message});
-        console.log('An error occurred while creating the user', error)
+          setAlertData({message: ""});
+          setTimeout(() => {
+            setAlertData({ message: "Error: " + (error.message || "There was an error during sign in.") });
+          }, 10);
       }
     }
   }

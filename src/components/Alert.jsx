@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 const Alert = ({ message }) => {
-    const [visible, setVisible] = useState(true);
+    const [visible, setVisible] = useState(false);
     useEffect(() => {
         if (message) {
-            setVisible(true)
+            setVisible(true);
         
             const timer = setTimeout(() => {
                 setVisible(false);
