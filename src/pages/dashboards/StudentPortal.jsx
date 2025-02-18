@@ -179,14 +179,13 @@ const StudentPortal = () => {
               {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
                 <div key={day} className="table-cell p-2">
                   {classes
-                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor, level: classObj.level })))
+                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor })))
                     .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
                     .sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`)) // Sort by time
                     .map((schedule, index) => (
                       <div key={index} className="bg-blue-200 rounded p-2 mb-2">
-                        <p className="text-gray-600 text-sm">{schedule.day} {schedule.time}</p>
-                        <p>Level: {schedule.level}</p>
-                        <p>Class with {schedule.instructor}</p>
+                        <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
+                        <div>Class with {schedule.instructor}</div>
                       </div>
                     ))}
                 </div>
