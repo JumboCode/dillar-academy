@@ -97,6 +97,16 @@ const getClassById = async (classId) => {
   }
 }
 
+const updateClassroomLink = async (classId, classroomLink) => {
+  try {
+    const response = await axios.put(`/api/classes/${classId}/classroom-link`, { classroomLink });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating classroom link:', error);
+    throw error;
+  }
+}
+
 export {
   getClasses,
   getLevels,
@@ -108,4 +118,5 @@ export {
   unenrollInClass,
   getStudentsClasses,
   getClassById,
+  updateClassroomLink,
 }
