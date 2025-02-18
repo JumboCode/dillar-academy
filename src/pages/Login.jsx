@@ -4,10 +4,10 @@ import { postLogin } from "../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
+import Alert from "@/components/Alert";
 import { useSignIn, useAuth } from "@clerk/clerk-react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useTranslation } from "react-i18next";
-
 export default function Login() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [, setLocation] = useLocation();
@@ -18,6 +18,7 @@ export default function Login() {
     email: '',
     password: '',
   })
+  const [alertData, setAlertData] = useState({message: ""})
 
   useEffect(() => {
     if (isSignedIn && user) {
@@ -53,14 +54,15 @@ export default function Login() {
         console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
       }
     } catch (error) {
-      console.error('Error during login: ', error);
-      alert("An error occurred during login.");
+      // console.error('Error during login: ', error);
+      setAlertData({message: "Error during login: " + error.message})
     }
   };
 
   return (
     <>
       <main className="header-gradient h-full py-40 flex justify-center items-center">
+        {alertData.message && <Alert message={alertData.message}/>}
         <Form width="w-2/5">
           <h1 className="text-4xl font-extrabold sm:text-3xl">{t("login_text")}</h1>
           <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}

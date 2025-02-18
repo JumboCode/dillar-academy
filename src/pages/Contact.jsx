@@ -4,6 +4,7 @@ import { postContact } from '@/api/contact-wrapper';
 import Form from "@/components/Form/Form"
 import FormInput from '@/components/Form/FormInput';
 import FormSubmit from '@/components/Form/FormSubmit';
+import Alert from "@/components/Alert";
 import { useTranslation } from 'react-i18next';
 
 export default function Contact() {
@@ -15,6 +16,8 @@ export default function Contact() {
     subject: '',
     message: ''
   });
+  const [alertData, setAlertData] = useState({message: ""})
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,16 +32,17 @@ export default function Contact() {
         alert("Message submitted successfully!");
       } else {
         const errorResponse = await response.json();
-        alert(`Failed to send message: ${errorResponse.message}`);
+        setAlertData({message: `Failed to send message: ${errorResponse.message}`})
       }
     } catch (err) {
-      console.error('Error in handleSubmit:', err);
-      alert("There was an error submitting the inquiry.");
+      // console.error('Error in handleSubmit:', err);
+      setAlertData({message: "There was an error submitting the inquiry."})
     }
   };
 
   return (
     <div className="w-full h-full py-12 sm:py-32 bg-[url('/images/ice_water.png')] bg-no-repeat bg-center bg-cover flex flex-col sm:flex-row justify-center items-center">
+      {alertData.message && <Alert message={alertData.message}/>}
       {/* form box */}
       <Form width="w-4/5 md:w-3/5">
         <h2 className="text-2xl sm: text-1xl font-semibold mb-2">{t("contact_heading")}</h2>
