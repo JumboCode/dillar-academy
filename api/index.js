@@ -212,7 +212,6 @@ app.get('/api/users', async (req, res) => {
 
 // Get User
 app.get('/api/user', async (req, res) => {
-  console.log("req.query: " + req.query);
   const allowedFields = ['email', '_id']
   const filters = validateInput(req.query, allowedFields)
 

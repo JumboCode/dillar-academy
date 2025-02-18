@@ -68,9 +68,9 @@ const resetPassword = async (body) => {
   }
 }
 
-const updateInfo = async (user, userData) => {
+const updateInfo = async (userId, userData) => {
   try {
-    const response = await axios.put(`/api/user/${user._id}`, userData);
+    const response = await axios.put(`/api/user/${userId}`, userData);
     return response.data;
   } catch (error) {
     console.error('Error updating user:', error);

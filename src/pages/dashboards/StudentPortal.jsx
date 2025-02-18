@@ -13,8 +13,7 @@ import FormInput from '@/components/Form/FormInput';
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
-  const { user, } = useContext(UserContext);
-  const [currUser, setCurrUser] = useState(null);
+  const { user, setUser } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isLoaded, isSignedIn } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
@@ -23,7 +22,7 @@ const StudentPortal = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    email:'',
+    email: '',
     age: '',
     gender: '',
   });
@@ -35,13 +34,10 @@ const StudentPortal = () => {
         setAllowRender(true);
       }
     }
-    
+
     // get student's classes
     const fetchData = async () => {
       if (user) {
-        const userFilter = new URLSearchParams(`_id=${user._id}`);
-        const data = await getUser(userFilter);
-        setCurrUser(data);
         const response = await getStudentsClasses(user?._id);
         const classes = await Promise.all(
           response.enrolledClasses.map(async (classID) => {
@@ -57,29 +53,24 @@ const StudentPortal = () => {
   }, [isLoaded, isSignedIn, user]);
 
   const fetchUser = async () => {
-    try {
-      const data = await getUser(user);
-      setCurrUser(data);
-    } catch (error) {
-      console.error('Error fetching user:', error);
-    }
-  };
+    const userFilter = new URLSearchParams(`_id=${user._id}`);
+    const response = await getUser(userFilter);
+    setUser(response.data);
+  }
 
   const handleEditInfo = async (e) => {
     e.preventDefault();
     try {
-      await updateInfo(user, formData);
-      setShowEditModal(false);
+      await updateInfo(user._id, formData);
       await fetchUser();
+      setShowEditModal(false);
       setFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
-    
-      
     } catch (error) {
       console.error('Error updating data:', error);
     }
   };
 
-  const openEditStudent = (user) => {
+  const openEditStudent = () => {
     setFormData({
       firstName: user.firstName || '',
       lastName: user.lastName || '',
@@ -128,29 +119,29 @@ const StudentPortal = () => {
             </tr>
           </thead>
           <tbody>
-              <tr>
-                <td className="py-2 px-3">{user.firstName} {user.lastName}</td>
-                <td className="py-2 px-3">{user.email}</td>
-                <td className="py-2 px-3 flex gap-2">
-                  {showPassword? user.password : "********"}
-                  <input type="checkbox" onClick={togglePassword}/>
-                </td>
-                <td className="py-2 px-3">{user.age}</td>
-                <td className="py-2 px-3">{user.gender}</td>
-                <td className="py-2 px-3">
+            <tr>
+              <td className="py-2 px-3">{user.firstName} {user.lastName}</td>
+              <td className="py-2 px-3">{user.email}</td>
+              <td className="py-2 px-3 flex gap-2">
+                {showPassword ? user.password : "********"}
+                <input type="checkbox" onClick={togglePassword} />
+              </td>
+              <td className="py-2 px-3">{user.age}</td>
+              <td className="py-2 px-3">{user.gender}</td>
+              <td className="py-2 px-3">
                 <Button
                   label="Edit"
                   isOutline={true}
-                  onClick={() => openEditStudent(user)}
+                  onClick={() => openEditStudent()}
                 />
-                </td>
-              </tr>
-            
+              </td>
+            </tr>
+
           </tbody>
         </table>
-       
+
       </section>
-      
+
       <section>
         <h1 className='text-3xl mb-4'> Your courses </h1>
         <div className='grid grid-cols-3 gap-6'>
