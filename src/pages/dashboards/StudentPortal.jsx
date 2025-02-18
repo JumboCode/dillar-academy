@@ -19,6 +19,7 @@ const StudentPortal = () => {
   const { isLoaded, isSignedIn } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -38,13 +39,9 @@ const StudentPortal = () => {
     // get student's classes
     const fetchData = async () => {
       if (user) {
-        console.log("id: " + user?._id);
         const userFilter = new URLSearchParams(`_id=${user._id}`);
         const data = await getUser(userFilter);
-        console.log("data: " + data);
         setCurrUser(data);
-
-        console.log("meee: " + data.firstName);
         const response = await getStudentsClasses(user?._id);
         const classes = await Promise.all(
           response.enrolledClasses.map(async (classID) => {
@@ -53,34 +50,18 @@ const StudentPortal = () => {
           })
         );
         setClasses(classes);
-        console.log(classes)
       }
     };
 
     fetchData();
   }, [isLoaded, isSignedIn, user]);
 
-  // const fetchData = async () => {
-  //   if (user) {
-  //     const response = await getStudentsClasses(user?._id);
-  //     const classes = await Promise.all(
-  //       response.enrolledClasses.map(async (classID) => {
-  //         const classResponse = await getClassById(classID);
-  //         return classResponse; // Return the class details
-  //       })
-  //     );
-  //     setClasses(classes);
-  //     console.log(classes)
-  //   }
-  // };
-
   const fetchUser = async () => {
     try {
       const data = await getUser(user);
-
-      // setUser(data);
+      setCurrUser(data);
     } catch (error) {
-      console.error('Error fetching classes:', error);
+      console.error('Error fetching user:', error);
     }
   };
 
@@ -99,8 +80,6 @@ const StudentPortal = () => {
   };
 
   const openEditStudent = (user) => {
-
-    // below was adjsuted
     setFormData({
       firstName: user.firstName || '',
       lastName: user.lastName || '',
@@ -127,6 +106,10 @@ const StudentPortal = () => {
     return <div>Unauthorized</div>
   }
 
+  const togglePassword = (e) => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className='h-full'>
       <br></br>
@@ -148,7 +131,10 @@ const StudentPortal = () => {
               <tr>
                 <td className="py-2 px-3">{user.firstName} {user.lastName}</td>
                 <td className="py-2 px-3">{user.email}</td>
-                <td className="py-2 px-3">{user.password}</td>
+                <td className="py-2 px-3 flex gap-2">
+                  {showPassword? user.password : "********"}
+                  <input type="checkbox" onClick={togglePassword}/>
+                </td>
                 <td className="py-2 px-3">{user.age}</td>
                 <td className="py-2 px-3">{user.gender}</td>
                 <td className="py-2 px-3">
@@ -158,7 +144,6 @@ const StudentPortal = () => {
                   onClick={() => openEditStudent(user)}
                 />
                 </td>
-                
               </tr>
             
           </tbody>
