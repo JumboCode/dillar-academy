@@ -181,6 +181,8 @@ app.post('/api/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
+      console.log(password)
+      console.log("fetched password: " + user.password)
       if (user.password === password) {
         console.log('Login successful for user:', email);
         res.status(200).json(user);
@@ -540,7 +542,7 @@ app.put('/api/user/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    
+
     // Validate ID format
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid user ID' });
@@ -548,9 +550,9 @@ app.put('/api/user/:id', async (req, res) => {
 
     // Update the user
     const updatedUser = await User.findByIdAndUpdate(
-      id, 
-      updates, 
-      { new: true, runValidators: true});
+      id,
+      updates,
+      { new: true, runValidators: true });
 
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });

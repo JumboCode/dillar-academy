@@ -22,16 +22,17 @@ const AdminView = () => {
   const [showUserEditModal, setShowUserEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const [formData, setFormData] = useState({
+  const [classData, setClassData] = useState({
     level: '',
     ageGroup: '',
     instructor: '',
   });
   const [userData, setUserData] = useState({
-    Name: '',
-    Email: '',
-    Age: '',
-    Gender: '',
+    firstName: '',
+    lasttName: '',
+    email: '',
+    age: '',
+    gender: '',
   });
 
   useEffect(() => {
@@ -43,12 +44,13 @@ const AdminView = () => {
       }
     }
 
-    const fetchData = async () => {
-      const userData = await getUsers();
-      setUsers(userData.data);
-    }
-    fetchData();
+    fetchUsers();
   }, [isLoaded, isSignedIn, user]);
+
+  const fetchUsers = async () => {
+    const userData = await getUsers();
+    setUsers(userData.data);
+  }
 
   useEffect(() => {
     if (allowRender) {
@@ -66,8 +68,8 @@ const AdminView = () => {
   };
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
+    setClassData({
+      ...classData,
       [e.target.name]: e.target.value,
     });
   };
@@ -75,9 +77,9 @@ const AdminView = () => {
   const handleCreateClass = async (e) => {
     e.preventDefault();
     try {
-      await createClass(formData);
+      await createClass(classData);
       setShowCreateModal(false);
-      setFormData({ level: '', ageGroup: '', instructor: '' });
+      setClassData({ level: '', ageGroup: '', instructor: '' });
       await fetchClasses();
     } catch (error) {
       console.error('Error creating class:', error);
@@ -87,10 +89,10 @@ const AdminView = () => {
   const handleEditClass = async (e) => {
     e.preventDefault();
     try {
-      await updateClass(selectedClass._id, formData);
+      await updateClass(selectedClass._id, classData);
       setShowEditModal(false);
       setSelectedClass(null);
-      setFormData({ level: '', ageGroup: '', instructor: '' });
+      setClassData({ level: '', ageGroup: '', instructor: '' });
       await fetchClasses();
     } catch (error) {
       console.error('Error updating class:', error);
@@ -106,9 +108,9 @@ const AdminView = () => {
     }
   };
 
-  const openEditModal = (classData) => {
+  const openEditClassModal = (classData) => {
     setSelectedClass(classData);
-    setFormData({
+    setClassData({
       level: classData.level,
       ageGroup: classData.ageGroup,
       instructor: classData.instructor,
@@ -124,10 +126,10 @@ const AdminView = () => {
     e.preventDefault();
     try {
       await updateUser(selectedUser._id, userData);
-      setShowEditModal(false);
+      setShowUserEditModal(false);
       setSelectedUser(null);
-      setUserData({Name:'', Email:'', Age:'', Gender:''})
-      await fetchData();
+      setUserData({ firstName: '', lastName: '', email: '', age: '', gender: '' })
+      await fetchUsers();
     } catch (error) {
       console.error('Error updating user:', error);
     }
@@ -135,11 +137,13 @@ const AdminView = () => {
 
   const openUserEditModal = (userData) => {
     setSelectedUser(userData);
+    console.log(userData)
     setUserData({
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
-      privilege: userData.privilege,
+      age: userData.age,
+      gender: userData.gender
     });
     setShowUserEditModal(true);
   };
@@ -163,6 +167,8 @@ const AdminView = () => {
               <th className="px-3">Email</th>
               <th className="px-3">Password</th>
               <th className="px-3">Privilege</th>
+              <th className="px-3">Age</th>
+              <th className="px-3">Gender</th>
               <th className="px-3">Action</th>
             </tr>
           </thead>
@@ -173,9 +179,11 @@ const AdminView = () => {
                 <td className="py-2 px-3">{userData.email}</td>
                 <td className="py-2 px-3">{userData.password}</td>
                 <td className="py-2 px-3">{userData.privilege}</td>
+                <td className="py-2 px-3">{userData?.age}</td>
+                <td className="py-2 px-3">{userData?.gender}</td>
                 <td className="py-2 px-3">
                   <Button label="Edit" isOutline={true} onClick={() => openUserEditModal(userData)} />
-                  </td>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -209,7 +217,7 @@ const AdminView = () => {
                     <Button
                       label="Edit"
                       isOutline={true}
-                      onClick={() => openEditModal(classItem)}
+                      onClick={() => openEditClassModal(classItem)}
                     />
                     <Button
                       label="Delete"
@@ -234,7 +242,7 @@ const AdminView = () => {
                 type="text"
                 name="level"
                 placeholder="Level"
-                value={formData.level}
+                value={classData.level}
                 onChange={handleInputChange}
                 isRequired={true}
               />
@@ -242,7 +250,7 @@ const AdminView = () => {
                 type="text"
                 name="ageGroup"
                 placeholder="Age Group"
-                value={formData.ageGroup}
+                value={classData.ageGroup}
                 onChange={handleInputChange}
                 isRequired={true}
               />
@@ -250,7 +258,7 @@ const AdminView = () => {
                 type="text"
                 name="instructor"
                 placeholder="Instructor"
-                value={formData.instructor}
+                value={classData.instructor}
                 onChange={handleInputChange}
                 isRequired={true}
               />
@@ -260,7 +268,7 @@ const AdminView = () => {
                   isOutline={true}
                   onClick={() => {
                     setShowCreateModal(false);
-                    setFormData({ level: '', ageGroup: '', instructor: '' });
+                    setClassData({ level: '', ageGroup: '', instructor: '' });
                   }}
                 />
                 <Button label="Create" type="submit" />
@@ -280,7 +288,7 @@ const AdminView = () => {
                 type="text"
                 name="level"
                 placeholder="Level"
-                value={formData.level}
+                value={classData.level}
                 onChange={handleInputChange}
                 isRequired={true}
               />
@@ -288,7 +296,7 @@ const AdminView = () => {
                 type="text"
                 name="ageGroup"
                 placeholder="Age Group"
-                value={formData.ageGroup}
+                value={classData.ageGroup}
                 onChange={handleInputChange}
                 isRequired={true}
               />
@@ -296,7 +304,7 @@ const AdminView = () => {
                 type="text"
                 name="instructor"
                 placeholder="Instructor"
-                value={formData.instructor}
+                value={classData.instructor}
                 onChange={handleInputChange}
                 isRequired={true}
               />
@@ -307,7 +315,7 @@ const AdminView = () => {
                   onClick={() => {
                     setShowEditModal(false);
                     setSelectedClass(null);
-                    setFormData({ level: '', ageGroup: '', instructor: '' });
+                    setClassData({ level: '', ageGroup: '', instructor: '' });
                   }}
                 />
                 <Button label="Save" type="submit" />
@@ -321,46 +329,54 @@ const AdminView = () => {
           <Form width="w-1/2">
             <h2 className="text-2xl font-bold mb-6">Edit User</h2>
             <form onSubmit={handleEditUser} className="space-y-4">
-              <FormInput 
-                type="text" 
-                name="firstName" 
-                placeholder="First Name" 
-                value={userData.firstName} 
-                onChange={handleUserInputChange} 
-                isRequired={true} 
+              <FormInput
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                value={userData.firstName}
+                onChange={handleUserInputChange}
+                isRequired={true}
               />
-              <FormInput 
-                type="text" 
-                name="lastName" 
-                placeholder="Last Name" 
-                value={userData.lastName} 
-                onChange={handleUserInputChange} 
-                isRequired={true} 
+              <FormInput
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                value={userData.lastName}
+                onChange={handleUserInputChange}
+                isRequired={true}
               />
-              <FormInput 
-                type="email" 
-                name="email" 
-                placeholder="Email" 
-                value={userData.email} 
-                onChange={handleUserInputChange} 
-                isRequired={true} 
+              <FormInput
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={userData.email}
+                onChange={handleUserInputChange}
+                isRequired={true}
               />
-              <FormInput 
-                type="text" 
-                name="gender" 
-                placeholder="gender" 
-                value={userData.Gender} 
-                onChange={handleUserInputChange} 
-                isRequired={false} 
+              <FormInput
+                type="text"
+                name="age"
+                placeholder="Age"
+                value={userData.age}
+                onChange={handleUserInputChange}
+                isRequired={false}
+              />
+              <FormInput
+                type="text"
+                name="Gender"
+                placeholder="Gender"
+                value={userData.gender}
+                onChange={handleUserInputChange}
+                isRequired={false}
               />
               <div className="flex justify-end space-x-2">
-              <Button
+                <Button
                   label="Cancel"
                   isOutline={true}
                   onClick={() => {
                     setShowUserEditModal(false);
                     setSelectedUser(null);
-                    setFormData({ lastName:'', firstName:'', Email:''});
+                    setUserData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
                   }}
                 />
                 <Button label="Save" type="submit" />
