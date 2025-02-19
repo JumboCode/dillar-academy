@@ -1,6 +1,6 @@
 
 // possible modes: edit or none
-const ConversationClass = ({ conversation, modes = [] }) => {
+const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
   return (
     <div className="w-full h-full rounded-2xl shadow-shadow hover:shadow-shadow-hover transition-shadow grid grid-rows-[2fr_3fr]">
       <div className="bg-[url('/images/blue_mountains.png')] bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
