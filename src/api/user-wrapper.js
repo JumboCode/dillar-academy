@@ -68,7 +68,7 @@ const resetPassword = async (body) => {
   }
 }
 
-const updateInfo = async (userId, userData) => {
+const updateUser = async (userId, userData) => {
   try {
     const response = await axios.put(`/api/user/${userId}`, userData);
     return response.data;
@@ -85,5 +85,5 @@ export {
   getUser,
   getUserPassword,
   resetPassword,
-  updateInfo
+  updateUser
 }

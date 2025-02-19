@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { getClassById, getStudentsClasses } from '@/api/class-wrapper';
-import { updateInfo, getUser } from '@/api/user-wrapper';
+import { updateUser, getUser } from '@/api/user-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
@@ -61,7 +61,7 @@ const StudentPortal = () => {
   const handleEditInfo = async (e) => {
     e.preventDefault();
     try {
-      await updateInfo(user._id, formData);
+      await updateUser(user._id, formData);
       await fetchUser();
       setShowEditModal(false);
       setFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
