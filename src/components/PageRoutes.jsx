@@ -8,7 +8,15 @@ import ClassesPage from '@/pages/ClassesPage'
 import LevelsPage from '@/pages/LevelsPage'
 import ForgotPassword from "@/pages/ForgotPassword";
 import StudentPortal from '@/pages/dashboards/StudentPortal'
-import AdminView from '@/pages/dashboards/AdminView'
+import AdminLevels from '@/pages/dashboards/admin/AdminLevels'
+import AdminConversations from '@/pages/dashboards/admin/AdminConversations'
+import AdminStudents from '@/pages/dashboards/admin/AdminStudents'
+import AdminTeachers from '@/pages/dashboards/admin/AdminTeachers'
+import AdminSchedule from '@/pages/dashboards/admin/AdminSchedule'
+import EditLevel from '@/pages/dashboards/admin/editPages/EditLevel'
+import EditClass from '@/pages/dashboards/admin/editPages/EditClass'
+import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation'
+import EditStudent from '@/pages/dashboards/admin/editPages/EditStudent'
 import TeacherView from '@/pages/dashboards/TeacherView'
 import PageNotFound from '@/pages/PageNotFound'
 import StyleGuide from "@/pages/StyleGuide";
@@ -25,7 +33,15 @@ export default function PageRoutes() {
       <Route path="/levels/:id/classes" component={ClassesPage} />
       <Route path="/forgotpassword" component={ForgotPassword} />
       <Route path="/student" component={StudentPortal} />
-      <Route path="/admin" component={AdminView} />
+      <Route path="/admin/levels" component={AdminLevels} />
+      <Route path="/admin/levels/:id" component={EditLevel} />
+      <Route path="/admin/levels/conversations" component={AdminConversations} />
+      <Route path="/admin/levels/conversations/:id" component={EditConversation} />
+      <Route path="/admin/class/:classId" component={EditClass} />
+      <Route path="/admin/students" component={AdminStudents} />
+      <Route path="/admin/students/:id" component={EditStudent} />
+      <Route path="/admin/teachers" component={AdminTeachers} />
+      <Route path="/admin/schedule" component={AdminSchedule} />
       <Route path="/teacher" component={TeacherView} />
       <Route path="/style" component={StyleGuide} />
       <Route component={PageNotFound} />

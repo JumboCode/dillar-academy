@@ -23,16 +23,23 @@ const NavBar = () => {
           </Link>
           {/* Desktop navigation */}
           <div className="hidden sm:flex sm:items-center lg:gap-x-20 md:gap-x-10">
-            <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
-            <NavLink href="/contact">{t("nav_link_contact")}</NavLink>
-            <NavLink href="/about">{t("nav_link_about")}</NavLink>
-            <SignedOut>
-              <NavLink href="/login">{t("nav_link_login")}</NavLink>
-            </SignedOut>
-            <SignedIn>
+            {user?.privilege === "admin" ? <>
+              <NavLink href="/admin/levels">{t("nav_link_classes")}</NavLink>
+              <NavLink href="/admin/students">Students</NavLink>
+              <NavLink href="/admin/teachers">Teachers</NavLink>
               <SignOutButton />
-              <NavLink href={`/${user?.privilege}`}>{t("nav_link_dashboard")}</NavLink>
-            </SignedIn>
+            </> : <>
+              <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
+              <NavLink href="/contact">{t("nav_link_contact")}</NavLink>
+              <NavLink href="/about">{t("nav_link_about")}</NavLink>
+              <SignedOut>
+                <NavLink href="/login">{t("nav_link_login")}</NavLink>
+              </SignedOut>
+              <SignedIn>
+                <SignOutButton />
+                <NavLink href={`/${user?.privilege}`}>{t("nav_link_dashboard")}</NavLink>
+              </SignedIn>
+            </>}
           </div>
           <div className='hidden sm:inline'>
             <LanguageDropdown />

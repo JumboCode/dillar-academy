@@ -6,8 +6,6 @@ import FormSubmit from "../components/Form/FormSubmit";
 import PasswordReqs from "./PasswordReqs";
 import { useTranslation } from "react-i18next";
 
-//Fetching first
-
 const getUserPassword = async () => {
   try {
     const response = await getUserPassword();
@@ -17,9 +15,6 @@ const getUserPassword = async () => {
   }
 }
 
-//Updating the person's password property
-
-// Implement the Welcome page and check for if it should be displayed
 export default function ForgotPassword() {
   const { t } = useTranslation();
 
@@ -62,8 +57,7 @@ export default function ForgotPassword() {
     <>
       <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
         <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
-          <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("forgot_your_pass")}</h1>
-
+          <h3 className="font-semibold my-3">{t("forgot_your_pass")}</h3>
           <form method="POST"
             onSubmit={handleSubmit}
             className="gap-y-3"
@@ -75,7 +69,6 @@ export default function ForgotPassword() {
               onChange={handleChange}
               placeholder={t("username_field")}
               isRequired={true} />
-
             <FormInput
               type="password"
               name="password"
@@ -83,7 +76,6 @@ export default function ForgotPassword() {
               onChange={handleChange}
               placeholder={t("reset_new_pass")}
               isRequired={true} />
-
             <FormInput
               type="password"
               name="retypedPassword"
@@ -91,11 +83,9 @@ export default function ForgotPassword() {
               onChange={handleChange}
               placeholder={t("reset_retype_pass")}
               isRequired={true} />
-
             <div className="mt-2">
               <PasswordReqs formData={formData} setIsValid={setIsValid} />
             </div>
-
             <FormSubmit label={"Reset Password"} isDisabled={!isValid} />
           </form>
         </Form>

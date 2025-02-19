@@ -132,7 +132,8 @@ const Conversation = mongoose.model("Conversation", ConversationSchema)
 const LevelSchema = new Schema({
   level: { type: Number, required: true },
   name: { type: String, required: true },
-  instructors: { type: [String], required: true, default: [] },
+  description: { type: String, required: true },
+  skills: { type: [String], default: [] }
 }, { collection: 'levels' })
 
 const Level = mongoose.model("Level", LevelSchema)

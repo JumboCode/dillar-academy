@@ -146,7 +146,7 @@ const StudentPortal = () => {
         <h1 className='text-3xl mb-4'> Your courses </h1>
         <div className='grid grid-cols-3 gap-6'>
           {classes.map((classObj, classIndex) => (
-            <Class key={classIndex} classObj={classObj} />
+            <Class key={classIndex} classObj={classObj} modes={["unenroll"]} />
           ))}
           <div className="flex items-center">
             <Link

@@ -24,7 +24,7 @@ export default function SignUp() {
     retypedPassword: '',
   })
   const [isValid, setIsValid] = useState(false);
-  const [alertData, setAlertData] = useState({message: ""})
+  const [alertData, setAlertData] = useState({ message: "" })
 
   useEffect(() => {
     if (isSignedIn && user) {
@@ -67,31 +67,31 @@ export default function SignUp() {
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-          setAlertData({message: ""});
-          setTimeout(() => {
-            setAlertData({ message: "Error: " + (error.message || "There was an error during sign in.") });
-          }, 10);
+        setAlertData({ message: "" });
+        setTimeout(() => {
+          setAlertData({ message: "Error: " + (error.message || "There was an error during sign in.") });
+        }, 10);
       } else {
-          setAlertData({message: ""});
-          setTimeout(() => {
-            setAlertData({ message: "Error: " + (error.message || "There was an error during sign in.") });
-          }, 10);
+        setAlertData({ message: "" });
+        setTimeout(() => {
+          setAlertData({ message: "Error: " + (error.message || "There was an error during sign in.") });
+        }, 10);
       }
     }
   }
 
   return (
     <div className='header-gradient w-full h-full py-8 sm:py-24 flex items-center justify-center'>
-      {alertData.message && <Alert message={alertData.message}/>}
+      {alertData.message && <Alert message={alertData.message} />}
       <Form
         width={"mx-10 w-full sm:w-2/5"}
       >
-        <h3 className="text-3xl md:text-4xl font-semibold">{t("sign_up_text")}</h3>
-        <p className="mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
+        <h3 className="font-extrabold">{t("sign_up_text")}</h3>
+        <p className="text-base sm:text-lg mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
           <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("login_text")}</Link>
         </p>
         {/* Form Values and the Borders */}
-        <form method="POST" onSubmit={handleSubmit} className="gap-y-3">
+        <form method="POST" onSubmit={handleSubmit} className="space-y-3">
           <div className="flex gap-y-3 sm:gap-y-0 sm:gap-x-3 sm:flex-row flex-col">
             <FormInput
               isRequired={true}

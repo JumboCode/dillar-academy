@@ -16,8 +16,8 @@ export default function Contact() {
     subject: '',
     message: ''
   });
-  const [alertData, setAlertData] = useState({message: ""})
-  
+  const [alertData, setAlertData] = useState({ message: "" })
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,11 +32,11 @@ export default function Contact() {
         alert("Message submitted successfully!");
       } else {
         const errorResponse = await response.json();
-        setAlertData({message: `Failed to send message: ${errorResponse.message}`})
+        setAlertData({ message: `Failed to send message: ${errorResponse.message}` })
       }
     } catch (err) {
       // console.error('Error in handleSubmit:', err);
-      setAlertData({message: ""});
+      setAlertData({ message: "" });
       setTimeout(() => {
         setAlertData({ message: "Error: " + (error.message || "There was an error submitting the inquiry.") });
       }, 10);
@@ -45,16 +45,16 @@ export default function Contact() {
 
   return (
     <div className="w-full h-full py-12 sm:py-32 bg-[url('/images/ice_water.png')] bg-no-repeat bg-center bg-cover flex flex-col sm:flex-row justify-center items-center">
-      {alertData.message && <Alert message={alertData.message}/>}
+      {alertData.message && <Alert message={alertData.message} />}
       {/* form box */}
       <Form width="w-4/5 md:w-3/5">
-        <h2 className="text-2xl sm: text-1xl font-semibold mb-2">{t("contact_heading")}</h2>
-        <p className="mb-4 text-gray-600 opacity-70">
+        <h3 className="font-extrabold mb-2">{t("contact_heading")}</h3>
+        <p className="text-base sm:text-lg mb-4 text-gray-600 opacity-70">
           {t("contact_form_description")}
         </p >
         <form
           onSubmit={handleSubmit}
-          className="gap-y-3"
+          className="space-y-3"
         >
           <FormInput
             type="text"

@@ -8,6 +8,7 @@ import Alert from "@/components/Alert";
 import { useSignIn, useAuth } from "@clerk/clerk-react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useTranslation } from "react-i18next";
+
 export default function Login() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [, setLocation] = useLocation();
@@ -18,11 +19,17 @@ export default function Login() {
     email: '',
     password: '',
   })
-  const [alertData, setAlertData] = useState({message: ""})
+  const [alertData, setAlertData] = useState({ message: "" })
 
   useEffect(() => {
     if (isSignedIn && user) {
-      setLocation(`/${user?.privilege}`);
+      if (user?.privilege === "admin") {
+        setLocation("/admin/levels");
+      } else if (user?.privilege === "teacher") {
+        setLocation("/teacher")
+      } else {
+        setLocation("/student")
+      }
     }
   }, [isSignedIn, user])
 
@@ -55,26 +62,26 @@ export default function Login() {
       }
     } catch (error) {
       console.error(error)
-      setAlertData({message: ""});
+      setAlertData({ message: "" });
       setTimeout(() => {
         console.log(error.message)
         setAlertData({ message: "Error: " + (error.message || "There was an error during login.") });
-      }, 10);    
-  }
+      }, 10);
+    }
   };
 
   return (
     <>
       <main className="header-gradient h-full py-40 flex justify-center items-center">
-        {alertData.message && <Alert message={alertData.message}/>}
+        {alertData.message && <Alert message={alertData.message} />}
         <Form width="w-2/5">
-          <h1 className="text-4xl font-extrabold sm:text-3xl">{t("login_text")}</h1>
-          <h3 className="text-lg sm:text-base text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
+          <h3 className="font-extrabold">{t("login_text")}</h3>
+          <p className="text-base sm:text-lg text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
             <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
-          </h3>
+          </p>
           <form method="POST"
             onSubmit={handleSubmit}
-            className="gap-y-3"
+            className="space-y-3"
           >
             <FormInput
               type="email"

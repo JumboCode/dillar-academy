@@ -5,12 +5,12 @@ import Button from '@/components/Button/Button'
 const Class = ({ classObj }) => {
   const ageGroup = classObj.ageGroup.toString();
   const day1 = classObj.schedule[0].day.toString();
-  const subDay1 = day1.substr(0,3);
+  const subDay1 = day1.substr(0, 3);
 
   const time = classObj.schedule[0].time.toString();
 
   const day2 = classObj.schedule[1].day.toString();
-  const subDay2 = day2.substr(0,3);
+  const subDay2 = day2.substr(0, 3);
 
 
   return (
@@ -19,10 +19,10 @@ const Class = ({ classObj }) => {
         {/* Header */}
 
         <div>
-            <h3 className="text-2xl font-extrabold mb-2">You are registered!</h3>
-            <p>
+          <h5 className="font-extrabold mb-2">You are registered!</h5>
+          <p>
             {ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}'s Class w/ {classObj.instructor}
-            </p>
+          </p>
         </div>
 
         {/* Schedule */}
@@ -41,7 +41,7 @@ const Class = ({ classObj }) => {
           <button
             className={`px-4 py-2 rounded-lg transition-colors duration-300 border border-dark-blue-800 w-full`}
           >
-          Got it!
+            Got it!
           </button>
         </div>
       </div>
