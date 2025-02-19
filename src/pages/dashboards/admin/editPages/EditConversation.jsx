@@ -18,7 +18,6 @@ const EditConversation = () => {
             }
         }
 
-        // fetchUsers();
     }, [isLoaded, isSignedIn, user]);
 
     if (!allowRender) {

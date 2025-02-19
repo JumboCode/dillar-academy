@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation } from 'wouter';
+import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getClassById } from "@/api/class-wrapper";
-import { useParams } from 'wouter';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import { updateClass, deleteClass } from '@/api/class-wrapper.js';

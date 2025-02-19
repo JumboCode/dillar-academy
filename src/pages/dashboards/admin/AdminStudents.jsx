@@ -2,10 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getUsers, updateUser } from '@/api/user-wrapper.js'
+import { getUsers } from '@/api/user-wrapper.js'
 import Button from '@/components/Button/Button';
-import Form from '@/components/Form/Form';
-import FormInput from '@/components/Form/FormInput';
 
 const AdminStudents = () => {
   const { user } = useContext(UserContext);
@@ -14,15 +12,6 @@ const AdminStudents = () => {
   const [allowRender, setAllowRender] = useState(false);
 
   const [users, setUsers] = useState([]);
-  const [showUserEditModal, setShowUserEditModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    age: '',
-    gender: '',
-  });
 
   useEffect(() => {
     if (isLoaded) {
@@ -40,36 +29,6 @@ const AdminStudents = () => {
     const userData = await getUsers();
     setUsers(userData.data);
   }
-
-  const handleUserInputChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
-  };
-
-
-  const handleEditUser = async (e) => {
-    e.preventDefault();
-    try {
-      await updateUser(selectedUser._id, userData);
-      setShowUserEditModal(false);
-      setSelectedUser(null);
-      setUserData({ firstName: '', lastName: '', email: '', age: '', gender: '' })
-      await fetchUsers();
-    } catch (error) {
-      console.error('Error updating user:', error);
-    }
-  };
-
-  const openUserEditModal = (userData) => {
-    setSelectedUser(userData);
-    setUserData({
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email,
-      age: userData.age || '',
-      gender: userData.gender || ''
-    });
-    setShowUserEditModal(true);
-  };
 
   if (!allowRender) {
     return <div></div>;
@@ -105,74 +64,13 @@ const AdminStudents = () => {
                 <td className="py-2 px-3">{userData.age}</td>
                 <td className="py-2 px-3">{userData.gender}</td>
                 <td className="py-2 px-3">
-                  <Button label="Edit" isOutline={true} onClick={() => openUserEditModal(userData)} />
+                  <Button label="Edit" isOutline={true} onClick={() => setLocation(`/admin/students/${userData._id}`)} />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </section>
-      {showUserEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <Form width="w-1/2">
-            <h2 className="text-2xl font-bold mb-6">Edit User</h2>
-            <form onSubmit={handleEditUser} className="space-y-4">
-              <FormInput
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={userData.firstName}
-                onChange={handleUserInputChange}
-                isRequired={true}
-              />
-              <FormInput
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={userData.lastName}
-                onChange={handleUserInputChange}
-                isRequired={true}
-              />
-              <FormInput
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={userData.email}
-                onChange={handleUserInputChange}
-                isRequired={true}
-              />
-              <FormInput
-                type="text"
-                name="age"
-                placeholder="Age"
-                value={userData.age}
-                onChange={handleUserInputChange}
-                isRequired={false}
-              />
-              <FormInput
-                type="text"
-                name="gender"
-                placeholder="Gender"
-                value={userData.gender}
-                onChange={handleUserInputChange}
-                isRequired={false}
-              />
-              <div className="flex justify-end space-x-2">
-                <Button
-                  label="Cancel"
-                  isOutline={true}
-                  onClick={() => {
-                    setShowUserEditModal(false);
-                    setSelectedUser(null);
-                    setUserData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
-                  }}
-                />
-                <Button label="Save" type="submit" />
-              </div>
-            </form>
-          </Form>
-        </div>
-      )}
     </div>
   )
 }
