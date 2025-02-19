@@ -5,6 +5,7 @@ import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
 import FormSubmit from "@/components/Form/FormSubmit";
 import PasswordReqs from "./PasswordReqs";
+import Alert from "@/components/Alert";
 import { useSignUp, useAuth } from '@clerk/clerk-react'
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useTranslation } from "react-i18next";
@@ -23,6 +24,7 @@ export default function SignUp() {
     retypedPassword: '',
   })
   const [isValid, setIsValid] = useState(false);
+  const [alertData, setAlertData] = useState({message: ""})
 
   useEffect(() => {
     if (isSignedIn && user) {
@@ -65,17 +67,22 @@ export default function SignUp() {
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        // alert('User already exists.');
-        console.log('User already exists.')
+          setAlertData({message: ""});
+          setTimeout(() => {
+            setAlertData({ message: "Error: " + (error.message || "There was an error during sign in.") });
+          }, 10);
       } else {
-        // alert('An error occurred while creating the user.')
-        console.log('An error occurred while creating the user', error)
+          setAlertData({message: ""});
+          setTimeout(() => {
+            setAlertData({ message: "Error: " + (error.message || "There was an error during sign in.") });
+          }, 10);
       }
     }
   }
 
   return (
     <div className='header-gradient w-full h-full py-8 sm:py-24 flex items-center justify-center'>
+      {alertData.message && <Alert message={alertData.message}/>}
       <Form
         width={"mx-10 w-full sm:w-2/5"}
       >
