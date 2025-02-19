@@ -537,22 +537,21 @@ app.put('/api/users/reset-password', async (req, res) => {
   }
 });
 
-//Edit User
+// Update user
 app.put('/api/user/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
 
-    // Validate ID format
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid user ID' });
+      return res.status(400).json({ error: 'Invalid ID' });
     }
 
-    // Update the user
     const updatedUser = await User.findByIdAndUpdate(
       id,
       updates,
-      { new: true, runValidators: true });
+      { new: true, runValidators: true }
+    );
 
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });

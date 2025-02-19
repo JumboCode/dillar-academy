@@ -29,7 +29,7 @@ const AdminView = () => {
   });
   const [userData, setUserData] = useState({
     firstName: '',
-    lasttName: '',
+    lastName: '',
     email: '',
     age: '',
     gender: '',
@@ -137,13 +137,12 @@ const AdminView = () => {
 
   const openUserEditModal = (userData) => {
     setSelectedUser(userData);
-    console.log(userData)
     setUserData({
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
-      age: userData.age,
-      gender: userData.gender
+      age: userData.age || '',
+      gender: userData.gender || ''
     });
     setShowUserEditModal(true);
   };
@@ -363,7 +362,7 @@ const AdminView = () => {
               />
               <FormInput
                 type="text"
-                name="Gender"
+                name="gender"
                 placeholder="Gender"
                 value={userData.gender}
                 onChange={handleUserInputChange}

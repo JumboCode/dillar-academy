@@ -1,19 +1,31 @@
 import { useContext, useEffect, useState } from 'react';
 import { getClassById, getStudentsClasses } from '@/api/class-wrapper';
+import { updateUser, getUser } from '@/api/user-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
 import Class from '@/components/Class'
 import { Link } from "wouter"
+import Button from '@/components/Button/Button';
+import Form from '@/components/Form/Form';
+import FormInput from '@/components/Form/FormInput';
 
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
-  const { user, } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isLoaded, isSignedIn } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    age: '',
+    gender: '',
+  });
   useEffect(() => {
     if (isLoaded) {
       if (!isSignedIn) {
@@ -34,12 +46,48 @@ const StudentPortal = () => {
           })
         );
         setClasses(classes);
-        console.log(classes)
       }
     };
 
     fetchData();
   }, [isLoaded, isSignedIn, user]);
+
+  const fetchUser = async () => {
+    const userFilter = new URLSearchParams(`_id=${user._id}`);
+    const response = await getUser(userFilter);
+    setUser(response.data);
+  }
+
+  const handleEditInfo = async (e) => {
+    e.preventDefault();
+    try {
+      await updateUser(user._id, formData);
+      await fetchUser();
+      setShowEditModal(false);
+      setFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
+
+  const openEditStudent = () => {
+    setFormData({
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.email || '',
+      age: user.age || '',
+      gender: user.gender || '',
+    });
+    setShowEditModal(true);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
   if (!allowRender) {
     return;
@@ -49,12 +97,50 @@ const StudentPortal = () => {
     return <div>Unauthorized</div>
   }
 
+  const togglePassword = (e) => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className='h-full'>
       <br></br>
       <h1 className='text-4xl font-bold mb-4'>
         Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}!
       </h1>
+      <section>
+        <table className="table-auto w-full text-left">
+          <thead className="bg-neutral-200 text-lg">
+            <tr>
+              <th className="px-3">Name</th>
+              <th className="px-3">Email</th>
+              <th className="px-3">Password</th>
+              <th className="px-3">Age</th>
+              <th className="px-3">Gender</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="py-2 px-3">{user.firstName} {user.lastName}</td>
+              <td className="py-2 px-3">{user.email}</td>
+              <td className="py-2 px-3 flex gap-2">
+                {showPassword ? user.password : "********"}
+                <input type="checkbox" onClick={togglePassword} />
+              </td>
+              <td className="py-2 px-3">{user.age}</td>
+              <td className="py-2 px-3">{user.gender}</td>
+              <td className="py-2 px-3">
+                <Button
+                  label="Edit"
+                  isOutline={true}
+                  onClick={() => openEditStudent()}
+                />
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </section>
 
       <section>
         <h1 className='text-3xl mb-4'> Your courses </h1>
@@ -108,6 +194,66 @@ const StudentPortal = () => {
           </div>
         </div>
       </section>
+      {showEditModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <Form width="w-1/2">
+            <h2 className="text-2xl font-bold mb-6">Edit User Info</h2>
+            <form onSubmit={handleEditInfo} className="space-y-4">
+              <FormInput
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                isRequired={true}
+              />
+              <FormInput
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                isRequired={true}
+              />
+              <FormInput
+                type="text"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleInputChange}
+                isRequired={true}
+              />
+              <FormInput
+                type="text"
+                name="age"
+                placeholder="Age"
+                value={formData.age}
+                onChange={handleInputChange}
+                isRequired={false}
+              />
+              <FormInput
+                type="text"
+                name="gender"
+                placeholder="Gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                isRequired={false}
+              />
+              <div className="flex justify-end space-x-2">
+                <Button
+                  label="Cancel"
+                  isOutline={true}
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setFormData({ firstName: '', lastName: '', email: '' });
+                  }}
+                />
+                <Button label="Save Info" type="submit" />
+              </div>
+            </form>
+          </Form>
+        </div>
+      )}
     </div>
   );
 

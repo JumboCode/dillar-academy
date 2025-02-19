@@ -68,29 +68,22 @@ const resetPassword = async (body) => {
   }
 }
 
+const updateUser = async (userId, userData) => {
+  try {
+    const response = await axios.put(`/api/user/${userId}`, userData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+}
+
 export {
   postUser,
   postLogin,
   getUsers,
   getUser,
   getUserPassword,
-  resetPassword
+  resetPassword,
+  updateUser
 }
-
-
-const updateUser = async (id, body) => {
-  try {
-    const response = await axios.put(`/api/user/${id}`, body, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response;
-  } catch (error) {
-    console.error('Error updating user:', error);
-    throw error;
-  }
-};
-
-export { updateUser };

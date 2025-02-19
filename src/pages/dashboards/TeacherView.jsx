@@ -3,7 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
 
-const AdminView = () => {
+const TeacherView = () => {
     const { user, } = useContext(UserContext);
     const [, setLocation] = useLocation();
     const { isSignedIn, isLoaded } = useAuth();
@@ -34,4 +34,4 @@ const AdminView = () => {
     );
 };
 
-export default AdminView;
+export default TeacherView;
