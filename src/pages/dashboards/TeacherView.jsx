@@ -29,20 +29,25 @@ const TeacherView = () => {
 
         const fetchClassesAndStudents = async () => {
             try {
-                const teacherClasses = await getClasses(`instructor=${user._id}`);
+                console.log("here")
+                const teacherClasses = await getClasses(`instructor=${user.firstName}`);
                 setClasses(teacherClasses);
 
-                const studentsData = {};
+                let studentsData = [];
+                console.log(teacherClasses)
                 for (const cls of teacherClasses) {
-                    const studentPromises = cls.enrolledStudents.map(async (studentID) => {
+                    const promises = await Promise.all(cls.roster.map(async (studentID) => {
                         const student = await getUser(`_id=${studentID}`);
-                        return student.data || student; 
-                    });
+                        console.log(student)
+                        return student.data;
 
-                    studentsData[cls._id] = await Promise.all(studentPromises);
+                    }));
+                    studentsData.concat(promises)
+
                 }
 
                 setStudents(studentsData);
+                console.log(students)
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -66,6 +71,7 @@ const TeacherView = () => {
             <div className="grid grid-cols-3 gap-6">
                 {classes.map((classObj) => (
                     <Class key={classObj._id} classObj={classObj} students={students[classObj._id] || []} />
+                    
                 ))}
             </div>
         </div>
