@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "wouter";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -8,6 +9,7 @@ const Footer = () => {
       <h3 className="font-extrabold">Dillar English Academy</h3>
       <p className="lg:text-lg">{t("email_field")}: dillarenglish@gmail.com</p>
       <p className="lg:text-lg">{t("instagram")}: @dillaracademy</p>
+      <Link href="/contact">Contact Us</Link>
     </footer>
   )
 }

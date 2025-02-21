@@ -17,9 +17,9 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
       {/* Header */}
       <div className='mb-4'>
-        <h3 className="text-xl font-extrabold text-dark-blue-800 mb-1">
+        <h5 className="font-extrabold text-dark-blue-800 mb-1">
           {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}
-        </h3>
+        </h5>
         <span className="text-sm text-neutral-400">with {classObj.instructor}</span>
       </div>
       {/* Schedule */}
@@ -38,7 +38,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
         {modes.includes("enroll") &&
           <EnrollButton
             userId={user?._id}
-            classId={classObj._id}
+            classObj={classObj}
             isEnroll={true}
           />
         }
@@ -47,7 +47,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
         {modes.includes("unenroll") &&
           <EnrollButton
             userId={user?._id}
-            classId={classObj._id}
+            classObj={classObj}
             isEnroll={false}
           />
         }
