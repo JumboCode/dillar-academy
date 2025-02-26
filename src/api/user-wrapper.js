@@ -1,13 +1,16 @@
 import axios from 'axios';
 
+// Helper to build full API URLs using your VITE_API_URL environment variable
+const apiUrl = (path) => `${import.meta.env.VITE_API_URL}${path}`;
+
 const postUser = async (body) => {
   try {
-    const response = await axios.post("/api/sign-up", body)
-    return response
+    const response = await axios.post("/api/sign-up", body);
+    return response;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
 
 const postLogin = async (body) => {
   try {
@@ -16,12 +19,11 @@ const postLogin = async (body) => {
         'Content-Type': 'application/json',
       },
     });
-
-    return response
+    return response;
   } catch (error) {
     console.error('Login endpoint post error:', error);
   }
-}
+};
 
 const getUsers = async () => {
   try {
@@ -30,7 +32,7 @@ const getUsers = async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
-}
+};
 
 const getUser = async (query = "") => {
   try {
@@ -39,19 +41,22 @@ const getUser = async (query = "") => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
-}
+};
 
-//added 12/7
+// Added 12/7: Get user password endpoint (if needed)
 const getUserPassword = async () => {
   try {
-    const response = await fetch('/api/users/password')
-    const jsonData = await response.json()
-    return jsonData
+    const response = await fetch('/api/users/password');
+    const jsonData = await response.json();
+    return jsonData;
   } catch (error) {
     console.error('Error fetching user password:', error);
   }
-}
+};
 
+// Updated resetPassword function:
+// - Uses the apiUrl helper
+// - Parses and returns the JSON response (so your client can check response.success)
 const resetPassword = async (body) => {
   try {
     const response = await fetch(apiUrl("/api/users/reset-password"), {
@@ -60,13 +65,13 @@ const resetPassword = async (body) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-    })
-
-    return response
+    });
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Reset password endpoint error:', error);
   }
-}
+};
 
 const updateUser = async (userId, userData) => {
   try {
@@ -76,7 +81,7 @@ const updateUser = async (userId, userData) => {
     console.error('Error updating user:', error);
     throw error;
   }
-}
+};
 
 export {
   postUser,
@@ -86,4 +91,4 @@ export {
   getUserPassword,
   resetPassword,
   updateUser
-}
+};
