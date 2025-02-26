@@ -44,7 +44,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="w-full h-full py-12 sm:py-32 bg-[url('/images/ice_water.png')] bg-no-repeat bg-center bg-cover flex flex-col sm:flex-row justify-center items-center">
+    <div className="w-full h-full py-10 bg-[url('/images/ice_water.png')] bg-no-repeat bg-center bg-cover flex justify-center items-center">
       {alertData.message && <Alert message={alertData.message} />}
       {/* form box */}
       <Form width="w-4/5 md:w-3/5">

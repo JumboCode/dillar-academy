@@ -51,21 +51,22 @@ const App = () => {
 
   return (
     <>
-      <div className='min-h-screen grid grid-rows-[5rem_1fr] font-avenir font-normal box-border'>
+      <div className='max-h-screen grid grid-rows-[5rem_minmax(auto,_1fr)] font-avenir font-normal box-border'>
         <UserContext.Provider value={{ user: userData, setUser: setUser }}>
-          <div className={`${isNew ? 'hidden' : ''}`}>
+          <div className={`${isNew ? 'hidden' : ''} row-start-1`}>
             <NavBar />
           </div>
-          <div className='hidden'></div>
-          <div className='w-full'>
-            {isNew ? (
-              <Welcome onComplete={handleWelcomeComplete} />
-            ) : (
-              <PageRoutes />
-            )}
-          </div>
-          <div className={`${isNew ? 'hidden' : ''}`}>
-            <Footer />
+          <div className="row-start-2 min-h-[calc(100vh-5rem)] overflow-y-scroll flex flex-col">
+            <div className='w-full flex-1'>
+              {isNew ? (
+                <Welcome onComplete={handleWelcomeComplete} />
+              ) : (
+                <PageRoutes />
+              )}
+            </div>
+            <div className={`w-full ${isNew ? 'hidden' : ''}`}>
+              <Footer />
+            </div>
           </div>
         </UserContext.Provider>
       </div >

@@ -1,10 +1,9 @@
 
-import React from 'react'
+import React, { useContext } from 'react'
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import EnrollButton from '@/components/Button/EnrollButton'
 import Button from '@/components/Button/Button'
 import EditButton from '@/components/Button/EditButton'
-import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 // possible modes: enroll, unenroll, edit, delete

@@ -95,7 +95,7 @@ const Home = () => {
       <div className="header-gradient p-4 min-h-[60dvh] flex items-center justify-center">
         <div className="text-center md:text-left mb-12 mt-12 px-5 justify-items-center">
           <h5 className="text-blue-600 mb-3">{t("home_motto")}</h5>
-          <h1 className="font-extrabold mb-6">Dillar English Academy</h1>
+          <h1 className="font-extrabold mb-6">Dillar Academy</h1>
           <p className="text-xl">{t("home_purpose")}</p>
           <p className="mb-4"><b>300+</b> {t("home_student_desc")}</p>
           <div className="flex flex-col space-y-2 sm:flex-row items-center sm:space-y-0 sm:space-x-3">

@@ -19,7 +19,7 @@ const NavBar = () => {
         {/* Navbar content */}
         <div className='flex justify-between items-center sm:px-8 px-3 h-full'>
           <Link href="/" className="flex-shrink-0 flex items-center">
-            <img className="h-14 w-auto" src={dillarLogo} alt="Dillar English Academy" />
+            <img className="h-14 w-auto" src={dillarLogo} alt="Dillar Academy" />
           </Link>
           {/* Desktop navigation */}
           <div className="hidden sm:flex sm:items-center lg:gap-x-20 md:gap-x-10">

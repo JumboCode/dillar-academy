@@ -72,7 +72,7 @@ export default function Login() {
 
   return (
     <>
-      <main className="header-gradient h-full py-40 flex justify-center items-center">
+      <div className="header-gradient h-full py-10 flex justify-center items-center">
         {alertData.message && <Alert message={alertData.message} />}
         <Form width="w-2/5">
           <h3 className="font-extrabold">{t("login_text")}</h3>
@@ -101,7 +101,7 @@ export default function Login() {
             <FormSubmit label={t("login_text")} />
           </form >
         </Form >
-      </main >
+      </div >
     </>
   )
 }

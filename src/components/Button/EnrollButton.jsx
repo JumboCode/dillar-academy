@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '@/components/Button/Button'
 import { enrollInClass, getClassById, unenrollInClass } from '@/api/class-wrapper';
-import { useUser } from '@clerk/clerk-react';
-import { useState } from 'react';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import { useLocation } from 'wouter';
+import { useUser } from '@clerk/clerk-react';
 
 const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
   const [confirming, setConfirming] = useState(true);
@@ -62,7 +61,14 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
           </div>
           <span className='flex gap-x-2'>
             <Button label={"My Schedule"} onClick={() => setLocation('/student')} />
-            <Button label={"Undo"} isOutline={true} onClick={() => setShowPopup(false)} />
+            <Button
+              label={"Undo"}
+              isOutline={true}
+              onClick={() => {
+                setShowPopup(false)
+                isEnroll = false;
+                handleEnrollOrUnenroll();
+              }} />
           </span>
         </div>}
       </div>
@@ -70,30 +76,38 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
   )
 }
 
-const UnenrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
-
-}
-
-const SignInPopup = () => {
-  return (
-    <div className='bg-black bg-opacity-30 fixed z-50 inset-0 grid place-items-center'>
-      <div className='w-[28rem] bg-white rounded-lg p-6'>
-
-      </div>
-    </div>
-  )
-}
-
 const EnrollButton = ({ userId, classObj, isEnroll }) => {
-  const { user, isSignedIn } = useUser();
   const [showEnrollPopup, setShowEnrollPopup] = useState(false);
-  const [showUnenrollPopup, setShowUnenrollPopup] = useState(false);
-  const [showSignInPopup, setShowSignInPopup] = useState(false);
+  const [, setLocation] = useLocation();
+  const { isSignedIn } = useUser();
+
+  const handleEnrollOrUnenroll = async () => {
+    if (isEnroll) {
+      await enrollInClass(classObj._id, userId);
+    } else {
+      await unenrollInClass(classObj._id, userId);
+    }
+  }
 
   return (
     <>
-      <Button label={isEnroll ? "Enroll" : "Unenroll"} isOutline={false} onClick={() => setShowEnrollPopup(true)}></Button>
-      {showEnrollPopup && <EnrollPopup isEnroll={isEnroll} classObj={classObj} userId={userId} setShowPopup={setShowEnrollPopup} />}
+      {isEnroll ? <Button
+        label={"Enroll"}
+        isOutline={false}
+        onClick={isSignedIn ? () => setShowEnrollPopup(true) : () => setLocation("/login")}
+      /> : <Button
+        label={"Unenroll"}
+        isOutline={false}
+        onClick={() => {
+          handleEnrollOrUnenroll();
+          window.location.reload();
+        }}
+      />}
+      {showEnrollPopup && <EnrollPopup
+        isEnroll={isEnroll}
+        classObj={classObj}
+        userId={userId}
+        setShowPopup={setShowEnrollPopup} />}
     </>
   )
 }
