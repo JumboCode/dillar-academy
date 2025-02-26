@@ -97,6 +97,15 @@ const getClassById = async (classId) => {
   }
 }
 
+const getConversationById = async (conversationId) => {
+  try {
+    const response = await axios.get(`/api/conversations/${conversationId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching class from id:", error);
+  }
+}
+
 export {
   getClasses,
   getLevels,
@@ -108,4 +117,5 @@ export {
   unenrollInClass,
   getStudentsClasses,
   getClassById,
+  getConversationById
 }

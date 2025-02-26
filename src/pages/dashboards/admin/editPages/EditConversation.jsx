@@ -2,12 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
+import { getConversationById } from "@/api/class-wrapper";
 
 const EditConversation = () => {
     const { user } = useContext(UserContext);
     const [, setLocation] = useLocation();
     const { isSignedIn, isLoaded } = useAuth();
     const [allowRender, setAllowRender] = useState(false);
+
+    const params = useParams();
+    
 
     useEffect(() => {
         if (isLoaded) {

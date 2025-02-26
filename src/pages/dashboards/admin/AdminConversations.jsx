@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
+import ConversationClass from '@/components/ConversationClass';
 
 const AdminConversations = () => {
     const { user } = useContext(UserContext);
@@ -15,11 +16,13 @@ const AdminConversations = () => {
                 setLocation("/login");
             } else {
                 setAllowRender(true);
+                fetchConversations();
             }
         }
 
         // TODO: fetch conversation classes
     }, [isLoaded, isSignedIn, user]);
+
 
     if (!allowRender) {
         return <div></div>;
