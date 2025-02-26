@@ -39,9 +39,12 @@ const AdminStudents = () => {
   }
 
   return (
-    <div className="h-full p-8 space-y-10">
+    <div className="h-full p-8 space-y-7">
       <h3 className="font-extrabold">Students</h3>
+      <p>List of all students enrolled in Dillar Classes</p>
+      <input type="text" className=""placeholder="Search names, levels, or classes..."></input>
       <section>
+       
         <table className="table-auto w-full text-left">
           <thead className="bg-neutral-200 text-lg">
             <tr>
