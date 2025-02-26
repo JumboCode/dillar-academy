@@ -1,3 +1,4 @@
+import Button from '@/components/Button/Button';
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
@@ -31,6 +32,10 @@ const AdminLevels = () => {
   return (
     <div className="h-full p-8 space-y-10">
       <h3 className="font-extrabold">All Levels</h3>
+      <Button
+        label="Conversation Classes"
+        onClick={() => setLocation("/admin/levels/conversations")}
+        isOutline={false}></Button>
     </div>
   );
 };
