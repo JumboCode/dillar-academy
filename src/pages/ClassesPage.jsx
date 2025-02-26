@@ -35,7 +35,7 @@ const ClassesPage = () => {
   if (loading || !level) return;
 
   return (
-    <div className="h-full bg-white">
+    <div className="h-full flex-1 bg-white">
       {/* Banner Section */}
       <div className="header-gradient py-28 px-14">
         <h5 className="font-light text-dark-blue-700 mb-2">Level {level.level}</h5>

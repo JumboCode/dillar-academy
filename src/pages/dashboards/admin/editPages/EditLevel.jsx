@@ -105,7 +105,7 @@ const EditLevel = () => {
   }
 
   return (
-    <div className="h-full p-8 space-y-10">
+    <div className="h-full flex-1 p-8 space-y-10">
       <h3 className="font-extrabold">Edit Level</h3>
       <div>
         <p>Level {level.level}</p>

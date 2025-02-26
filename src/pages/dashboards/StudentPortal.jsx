@@ -102,7 +102,7 @@ const StudentPortal = () => {
   };
 
   return (
-    <div className='h-full'>
+    <div className='h-full flex-1'>
       <br></br>
       <h1 className='text-4xl font-bold mb-4'>
         Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}!

@@ -8,6 +8,18 @@ import "./i18n.js";
 import { useUser } from '@clerk/clerk-react'
 import { getUser } from './api/user-wrapper.js';
 import { UserContext } from '@/contexts/UserContext.jsx';
+import { useLocation } from 'wouter';
+
+export function ScrollToTop() {
+  const [pathname] = useLocation();
+
+  useEffect(() => {
+    console.log("Route changed:", location);
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 const App = () => {
   const [userData, setUser] = useState(null);
@@ -51,23 +63,26 @@ const App = () => {
 
   return (
     <>
+      <ScrollToTop />
       <div className='max-h-screen grid grid-rows-[5rem_minmax(auto,_1fr)] font-avenir font-normal box-border'>
         <UserContext.Provider value={{ user: userData, setUser: setUser }}>
           <div className={`${isNew ? 'hidden' : ''} row-start-1`}>
             <NavBar />
           </div>
-          <div className="row-start-2 min-h-[calc(100vh-5rem)] overflow-y-scroll flex flex-col">
-            <div className='w-full flex-1'>
-              {isNew ? (
-                <Welcome onComplete={handleWelcomeComplete} />
-              ) : (
+          {isNew ? (
+            <div className="row-start-1 h-screen row-span-2">
+              <Welcome onComplete={handleWelcomeComplete} />
+            </div>
+          ) : (
+            <div className="row-start-2 min-h-[calc(100vh-5rem)]">
+              <div className='w-full min-h-full flex flex-col'>
                 <PageRoutes />
-              )}
+              </div>
+              <div className={`w-full ${isNew ? 'hidden' : ''}`}>
+                <Footer />
+              </div>
             </div>
-            <div className={`w-full ${isNew ? 'hidden' : ''}`}>
-              <Footer />
-            </div>
-          </div>
+          )}
         </UserContext.Provider>
       </div >
     </>

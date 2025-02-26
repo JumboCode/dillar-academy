@@ -56,7 +56,9 @@ export default function Login() {
         } else {
           // TODO
         }
-        setLocation(`/${response.data.privilege}`);
+        const dashboardURL = response.data.privilege === "admin" ? "/admin/levels" : `/${response.data.privilege}`;
+
+        setLocation(dashboardURL);
       } else {
         console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
       }
@@ -72,7 +74,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="header-gradient h-full py-10 flex justify-center items-center">
+      <div className="header-gradient h-full flex-1 py-10 flex justify-center items-center">
         {alertData.message && <Alert message={alertData.message} />}
         <Form width="w-2/5">
           <h3 className="font-extrabold">{t("login_text")}</h3>

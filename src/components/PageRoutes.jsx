@@ -34,8 +34,8 @@ export default function PageRoutes() {
       <Route path="/forgotpassword" component={ForgotPassword} />
       <Route path="/student" component={StudentPortal} />
       <Route path="/admin/levels" component={AdminLevels} />
-      <Route path="/admin/levels/:id" component={EditLevel} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
+      <Route path="/admin/levels/:id" component={EditLevel} />
       <Route path="/admin/levels/conversations/:id" component={EditConversation} />
       <Route path="/admin/class/:classId" component={EditClass} />
       <Route path="/admin/students" component={AdminStudents} />

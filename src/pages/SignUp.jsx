@@ -4,7 +4,7 @@ import { postUser } from "@/api/user-wrapper";
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
 import FormSubmit from "@/components/Form/FormSubmit";
-import PasswordReqs from "./PasswordReqs";
+import PasswordReqs from "@/components/PasswordReqs";
 import Alert from "@/components/Alert";
 import { useSignUp, useAuth } from '@clerk/clerk-react'
 import { UserContext } from '@/contexts/UserContext.jsx';
@@ -81,7 +81,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className='header-gradient w-full h-full py-10 flex items-center justify-center'>
+    <div className='header-gradient w-full h-full flex-1 py-10 flex items-center justify-center'>
       {alertData.message && <Alert message={alertData.message} />}
       <Form
         width={"mx-10 w-full sm:w-2/5"}

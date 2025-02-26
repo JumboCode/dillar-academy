@@ -73,7 +73,7 @@ const EditStudent = () => {
   }
 
   return (
-    <div className="h-full p-8 space-y-10">
+    <div className="h-full flex-1 p-8 space-y-10">
       <h3 className="font-extrabold">Edit Student</h3>
       <form onSubmit={handleEditUser} className="space-y-4">
         <FormInput

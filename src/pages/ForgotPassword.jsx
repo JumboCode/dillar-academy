@@ -3,7 +3,7 @@ import { resetPassword } from "../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
 import FormSubmit from "../components/Form/FormSubmit";
-import PasswordReqs from "./PasswordReqs";
+import PasswordReqs from "@/components/PasswordReqs";
 import { useTranslation } from "react-i18next";
 
 const getUserPassword = async () => {
@@ -55,7 +55,7 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
+      <main className="header-gradient h-full flex-1 py-10 sm:py-32 flex justify-center items-center">
         <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
           <h3 className="font-semibold my-3">{t("forgot_your_pass")}</h3>
           <form method="POST"
