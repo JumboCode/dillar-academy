@@ -74,7 +74,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="header-gradient h-full flex-1 py-10 flex justify-center items-center">
+      <div className="header-gradient page-format flex justify-center items-center">
         {alertData.message && <Alert message={alertData.message} />}
         <Form width="w-2/5">
           <h3 className="font-extrabold">{t("login_text")}</h3>

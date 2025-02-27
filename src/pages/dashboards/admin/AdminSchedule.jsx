@@ -30,7 +30,7 @@ const AdminSchedule = () => {
     }
 
     return (
-        <div className="h-full flex-1 p-8 space-y-10">
+        <div className="page-format space-y-10">
             <h3 className="font-extrabold">Schedule</h3>
         </div>
     )

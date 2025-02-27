@@ -55,12 +55,12 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <main className="header-gradient h-full flex-1 py-10 sm:py-32 flex justify-center items-center">
+      <main className="header-gradient page-format flex justify-center items-center">
         <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
           <h3 className="font-semibold my-3">{t("forgot_your_pass")}</h3>
           <form method="POST"
             onSubmit={handleSubmit}
-            className="gap-y-3"
+            className="space-y-3"
           >
             <FormInput
               type="email"

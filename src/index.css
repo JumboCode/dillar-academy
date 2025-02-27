@@ -35,6 +35,11 @@
 }
 
 @layer components {
+  .page-format {
+    @apply w-full h-full flex-1 py-10 px-4;
+    @apply sm:px-14;
+  }
+
   .header-gradient {
     background: radial-gradient(120% 177.59% at -20% 100%, rgba(255, 255, 255, 0.80) 0%, rgba(211, 237, 252, 0.80) 35.46%, rgba(178, 224, 250, 0.80) 57.09%, rgba(138, 199, 244, 0.80) 76.71%, rgba(63, 150, 234, 0.80) 100%);
   }

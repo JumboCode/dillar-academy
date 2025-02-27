@@ -81,7 +81,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className='header-gradient w-full h-full flex-1 py-10 flex items-center justify-center'>
+    <div className='header-gradient page-format flex items-center justify-center'>
       {alertData.message && <Alert message={alertData.message} />}
       <Form
         width={"mx-10 w-full sm:w-2/5"}

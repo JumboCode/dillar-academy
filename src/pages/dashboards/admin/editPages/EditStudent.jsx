@@ -73,9 +73,9 @@ const EditStudent = () => {
   }
 
   return (
-    <div className="h-full flex-1 p-8 space-y-10">
-      <h3 className="font-extrabold">Edit Student</h3>
-      <form onSubmit={handleEditUser} className="space-y-4">
+    <div className="page-format">
+      <h3 className="font-extrabold mb-10">Edit Student</h3>
+      <form onSubmit={handleEditUser} className="space-y-3">
         <FormInput
           type="text"
           name="firstName"

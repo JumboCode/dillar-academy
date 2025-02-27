@@ -102,7 +102,7 @@ const StudentPortal = () => {
   };
 
   return (
-    <div className='h-full flex-1'>
+    <div className='page-format'>
       <br></br>
       <h1 className='text-4xl font-bold mb-4'>
         Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}!
@@ -198,7 +198,7 @@ const StudentPortal = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <Form width="w-1/2">
             <h2 className="text-2xl font-bold mb-6">Edit User Info</h2>
-            <form onSubmit={handleEditInfo} className="space-y-4">
+            <form onSubmit={handleEditInfo} className="space-y-3">
               <FormInput
                 type="text"
                 name="firstName"

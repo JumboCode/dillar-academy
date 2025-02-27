@@ -28,7 +28,7 @@ const TeacherView = () => {
     }
 
     return (
-        <div className="h-full flex-1">
+        <div className="page-format">
             <h1>Teacher</h1>
         </div>
     );

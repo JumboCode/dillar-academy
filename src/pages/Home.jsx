@@ -92,7 +92,7 @@ const Home = () => {
   return (
     <>
       {/* hero section */}
-      <div className="header-gradient p-4 min-h-[60dvh] flex items-center justify-center">
+      <div className="header-gradient min-h-[60dvh] flex items-center justify-center">
         <div className="text-center md:text-left mb-12 mt-12 px-5 justify-items-center">
           <h5 className="text-blue-600 mb-3">{t("home_motto")}</h5>
           <h1 className="font-extrabold mb-6">Dillar Academy</h1>
@@ -113,7 +113,7 @@ const Home = () => {
         </div>
       </div>
       {/* Learn more section */}
-      <div className="flex flex-col bg-white px-4 py-20 sm:py-40 gap-y-20 md:gap-32 mx-auto max-w-7xl">
+      <div className="flex flex-col bg-white py-20 sm:py-40 gap-y-20 md:gap-32 mx-auto max-w-7xl">
         {/* About levels */}
         <div className="flex flex-col-reverse gap-4 sm:flex-row justify-around items-center">
           <div className="grid grid-cols-1 w-4/5 sm:gap-4 sm:w-auto sm:grid-cols-2 justify-center gap-8 ">

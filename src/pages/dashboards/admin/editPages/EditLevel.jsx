@@ -105,7 +105,7 @@ const EditLevel = () => {
   }
 
   return (
-    <div className="h-full flex-1 p-8 space-y-10">
+    <div className="page-format space-y-10">
       <h3 className="font-extrabold">Edit Level</h3>
       <div>
         <p>Level {level.level}</p>
@@ -131,7 +131,7 @@ const EditLevel = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <Form width="w-1/2">
             <h2 className="text-2xl font-bold mb-6">Create New Class</h2>
-            <form onSubmit={handleCreateClass} className="space-y-4">
+            <form onSubmit={handleCreateClass} className="space-y-3">
               <FormInput
                 type="text"
                 name="level"

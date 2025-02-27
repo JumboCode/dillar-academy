@@ -37,7 +37,7 @@ const ClassesPage = () => {
   return (
     <div className="h-full flex-1 bg-white">
       {/* Banner Section */}
-      <div className="header-gradient py-28 px-14">
+      <div className="header-gradient py-24 px-14">
         <h5 className="font-light text-dark-blue-700 mb-2">Level {level.level}</h5>
         <h3 className='font-extrabold text-dark-blue-800 mb-6'>{level.name}</h3>
 
