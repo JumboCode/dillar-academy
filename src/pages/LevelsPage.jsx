@@ -41,7 +41,7 @@ const LevelsPage = () => {
         <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 flex flex-col`}>
           {levels.map((level, levelIndex) => (
             <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
-              <Level level={level} />
+              <Level level={level} isSimplified={true} />
             </Link>
           ))}
         </div>
