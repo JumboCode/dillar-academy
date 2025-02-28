@@ -6,19 +6,18 @@ function About() {
   const { t } = useTranslation();
 
   return (
-    <div className="page-format flex flex-col items-center sm:flex-row-reverse sm:justify-between">
-      <div className="flex items-center justify-center sm:w-1/3">
-        <img src={stepping_stones_landscape} alt="stepping_stones_landscape" className="rounded-3xl shadow-xl sm:aspect-square object-cover" title="stepping_stones_landscape"></img>
+    <div className="page-format max-w-[96rem] flex flex-col items-center lg:flex-row-reverse lg:justify-between">
+      <div className="flex items-center justify-center lg:w-1/3">
+        <img src={stepping_stones_landscape} alt="stepping_stones_landscape" className="rounded-3xl shadow-xl lg:aspect-square object-cover" title="stepping_stones_landscape"></img>
       </div>
-      <div className="my-8 sm:my-auto sm:w-7/12 sm:text-lg">
-        <h2 className="text-center sm:text-left font-extrabold text-blue-700 inline-flex items-center mb-4 sm:mb-7">
+      <div className="my-8 lg:w-7/12 sm:text-lg">
+        <div className="w-full flex gap-x-4 items-center justify-center lg:justify-start mb-4 sm:mb-7">
           <IoStar
-            style={{ fontSize: '40px' }}
-            color="steelblue"
-            className="mr-2"
+            style={{ fontSize: '32px' }}
+            className="text-blue-700"
           />
-          {t("about_heading")}
-        </h2>
+          <h2 className="font-extrabold text-blue-700">{t("about_heading")}</h2>
+        </div>
         <p>{t("about_desc_1")}
           <br /><br />
           {t("about_desc_2")}

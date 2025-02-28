@@ -29,7 +29,7 @@ const LevelsPage = () => {
   }
 
   return (
-    <div className="page-format sm:py-24">
+    <div className="page-format max-w-[96rem] lg:py-24">
       <section className={sectionStyle}>
         <h3 className='font-extrabold mb-2'>Browse Classes</h3>
         <p className={descriptionStyle}>Dillar Academy offers classes at a variety of levels, based on your English skill level! Browse all the levels and classes here.</p>

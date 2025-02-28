@@ -37,7 +37,8 @@
 @layer components {
   .page-format {
     @apply w-full h-full flex-1 py-10 px-4;
-    @apply sm:px-14;
+    @apply sm:px-6;
+    @apply lg:px-20;
   }
 
   .header-gradient {

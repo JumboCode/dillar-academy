@@ -14,7 +14,6 @@ export function ScrollToTop() {
   const [pathname] = useLocation();
 
   useEffect(() => {
-    console.log("Route changed:", location);
     window.scrollTo(0, 0);
   }, [pathname]);
 
@@ -75,7 +74,7 @@ const App = () => {
             </div>
           ) : (
             <div className="row-start-2 min-h-[calc(100vh-5rem)]">
-              <div className='w-full min-h-full flex flex-col'>
+              <div className='w-full min-h-full flex flex-col items-center'>
                 <PageRoutes />
               </div>
               <div className={`w-full ${isNew ? 'hidden' : ''}`}>

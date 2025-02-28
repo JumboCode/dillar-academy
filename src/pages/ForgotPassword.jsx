@@ -56,39 +56,41 @@ export default function ForgotPassword() {
   return (
     <>
       <main className="header-gradient page-format flex justify-center items-center">
-        <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
-          <h3 className="font-semibold my-3">{t("forgot_your_pass")}</h3>
-          <form method="POST"
-            onSubmit={handleSubmit}
-            className="space-y-3"
-          >
-            <FormInput
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder={t("username_field")}
-              isRequired={true} />
-            <FormInput
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder={t("reset_new_pass")}
-              isRequired={true} />
-            <FormInput
-              type="password"
-              name="retypedPassword"
-              value={formData.retypedPassword}
-              onChange={handleChange}
-              placeholder={t("reset_retype_pass")}
-              isRequired={true} />
-            <div className="mt-2">
-              <PasswordReqs formData={formData} setIsValid={setIsValid} />
-            </div>
-            <FormSubmit label={"Reset Password"} isDisabled={!isValid} />
-          </form>
-        </Form>
+        <div className="w-full max-w-[96rem] flex justify-center">
+          <Form width="lg:w-3/5 xl:w-2/5">
+            <h3 className="font-semibold my-3">{t("forgot_your_pass")}</h3>
+            <form method="POST"
+              onSubmit={handleSubmit}
+              className="space-y-3"
+            >
+              <FormInput
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder={t("username_field")}
+                isRequired={true} />
+              <FormInput
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder={t("reset_new_pass")}
+                isRequired={true} />
+              <FormInput
+                type="password"
+                name="retypedPassword"
+                value={formData.retypedPassword}
+                onChange={handleChange}
+                placeholder={t("reset_retype_pass")}
+                isRequired={true} />
+              <div className="mt-2">
+                <PasswordReqs formData={formData} setIsValid={setIsValid} />
+              </div>
+              <FormSubmit label={"Reset Password"} isDisabled={!isValid} />
+            </form>
+          </Form>
+        </div>
       </main>
     </>
   )
