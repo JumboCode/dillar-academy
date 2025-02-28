@@ -69,6 +69,9 @@ export default function Login() {
         console.log(error.message)
         setAlertData({ message: "Error: " + (error.message || "There was an error during login.") });
       }, 10);
+      setTimeout(() => {
+        setAlertData({ message: "" })
+      }, 5000)
     }
   };
 

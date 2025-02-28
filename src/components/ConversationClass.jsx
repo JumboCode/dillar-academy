@@ -1,3 +1,4 @@
+import EditButton from '@/components/Button/EditButton'
 
 // possible modes: edit or none
 const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
