@@ -109,11 +109,6 @@ const Home = () => {
                             onClick={() => setLocation("/about")}
                             isOutline={true}
                         />
-                        <Button
-                            label={t("Test Button")}
-                            onClick={() => setLocation('/api/classes/:id/classroom-link')}
-                            isOutline={false}
-                        />
                     </div>
                 </div>
             </div>
