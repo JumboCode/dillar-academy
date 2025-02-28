@@ -69,21 +69,20 @@ export default function ResetPasswordCode() {
   return (
     <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
       <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
-        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("enter_reset_code")}</h1>
-        <p className="text-sm text-gray-600 mb-4">{t("reset_code_instructions")}</p>
-        <form onSubmit={handleSubmit} className="gap-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("Enter Reset Code")}</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-y-6">
           <FormInput
             type="text"
             name="code"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder={t("reset_code_placeholder")}
+            placeholder={t("Reset Code")}
             isRequired={true}
             disabled={isSubmitting || retryAfter > 0}
           />
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           <FormSubmit
-            label={isSubmitting ? t("verifying") : t("verify_code")}
+            label={isSubmitting ? t("Verifying") : t("Verify code")}
             isDisabled={isSubmitting || retryAfter > 0}
           />
           {retryAfter > 0 && <p className="text-sm text-gray-600 mt-2">You can try again in {retryAfter} seconds</p>}

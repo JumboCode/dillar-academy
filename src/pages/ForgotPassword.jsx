@@ -44,20 +44,21 @@ export default function ForgotPassword() {
   return (
     <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
       <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
-        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("forgot_your_pass")}</h1>
-        <p className="text-sm text-gray-600 mb-4">{t("forgot_password_instructions")}</p>
-        <form onSubmit={handleSubmit} className="gap-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("Forgot Password")}</h1>
+        <p className="text-sm text-gray-600 mb-4">{t("Enter your email for instructions")}</p>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-y-6">
           <FormInput
             type="email"
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("email_field")}
+            placeholder={t("Email")}
             isRequired={true}
             disabled={isSubmitting}
+            className="mb-4"
           />
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          <FormSubmit label={isSubmitting ? t("sending") : t("send_reset_instructions")} isDisabled={isSubmitting} />
+          <FormSubmit label={isSubmitting ? t("Sending") : t("Send")} isDisabled={isSubmitting} className="mt-4" />
         </form>
       </Form>
     </main>

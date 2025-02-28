@@ -76,8 +76,8 @@ export default function ResetPassword() {
   return (
     <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
       <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
-        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("reset_your_password")}</h1>
-        <form onSubmit={handleSubmit} className="gap-y-3">
+        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("Reset Your Password")}</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-y-6">
           <FormInput
             type="password"
             name="password"
@@ -100,7 +100,7 @@ export default function ResetPassword() {
             <PasswordReqs formData={formData} setIsValid={setIsValid} />
           </div>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          <FormSubmit label={isSubmitting ? t("resetting_password") : t("reset_password")} isDisabled={!isValid || isSubmitting} />
+          <FormSubmit label={isSubmitting ? t("Resetting Password") : t("Reset Password")} isDisabled={!isValid || isSubmitting} />
         </form>
       </Form>
     </main>
