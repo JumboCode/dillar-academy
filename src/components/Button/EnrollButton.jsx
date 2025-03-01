@@ -41,7 +41,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
               ))}
             </div>
           </div>
-          <span className='flex gap-x-2'>
+          <div className='flex gap-x-2'>
             <Button label={"Confirm"} onClick={handleEnrollOrUnenroll} />
             <Button
               label={"Cancel"}
@@ -50,7 +50,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
                 isEnroll = false;
                 handleEnrollOrUnenroll();
               }} />
-          </span>
+          </div>
         </div> : <div className='flex flex-col gap-y-5'>
           <div className='flex flex-col gap-y-4'>
             <div>
@@ -59,7 +59,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
             </div>
             <p className='text-base text-[#86858F]'>Checkout your class schedule in your profile! Made a mistake? Select “Undo”</p>
           </div>
-          <span className='flex gap-x-2'>
+          <div className='flex gap-x-2'>
             <Button label={"My Schedule"} onClick={() => setLocation('/student')} />
             <Button
               label={"Undo"}
@@ -69,8 +69,56 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
                 isEnroll = false;
                 handleEnrollOrUnenroll();
               }} />
-          </span>
+          </div>
         </div>}
+      </div>
+    </div>
+  )
+}
+
+const UnenrollPopup = ({ classObj, userId, setShowPopup }) => {
+  const handleUnenroll = async () => {
+    await unenrollInClass(classObj._id, userId);
+    setShowPopup(false);
+    window.location.reload();
+  }
+
+  return (
+    <div className="bg-black bg-opacity-30 fixed z-50 inset-0 grid place-items-center">
+      <div className="w-[22rem] bg-white rounded-lg p-6 space-y-5">
+        <div className="space-y-1">
+          <h5 className='font-extrabold'>Are you sure you want to unenroll from:</h5>
+          <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}</p>
+        </div>
+        <div className='flex gap-x-2'>
+          <Button label={"Confirm"} onClick={handleUnenroll} />
+          <Button
+            label={"Cancel"}
+            isOutline={true}
+            onClick={() => setShowPopup(false)} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const SignUpPopup = ({ setShowPopup }) => {
+  const [, setLocation] = useLocation();
+
+  return (
+    <div className="bg-black bg-opacity-30 fixed z-50 inset-0 grid place-items-center">
+      <div className="w-[24rem] bg-white rounded-lg p-6 space-y-5">
+        <div>
+          <h5 className='font-extrabold'>Create an account first!</h5>
+          <p className='text-base sm:text-lg'>Please sign up for an account with Dillar before registering for classes.</p>
+        </div>
+        <div className='flex gap-x-2'>
+          <Button label={"Sign Up"} onClick={() => setLocation("/signup")} />
+          <Button
+            label={"Cancel"}
+            isOutline={true}
+            onClick={() => setShowPopup(false)} />
+        </div>
       </div>
     </div>
   )
@@ -78,29 +126,21 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
 
 const EnrollButton = ({ userId, classObj, isEnroll }) => {
   const [showEnrollPopup, setShowEnrollPopup] = useState(false);
-  const [, setLocation] = useLocation();
+  const [showUnenrollPopup, setShowUnenrollPopup] = useState(false);
+  const [showSignUpPopup, setShowSignUpPopup] = useState(false);
   const { isSignedIn } = useUser();
-
-  const handleEnrollOrUnenroll = async () => {
-    if (isEnroll) {
-      await enrollInClass(classObj._id, userId);
-    } else {
-      await unenrollInClass(classObj._id, userId);
-    }
-  }
 
   return (
     <>
       {isEnroll ? <Button
         label={"Enroll"}
         isOutline={false}
-        onClick={isSignedIn ? () => setShowEnrollPopup(true) : () => setLocation("/login")}
+        onClick={isSignedIn ? () => setShowEnrollPopup(true) : () => setShowSignUpPopup(true)}
       /> : <Button
         label={"Unenroll"}
         isOutline={false}
         onClick={() => {
-          handleEnrollOrUnenroll();
-          window.location.reload();
+          setShowUnenrollPopup(true)
         }}
       />}
       {showEnrollPopup && <EnrollPopup
@@ -108,6 +148,12 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
         classObj={classObj}
         userId={userId}
         setShowPopup={setShowEnrollPopup} />}
+      {showUnenrollPopup && <UnenrollPopup
+        classObj={classObj}
+        userId={userId}
+        setShowPopup={setShowUnenrollPopup} />}
+      {showSignUpPopup && <SignUpPopup
+        setShowPopup={setShowSignUpPopup} />}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
@@ -9,9 +9,28 @@ import { UserContext } from '../../contexts/UserContext';
 import { useTranslation } from "react-i18next";
 
 const NavBar = () => {
+  const mobileMenuRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, } = useContext(UserContext)
   const { t } = useTranslation();
+
+  // close dropdown when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target)) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMenuOpen])
+
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <div>
@@ -36,8 +55,8 @@ const NavBar = () => {
                 <NavLink href="/login">{t("nav_link_login")}</NavLink>
               </SignedOut>
               <SignedIn>
-                <SignOutButton />
                 <NavLink href={`/${user?.privilege}`}>{t("nav_link_dashboard")}</NavLink>
+                <SignOutButton className="hover:text-neutral-300 px-3 py-2" />
               </SignedIn>
             </>}
           </div>
@@ -58,18 +77,16 @@ const NavBar = () => {
           </button>
         </div>
         {/* Mobile menu */}
-        <div className={`sm:hidden flex flex-col items-center w-full pb-3 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <NavLink href="/levels" isMobile={true}>{t("nav_link_classes")}</NavLink>
-          <NavLink href="/contact" isMobile={true}>{t("nav_link_contact")}</NavLink>
-          <NavLink href="/about" isMobile={true}>{t("nav_link_about")}</NavLink>
+        <div ref={mobileMenuRef} className={`sm:hidden flex flex-col items-center w-full pb-3 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
+          <NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
+          <NavLink href="/contact" isMobile={true} onClick={closeMenu}>{t("nav_link_contact")}</NavLink>
+          <NavLink href="/about" isMobile={true} onClick={closeMenu}>{t("nav_link_about")}</NavLink>
           <SignedOut>
-            <NavLink href="/login" isMobile={true}>{t("nav_link_login")}</NavLink>
+            <NavLink href="/login" isMobile={true} onClick={closeMenu}>{t("nav_link_login")}</NavLink>
           </SignedOut>
           <SignedIn>
-            <div className='py-2'>
-              <SignOutButton />
-            </div>
-            <NavLink href={`/${user?.privilege}`}>{t("nav_link_dashboard")}</NavLink>
+            <NavLink href={`/${user?.privilege}`} onClick={closeMenu}>{t("nav_link_dashboard")}</NavLink>
+            <SignOutButton className="py-2 px-3" />
           </SignedIn>
           <div className="w-full h-2 mt-2 mx-3 border-t border-gray-200"></div>
           <LanguageDropdown />
