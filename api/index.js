@@ -463,6 +463,7 @@ app.delete('/api/classes/:id', async (req, res) => {
 app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
   const { id } = req.params;
+  console.log("enrolling")
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID' });
@@ -492,6 +493,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
   const { id } = req.params;
+  console.log("unenrolling")
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID' });

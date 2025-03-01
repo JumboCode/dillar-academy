@@ -30,7 +30,7 @@ const AdminConversations = () => {
     }
 
     return (
-        <div className="h-full p-8 space-y-10">
+        <div className="page-format space-y-10">
             <h3 className="font-extrabold">All Conversation Classes</h3>
         </div>
     )

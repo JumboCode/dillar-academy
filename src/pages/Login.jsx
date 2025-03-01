@@ -56,7 +56,9 @@ export default function Login() {
         } else {
           // TODO
         }
-        setLocation(`/${response.data.privilege}`);
+        const dashboardURL = response.data.privilege === "admin" ? "/admin/levels" : `/${response.data.privilege}`;
+
+        setLocation(dashboardURL);
       } else {
         console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
       }
@@ -67,41 +69,46 @@ export default function Login() {
         console.log(error.message)
         setAlertData({ message: "Error: " + (error.message || "There was an error during login.") });
       }, 10);
+      setTimeout(() => {
+        setAlertData({ message: "" })
+      }, 5000)
     }
   };
 
   return (
     <>
-      <main className="header-gradient h-full py-40 flex justify-center items-center">
+      <div className="header-gradient page-format flex justify-center items-center">
         {alertData.message && <Alert message={alertData.message} />}
-        <Form width="w-2/5">
-          <h3 className="font-extrabold">{t("login_text")}</h3>
-          <p className="text-base sm:text-lg text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
-            <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
-          </p>
-          <form method="POST"
-            onSubmit={handleSubmit}
-            className="space-y-3"
-          >
-            <FormInput
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder={t("username_field")}
-              isRequired={true} />
-            <FormInput
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder={t("password_field")}
-              isRequired={true} />
-            <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgotpassword">{t("forgot_pass")}</Link></p>
-            <FormSubmit label={t("login_text")} />
-          </form >
-        </Form >
-      </main >
+        <div className="w-full max-w-[96rem] flex justify-center">
+          <Form width="lg:w-3/5 xl:w-2/5">
+            <h3 className="font-extrabold">{t("login_text")}</h3>
+            <p className="text-base sm:text-lg text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
+              <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
+            </p>
+            <form method="POST"
+              onSubmit={handleSubmit}
+              className="space-y-3"
+            >
+              <FormInput
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder={t("username_field")}
+                isRequired={true} />
+              <FormInput
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder={t("password_field")}
+                isRequired={true} />
+              <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgotpassword">{t("forgot_pass")}</Link></p>
+              <FormSubmit label={t("login_text")} />
+            </form >
+          </Form >
+        </div>
+      </div >
     </>
   )
 }
