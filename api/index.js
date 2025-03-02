@@ -564,3 +564,70 @@ app.put('/api/user/:id', async (req, res) => {
     res.status(500).json({ message: 'Error updating user' });
   }
 });
+
+
+// Get level by ID
+app.get('/api/levels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await Level.findOne({ _id: id });
+    res.json(data)
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Edit Level
+app.put('/api/levels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const updatedLevel = await Level.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedLevel) {
+      return res.status(404).json({ message: 'Level not found' });
+    }
+
+    res.status(200).json(updatedLevel);
+  } catch (error) {
+    console.error('Error updating level:', error);
+    res.status(500).json({ message: 'Error updating level' });
+  }
+});
+
+// Delete Level
+app.delete('/api/levels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedLevel = await Level.findById(id);
+    if (!deletedLevel) {
+      return res.status(404).json({ message: 'Level not found' });
+    }
+
+    await Level.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Level deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting level:', error);
+    res.status(500).json({ message: 'Error deleting level' });
+  }
+});

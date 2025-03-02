@@ -1,103 +1,83 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation, useParams } from 'wouter';
+import { useLocation, useParams, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getClasses, getLevels, createClass, deleteClass } from '@/api/class-wrapper.js';
+import { getLevelById, updateLevel, deleteLevel } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
-import Class from '@/components/Class';
-import Form from '@/components/Form/Form'
-import FormInput from '@/components/Form/FormInput'
+import FormInput from '@/components/Form/FormInput';
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-
   const params = useParams();
-  const levelNum = decodeURIComponent(params.id);
+  
+  console.log("Params:", params);
+
   const [level, setLevel] = useState();
-  const [classes, setClasses] = useState([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [classData, setClassData] = useState({
-    level: '',
-    ageGroup: '',
-    instructor: '',
-  });
+  const [levelData, setLevelData] = useState({ level: '', name: '' });
 
   useEffect(() => {
-    if (params === "" || levelNum === "") {
+    if (!params.id) {
+      console.log("Redirecting: No levelId provided");
       setLocation("/admin/levels");
+      return;
     }
 
     if (isLoaded) {
       if (!isSignedIn) {
+        console.log("Redirecting: User not signed in");
         setLocation("/login");
       } else {
+        fetchLevels();
         setAllowRender(true);
       }
     }
   }, [isLoaded, isSignedIn, user]);
 
-  useEffect(() => {
-    const fetchLevel = async () => {
-      try {
-        const levelData = await getLevels();
-        const thisLevel = levelData.find(l => l.level === parseInt(levelNum));
-        if (thisLevel && thisLevel !== level) {
-          setLevel(thisLevel);
-        }
-      } catch (error) {
-        console.error('Error fetching levels:', error);
-      }
-    }
-
-    if (allowRender) {
-      fetchLevel();
-      fetchClasses();
-    }
-  }, [allowRender]);
-
-  const fetchClasses = async () => {
+  const fetchLevels = async () => {
     try {
-      const classFilter = new URLSearchParams(`level=${levelNum}`);
-      const data = await getClasses(classFilter);
-      setClasses(data);
+      const data = await getLevelById(params.id);
+      console.log("Fetched level data:", data);
+      setLevel(data);
+      setLevelData({ level: data.level, name: data.name });
     } catch (error) {
-      console.error('Error fetching classes:', error);
+      console.error("Error fetching levels:", error);
     }
   };
 
-  const handleInputChange = (e) => {
-    setClassData({
-      ...classData,
+  const handleLevelChange = (e) => {
+    setLevelData({
+      ...levelData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleCreateClass = async (e) => {
+  const handleEditLevel = async (e) => {
     e.preventDefault();
+    console.log("Submitting level update:", levelData);
     try {
-      await createClass(classData);
-      setShowCreateModal(false);
-      setClassData({ level: '', ageGroup: '', instructor: '' });
-      await fetchClasses();
+      await updateLevel(params.id, levelData);
+      console.log("Level updated successfully");
+      await fetchLevels();
     } catch (error) {
-      console.error('Error creating class:', error);
+      console.error("Error updating level:", error);
     }
   };
 
-  const handleDeleteClass = async (classId) => {
+  const handleDeleteLevel = async () => {
     try {
-      await deleteClass(classId);
-      await fetchClasses();
+      console.log("Deleting level:", params.id);
+      await deleteLevel(params.id);
+      setLocation("/admin/levels");
     } catch (error) {
-      console.error('Error deleting class:', error);
+      console.error("Error deleting level:", error);
     }
-  }
+  };
 
   if (!allowRender || !level) {
-    return <div></div>;
+    return <div>Loading...</div>;
   }
 
   if (user?.privilege !== "admin") {
@@ -106,73 +86,39 @@ const EditLevel = () => {
 
   return (
     <div className="h-full p-8 space-y-10">
+      <Link to="/admin/levels" className="cursor-pointer hover:underline text-blue-500">
+        ← All Levels
+      </Link>
       <h3 className="font-extrabold">Edit Level</h3>
-      <div>
-        <p>Level {level.level}</p>
-        <p>Name {level.name}</p>
+      <div className="text-lg text-gray-600">
+        Edit Level information and view all the classes in this level.
       </div>
-      <section>
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-xl font-bold">Class Management</h1>
-          <Button
-            label="Create Class"
-            onClick={() => setShowCreateModal(true)}
-          />
+      <form onSubmit={handleEditLevel} className="space-y-4">
+        <FormInput
+          type="text"
+          name="level"
+          placeholder="Level"
+          value={levelData.level}
+          onChange={handleLevelChange}
+          isRequired={true}
+        />
+        <FormInput
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={levelData.name}
+          onChange={handleLevelChange}
+          isRequired={true}
+        />
+        <div className="flex justify-end space-x-2">
+          <Button label="Cancel" onClick={() => 
+            setLevelData({ level: level.level, name: level.name })} />
+          <Button label="Save" type="submit" />
         </div>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-          {classes.map((classObj, classIndex) => (
-            <Class key={classIndex} classObj={classObj} modes={["edit", "delete"]} editURL={`/admin/class`} />
-          ))}
-        </div>
-      </section>
-
-      {/* Create Class Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <Form width="w-1/2">
-            <h2 className="text-2xl font-bold mb-6">Create New Class</h2>
-            <form onSubmit={handleCreateClass} className="space-y-4">
-              <FormInput
-                type="text"
-                name="level"
-                placeholder="Level"
-                value={classData.level}
-                onChange={handleInputChange}
-                isRequired={true}
-              />
-              <FormInput
-                type="text"
-                name="ageGroup"
-                placeholder="Age Group"
-                value={classData.ageGroup}
-                onChange={handleInputChange}
-                isRequired={true}
-              />
-              <FormInput
-                type="text"
-                name="instructor"
-                placeholder="Instructor"
-                value={classData.instructor}
-                onChange={handleInputChange}
-                isRequired={true}
-              />
-              <div className="flex justify-end space-x-2">
-                <Button
-                  label="Cancel"
-                  isOutline={true}
-                  onClick={() => {
-                    setShowCreateModal(false);
-                    setClassData({ level: '', ageGroup: '', instructor: '' });
-                  }}
-                />
-                <Button label="Create" type="submit" />
-              </div>
-            </form>
-          </Form>
-        </div>
-      )}
+      </form>
+      <Button label="Delete" onClick={handleDeleteLevel} />
     </div>
-  )
-}
+  );
+};
 
 export default EditLevel;

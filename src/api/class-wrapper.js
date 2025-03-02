@@ -97,9 +97,37 @@ const getClassById = async (classId) => {
   }
 }
 
+const getLevelById = async (levelId) => {
+  try {
+    const response = await axios.get(`/api/levels/${levelId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching level from id:", error);
+  }
+}
+
+const updateLevel = async (levelId, LevelData) => {
+  try {
+    const response = await axios.put(`/api/levels/${levelId}`, LevelData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating level:', error);
+    throw error;
+  }
+}
+
+const deleteLevel = async (levelId) => {
+  try {
+    const response = await axios.delete(`/api/level/${levelId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting level:', error);
+    throw error;
+  }
+}
+
 export {
   getClasses,
-  getLevels,
   createClass,
   updateClass,
   deleteClass,
@@ -108,4 +136,8 @@ export {
   unenrollInClass,
   getStudentsClasses,
   getClassById,
+  getLevels,
+  deleteLevel,
+  updateLevel,
+  getLevelById,
 }
