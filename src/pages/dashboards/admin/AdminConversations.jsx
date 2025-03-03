@@ -98,7 +98,7 @@ const AdminConversations = () => {
                         key={conversation._id} 
                         conversation={conversation} 
                         modes={["edit"]} 
-                        editURL="/admin/levels/conversations/" 
+                        editURL="/admin/levels/conversations" 
                     />
                 ))}
             </div>

@@ -16,6 +16,7 @@ import AdminSchedule from '@/pages/dashboards/admin/AdminSchedule'
 import EditLevel from '@/pages/dashboards/admin/editPages/EditLevel'
 import EditClass from '@/pages/dashboards/admin/editPages/EditClass'
 import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation'
+import AddConversation from '@/pages/dashboards/admin/AddConversation'
 import EditStudent from '@/pages/dashboards/admin/editPages/EditStudent'
 import TeacherView from '@/pages/dashboards/TeacherView'
 import PageNotFound from '@/pages/PageNotFound'
@@ -35,6 +36,7 @@ export default function PageRoutes() {
       <Route path="/student" component={StudentPortal} />
       <Route path="/admin/levels" component={AdminLevels} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
+      <Route path="/admin/levels/conversations/new" component={AddConversation} />
       <Route path="/admin/levels/:id" component={EditLevel} />
       <Route path="/admin/levels/conversations/:id" component={EditConversation} />
       <Route path="/admin/class/:classId" component={EditClass} />

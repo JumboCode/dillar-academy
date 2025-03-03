@@ -324,6 +324,107 @@ app.get("/api/conversations", async (req, res) => {
   }
 })
 
+// Get Conversation by ID
+app.get('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await Conversation.findOne({ _id: id });
+    res.json(data)
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Update Conversation
+app.put('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const updatedConversation = await Conversation.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedConversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    res.status(200).json(updatedConversation);
+  } catch (error) {
+    console.error('Error updating conversation:', error);
+    res.status(500).json({ message: 'Error updating conversation' });
+  }
+});
+
+// Delete Conversation
+app.delete('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedConversation = await Conversation.findOne({ _id: id });
+    if (!deletedConversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    // delete conversation
+    await Conversation.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Conversation deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    res.status(500).json({ message: 'Error deleting conversation' });
+  }
+});
+
+// Create conversation
+app.post('/api/conversations', async (req, res) => {
+  try {
+    const { ageGroup, instructor } = req.body;
+
+    // Check if conversation already exists
+    const query = { ageGroup, instructor };
+    // if (schedule) {
+    //   query.$expr = { $setEquals: ["$schedule", schedule] };
+    // }
+    const existingConversation = await Conversation.findOne(query);
+
+    if (existingConversation) {
+      return res.status(409).json({
+        message: 'Conversation already exists',
+        class: existingConversation
+      });
+    } else {
+      const newConversation = new Conversation({
+        ageGroup,
+        instructor
+      });
+
+      await newConversation.save();
+      return res.status(201).json({
+        message: 'Conversation created successfully',
+        class: newConversation
+      });
+    }
+  } catch (error) {
+    console.error('Error creating:', error);
+    return res.status(500).json({ message: 'Error creating conversation' });
+  }
+});
 
 // Get Student's classes by ID
 app.get('/api/students-classes/:id', async (req, res) => {
