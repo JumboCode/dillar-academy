@@ -160,7 +160,7 @@ const EditLevel = () => {
         Edit Level information and view all the classes in this level.
       </div>
       <form onSubmit={handleEditLevel} className="space-y-4">
-        {/* Level and Name fields on the same line */}
+        {/* Level and Name fields */}
         <div className="flex space-x-4">
           <div className="flex-1">
             <label className="block text-sm font-semibold mb-1">Level</label>
@@ -186,7 +186,7 @@ const EditLevel = () => {
           </div>
         </div>
 
-        {/* Larger description field */}
+        {/* Description field */}
         <div>
           <label className="block text-sm font-semibold mb-1">Description</label>
           <textarea
