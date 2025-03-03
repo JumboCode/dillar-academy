@@ -200,7 +200,7 @@ const EditLevel = () => {
         {/* Skills field with deletable tags */}
         <div>
           <label className="block text-sm font-semibold mb-1">
-            Relevant Skills (type and press Enter, or use commas)
+            Relevant Skills
           </label>
           <input
             type="text"
@@ -208,7 +208,7 @@ const EditLevel = () => {
             value={skillsInput}
             onChange={handleSkillsInputChange}
             onKeyDown={handleSkillsInputKeyDown}
-            placeholder="Type a skill and press Enter"
+            placeholder="Ex. the alphabet, simple vocabulary, basic conversation"
           />
           {/* Display the current skills as deletable tags */}
           <div className="mt-2 flex flex-wrap gap-2">
