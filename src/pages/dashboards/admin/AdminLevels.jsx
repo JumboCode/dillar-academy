@@ -46,7 +46,16 @@ const AdminLevels = () => {
   return (
     <div className="h-full p-8 space-y-10">
       <h3 className="font-extrabold text-2xl">All Levels</h3>
+      <div className="flex items-center justify-between">
       <div className="font-semibold">Browse, add, and delete levels.</div>
+      <button
+          onClick={() => setLocation("/admin/levels/new")}
+          className="px-3 py-0 bg-white text-gray-500 border border-gray-500 rounded"
+        >
+          + Add Level
+        </button>
+      </div>
+      
       
       {/* Levels List */}
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
