@@ -427,6 +427,7 @@ app.put('/api/classes/:id', async (req, res) => {
 });
 
 
+//instead of Class, use level
 // Delete Class
 app.delete('/api/classes/:id', async (req, res) => {
   try {

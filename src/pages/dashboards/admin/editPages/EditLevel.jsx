@@ -30,7 +30,9 @@ const EditLevel = () => {
         console.log("Redirecting: User not signed in");
         setLocation("/login");
       } else {
-        fetchLevels();
+        if (params.id != "new"){
+          fetchLevels(); //Fetch level only if it's not new
+        }
         setAllowRender(true);
       }
     }
@@ -76,7 +78,7 @@ const EditLevel = () => {
     }
   };
 
-  if (!allowRender || !level) {
+  if (!allowRender && !level) {
     return <div>Loading...</div>;
   }
 
