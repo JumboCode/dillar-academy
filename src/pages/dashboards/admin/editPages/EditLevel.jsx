@@ -4,7 +4,6 @@ import { useLocation, useParams, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getLevelById, updateLevel, deleteLevel } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
-import FormInput from '@/components/Form/FormInput';
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -13,21 +12,17 @@ const EditLevel = () => {
   const [allowRender, setAllowRender] = useState(false);
   const params = useParams();
   
-  console.log("Params:", params);
-
   const [level, setLevel] = useState();
-  const [levelData, setLevelData] = useState({ level: '', name: '' });
+  const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
 
   useEffect(() => {
     if (!params.id) {
-      console.log("Redirecting: No levelId provided");
       setLocation("/admin/levels");
       return;
     }
 
     if (isLoaded) {
       if (!isSignedIn) {
-        console.log("Redirecting: User not signed in");
         setLocation("/login");
       } else {
         fetchLevels();
@@ -39,9 +34,13 @@ const EditLevel = () => {
   const fetchLevels = async () => {
     try {
       const data = await getLevelById(params.id);
-      console.log("Fetched level data:", data);
       setLevel(data);
-      setLevelData({ level: data.level, name: data.name });
+      setLevelData({ 
+        level: data.level, 
+        name: data.name, 
+        description: data.description || '', 
+        skills: data.skills || []
+      });
     } catch (error) {
       console.error("Error fetching levels:", error);
     }
@@ -56,10 +55,8 @@ const EditLevel = () => {
 
   const handleEditLevel = async (e) => {
     e.preventDefault();
-    console.log("Submitting level update:", levelData);
     try {
       await updateLevel(params.id, levelData);
-      console.log("Level updated successfully");
       await fetchLevels();
     } catch (error) {
       console.error("Error updating level:", error);
@@ -68,7 +65,6 @@ const EditLevel = () => {
 
   const handleDeleteLevel = async () => {
     try {
-      console.log("Deleting level:", params.id);
       await deleteLevel(params.id);
       setLocation("/admin/levels");
     } catch (error) {
@@ -89,30 +85,64 @@ const EditLevel = () => {
       <Link to="/admin/levels" className="cursor-pointer hover:underline text-blue-500">
         ← All Levels
       </Link>
-      <h3 className="font-extrabold">Edit Level</h3>
+      <h3 className="font-extrabold text-2xl">Edit Level</h3>
       <div className="text-lg text-gray-600">
         Edit Level information and view all the classes in this level.
       </div>
+      
       <form onSubmit={handleEditLevel} className="space-y-4">
-        <FormInput
-          type="text"
-          name="level"
-          placeholder="Level"
-          value={levelData.level}
-          onChange={handleLevelChange}
-          isRequired={true}
-        />
-        <FormInput
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={levelData.name}
-          onChange={handleLevelChange}
-          isRequired={true}
-        />
+        {/* Level and Name fields on the same line */}
+        <div className="flex space-x-4">
+          <div className="flex-1">
+            <label className="block text-sm font-semibold mb-1">Level</label>
+            <input
+              type="text"
+              name="level"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={levelData.level}
+              onChange={handleLevelChange}
+              required
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block text-sm font-semibold mb-1">Name</label>
+            <input
+              type="text"
+              name="name"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={levelData.name}
+              onChange={handleLevelChange}
+              required
+            />
+          </div>
+        </div>
+
+        {/* Larger description field */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">Description</label>
+          <textarea
+            name="description"
+            className="w-full p-2 border border-gray-300 rounded-md h-28 resize-none"
+            value={levelData.description}
+            onChange={handleLevelChange}
+          />
+        </div>
+
+        {/* Skills field */}
+        <div>
+          <label className="block text-sm font-semibold mb-1">Relevant Skills</label>
+          <input
+            type="text"
+            name="skills"
+            className="w-full p-2 border border-gray-300 rounded-md"
+            value={levelData.skills}
+            onChange={handleLevelChange}
+          />
+        </div>
+
+        {/* Action buttons */}
         <div className="flex justify-end space-x-2">
-          <Button label="Cancel" onClick={() => 
-            setLevelData({ level: level.level, name: level.name })} />
+          <Button label="Cancel" onClick={() => setLevelData({ level: level.level, name: level.name, description: level.description || '', skills: level.skills || [] })} />
           <Button label="Save" type="submit" />
         </div>
       </form>
