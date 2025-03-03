@@ -6,12 +6,15 @@ import { getUsers } from '@/api/user-wrapper.js'
 import Button from '@/components/Button/Button';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import { IoSearch , IoPersonOutline  } from "react-icons/io5";
+import { getClasses } from '@/api/class-wrapper';
+import UserItem from '@/components/UserItem'
 const AdminStudents = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-
+  const [classes, setClasses] = useState([]);
+  const [isHovering, setIsHovering] = useState(false);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -28,7 +31,9 @@ const AdminStudents = () => {
 
   const fetchUsers = async () => {
     const userData = await getUsers();
-    setUsers(userData.data);
+    setUsers(userData.data.filter((user) => user.privilege === "student"));
+    const classData = await getClasses();
+    setClasses(classData);
   }
 
   if (!allowRender) {
@@ -38,6 +43,7 @@ const AdminStudents = () => {
   if (user?.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
+
 
   return (
     <div className="h-full p-8 space-y-7">
@@ -63,39 +69,16 @@ const AdminStudents = () => {
       <div className="text-indigo-900 inline-flex text-[18px] items-center ">
           <IoPersonOutline size={18.43}/>
           <p>{users.length} students</p>
-      </div>      
+      </div> 
+      <div className="">
       
-      {/* <section>
-       
-        <table className="table-auto w-full text-left">
-          <thead className="bg-neutral-200 text-lg">
-            <tr>
-              <th className="px-3">Name</th>
-              <th className="px-3">Email</th>
-              <th className="px-3">Password</th>
-              <th className="px-3">Privilege</th>
-              <th className="px-3">Age</th>
-              <th className="px-3">Gender</th>
-              <th className="px-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((userData, userIndex) => (
-              <tr key={userIndex} className="border-b">
-                <td className="py-2 px-3">{userData.firstName} {userData.lastName}</td>
-                <td className="py-2 px-3">{userData.email}</td>
-                <td className="py-2 px-3">{userData.password}</td>
-                <td className="py-2 px-3">{userData.privilege}</td>
-                <td className="py-2 px-3">{userData.age}</td>
-                <td className="py-2 px-3">{userData.gender}</td>
-                <td className="py-2 px-3">
-                  <Button label="Edit" isOutline={true} onClick={() => setLocation(`/admin/students/${userData._id}`)} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section> */}
+
+      {users.map((userData, userIndex) => (
+
+              <UserItem userData={userData} classes={classes} />
+                
+            ))}   
+      </div>     
     </div>
   )
 }
