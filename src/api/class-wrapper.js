@@ -118,7 +118,7 @@ const updateLevel = async (levelId, LevelData) => {
 
 const deleteLevel = async (levelId) => {
   try {
-    const response = await axios.delete(`/api/level/${levelId}`);
+    const response = await axios.delete(`/api/levels/${levelId}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting level:', error);
