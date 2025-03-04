@@ -2,13 +2,13 @@ import { Route, Switch } from "wouter";
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
-import SignUp from '@/pages/SignUp';
-import Login from '@/pages/Login';
+import SignUp from '@/pages/onboarding/SignUp';
+import Login from '@/pages/onboarding/Login';
 import ClassesPage from '@/pages/ClassesPage';
 import LevelsPage from '@/pages/LevelsPage';
-import ForgotPassword from "@/pages/ForgotPassword";
-import ResetPasswordCode from "@/pages/ResetPasswordCode";
-import ResetPassword from "@/pages/ResetPassword";  // Import the new file
+import ForgotPassword from "@/pages/onboarding/ForgotPassword";
+import ResetPasswordCode from "@/pages/onboarding/ResetPasswordCode";
+import ResetPassword from "@/pages/onboarding/ResetPassword";
 import StudentPortal from '@/pages/dashboards/StudentPortal';
 import AdminLevels from '@/pages/dashboards/admin/AdminLevels';
 import AdminConversations from '@/pages/dashboards/admin/AdminConversations';
@@ -33,13 +33,13 @@ export default function PageRoutes() {
       <Route path="/login" component={Login} />
       <Route path="/levels" component={LevelsPage} />
       <Route path="/levels/:id/classes" component={ClassesPage} />
-      <Route path="/forgotpassword" component={ForgotPassword} />
+      <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password-code" component={ResetPasswordCode} />
-      <Route path="/reset-password" component={ResetPassword} /> 
+      <Route path="/reset-password" component={ResetPassword} />
       <Route path="/student" component={StudentPortal} />
       <Route path="/admin/levels" component={AdminLevels} />
-      <Route path="/admin/levels/:id" component={EditLevel} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
+      <Route path="/admin/levels/:id" component={EditLevel} />
       <Route path="/admin/levels/conversations/:id" component={EditConversation} />
       <Route path="/admin/class/:classId" component={EditClass} />
       <Route path="/admin/students" component={AdminStudents} />

@@ -80,9 +80,9 @@ const EditClass = () => {
   }
 
   return (
-    <div className="h-full p-8 space-y-10">
+    <div className="page-format space-y-10">
       <h3 className="font-extrabold">Edit Class</h3>
-      <form onSubmit={handleEditClass} className="space-y-4">
+      <form onSubmit={handleEditClass} className="space-y-3">
         <FormInput
           type="text"
           name="level"

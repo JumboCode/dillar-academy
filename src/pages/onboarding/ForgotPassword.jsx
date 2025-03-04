@@ -42,25 +42,27 @@ export default function ForgotPassword() {
   if (!isLoaded) return null;
 
   return (
-    <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
-      <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
-        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("Forgot Password")}</h1>
-        <p className="text-sm text-gray-600 mb-4">{t("Enter your email for instructions")}</p>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-y-6">
-          <FormInput
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("Email")}
-            isRequired={true}
-            disabled={isSubmitting}
-            className="mb-4"
-          />
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          <FormSubmit label={isSubmitting ? t("Sending") : t("Send")} isDisabled={isSubmitting} className="mt-4" />
-        </form>
-      </Form>
+    <main className="header-gradient page-format flex justify-center items-center">
+      <div className="w-full max-w-[96rem] flex justify-center">
+        <Form width="lg:w-3/5 xl:w-2/5">
+          <h3 className="font-extrabold mb-3">Forgot Password</h3>
+          <p className="text-base sm:text-lg text-gray-600 mb-5">Enter your email below for password reset instructions.</p>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <FormInput
+              type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={"Email"}
+              isRequired={true}
+              disabled={isSubmitting}
+              className="mb-4"
+            />
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            <FormSubmit label={isSubmitting ? t("Sending") : t("Send")} isDisabled={isSubmitting} />
+          </form>
+        </Form>
+      </div>
     </main>
   );
 }
