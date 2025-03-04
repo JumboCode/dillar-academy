@@ -25,7 +25,7 @@ const Level = ({ level, isSimplified, direction }) => {
         <div className="flex items-center justify-between">
           <SlArrowLeft style={{ fontSize: '20px' }} vcolor="grey" className="mr-4"/>
           <h3 className="text-xl font-extrabold text-dark-blue-800">Level {level.level}</h3>
-          <p className="text-gray-400 text-sm flex-1 text-right mr-4 truncate">{level.description || "New Concept Book 1 -- Ch. 1-72"}</p>
+          <p className="text-gray-400 text-lg flex-1 text-right mr-4 truncate">{level.description || "New Concept Book 1 -- Ch. 1-72"}</p>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@ const Level = ({ level, isSimplified, direction }) => {
       <div className="shadow-shadow flex flex-col hover:shadow-shadow-hover transition-shadow rounded-2xl">
       <div className={`py-6 pl-7 bg-white ${nextLevelColorMapping[level.level]} rounded-2xl overflow-hidden transition-shadow`}>
         <div className="flex items-center justify-between">
-          <p className="text-gray-400 text-sm flex-1 text-left truncate">{level.description || "New Concept Book 1 -- Ch. 1-72"}</p>
+          <p className="text-gray-400 text-lg flex-1 text-left truncate">{level.description || "New Concept Book 1 -- Ch. 1-72"}</p>
           <h3 className="text-xl font-extrabold text-dark-blue-800">Level {level.level}</h3>
           <SlArrowRight style={{ fontSize: '20px' }} vcolor="grey" className="ml-4 mr-4"/>
         </div>
