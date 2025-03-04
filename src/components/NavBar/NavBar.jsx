@@ -2,7 +2,7 @@ import { useContext, useRef, useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import dillarLogo from '/dillar_logo.png';
 import NavLink from './NavLink';
-import LanguageDropdown from '../Dropdown/LanguageDropdown';
+import LanguageDropdown from '@/components/Dropdown/LanguageDropdown';
 import { IoMenuOutline } from "react-icons/io5";
 import { SignOutButton, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { UserContext } from '../../contexts/UserContext';

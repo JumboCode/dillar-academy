@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { postLogin } from "../api/user-wrapper";
+import { postLogin } from "../../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
-import FormSubmit from "../components/Form/FormSubmit";
+import FormSubmit from "../../components/Form/FormSubmit";
 import Alert from "@/components/Alert";
 import { useSignIn, useAuth } from "@clerk/clerk-react";
 import { UserContext } from '@/contexts/UserContext.jsx';
@@ -82,7 +82,7 @@ export default function Login() {
         <div className="w-full max-w-[96rem] flex justify-center">
           <Form width="lg:w-3/5 xl:w-2/5">
             <h3 className="font-extrabold">{t("login_text")}</h3>
-            <p className="text-base sm:text-lg text-gray-500 mt-3 mb-5mt-3 mb-5">{t("login_signup1")}
+            <p className="text-base sm:text-lg text-gray-500 mt-3 mb-5">{t("login_signup1")}
               <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
             </p>
             <form method="POST"
@@ -103,7 +103,7 @@ export default function Login() {
                 onChange={handleChange}
                 placeholder={t("password_field")}
                 isRequired={true} />
-              <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgotpassword">{t("forgot_pass")}</Link></p>
+              <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgot-password">{t("forgot_pass")}</Link></p>
               <FormSubmit label={t("login_text")} />
             </form >
           </Form >

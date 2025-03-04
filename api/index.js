@@ -463,7 +463,6 @@ app.delete('/api/classes/:id', async (req, res) => {
 app.put('/api/users/:id/enroll', async (req, res) => {
   const { classId } = req.body
   const { id } = req.params;
-  console.log("enrolling")
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID' });
@@ -525,18 +524,15 @@ app.put('/api/users/reset-password', async (req, res) => {
   const user = await User.findOne({ email });
   try {
     if (user) {
-      const user = { email: email };
-      const updatedPassword = { password: password };
-      const options = { returnDocument: 'after' };
-      await User.findOneAndUpdate(user, updatedPassword, options);
-
-      res.status(200).send("Password updated successfully.");
+      // Update the password (make sure to hash it if needed)
+      await User.findOneAndUpdate({ email }, { password }, { returnDocument: 'after' });
+      res.status(200).json({ success: true, message: "Password updated successfully." });
     } else {
-      res.status(401).send('Invalid email.');
+      res.status(401).json({ success: false, message: "Invalid email." });
     }
   } catch (err) {
-    console.error('Error resetting password');
-    res.status(500).send("Server error resetting password.");
+    console.error('Error resetting password', err);
+    res.status(500).json({ success: false, message: "Server error resetting password." });
   }
 });
 

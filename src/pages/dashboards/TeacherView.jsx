@@ -29,7 +29,7 @@ const TeacherView = () => {
 
     return (
         <div className="page-format">
-            <h1>Teacher</h1>
+            <h3 className="font-extrabold">Teacher</h3>
         </div>
     );
 };
