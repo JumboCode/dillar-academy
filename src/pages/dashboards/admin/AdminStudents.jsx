@@ -14,7 +14,6 @@ const AdminStudents = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [classes, setClasses] = useState([]);
-  const [isHovering, setIsHovering] = useState(false);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -62,6 +61,7 @@ const AdminStudents = () => {
                   </div>
             }
             buttonClassName="flex items-center justify-center w-full text-base font-normal text-black min-w-fit   sm:px-5 gap-1 rounded-lg bg-white"
+            
           ></Dropdown>
         </div>
         
@@ -70,10 +70,10 @@ const AdminStudents = () => {
           <IoPersonOutline size={18.43}/>
           <p>{users.length} students</p>
       </div> 
-      <div className="">
+      <div className="grid md:grid-cols-3 gap-x-14">
       
-
-      {users.map((userData, userIndex) => (
+      
+      {users.map((userData) => (
 
               <UserItem userData={userData} classes={classes} />
                 
