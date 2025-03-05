@@ -1,16 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoPencilSharp } from "react-icons/io5";
+import { useAuth } from '@clerk/clerk-react';
 import { Link } from "wouter"
 
 
 const UserItem = ({ userData, classes }) => {
   const [isHovering, setIsHovering] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [matchingClass, setMatchingClass] = useState();
 
-  // Find the matching class for the current user
-  const matchingClass = classes.find((cls) => 
-    userData.enrolledClasses.length > 0 &&
-    userData.enrolledClasses[0] === cls._id
-  );
+  useEffect(() => {
+    // Find the matching class for the current user
+    setMatchingClass(classes.find((cls) => 
+      userData.enrolledClasses.length > 0 &&
+      userData.enrolledClasses[0] === cls._id
+    )) 
+    setIsLoaded(true);
+  }, [matchingClass]);
+  
+
+  if(!isLoaded) return;
 
   return (
     <div
@@ -26,9 +35,9 @@ const UserItem = ({ userData, classes }) => {
                 {userData.email}
                 </p>
                 <p className="text-gray-500 text-sm">
-                {userData.enrolledClasses.length > 0 && (matchingClass.ageGroup === "all" ? 'All Ages' : `${matchingClass.ageGroup.charAt(0).toUpperCase() + matchingClass.ageGroup.slice(1)}'s Class`)}
-                
+                  {(matchingClass) ? (matchingClass.ageGroup === "all" ? 'All Ages' : `${matchingClass.ageGroup.charAt(0).toUpperCase() + matchingClass.ageGroup.slice(1)}'s Class`) : "No Enrollment"}
                 </p>
+
               </div>
               <div className="">
                 

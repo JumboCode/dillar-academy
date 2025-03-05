@@ -73,9 +73,9 @@ const AdminStudents = () => {
       <div className="grid md:grid-cols-3 gap-x-14">
       
       
-      {users.map((userData) => (
+      {users.map((userData, userIndex) => (
 
-              <UserItem userData={userData} classes={classes} />
+              <UserItem userData={userData} classes={classes} key={userIndex}/>
                 
             ))}   
       </div>     
