@@ -534,34 +534,3 @@ app.put('/api/users/reset-password', async (req, res) => {
     res.status(500).send("Server error resetting password.");
   }
 });
-
-// Update Classroom Link
-app.put('/api/classes/:id/classroom-link', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { classroomLink } = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    if (!classroomLink) {
-      return res.status(400).json({ error: 'Classroom link is required' });
-    }
-
-    const updatedClass = await Class.findByIdAndUpdate(
-      id,
-      { classroomLink },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedClass) {
-      return res.status(404).json({ message: 'Class not found' });
-    }
-
-    res.status(200).json(updatedClass);
-  } catch (error) {
-    console.error('Error updating classroom link:', error);
-    res.status(500).json({ message: 'Error updating classroom link' });
-  }
-});
