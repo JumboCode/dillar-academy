@@ -632,3 +632,40 @@ app.delete('/api/levels/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting level' });
   }
 });
+
+// Create Level 
+app.post('/api/levels', async (req, res) => {
+  try {
+    const { level, ageGroup, instructor, schedule } = req.body;
+
+    // Check if level already exists
+    const query = { level, ageGroup, instructor };
+    if (schedule) {
+      query.$expr = { $setEquals: ["$schedule", schedule] };
+    }
+    const existingLevel = await Level.findOne(query);
+
+    if (existingLevel) {
+      return res.status(409).json({
+        message: 'Level already exists',
+        level: existingLevel
+      });
+    } else {
+      const newLevel = new Level({
+        level,
+        ageGroup,
+        instructor,
+        schedule,
+      });
+
+      await newLevel.save();
+      return res.status(201).json({
+        message: 'Level created successfully',
+        level: newLevel
+      });
+    }
+  } catch (error) {
+    console.error('Error creating:', error);
+    return res.status(500).json({ message: 'Error creating class' });
+  }
+});

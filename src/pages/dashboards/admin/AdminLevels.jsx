@@ -49,7 +49,7 @@ const AdminLevels = () => {
       <div className="flex items-center justify-between">
       <div className="font-semibold">Browse, add, and delete levels.</div>
       <button
-          onClick={() => setLocation("/admin/levels/new")}
+          onClick={() => setLocation("/admin/levels/add")}
           className="px-3 py-0 bg-white text-gray-500 border border-gray-500 rounded"
         >
           + Add Level

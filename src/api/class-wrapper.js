@@ -129,6 +129,17 @@ const deleteLevel = async (levelId) => {
 //make createLevel endpoint
 //3 endpoints to create: create, edit levels, delete 
 
+// const createLevel = async (levelId) =>
+  const createLevel = async (LevelData) => {
+    try {
+      const response = await axios.post('/api/new', LevelData);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating level:', error);
+      throw error;
+    }
+  }
+
 export {
   getClasses,
   createClass,
