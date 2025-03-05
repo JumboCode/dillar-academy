@@ -10,7 +10,6 @@ import Button from '@/components/Button/Button';
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
 
-
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
   const { user, setUser } = useContext(UserContext);
@@ -96,7 +95,7 @@ const StudentPortal = () => {
     return;
   }
 
-  if (user?.privilege !== "student") {
+  if (user.privilege !== "student") {
     return <div>Unauthorized</div>
   }
 
@@ -108,7 +107,7 @@ const StudentPortal = () => {
     <div className='page-format'>
       <br></br>
       <h3 className='font-extrabold mb-4'>
-        Welcome {user ? `${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}` : 'Loading...'}!
+        Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
       </h3>
       <section>
         <table className="table-auto w-full text-left">
@@ -139,12 +138,9 @@ const StudentPortal = () => {
                 />
               </td>
             </tr>
-
           </tbody>
         </table>
-
       </section>
-
       <section>
         <h1 className='text-3xl mb-4'> Your courses </h1>
         <div className='grid grid-cols-3 gap-6'>
@@ -259,7 +255,6 @@ const StudentPortal = () => {
       )}
     </div>
   );
-
 }
 
 export default StudentPortal;

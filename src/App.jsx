@@ -25,7 +25,7 @@ const App = () => {
   const [allowRender, setAllowRender] = useState(false);
   const [isNew, setNew] = useState(false);
 
-  const { user, isSignedIn } = useUser();
+  const { isLoaded, user, isSignedIn } = useUser();
 
   // ensure user context is set before page loads
   useEffect(() => {
@@ -33,7 +33,10 @@ const App = () => {
       const userFilter = new URLSearchParams(`email=${user.primaryEmailAddress.emailAddress}`);
       const response = await getUser(userFilter);
       setUser(response.data);
-      setAllowRender(true);
+    }
+
+    if (!isLoaded) {
+      return;
     }
 
     // check if Welcome page should be shown or not
@@ -49,7 +52,7 @@ const App = () => {
     } else {
       setAllowRender(true);
     }
-  }, [isSignedIn, user, userData])
+  }, [isLoaded, isSignedIn, user, userData])
 
   const handleWelcomeComplete = () => {
     localStorage.setItem("visited", "true");

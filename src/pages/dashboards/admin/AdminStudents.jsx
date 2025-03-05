@@ -34,7 +34,7 @@ const AdminStudents = () => {
     return <div></div>;
   }
 
-  if (user?.privilege !== "admin") {
+  if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
 
