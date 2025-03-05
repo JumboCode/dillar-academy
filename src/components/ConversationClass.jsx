@@ -11,7 +11,7 @@ const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
           <p key={index} className="text-black opacity-50">{schedule.day} {schedule.time}</p>
         ))}
       </div>
-      <div className='flex gap-3'>
+      <div className='flex gap-3 mb-4 ml-5'>
         {modes.includes("edit") && <EditButton classId={conversation._id} editURL={editURL} />}
       </div>
     </div>
