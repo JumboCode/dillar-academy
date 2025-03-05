@@ -8,13 +8,24 @@ import "./i18n.js";
 import { useUser } from '@clerk/clerk-react'
 import { getUser } from './api/user-wrapper.js';
 import { UserContext } from '@/contexts/UserContext.jsx';
+import { useLocation } from 'wouter';
+
+export function ScrollToTop() {
+  const [pathname] = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 const App = () => {
   const [userData, setUser] = useState(null);
   const [allowRender, setAllowRender] = useState(false);
   const [isNew, setNew] = useState(false);
 
-  const { user, isSignedIn } = useUser();
+  const { isLoaded, user, isSignedIn } = useUser();
 
   // ensure user context is set before page loads
   useEffect(() => {
@@ -22,7 +33,10 @@ const App = () => {
       const userFilter = new URLSearchParams(`email=${user.primaryEmailAddress.emailAddress}`);
       const response = await getUser(userFilter);
       setUser(response.data);
-      setAllowRender(true);
+    }
+
+    if (!isLoaded) {
+      return;
     }
 
     // check if Welcome page should be shown or not
@@ -38,7 +52,7 @@ const App = () => {
     } else {
       setAllowRender(true);
     }
-  }, [isSignedIn, user, userData])
+  }, [isLoaded, isSignedIn, user, userData])
 
   const handleWelcomeComplete = () => {
     localStorage.setItem("visited", "true");
@@ -51,22 +65,26 @@ const App = () => {
 
   return (
     <>
-      <div className='min-h-screen grid grid-rows-[5rem_1fr] font-avenir font-normal box-border'>
+      <ScrollToTop />
+      <div className='max-h-screen grid grid-rows-[5rem_minmax(auto,_1fr)] font-avenir font-normal box-border'>
         <UserContext.Provider value={{ user: userData, setUser: setUser }}>
-          <div className={`${isNew ? 'hidden' : ''}`}>
+          <div className={`${isNew ? 'hidden' : ''} row-start-1`}>
             <NavBar />
           </div>
-          <div className='hidden'></div>
-          <div className='w-full'>
-            {isNew ? (
+          {isNew ? (
+            <div className="row-start-1 h-screen row-span-2">
               <Welcome onComplete={handleWelcomeComplete} />
-            ) : (
-              <PageRoutes />
-            )}
-          </div>
-          <div className={`${isNew ? 'hidden' : ''}`}>
-            <Footer />
-          </div>
+            </div>
+          ) : (
+            <div className="row-start-2 min-h-[calc(100vh-5rem)]">
+              <div className='w-full min-h-full flex flex-col items-center'>
+                <PageRoutes />
+              </div>
+              <div className={`w-full ${isNew ? 'hidden' : ''}`}>
+                <Footer />
+              </div>
+            </div>
+          )}
         </UserContext.Provider>
       </div >
     </>

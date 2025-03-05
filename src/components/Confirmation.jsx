@@ -1,28 +1,25 @@
 
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
-import Button from '@/components/Button/Button'
 
-const Class = ({ classObj }) => {
+const Confirmation = ({ classObj }) => {
   const ageGroup = classObj.ageGroup.toString();
   const day1 = classObj.schedule[0].day.toString();
-  const subDay1 = day1.substr(0,3);
+  const subDay1 = day1.substr(0, 3);
 
   const time = classObj.schedule[0].time.toString();
 
   const day2 = classObj.schedule[1].day.toString();
-  const subDay2 = day2.substr(0,3);
+  const subDay2 = day2.substr(0, 3);
 
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow w-96">
+    <div className="w-full p-6 bg-white rounded-lg shadow-[0px_4px_16px_0px_rgba(7,79,120,0.12),20px_8px_60px_0px_rgba(183,226,251,0.40)] overflow-hidden">
       <div className="flex flex-col gap-2">
-        {/* Header */}
-
         <div>
-            <h3 className="text-2xl font-extrabold mb-2">You are registered!</h3>
-            <p>
+          <h5 className="font-extrabold mb-2">You are registered!</h5>
+          <p>
             {ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}'s Class w/ {classObj.instructor}
-            </p>
+          </p>
         </div>
 
         {/* Schedule */}
@@ -41,7 +38,7 @@ const Class = ({ classObj }) => {
           <button
             className={`px-4 py-2 rounded-lg transition-colors duration-300 border border-dark-blue-800 w-full`}
           >
-          Got it!
+            Got it!
           </button>
         </div>
       </div>
@@ -49,4 +46,4 @@ const Class = ({ classObj }) => {
   );
 };
 
-export default Class;
+export default Confirmation;

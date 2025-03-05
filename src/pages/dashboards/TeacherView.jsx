@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/contexts/UserContext.jsx";
 import { useLocation } from "wouter";
 import { useAuth } from "@clerk/clerk-react";
-import { getUser } from "@/api/user-wrapper.js";
 import { getClasses } from "@/api/class-wrapper.js";
 import Class from "../../components/Class";
 
@@ -12,53 +11,29 @@ const TeacherView = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [classes, setClasses] = useState([]);
-  const [students, setStudents] = useState({});
 
   useEffect(() => {
-    if (!isLoaded) return;  // Ensure authentication is fully loaded first
-
-    if (!isSignedIn) {
-      setLocation("/login");
-      return;
-    }
-
-    // Ensure user is defined before proceeding
-    if (!user) return;
-
-    setAllowRender(true);
-
-    const fetchClassesAndStudents = async () => {
-      try {
-        console.log("here")
+    const fetchData = async () => {
+      if (user) {
         const teacherClasses = await getClasses(`instructor=${user.firstName}`);
         setClasses(teacherClasses);
-
-        let studentsData = [];
-        console.log(teacherClasses)
-        for (const cls of teacherClasses) {
-          const promises = await Promise.all(cls.roster.map(async (studentID) => {
-            const student = await getUser(`_id=${studentID}`);
-            console.log(student)
-            return student.data;
-
-          }));
-          studentsData.concat(promises)
-
-        }
-
-        setStudents(studentsData);
-        console.log(students)
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
     };
 
-    fetchClassesAndStudents();
-  }, [isLoaded, isSignedIn, user]); // Depend on user
+    if (isLoaded) {
+      if (!isSignedIn) {
+        setLocation("/login");
+      } else {
+        fetchData();
+        setAllowRender(true);
+      }
+    }
+  }, [isLoaded, isSignedIn, user]);
 
-  // **Ensure user is fully loaded before rendering**
-  if (!user) {
-    return <div>Loading...</div>;
+  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
+  if (!allowRender) {
+    return;
   }
 
   if (user.privilege !== "teacher") {
@@ -66,12 +41,13 @@ const TeacherView = () => {
   }
 
   return (
-    <div className="h-full">
-      <h1 className="text-3xl font-bold mb-4">Your Courses</h1>
+    <div className="page-format">
+      <h1 className="text-3xl font-bold mb-4">
+        Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+      </h1>
       <div className="grid grid-cols-3 gap-6">
         {classes.map((classObj) => (
-          <Class key={classObj._id} classObj={classObj} students={students[classObj._id] || []} />
-
+          <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="" />
         ))}
       </div>
     </div>

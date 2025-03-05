@@ -10,9 +10,8 @@ const LevelsPage = () => {
   const [conversations, setConversations] = useState([]);
 
   // styles
-  const h3Style = "text-3xl font-extrabold"
-  const descriptionStyle = "font-light text-lg"
-  const sectionStyle = "mb-12"
+  const descriptionStyle = "font-light text-base sm:text-lg"
+  const sectionStyle = "mb-8 sm:mb-12"
   const courseDivStyle = "mt-8 sm:grid gap-8"
 
   useEffect(() => {
@@ -30,14 +29,14 @@ const LevelsPage = () => {
   }
 
   return (
-    <div className="xl:px-16 md:px-6 px-4 py-10">
+    <div className="page-format max-w-[96rem] lg:py-24">
       <section className={sectionStyle}>
-        <h1 className='text-4xl font-extrabold'>Browse Classes</h1>
+        <h3 className='font-extrabold mb-2'>Browse Classes</h3>
         <p className={descriptionStyle}>Dillar Academy offers classes at a variety of levels, based on your English skill level! Browse all the levels and classes here.</p>
       </section>
       <section className={sectionStyle}>
-        <h3 className={h3Style}>Levels</h3>
-        <p className={descriptionStyle}>Browse levels to determine which one is most suitable for you!</p>
+        <h4 className="font-extrabold mb-1">Regular English Classes</h4>
+        <p className={descriptionStyle}>Beginner-friendly English classes focused on reading, grammar, and speaking. Build confidence step by step, from alphabets to everyday conversations.</p>
         <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 flex flex-col`}>
           {levels.map((level, levelIndex) => (
             <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
@@ -47,8 +46,8 @@ const LevelsPage = () => {
         </div>
       </section>
       <section className={sectionStyle}>
-        <h3 className={h3Style}>Conversations</h3>
-        <p className={descriptionStyle}>Practice your English conversation skills with native speakers.</p>
+        <h4 className="font-extrabold mb-1">Supplementary Classes</h4>
+        <p className={descriptionStyle}>Extra practice for dedicated learners! Improve fluency with conversation classes led by native English speakers or prepare for the IELTS with targeted lessons.</p>
         <div className={`${courseDivStyle} lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 flex flex-col`}>
           {conversations.map((conversation, conversationIndex) => (
             <ConversationClass key={conversationIndex} conversation={conversation} />
