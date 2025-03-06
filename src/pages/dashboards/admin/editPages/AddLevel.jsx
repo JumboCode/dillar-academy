@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
+import { createLevel, getLevelById, updateLevel, deleteLevel } from '@/api/class-wrapper.js';
 import { useAuth } from '@clerk/clerk-react';
 import Button from '@/components/Button/Button';
 
@@ -81,7 +82,9 @@ const AddLevel = () => {
     e.preventDefault();
     console.log("Submitting level update:", levelData);
     try {
-      console.log("Level updated successfully");
+      await createLevel(levelData); 
+      console.log("Level updated successfully");      
+      setLocation("/admin/new");
     } catch (error) {
       console.error("Error updating level:", error);
     }
@@ -193,5 +196,6 @@ const AddLevel = () => {
     </div>
   );
 };
+//need to make sure the save button actually saves
 
 export default AddLevel;
