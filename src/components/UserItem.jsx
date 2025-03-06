@@ -1,25 +1,21 @@
 import { useState, useEffect } from "react";
 import { IoPencilSharp } from "react-icons/io5";
-import { useAuth } from '@clerk/clerk-react';
 import { Link } from "wouter"
 
 
 const UserItem = ({ userData, classes }) => {
-  const [isHovering, setIsHovering] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [matchingClass, setMatchingClass] = useState();
-
-  useEffect(() => {
-    // Find the matching class for the current user
-    setMatchingClass(classes.find((cls) => 
-      userData.enrolledClasses.length > 0 &&
-      userData.enrolledClasses[0] === cls._id
-    )) 
-    setIsLoaded(true);
-  }, [matchingClass]);
+  const [isHovering, setIsHovering] = useState(false);  
   
+  const enrolledClasses = classes.filter(cls =>
+    userData.enrolledClasses.includes(cls._id)
+  );
 
-  if(!isLoaded) return;
+  const highestClass =
+    enrolledClasses.length > 0
+      ? enrolledClasses.reduce((prev, curr) =>
+          curr.level > prev.level ? curr : prev
+        )
+      : null;
 
   return (
     <div
@@ -35,7 +31,20 @@ const UserItem = ({ userData, classes }) => {
                 {userData.email}
                 </p>
                 <p className="text-gray-500 text-sm">
-                  {(matchingClass) ? (matchingClass.ageGroup === "all" ? 'All Ages' : `${matchingClass.ageGroup.charAt(0).toUpperCase() + matchingClass.ageGroup.slice(1)}'s Class`) : "No Enrollment"}
+                {userData.privilege !== "teacher" && (
+                  <p className="text-gray-500 text-sm">
+                  {highestClass ? (
+                  highestClass.ageGroup === "all" ? (
+                  "All Ages"
+                  ) : (
+                `${highestClass.ageGroup.charAt(0).toUpperCase() +
+                  highestClass.ageGroup.slice(1)}'s Class`
+                    )
+                    ) : (
+                  "No Enrollment"
+                  )}
+                </p>
+                  )}
                 </p>
 
               </div>
