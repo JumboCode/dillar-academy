@@ -1,7 +1,8 @@
 import Button from '@/components/Button/Button';
+import Level from '@/components/Class/Level';
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 
 const AdminLevels = () => {
@@ -25,17 +26,20 @@ const AdminLevels = () => {
     return <div></div>;
   }
 
-  if (user?.privilege !== "admin") {
+  if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
 
   return (
-    <div className="h-full p-8 space-y-10">
+    <div className="page-format space-y-10">
       <h3 className="font-extrabold">All Levels</h3>
-      <Button
-        label="Conversation Classes"
-        onClick={() => setLocation("/admin/levels/conversations")}
-        isOutline={false}></Button>
+      <Link href="/admin/levels/conversations">
+        <Level level={{
+          level: "conversation",
+          name: "conversation level",
+        }}
+          isSimplified />
+      </Link>
     </div>
   );
 };

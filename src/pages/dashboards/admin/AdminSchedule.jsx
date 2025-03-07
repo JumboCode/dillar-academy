@@ -25,12 +25,12 @@ const AdminSchedule = () => {
         return <div></div>;
     }
 
-    if (user?.privilege !== "admin") {
+    if (user.privilege !== "admin") {
         return <div>Unauthorized</div>;
     }
 
     return (
-        <div className="h-full p-8 space-y-10">
+        <div className="page-format space-y-10">
             <h3 className="font-extrabold">Schedule</h3>
         </div>
     )

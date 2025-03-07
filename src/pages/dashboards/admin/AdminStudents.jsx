@@ -34,12 +34,12 @@ const AdminStudents = () => {
     return <div></div>;
   }
 
-  if (user?.privilege !== "admin") {
+  if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
 
   return (
-    <div className="h-full p-8 space-y-10">
+    <div className="page-format space-y-10">
       <h3 className="font-extrabold">Students</h3>
       <section>
         <table className="table-auto w-full text-left">

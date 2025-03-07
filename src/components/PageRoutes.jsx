@@ -1,25 +1,27 @@
 import { Route, Switch } from "wouter";
-import Home from '@/pages/Home'
-import About from '@/pages/About'
-import Contact from '@/pages/Contact'
-import SignUp from '@/pages/SignUp'
-import Login from '@/pages/Login'
-import ClassesPage from '@/pages/ClassesPage'
-import LevelsPage from '@/pages/LevelsPage'
-import ForgotPassword from "@/pages/ForgotPassword";
-import StudentPortal from '@/pages/dashboards/StudentPortal'
-import AdminLevels from '@/pages/dashboards/admin/AdminLevels'
-import AdminConversations from '@/pages/dashboards/admin/AdminConversations'
-import AdminStudents from '@/pages/dashboards/admin/AdminStudents'
-import AdminTeachers from '@/pages/dashboards/admin/AdminTeachers'
-import AdminSchedule from '@/pages/dashboards/admin/AdminSchedule'
-import EditLevel from '@/pages/dashboards/admin/editPages/EditLevel'
-import EditClass from '@/pages/dashboards/admin/editPages/EditClass'
-import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation'
-import AddConversation from '@/pages/dashboards/admin/AddConversation'
-import EditStudent from '@/pages/dashboards/admin/editPages/EditStudent'
-import TeacherView from '@/pages/dashboards/TeacherView'
-import PageNotFound from '@/pages/PageNotFound'
+import Home from '@/pages/Home';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+import SignUp from '@/pages/onboarding/SignUp';
+import Login from '@/pages/onboarding/Login';
+import ClassesPage from '@/pages/ClassesPage';
+import LevelsPage from '@/pages/LevelsPage';
+import ForgotPassword from "@/pages/onboarding/ForgotPassword";
+import ResetPasswordCode from "@/pages/onboarding/ResetPasswordCode";
+import ResetPassword from "@/pages/onboarding/ResetPassword";
+import StudentPortal from '@/pages/dashboards/StudentPortal';
+import AdminLevels from '@/pages/dashboards/admin/AdminLevels';
+import AdminConversations from '@/pages/dashboards/admin/AdminConversations';
+import AdminStudents from '@/pages/dashboards/admin/AdminStudents';
+import AdminTeachers from '@/pages/dashboards/admin/AdminTeachers';
+import AdminSchedule from '@/pages/dashboards/admin/AdminSchedule';
+import EditLevel from '@/pages/dashboards/admin/editPages/EditLevel';
+import EditClass from '@/pages/dashboards/admin/editPages/EditClass';
+import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation';
+import AddConversation from '@/pages/dashboards/admin/AddConversation';
+import EditStudent from '@/pages/dashboards/admin/editPages/EditStudent';
+import TeacherView from '@/pages/dashboards/TeacherView';
+import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
 
 export default function PageRoutes() {
@@ -32,7 +34,9 @@ export default function PageRoutes() {
       <Route path="/login" component={Login} />
       <Route path="/levels" component={LevelsPage} />
       <Route path="/levels/:id/classes" component={ClassesPage} />
-      <Route path="/forgotpassword" component={ForgotPassword} />
+      <Route path="/forgot-password" component={ForgotPassword} />
+      <Route path="/reset-password-code" component={ResetPasswordCode} />
+      <Route path="/reset-password" component={ResetPassword} />
       <Route path="/student" component={StudentPortal} />
       <Route path="/admin/levels" component={AdminLevels} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
@@ -49,4 +53,4 @@ export default function PageRoutes() {
       <Route component={PageNotFound} />
     </Switch>
   );
-};
+}

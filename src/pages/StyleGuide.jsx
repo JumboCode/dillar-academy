@@ -181,7 +181,7 @@ const StyleGuide = () => {
   const sectionStyle = `py-6 px-8`
 
   return (
-    <div className="py-6 h-full">
+    <div className="h-full flex-1">
       <h1 className="px-8 text-4xl my-6 font-extrabold">Style Guide</h1>
       {/* color palette */}
       <section className={`${sectionStyle} bg-indigo-100`}>

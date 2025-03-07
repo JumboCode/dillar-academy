@@ -76,97 +76,97 @@ const EditClass = () => {
     return <div></div>;
   }
 
-  if (user?.privilege !== "admin") {
+  if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
 
   return (
-        <div className="h-full p-8 space-y-10">
-            <div className="flex">
-                <button
-                onClick={() => setLocation("/admin/levels")}>
-                    <IoChevronBack className="mr-4" />
-                </button>
-                
-                <h6 className="font-light">All Classes</h6>
-            </div>
-            <h3 className="font-extrabold">Edit Class</h3>
-            <h5 className="font-light">Edit class and student information</h5>
-            
-            <form onSubmit={handleEditClass}>
-            <div className="flex justify-start space-x-10 w-2/3 mb-6">
-                <div className="w-2/3 space-y-3">
-                        <label className="mx-1">Age Group</label>
-                        <FormInput
-                        type="text"
-                        name="ageGroup"
-                        placeholder="Age Group"
-                        value={classData.ageGroup}
-                        onChange={handleInputChange}
-                        isRequired={true}
-                        />
-                    </div>
-                    <div className="w-2/3 space-y-3">
-                        <label className="mx-1">Instructor</label>
-                        <FormInput
-                        type="text"
-                        name="instructor"
-                        placeholder="Instructor"
-                        value={classData.instructor}
-                        onChange={handleInputChange}
-                        isRequired={true}
-                        />
-                    </div>
-            </div>
+    <div className="page-format space-y-10">
+      <div className="flex">
+        <button
+          onClick={() => setLocation("/admin/levels")}>
+          <IoChevronBack className="mr-4" />
+        </button>
 
-            <div className="flex justify-start space-x-10 w-2/3">
-                <div className="w-2/3 space-y-3">
-                        <label className="mx-1">Date</label>
-                        <FormInput
-                        type="date"
-                        name="date"
-                        placeholder="Select Dates"
-                        // value={classData.ageGroup}
-                        onChange={handleInputChange}
-                        isRequired={false}
-                        />
-                    </div>
-                    <div className="w-2/3">
-                        <label className="mx-1">Time</label>
-                            <div className="flex space-x-4 mt-3 items-center">
-                            <FormInput
-                            type="text"
-                            name="startTime"
-                            placeholder="Start"
-                            // value={classData.instructor}
-                            // onChange={handleInputChange}
-                            isRequired={false}
-                            />
-                            <p className="text-3xl">-</p>
-                            <FormInput
-                            type="text"
-                            name="endTime"
-                            placeholder="End"
-                            // value={classData.instructor}
-                            // onChange={handleInputChange}
-                            isRequired={false}
-                            />
-                        </div>
-                    </div>
-            </div>
+        <h6 className="font-light">All Classes</h6>
+      </div>
+      <h3 className="font-extrabold">Edit Class</h3>
+      <h5 className="font-light">Edit class and student information</h5>
 
-            <div className="space-x-2 mt-8">
-                <Button label="Save" type="submit" />
-                <Button 
-                label="Cancel"
-                isOutline={true}
-                onClick={() => setLocation("/admin/levels")} />
-            </div>
-        </form>
-
-        <Button label="Delete class" onClick={handleDeleteclass} />
-
+      <form onSubmit={handleEditClass}>
+        <div className="flex justify-start space-x-10 w-2/3 mb-6">
+          <div className="w-2/3 space-y-3">
+            <label className="mx-1">Age Group</label>
+            <FormInput
+              type="text"
+              name="ageGroup"
+              placeholder="Age Group"
+              value={classData.ageGroup}
+              onChange={handleInputChange}
+              isRequired={true}
+            />
+          </div>
+          <div className="w-2/3 space-y-3">
+            <label className="mx-1">Instructor</label>
+            <FormInput
+              type="text"
+              name="instructor"
+              placeholder="Instructor"
+              value={classData.instructor}
+              onChange={handleInputChange}
+              isRequired={true}
+            />
+          </div>
         </div>
+
+        <div className="flex justify-start space-x-10 w-2/3">
+          <div className="w-2/3 space-y-3">
+            <label className="mx-1">Date</label>
+            <FormInput
+              type="date"
+              name="date"
+              placeholder="Select Dates"
+              // value={classData.ageGroup}
+              onChange={handleInputChange}
+              isRequired={false}
+            />
+          </div>
+          <div className="w-2/3">
+            <label className="mx-1">Time</label>
+            <div className="flex space-x-4 mt-3 items-center">
+              <FormInput
+                type="text"
+                name="startTime"
+                placeholder="Start"
+                // value={classData.instructor}
+                // onChange={handleInputChange}
+                isRequired={false}
+              />
+              <p className="text-3xl">-</p>
+              <FormInput
+                type="text"
+                name="endTime"
+                placeholder="End"
+                // value={classData.instructor}
+                // onChange={handleInputChange}
+                isRequired={false}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-x-2 mt-8">
+          <Button label="Save" type="submit" />
+          <Button
+            label="Cancel"
+            isOutline={true}
+            onClick={() => setLocation("/admin/levels")} />
+        </div>
+      </form>
+
+      <Button label="Delete class" onClick={handleDeleteclass} />
+
+    </div>
   )
 }
 

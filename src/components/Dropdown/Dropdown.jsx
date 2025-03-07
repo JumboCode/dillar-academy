@@ -17,7 +17,6 @@ const Dropdown = ({ label, children, buttonClassName = "dropdown-button text-rig
       document.addEventListener('mousedown', handleClickOutside)
     }
     return () => {
-      // unbind event listener when dropdown is closed
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isOpen])
