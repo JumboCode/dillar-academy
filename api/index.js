@@ -99,6 +99,7 @@ const Contact = mongoose.model('Contact', ContactSchema);
 
 
 // Schedule Schema
+// timezone is automatically EST
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
   time: { type: String, required: true },
@@ -132,7 +133,8 @@ const Conversation = mongoose.model("Conversation", ConversationSchema)
 const LevelSchema = new Schema({
   level: { type: Number, required: true },
   name: { type: String, required: true },
-  instructors: { type: [String], required: true, default: [] },
+  description: { type: String, required: true },
+  skills: { type: [String], default: [] }
 }, { collection: 'levels' })
 
 const Level = mongoose.model("Level", LevelSchema)
@@ -181,6 +183,8 @@ app.post('/api/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
+      console.log(password)
+      console.log("fetched password: " + user.password)
       if (user.password === password) {
         console.log('Login successful for user:', email);
         res.status(200).json(user);
@@ -321,6 +325,107 @@ app.get("/api/conversations", async (req, res) => {
   }
 })
 
+// Get Conversation by ID
+app.get('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await Conversation.findOne({ _id: id });
+    res.json(data)
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Update Conversation
+app.put('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const updatedConversation = await Conversation.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedConversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    res.status(200).json(updatedConversation);
+  } catch (error) {
+    console.error('Error updating conversation:', error);
+    res.status(500).json({ message: 'Error updating conversation' });
+  }
+});
+
+// Delete Conversation
+app.delete('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedConversation = await Conversation.findOne({ _id: id });
+    if (!deletedConversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    // delete conversation
+    await Conversation.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Conversation deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    res.status(500).json({ message: 'Error deleting conversation' });
+  }
+});
+
+// Create conversation
+app.post('/api/conversations', async (req, res) => {
+  try {
+    const { ageGroup, instructor } = req.body;
+
+    // Check if conversation already exists
+    const query = { ageGroup, instructor };
+    // if (schedule) {
+    //   query.$expr = { $setEquals: ["$schedule", schedule] };
+    // }
+    const existingConversation = await Conversation.findOne(query);
+
+    if (existingConversation) {
+      return res.status(409).json({
+        message: 'Conversation already exists',
+        class: existingConversation
+      });
+    } else {
+      const newConversation = new Conversation({
+        ageGroup,
+        instructor
+      });
+
+      await newConversation.save();
+      return res.status(201).json({
+        message: 'Conversation created successfully',
+        class: newConversation
+      });
+    }
+  } catch (error) {
+    console.error('Error creating:', error);
+    return res.status(500).json({ message: 'Error creating conversation' });
+  }
+});
 
 // Get Student's classes by ID
 app.get('/api/students-classes/:id', async (req, res) => {
@@ -489,6 +594,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
   const { id } = req.params;
+  console.log("unenrolling")
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID' });
@@ -520,48 +626,41 @@ app.put('/api/users/reset-password', async (req, res) => {
   const user = await User.findOne({ email });
   try {
     if (user) {
-      const user = { email: email };
-      const updatedPassword = { password: password };
-      const options = { returnDocument: 'after' };
-      await User.findOneAndUpdate(user, updatedPassword, options);
-
-      res.status(200).send("Password updated successfully.");
+      // Update the password (make sure to hash it if needed)
+      await User.findOneAndUpdate({ email }, { password }, { returnDocument: 'after' });
+      res.status(200).json({ success: true, message: "Password updated successfully." });
     } else {
-      res.status(401).send('Invalid email.');
+      res.status(401).json({ success: false, message: "Invalid email." });
     }
   } catch (err) {
-    console.error('Error resetting password');
-    res.status(500).send("Server error resetting password.");
+    console.error('Error resetting password', err);
+    res.status(500).json({ success: false, message: "Server error resetting password." });
   }
 });
 
-// Update Classroom Link
-app.put('/api/classes/:id/classroom-link', async (req, res) => {
+// Update user
+app.put('/api/user/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { classroomLink } = req.body;
+    const updates = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
     }
 
-    if (!classroomLink) {
-      return res.status(400).json({ error: 'Classroom link is required' });
-    }
-
-    const updatedClass = await Class.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       id,
-      { classroomLink },
+      updates,
       { new: true, runValidators: true }
     );
 
-    if (!updatedClass) {
-      return res.status(404).json({ message: 'Class not found' });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    res.status(200).json(updatedClass);
+    res.status(200).json(updatedUser);
   } catch (error) {
-    console.error('Error updating classroom link:', error);
-    res.status(500).json({ message: 'Error updating classroom link' });
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Error updating user' });
   }
 });

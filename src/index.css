@@ -35,7 +35,75 @@
 }
 
 @layer components {
+  .page-format {
+    @apply w-full h-full flex-1 py-10 px-4;
+    @apply sm:px-6;
+    @apply lg:px-20;
+  }
+
   .header-gradient {
     background: radial-gradient(120% 177.59% at -20% 100%, rgba(255, 255, 255, 0.80) 0%, rgba(211, 237, 252, 0.80) 35.46%, rgba(178, 224, 250, 0.80) 57.09%, rgba(138, 199, 244, 0.80) 76.71%, rgba(63, 150, 234, 0.80) 100%);
+  }
+}
+
+h1 {
+  /* text-4xl */
+    font-size: 2.25rem; /* 36px */
+    line-height: 2.5rem; /* 40px */
+}
+
+h2 {
+  /* text-3xl */
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem; /* 36px */
+}
+
+h3 {
+  /* text-2xl */
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+}
+
+h4 {
+  /* text-xl */
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.75rem; /* 28px */
+}
+
+/* Headline */
+h5 {
+  /* text-lg */
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+}
+
+/* Tailwind sm breakpoint */
+@media screen and (min-width: 40rem) {
+  h1 {
+    /* text-5xl */
+    font-size: 3rem; /* 48px */
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: 2.5rem; /* 40px */
+    line-height: 1;
+  }
+
+  h3 {
+    /* text-4xl */
+    font-size: 2.25rem; /* 36px */
+    line-height: 2.5rem; /* 40px */
+  }
+
+  h4 {
+    font-size: 1.75rem; /* 28px */
+    line-height: 2rem; /* 32px */
+  }
+
+  h5 {
+    /* text-2xl */
+    font-size: 1.5rem; /* 24px */
+    line-height: 2rem; /* 32px */
   }
 }

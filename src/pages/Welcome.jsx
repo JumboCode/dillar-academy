@@ -8,9 +8,9 @@ const Welcome = ({ onComplete }) => {
     const [, setLocation] = useLocation();
 
     return (
-        <div className="header-gradient p-4 h-screen flex items-center justify-center">
+        <div className="header-gradient page-format flex items-center justify-center">
             <div className="text-center mb-12 mt-12 px-5">
-                <h1 className="text-6xl font-extrabold mb-4">Dillar English Academy</h1>
+                <h1 className="font-extrabold mb-4">Dillar Academy</h1>
                 <p className="mb-8 text-lg">{t("home_purpose")}</p>
                 <div className="flex flex-col items-center gap-y-4 mb-6">
                     {/* Language Dropdown with border */}
@@ -22,7 +22,7 @@ const Welcome = ({ onComplete }) => {
                         className="w-full max-w-xs px-4 py-3 text-lg font-extrabold text-white bg-dark-blue-800 rounded-lg hover:bg-dark-blue-700"
                         onClick={() => {
                             onComplete();
-                            setLocation("/signup");
+                            setLocation("/");
                         }}
                     >
                         {t("home_learn_title")}
