@@ -6,6 +6,7 @@ import { useAuth } from '@clerk/clerk-react';
 import ConversationClass from '@/components/Class/ConversationClass';
 import Button from '@/components/Button/Button';
 import { getConversations } from '@/api/class-wrapper';
+import BackButton from "@/components/Button/BackButton";
 
 const AdminConversations = () => {
   const { user } = useContext(UserContext);
@@ -44,6 +45,7 @@ const AdminConversations = () => {
 
   return (
     <div className="page-format space-y-10">
+      <BackButton label={"All Levels"} href={"/admin/levels/"} />
       <div className="flex justify-between items-end">
         <div>
           <h3 className="font-extrabold mb-2">All Conversation Classes</h3>

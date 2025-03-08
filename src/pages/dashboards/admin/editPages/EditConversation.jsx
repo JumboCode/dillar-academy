@@ -5,9 +5,9 @@ import { useAuth } from '@clerk/clerk-react';
 import { getConversationById } from "@/api/class-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
-import DateDropdown from '@/components/Dropdown/DateDropdown'
+import DateDropdown from '@/components/Dropdown/DateDropdown';
+import BackButton from "@/components/Button/BackButton";
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
-import { IoChevronBack } from "react-icons/io5";
 
 const EditConversation = () => {
   const { user } = useContext(UserContext);
@@ -89,10 +89,7 @@ const EditConversation = () => {
 
   return (
     <div className="page-format space-y-12">
-      <button className="flex items-center" onClick={() => setLocation("/admin/levels/conversations")}>
-        <IoChevronBack className="mr-4" />
-        <p className="font-light">All Conversations</p>
-      </button>
+      <BackButton label={"All Conversations"} href={"/admin/levels/conversations/"} />
       <div className="space-y-2">
         <h3 className="font-extrabold">Edit Conversation Class</h3>
         <h5 className="font-light">Edit conversation class and student information</h5>
