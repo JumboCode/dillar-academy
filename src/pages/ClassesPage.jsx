@@ -69,7 +69,7 @@ const ClassesPage = () => {
               <Class key={classIndex} classObj={classObj} />
             ))}
           </div>
-          <div className='grid grid-cols-2 w-full gap-x-6'>
+          <div className='grid grid-cols-2 w-full gap-6'>
             {levelNum > 1 && <div className='col-start-1 shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-lg w-full'>
               <button
                 className='w-full text-start py-6 px-7 rounded-lg shadow-[inset_0.5em_0_theme(colors.turquoise.200)]'

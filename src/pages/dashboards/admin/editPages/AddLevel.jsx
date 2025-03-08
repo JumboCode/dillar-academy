@@ -1,71 +1,29 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation, useParams, Link } from 'wouter';
+import { useLocation } from 'wouter';
+import { createLevel } from '@/api/class-wrapper.js';
 import { useAuth } from '@clerk/clerk-react';
-import { getLevelById, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
-import BackButton from "@/components/Button/BackButton";
-import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
+import BackButton from "@/components/Button/BackButton";
 
-const EditLevel = () => {
+const AddLevel = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
-  const [allowRender, setAllowRender] = useState(false);
-  const params = useParams();
-
-  const [level, setLevel] = useState();
-  const [classes, setClasses] = useState();
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
 
   useEffect(() => {
-    if (!params.id) {
-      console.log("Redirecting: No levelId provided");
-      setLocation("/admin/levels");
-      return;
-    }
-
     if (isLoaded) {
       if (!isSignedIn) {
         console.log("Redirecting: User not signed in");
         setLocation("/login");
-      } else {
-        fetchLevels();
-        setAllowRender(true);
       }
     }
   }, [isLoaded, isSignedIn, user]);
 
-  const fetchLevels = async () => {
-    try {
-      const levelRes = await getLevelById(params.id);
-      setLevel(levelRes);
-      const classRes = await getClasses(`level=${levelRes.level}`);
-      console.log(levelRes.level)
-      setClasses(classRes);
-
-      const skills = Array.isArray(levelRes.skills) ? levelRes.skills : [];
-
-      setLevelData({
-        level: levelRes.level,
-        name: levelRes.name,
-        description: levelRes.description || '',
-        skills: skills
-      });
-
-      console.log(classes)
-
-      // Initialize the skills input field
-      setSkillsInput(skills.join(', '));
-    } catch (error) {
-      console.error("Error fetching levels:", error);
-    }
-  };
-
   const handleLevelChange = (e) => {
-    console.log(`Updating ${e.target.name}:`, e.target.value);
     setLevelData({
       ...levelData,
       [e.target.name]: e.target.value,
@@ -89,7 +47,7 @@ const EditLevel = () => {
   // Function to handle adding a skill when pressing Enter
   const handleSkillsInputKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault();
+      e.preventDefault(); // Prevent form submission
 
       const newSkill = skillsInput.trim();
       if (newSkill && !levelData.skills.includes(newSkill)) {
@@ -115,25 +73,15 @@ const EditLevel = () => {
     setSkillsInput(updatedSkills.join(', '));
   };
 
-  const handleEditLevel = async (e) => {
+  const handleAddLevel = async (e) => {
     e.preventDefault();
-    console.log("Submitting level update:", levelData);
+    console.log("Creating level:", levelData);
     try {
-      await updateLevel(params.id, levelData);
-      console.log("Level updated successfully");
-      await fetchLevels();
-    } catch (error) {
-      console.error("Error updating level:", error);
-    }
-  };
-
-  const handleDeleteLevel = async () => {
-    try {
-      console.log("Deleting level:", params.id);
-      await deleteLevel(params.id);
+      await createLevel(levelData);
+      console.log("Level added successfully");
       setLocation("/admin/levels");
     } catch (error) {
-      console.error("Error deleting level:", error);
+      console.error("Error adding level:", error);
     }
   };
 
@@ -146,25 +94,21 @@ const EditLevel = () => {
       skills: skills
     });
     setSkillsInput(skills.join(', '));
-    setLocation("/admin/levels");
+    setLocation("/admin/levels")
   };
 
-  if (!allowRender || !level) {
-    return <div>Loading...</div>;
-  }
-
-  if (user.privilege !== "admin") {
+  if (user?.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
 
   return (
     <div className="page-format space-y-10">
       <BackButton label="All Levels" href="/admin/levels" />
-      <h3 className="font-extrabold">Edit Level</h3>
+      <h3 className="font-extrabold">Add Level</h3>
       <div className="text-lg text-gray-600">
-        Edit Level information and view all the classes in this level.
+        Add level information and view all the classes in this level.
       </div>
-      <form onSubmit={handleEditLevel} className="space-y-6">
+      <form onSubmit={handleAddLevel} className="space-y-6">
         {/* Level and Name fields */}
         <div className="flex gap-x-6">
           <div className="flex-1 gap-y-2">
@@ -241,19 +185,9 @@ const EditLevel = () => {
           <Button label="Cancel" onClick={handleCancel} isOutline />
         </div>
       </form>
-      <div>
-        <div className="flex justify-between">
-          <h4>Classes in this Level</h4>
-          <Button label="+ Add Class" onClick={() => { setLocation("") }} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
-        </div>
-        <div className="grid grid-cols-3 gap-6">
-          { }
-        </div>
-      </div>
-
-      <Button label="Delete Level" onClick={handleDeleteLevel} />
     </div>
   );
 };
+//need to make sure the save button actually saves
 
-export default EditLevel;
+export default AddLevel;
