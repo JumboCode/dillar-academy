@@ -1,16 +1,19 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getUsers } from '@/api/user-wrapper.js'
-import Button from '@/components/Button/Button';
+import { getUsers } from '@/api/user-wrapper.js';
+import Dropdown from '@/components/Dropdown/Dropdown';
+import { IoSearch, IoPersonOutline } from "react-icons/io5";
+import { getClasses } from '@/api/class-wrapper';
+import UserItem from '@/components/UserItem';
 
 const AdminStudents = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-
+  const [classes, setClasses] = useState([]);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -27,50 +30,50 @@ const AdminStudents = () => {
 
   const fetchUsers = async () => {
     const userData = await getUsers();
-    setUsers(userData.data);
+    setUsers(userData.data.filter((user) => user.privilege === "student"));
+    const classData = await getClasses();
+    setClasses(classData);
   }
 
   if (!allowRender) {
     return <div></div>;
   }
 
-  if (user?.privilege !== "admin") {
+  if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
 
   return (
-    <div className="h-full p-8 space-y-10">
-      <h3 className="font-extrabold">Students</h3>
-      <section>
-        <table className="table-auto w-full text-left">
-          <thead className="bg-neutral-200 text-lg">
-            <tr>
-              <th className="px-3">Name</th>
-              <th className="px-3">Email</th>
-              <th className="px-3">Password</th>
-              <th className="px-3">Privilege</th>
-              <th className="px-3">Age</th>
-              <th className="px-3">Gender</th>
-              <th className="px-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((userData, userIndex) => (
-              <tr key={userIndex} className="border-b">
-                <td className="py-2 px-3">{userData.firstName} {userData.lastName}</td>
-                <td className="py-2 px-3">{userData.email}</td>
-                <td className="py-2 px-3">{userData.password}</td>
-                <td className="py-2 px-3">{userData.privilege}</td>
-                <td className="py-2 px-3">{userData.age}</td>
-                <td className="py-2 px-3">{userData.gender}</td>
-                <td className="py-2 px-3">
-                  <Button label="Edit" isOutline={true} onClick={() => setLocation(`/admin/students/${userData._id}`)} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+    <div className="page-format space-y-9">
+      <div>
+        <h3 className="font-extrabold mb-2">Students</h3>
+        <p>List of all students enrolled in Dillar Classes</p>
+      </div>
+      <div className="w-full inline-flex gap-x-4">
+        <div className="w-full inline-flex items-center py-3 px-4 rounded-sm border border-gray-300">
+          <IoSearch size={16.81} className="text-gray-400" />
+          <input type="text" className="w-full border-none outline-none text-[18px]" placeholder="Search names, levels, or classes..."></input>
+        </div>
+        <Dropdown
+          label={
+            <div className="flex items-center justify-center gap-x-1">
+              <span className="whitespace-nowrap">Filter By</span>
+            </div>
+          }
+          buttonClassName="text-black min-w-fit border border-gray-300 px-5 py-3 gap-1 rounded-sm bg-white"
+        ></Dropdown>
+      </div>
+      <div>
+        <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
+          <IoPersonOutline />
+          <p>{users.length} teachers</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-x-14">
+          {users.map((userData, userIndex) => (
+            <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}><UserItem userData={userData} classes={classes} /></Link>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

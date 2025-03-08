@@ -1,8 +1,7 @@
-import { useLocation, useParams } from 'wouter';
+import { useLocation } from 'wouter';
 import Button from '@/components/Button/Button';
 
 const EditButton = ({ classId, editURL }) => {
-    const params = useParams();
     const [, setLocation] = useLocation();
 
     return (

@@ -1,18 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation, Link } from 'wouter';
-import { createLevel, getLevelById, updateLevel, deleteLevel } from '@/api/class-wrapper.js';
+import { useLocation } from 'wouter';
+import { createLevel } from '@/api/class-wrapper.js';
 import { useAuth } from '@clerk/clerk-react';
 import Button from '@/components/Button/Button';
+import FormInput from '@/components/Form/FormInput';
+import BackButton from "@/components/Button/BackButton";
 
 const AddLevel = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
-  const [allowRender, setAllowRender] = useState(false);
- 
-  
-  const [level, setLevel] = useState();
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
 
@@ -21,14 +19,11 @@ const AddLevel = () => {
       if (!isSignedIn) {
         console.log("Redirecting: User not signed in");
         setLocation("/login");
-      } else {
-        setAllowRender(true);
       }
     }
   }, [isLoaded, isSignedIn, user]);
 
   const handleLevelChange = (e) => {
-    console.log(`Updating ${e.target.name}:`, e.target.value);
     setLevelData({
       ...levelData,
       [e.target.name]: e.target.value,
@@ -39,7 +34,7 @@ const AddLevel = () => {
   const handleSkillsInputChange = (e) => {
     const inputValue = e.target.value;
     setSkillsInput(inputValue);
-    
+
     // Update the actual skills array in levelData
     // Split by commas and trim whitespace
     const skillsArray = inputValue.split(',').map(skill => skill.trim()).filter(skill => skill !== '');
@@ -53,7 +48,7 @@ const AddLevel = () => {
   const handleSkillsInputKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault(); // Prevent form submission
-      
+
       const newSkill = skillsInput.trim();
       if (newSkill && !levelData.skills.includes(newSkill)) {
         const newSkills = [...levelData.skills, newSkill];
@@ -73,33 +68,33 @@ const AddLevel = () => {
       ...levelData,
       skills: updatedSkills
     });
-    
+
     // Update the input field to reflect the current skills
     setSkillsInput(updatedSkills.join(', '));
   };
 
   const handleAddLevel = async (e) => {
     e.preventDefault();
-    console.log("Submitting level update:", levelData);
+    console.log("Creating level:", levelData);
     try {
-      await createLevel(levelData); 
-      console.log("Level updated successfully");      
-      setLocation("/admin/new");
+      await createLevel(levelData);
+      console.log("Level added successfully");
+      setLocation("/admin/levels");
     } catch (error) {
-      console.error("Error updating level:", error);
+      console.error("Error adding level:", error);
     }
   };
 
-
   const handleCancel = () => {
     const skills = Array.isArray(level.skills) ? level.skills : [];
-    setLevelData({ 
-      level: level.level, 
-      name: level.name, 
-      description: level.description || '', 
-      skills: skills 
+    setLevelData({
+      level: level.level,
+      name: level.name,
+      description: level.description || '',
+      skills: skills
     });
     setSkillsInput(skills.join(', '));
+    setLocation("/admin/levels")
   };
 
   if (user?.privilege !== "admin") {
@@ -107,70 +102,68 @@ const AddLevel = () => {
   }
 
   return (
-    <div className="h-full p-8 space-y-10">
-      <Link to="/admin/levels" className="cursor-pointer hover:underline text-blue-500">
-        ← All Levels
-      </Link>
+    <div className="page-format space-y-10">
+      <BackButton label="All Levels" href="/admin/levels" />
       <h3 className="font-extrabold">Add Level</h3>
       <div className="text-lg text-gray-600">
         Add level information and view all the classes in this level.
       </div>
-      <form onSubmit={handleAddLevel} className="space-y-4">
+      <form onSubmit={handleAddLevel} className="space-y-6">
         {/* Level and Name fields */}
-        <div className="flex space-x-4">
-          <div className="flex-1">
-            <label className="block text-sm font-semibold mb-1">Level</label>
-            <input
+        <div className="flex gap-x-6">
+          <div className="flex-1 gap-y-2">
+            <label>Level</label>
+            <FormInput
               type="text"
               name="level"
-              className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="Level"
               value={levelData.level}
               onChange={handleLevelChange}
-              required
+              isRequired={true}
             />
           </div>
-          <div className="flex-1">
-            <label className="block text-sm font-semibold mb-1">Name</label>
-            <input
+          <div className="flex-1 gap-y-2">
+            <label>Name</label>
+            <FormInput
               type="text"
               name="name"
-              className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="Name"
               value={levelData.name}
               onChange={handleLevelChange}
-              required
+              isRequired={true}
             />
           </div>
         </div>
 
         {/* Description field */}
-        <div>
-          <label className="block text-sm font-semibold mb-1">Description</label>
-          <textarea
+        <div className="space-y-2">
+          <label>Description</label>
+          <FormInput
+            type="textarea"
             name="description"
-            className="w-full p-2 border border-gray-300 rounded-md h-28 resize-none"
+            placeholder="Description"
             value={levelData.description}
             onChange={handleLevelChange}
+            isRequired={true}
           />
         </div>
 
         {/* Skills field with deletable tags */}
-        <div>
-          <label className="block text-sm font-semibold mb-1">
-            Relevant Skills
-          </label>
-          <input
+        <div className="space-y-2">
+          <label>Relevant Skills</label>
+          <FormInput
             type="text"
-            className="w-full p-2 border border-gray-300 rounded-md"
+            name="skills"
+            placeholder="Ex. the alphabet, simple vocabulary, basic conversation"
             value={skillsInput}
             onChange={handleSkillsInputChange}
             onKeyDown={handleSkillsInputKeyDown}
-            placeholder="Ex. the alphabet, simple vocabulary, basic conversation"
           />
           {/* Display the current skills as deletable tags */}
           <div className="mt-2 flex flex-wrap gap-2">
             {levelData.skills.map((skill, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="bg-gray-100 px-2 py-1 rounded text-sm flex items-center group"
               >
                 <span>{skill}</span>
@@ -186,11 +179,10 @@ const AddLevel = () => {
             ))}
           </div>
         </div>
-
         {/* Action buttons */}
-        <div className="flex justify-end space-x-2">
-          <Button label="Cancel" onClick={handleCancel} />
-          <Button label="Save" type="submit" />
+        <div className="flex gap-x-2">
+          <Button label="Save" />
+          <Button label="Cancel" onClick={handleCancel} isOutline />
         </div>
       </form>
     </div>

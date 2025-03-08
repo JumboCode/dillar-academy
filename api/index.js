@@ -99,6 +99,7 @@ const Contact = mongoose.model('Contact', ContactSchema);
 
 
 // Schedule Schema
+// timezone is automatically EST
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
   time: { type: String, required: true },
@@ -324,6 +325,107 @@ app.get("/api/conversations", async (req, res) => {
   }
 })
 
+// Get Conversation by ID
+app.get('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await Conversation.findOne({ _id: id });
+    res.json(data)
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Update Conversation
+app.put('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const updatedConversation = await Conversation.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedConversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    res.status(200).json(updatedConversation);
+  } catch (error) {
+    console.error('Error updating conversation:', error);
+    res.status(500).json({ message: 'Error updating conversation' });
+  }
+});
+
+// Delete Conversation
+app.delete('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedConversation = await Conversation.findOne({ _id: id });
+    if (!deletedConversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    // delete conversation
+    await Conversation.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Conversation deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    res.status(500).json({ message: 'Error deleting conversation' });
+  }
+});
+
+// Create conversation
+app.post('/api/conversations', async (req, res) => {
+  try {
+    const { ageGroup, instructor } = req.body;
+
+    // Check if conversation already exists
+    const query = { ageGroup, instructor };
+    // if (schedule) {
+    //   query.$expr = { $setEquals: ["$schedule", schedule] };
+    // }
+    const existingConversation = await Conversation.findOne(query);
+
+    if (existingConversation) {
+      return res.status(409).json({
+        message: 'Conversation already exists',
+        class: existingConversation
+      });
+    } else {
+      const newConversation = new Conversation({
+        ageGroup,
+        instructor
+      });
+
+      await newConversation.save();
+      return res.status(201).json({
+        message: 'Conversation created successfully',
+        class: newConversation
+      });
+    }
+  } catch (error) {
+    console.error('Error creating:', error);
+    return res.status(500).json({ message: 'Error creating conversation' });
+  }
+});
 
 // Get Student's classes by ID
 app.get('/api/students-classes/:id', async (req, res) => {
@@ -493,6 +595,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
   const { id } = req.params;
+  console.log("unenrolling")
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID' });
@@ -524,18 +627,15 @@ app.put('/api/users/reset-password', async (req, res) => {
   const user = await User.findOne({ email });
   try {
     if (user) {
-      const user = { email: email };
-      const updatedPassword = { password: password };
-      const options = { returnDocument: 'after' };
-      await User.findOneAndUpdate(user, updatedPassword, options);
-
-      res.status(200).send("Password updated successfully.");
+      // Update the password (make sure to hash it if needed)
+      await User.findOneAndUpdate({ email }, { password }, { returnDocument: 'after' });
+      res.status(200).json({ success: true, message: "Password updated successfully." });
     } else {
-      res.status(401).send('Invalid email.');
+      res.status(401).json({ success: false, message: "Invalid email." });
     }
   } catch (err) {
-    console.error('Error resetting password');
-    res.status(500).send("Server error resetting password.");
+    console.error('Error resetting password', err);
+    res.status(500).json({ success: false, message: "Server error resetting password." });
   }
 });
 
@@ -565,7 +665,6 @@ app.put('/api/user/:id', async (req, res) => {
     res.status(500).json({ message: 'Error updating user' });
   }
 });
-
 
 // Get level by ID
 app.get('/api/levels/:id', async (req, res) => {
@@ -636,13 +735,10 @@ app.delete('/api/levels/:id', async (req, res) => {
 // Create Level 
 app.post('/api/levels', async (req, res) => {
   try {
-    const { level, ageGroup, instructor, schedule } = req.body;
+    const { level, name, description, skills } = req.body;
 
     // Check if level already exists
-    const query = { level, ageGroup, instructor };
-    if (schedule) {
-      query.$expr = { $setEquals: ["$schedule", schedule] };
-    }
+    const query = { level };
     const existingLevel = await Level.findOne(query);
 
     if (existingLevel) {
@@ -653,11 +749,10 @@ app.post('/api/levels', async (req, res) => {
     } else {
       const newLevel = new Level({
         level,
-        ageGroup,
-        instructor,
-        schedule,
+        name,
+        description,
+        skills,
       });
-
       await newLevel.save();
       return res.status(201).json({
         message: 'Level created successfully',

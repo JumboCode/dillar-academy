@@ -44,53 +44,55 @@ export default function Contact() {
   };
 
   return (
-    <div className="w-full h-full py-12 sm:py-32 bg-[url('/images/ice_water.png')] bg-no-repeat bg-center bg-cover flex flex-col sm:flex-row justify-center items-center">
+    <div className="page-format bg-[url('/images/ice_water.png')] bg-no-repeat bg-center bg-cover flex justify-center items-center">
       {alertData.message && <Alert message={alertData.message} />}
       {/* form box */}
-      <Form width="w-4/5 md:w-3/5">
-        <h3 className="font-extrabold mb-2">{t("contact_heading")}</h3>
-        <p className="text-base sm:text-lg mb-4 text-gray-600 opacity-70">
-          {t("contact_form_description")}
-        </p >
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-3"
-        >
-          <FormInput
-            type="text"
-            name="name"
-            placeholder={t("name_field")}
-            value={formData.name}
-            onChange={handleChange}
-            isRequired={true}
-          />
-          <FormInput
-            type="email"
-            name="email"
-            placeholder={t("email_field")}
-            value={formData.email}
-            onChange={handleChange}
-            isRequired={true}
-          />
-          <FormInput
-            type="text"
-            name="subject"
-            placeholder={t("subject_field")}
-            value={formData.subject}
-            onChange={handleChange}
-            isRequired={true}
-          />
-          <FormInput
-            type="textarea"
-            name="message"
-            placeholder={t("message_field")}
-            value={formData.message}
-            onChange={handleChange}
-            required
-          />
-          <FormSubmit label={t("submit_button")} />
-        </form>
-      </Form>
+      <div className="max-w-[96rem] w-full flex justify-center">
+        <Form width="lg:w-3/5">
+          <h3 className="font-extrabold mb-2">{t("contact_heading")}</h3>
+          <p className="text-base sm:text-lg mb-4 text-gray-600 opacity-70">
+            {t("contact_form_description")}
+          </p >
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-3"
+          >
+            <FormInput
+              type="text"
+              name="name"
+              placeholder={t("name_field")}
+              value={formData.name}
+              onChange={handleChange}
+              isRequired={true}
+            />
+            <FormInput
+              type="email"
+              name="email"
+              placeholder={t("email_field")}
+              value={formData.email}
+              onChange={handleChange}
+              isRequired={true}
+            />
+            <FormInput
+              type="text"
+              name="subject"
+              placeholder={t("subject_field")}
+              value={formData.subject}
+              onChange={handleChange}
+              isRequired={true}
+            />
+            <FormInput
+              type="textarea"
+              name="message"
+              placeholder={t("message_field")}
+              value={formData.message}
+              onChange={handleChange}
+              required
+            />
+            <FormSubmit label={t("submit_button")} />
+          </form>
+        </Form>
+      </div>
     </div >
   );
 }
