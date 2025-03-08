@@ -18,7 +18,7 @@ const DateDropdown = ({ selectedDates, setSelectedDates }) => {
           <span className="text-center w-full">Select dates</span>
         </div>
       }
-      buttonClassName="flex items-center justify-between w-full text-base sm:text-lg w-full py-3 px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300">
+      buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300">
       {dates.map((day) => (
         <button
           type='button'

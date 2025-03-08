@@ -6,19 +6,17 @@ import { updateUser, getUser } from '@/api/user-wrapper.js'
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 
-const EditStudent = () => {
+const EditUser = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
 
   const params = useParams();
-  const [student, setStudent] = useState(null);
-  const [studentFormData, setStudentFormData] = useState({
+  const [userFormData, setUserFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    password: '',
   });
 
   useEffect(() => {
@@ -30,41 +28,40 @@ const EditStudent = () => {
       }
     }
 
-    fetchStudent();
+    fetchUser();
   }, [isLoaded, isSignedIn, user]);
 
-  const fetchStudent = async () => {
+  const fetchUser = async () => {
     try {
       const userFilter = new URLSearchParams(`_id=${params.id}`);
-      const studentData = await getUser(userFilter);
-      setStudent(studentData.data);
-      setStudentFormData({
-        firstName: studentData.data.firstName,
-        lastName: studentData.data.lastName,
-        email: studentData.data.email,
-        password: studentData.data.password
+      const userData = await getUser(userFilter);
+      setUserFormData({
+        firstName: userData.data.firstName,
+        lastName: userData.data.lastName,
+        email: userData.data.email,
+        password: userData.data.password
       });
     } catch (error) {
-      console.error('Error fetching student:', error);
+      console.error('Error fetching user:', error);
     }
   }
 
   const handleUserInputChange = (e) => {
-    setStudentFormData({ ...studentFormData, [e.target.name]: e.target.value });
+    setUserFormData({ ...userFormData, [e.target.name]: e.target.value });
   };
 
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
-      await updateUser(params.id, studentFormData);
-      setStudentFormData({ firstName: '', lastName: '', email: '', password: '' })
-      await fetchStudent();
+      await updateUser(params.id, userFormData);
+      setUserFormData({ firstName: '', lastName: '', email: '', password: '' })
+      await fetchUser();
     } catch (error) {
       console.error('Error updating user:', error);
     }
   };
 
-  if (!allowRender || !student) {
+  if (!allowRender) {
     return <div></div>;
   }
 
@@ -74,13 +71,13 @@ const EditStudent = () => {
 
   return (
     <div className="page-format">
-      <h3 className="font-extrabold mb-10">Edit Student</h3>
+      <h3 className="font-extrabold mb-10">Edit User</h3>
       <form onSubmit={handleEditUser} className="space-y-3">
         <FormInput
           type="text"
           name="firstName"
           placeholder="First Name"
-          value={studentFormData.firstName}
+          value={userFormData.firstName}
           onChange={handleUserInputChange}
           isRequired={true}
         />
@@ -88,7 +85,7 @@ const EditStudent = () => {
           type="text"
           name="lastName"
           placeholder="Last Name"
-          value={studentFormData.lastName}
+          value={userFormData.lastName}
           onChange={handleUserInputChange}
           isRequired={true}
         />
@@ -96,17 +93,9 @@ const EditStudent = () => {
           type="email"
           name="email"
           placeholder="Email"
-          value={studentFormData.email}
+          value={userFormData.email}
           onChange={handleUserInputChange}
           isRequired={true}
-        />
-        <FormInput
-          type="text"
-          name="password"
-          placeholder="Password"
-          value={studentFormData.password}
-          onChange={handleUserInputChange}
-          isRequired={false}
         />
         <div className="flex justify-end space-x-2">
           <Button label="Save" type="submit" />
@@ -116,4 +105,4 @@ const EditStudent = () => {
   )
 }
 
-export default EditStudent;
+export default EditUser;

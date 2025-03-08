@@ -19,7 +19,7 @@ import EditLevel from '@/pages/dashboards/admin/editPages/EditLevel';
 import EditClass from '@/pages/dashboards/admin/editPages/EditClass';
 import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation';
 import AddConversation from '@/pages/dashboards/admin/AddConversation';
-import EditStudent from '@/pages/dashboards/admin/editPages/EditStudent';
+import EditUser from '@/pages/dashboards/admin/editPages/EditUser';
 import TeacherView from '@/pages/dashboards/TeacherView';
 import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
@@ -45,8 +45,8 @@ export default function PageRoutes() {
       <Route path="/admin/levels/conversations/:id" component={EditConversation} />
       <Route path="/admin/class/:classId" component={EditClass} />
       <Route path="/admin/students" component={AdminStudents} />
-      <Route path="/admin/students/:id" component={EditStudent} />
       <Route path="/admin/teachers" component={AdminTeachers} />
+      <Route path="/admin/user/:id" component={EditUser} />
       <Route path="/admin/schedule" component={AdminSchedule} />
       <Route path="/teacher" component={TeacherView} />
       <Route path="/style" component={StyleGuide} />
