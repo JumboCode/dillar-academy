@@ -4,7 +4,7 @@ import { updateUser, getUser } from '@/api/user-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
-import Class from '@/components/Class'
+import Class from '@/components/Class/Class'
 import { Link } from "wouter"
 import Button from '@/components/Button/Button';
 import Form from '@/components/Form/Form';

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
-import Level from '@/components/Level'
-import ConversationClass from '../components/ConversationClass';
+import Level from '@/components/Class/Level'
+import ConversationClass from '../components/Class/ConversationClass';
 import { getConversations, getLevels } from '../api/class-wrapper';
 import { Link } from "wouter"
 

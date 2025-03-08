@@ -3,7 +3,7 @@ import { UserContext } from "@/contexts/UserContext.jsx";
 import { useLocation } from "wouter";
 import { useAuth } from "@clerk/clerk-react";
 import { getClasses } from "@/api/class-wrapper.js";
-import Class from "../../components/Class";
+import Class from "@/components/Class/Class";
 
 const TeacherView = () => {
   const { user } = useContext(UserContext);

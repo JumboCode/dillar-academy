@@ -1,6 +1,8 @@
+import Button from '@/components/Button/Button';
+import Level from '@/components/Class/Level';
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 
 const AdminLevels = () => {
@@ -31,6 +33,13 @@ const AdminLevels = () => {
   return (
     <div className="page-format space-y-10">
       <h3 className="font-extrabold">All Levels</h3>
+      <Link href="/admin/levels/conversations">
+        <Level level={{
+          level: "conversation",
+          name: "conversation level",
+        }}
+          isSimplified />
+      </Link>
     </div>
   );
 };

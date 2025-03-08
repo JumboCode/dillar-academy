@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'wouter';
-import Class from '../components/Class';
+import Class from '../components/Class/Class';
 import { getClasses, getLevels } from '../api/class-wrapper';
 import Button from '@/components/Button/Button';
 

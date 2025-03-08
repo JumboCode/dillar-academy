@@ -4,7 +4,7 @@ import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getClasses, getLevels, createClass, deleteClass } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
-import Class from '@/components/Class';
+import Class from '@/components/Class/Class';
 import Form from '@/components/Form/Form'
 import FormInput from '@/components/Form/FormInput'
 
