@@ -4,12 +4,11 @@ import { updateUser, getUser } from '@/api/user-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
-import Class from '@/components/Class'
+import Class from '@/components/Class/Class'
 import { Link } from "wouter"
 import Button from '@/components/Button/Button';
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
-
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
@@ -26,6 +25,7 @@ const StudentPortal = () => {
     age: '',
     gender: '',
   });
+
   useEffect(() => {
     if (isLoaded) {
       if (!isSignedIn) {
@@ -89,11 +89,13 @@ const StudentPortal = () => {
     }));
   };
 
+  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
   if (!allowRender) {
     return;
   }
 
-  if (user?.privilege !== "student") {
+  if (user.privilege !== "student") {
     return <div>Unauthorized</div>
   }
 
@@ -102,11 +104,11 @@ const StudentPortal = () => {
   };
 
   return (
-    <div className='h-full'>
+    <div className='page-format'>
       <br></br>
-      <h1 className='text-4xl font-bold mb-4'>
-        Welcome {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}!
-      </h1>
+      <h3 className='font-extrabold mb-4'>
+        Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+      </h3>
       <section>
         <table className="table-auto w-full text-left">
           <thead className="bg-neutral-200 text-lg">
@@ -136,12 +138,9 @@ const StudentPortal = () => {
                 />
               </td>
             </tr>
-
           </tbody>
         </table>
-
       </section>
-
       <section>
         <h1 className='text-3xl mb-4'> Your courses </h1>
         <div className='grid grid-cols-3 gap-6'>
@@ -198,7 +197,7 @@ const StudentPortal = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <Form width="w-1/2">
             <h2 className="text-2xl font-bold mb-6">Edit User Info</h2>
-            <form onSubmit={handleEditInfo} className="space-y-4">
+            <form onSubmit={handleEditInfo} className="space-y-3">
               <FormInput
                 type="text"
                 name="firstName"
@@ -256,7 +255,6 @@ const StudentPortal = () => {
       )}
     </div>
   );
-
 }
 
 export default StudentPortal;

@@ -5,7 +5,8 @@ const Level = ({ level, isSimplified }) => {
     2: "shadow-[inset_0.5em_0_theme(colors.turquoise.300)]",
     3: "shadow-[inset_0.5em_0_theme(colors.turquoise.500)]",
     4: "shadow-[inset_0.5em_0_theme(colors.turquoise.700)]",
-    5: "shadow-[inset_0.5em_0_theme(colors.turquoise.800)]"
+    5: "shadow-[inset_0.5em_0_theme(colors.turquoise.800)]",
+    "conversation": "shadow-[inset_0.5em_0_#594BD2]",
   }
 
   return isSimplified ? (
