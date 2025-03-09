@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'wouter';
 import Class from '../components/Class/Class';
 import { getClasses, getLevels } from '../api/class-wrapper';
-import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 
 const ClassesPage = () => {
   const [classes, setClasses] = useState([]);
@@ -69,7 +69,7 @@ const ClassesPage = () => {
               <Class key={classIndex} classObj={classObj} />
             ))}
           </div>
-          <div className='grid grid-cols-2 w-full gap-6'>
+          <div className='grid grid-cols-2 w-full gap-x-6'>
             {levelNum > 1 && <div className='col-start-1 shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-lg w-full'>
               <button
                 className='w-full text-start py-6 px-7 rounded-lg shadow-[inset_0.5em_0_theme(colors.turquoise.200)]'
@@ -77,7 +77,7 @@ const ClassesPage = () => {
                 isOutline={false}
               >
                 <div className='flex items-center gap-x-3'>
-                  <IoChevronBackOutline className='text-2xl' />
+                  <IoChevronBack className='text-2xl' />
                   <h5 className='font-extrabold'>Previous Level</h5>
                 </div>
               </button>
@@ -90,7 +90,7 @@ const ClassesPage = () => {
               >
                 <div className="flex items-center justify-end gap-x-3">
                   <h5 className='font-extrabold'>Next Level</h5>
-                  <IoChevronForwardOutline className='text-2xl' />
+                  <IoChevronForward className='text-2xl' />
                 </div>
               </button>
             </div>}

@@ -81,8 +81,8 @@ const EditUser = () => {
   }
 
   return (
-    <div className="page-format space-y-12">
-      {/* <BackButton label={"Class"} href={"/admin/levels/conversations/"} /> */}
+    <div className="page-format max-w-[96rem] space-y-12">
+      <BackButton label="Back" />
       <h3 className="font-extrabold">{userData.firstName + " " + userData.lastName}</h3>
       <form onSubmit={handleEditUser} className="space-y-12">
         <div className="flex w-full gap-x-6">

@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { getClassById } from "@/api/class-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
+import BackButton from "@/components/Button/BackButton";
 import { updateClass, deleteClass } from '@/api/class-wrapper.js';
 
 const EditClass = () => {
@@ -81,17 +82,12 @@ const EditClass = () => {
   }
 
   return (
-    <div className="page-format space-y-10">
-      <div className="flex">
-        <button
-          onClick={() => setLocation("/admin/levels")}>
-          <IoChevronBack className="mr-4" />
-        </button>
-
-        <h6 className="font-light">All Classes</h6>
+    <div className="page-format max-w-[96rem] space-y-10">
+      <BackButton label="Back to Level" />
+      <div>
+        <h3 className="font-extrabold mb-2">Edit Class</h3>
+        <h5 className="font-light">Edit class and student information</h5>
       </div>
-      <h3 className="font-extrabold">Edit Class</h3>
-      <h5 className="font-light">Edit class and student information</h5>
 
       <form onSubmit={handleEditClass}>
         <div className="flex justify-start space-x-10 w-2/3 mb-6">
@@ -163,9 +159,7 @@ const EditClass = () => {
             onClick={() => setLocation("/admin/levels")} />
         </div>
       </form>
-
-      <Button label="Delete class" onClick={handleDeleteclass} />
-
+      <Button label="Delete class" onClick={handleDeleteClass} />
     </div>
   )
 }

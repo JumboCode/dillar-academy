@@ -11,7 +11,6 @@ import { UserContext } from "../../contexts/UserContext";
 // handleDelete is function used for deleting class
 const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null }) => {
   const { user, } = useContext(UserContext);
-
   return (
     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
       {/* Header */}

@@ -1,5 +1,6 @@
 
 import Level from '@/components/Class/Level';
+import Button from '@/components/Button/Button';
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
@@ -44,25 +45,26 @@ const AdminLevels = () => {
   }
 
   return (
-    <div className="page-format space-y-10">
-      <h3 className="font-extrabold">All Levels</h3>
-      <div className="flex items-center justify-between">
-        <div className="font-semibold">Browse, add, and delete levels.</div>
-        <button
-          onClick={() => setLocation("/admin/levels/add")}
-          className="px-3 py-0 bg-white text-gray-500 border border-gray-500 rounded"
-        >
-          + Add Level
-        </button>
+    <div className="page-format max-w-[96rem] space-y-10">
+      <div className="flex justify-between items-end">
+        <div>
+          <h3 className="font-extrabold mb-2">All Levels</h3>
+          <p>Browse, add, and delete levels.</p>
+        </div>
+        <div>
+          <Button
+            label="+ Add Level"
+            isOutline
+            onClick={() => setLocation("/admin/levels/new")} />
+        </div>
       </div>
 
-
       {/* Levels List */}
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {levels.length > 0 ? (
           levels.map((level) => (
             // change to pass level.level, add function to get level by num?
-            <Link key={level.level} href={`/admin/levels/${level._id}`}>
+            <Link key={level.level} href={`/admin/levels/${level.level}`}>
               <div className="rounded-lg">
                 <Level level={level} isSimplified />
               </div>
@@ -73,8 +75,8 @@ const AdminLevels = () => {
         )}
         <Link href="/admin/levels/conversations">
           <Level level={{
-            level: "conversation",
-            name: "conversation level",
+            level: "Conversation Classes",
+            name: "",
           }}
             isSimplified />
         </Link>

@@ -44,8 +44,8 @@ const AdminConversations = () => {
   }
 
   return (
-    <div className="page-format space-y-10">
-      <BackButton label={"All Levels"} href={"/admin/levels/"} />
+    <div className="page-format max-w-[96rem] space-y-10">
+      <BackButton label={"All Levels"} />
       <div className="flex justify-between items-end">
         <div>
           <h3 className="font-extrabold mb-2">All Conversation Classes</h3>

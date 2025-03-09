@@ -44,9 +44,9 @@ const AdminTeachers = () => {
   }
 
   return (
-    <div className="page-format space-y-9">
+    <div className="page-format max-w-[96rem] space-y-9">
       <div>
-        <h3 className="font-extrabold">Teachers</h3>
+        <h3 className="font-extrabold mb-2">Teachers</h3>
         <p>List of all teachers teaching Dillar Classes</p>
       </div>
       <div className="w-full inline-flex gap-x-4">

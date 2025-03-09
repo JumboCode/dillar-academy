@@ -44,7 +44,7 @@ const AdminStudents = () => {
   }
 
   return (
-    <div className="page-format space-y-9">
+    <div className="page-format max-w-[96rem] space-y-9">
       <div>
         <h3 className="font-extrabold mb-2">Students</h3>
         <p>List of all students enrolled in Dillar Classes</p>
