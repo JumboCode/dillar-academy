@@ -32,7 +32,6 @@ const EditLevel = () => {
         setLocation("/login");
       } else {
         fetchLevels();
-        setAllowRender(true);
       }
     }
   }, [isLoaded, isSignedIn, user, levelNum]);
@@ -50,7 +49,6 @@ const EditLevel = () => {
 
       // Initialize the skills input field
       setSkillsInput(skills.join(', '));
-      console.log(levelData)
     }
   }, [level]);
 
@@ -60,13 +58,13 @@ const EditLevel = () => {
       setLevel(levelRes[0]);
       const classRes = await getClasses(`level=${levelNum}`);
       setClasses(classRes);
+      setAllowRender(true);
     } catch (error) {
       console.error("Error fetching levels:", error);
     }
   };
 
   const handleLevelChange = (e) => {
-    console.log(`Updating ${e.target.name}:`, e.target.value);
     setLevelData({
       ...levelData,
       [e.target.name]: e.target.value,
@@ -120,9 +118,10 @@ const EditLevel = () => {
     e.preventDefault();
     console.log("Submitting level update:", levelData);
     try {
-      await updateLevel(params.id, levelData);
+      await updateLevel(level._id, levelData);
       console.log("Level updated successfully");
       await fetchLevels();
+      // setLocation("/admin/levels");
     } catch (error) {
       console.error("Error updating level:", error);
     }
@@ -170,6 +169,7 @@ const EditLevel = () => {
         <div className="flex flex-col lg:flex-row gap-x-6 w-full">
           <div className="space-y-2">
             {/* TODO: show error if level is not a number, or allow strings for levels? */}
+            {/* TODO: make sure level num is unique, display message if not */}
             <label>Level</label>
             <FormInput
               type="text"

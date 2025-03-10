@@ -20,10 +20,10 @@ const AdminSchedule = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
         const fetchData = async () => {
           const response = await getClasses();
           setClasses(response);
+          setAllowRender(true);
         };
         fetchData();
       }

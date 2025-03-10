@@ -17,6 +17,7 @@ const TeacherView = () => {
       if (user) {
         const teacherClasses = await getClasses(`instructor=${user.firstName}`);
         setClasses(teacherClasses);
+        setAllowRender(true);
       }
     };
 
@@ -25,7 +26,6 @@ const TeacherView = () => {
         setLocation("/login");
       } else {
         fetchData();
-        setAllowRender(true);
       }
     }
   }, [isLoaded, isSignedIn, user]);

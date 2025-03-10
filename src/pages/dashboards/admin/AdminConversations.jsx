@@ -20,7 +20,6 @@ const AdminConversations = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
         fetchConversations();
       }
     }
@@ -30,6 +29,7 @@ const AdminConversations = () => {
     try {
       const data = await getConversations();
       setConversationClasses(data);
+      setAllowRender(true);
     } catch (error) {
       console.error("Failed to fetch conversation classes", error);
     }

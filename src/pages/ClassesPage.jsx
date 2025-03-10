@@ -74,7 +74,6 @@ const ClassesPage = () => {
               <button
                 className='w-full text-start py-6 px-7 rounded-lg shadow-[inset_0.5em_0_theme(colors.turquoise.200)]'
                 onClick={() => setLocation(`/levels/${Number(levelNum) - 1}/classes`)}
-                isOutline={false}
               >
                 <div className='flex items-center gap-x-3'>
                   <IoChevronBack className='text-2xl' />
@@ -86,7 +85,6 @@ const ClassesPage = () => {
               <button
                 className='w-full text-end py-6 px-7 rounded-lg shadow-[inset_0.5em_0_theme(colors.turquoise.500)]'
                 onClick={() => setLocation(`/levels/${Number(levelNum) + 1}/classes`)}
-                isOutline={false}
               >
                 <div className="flex items-center justify-end gap-x-3">
                   <h5 className='font-extrabold'>Next Level</h5>

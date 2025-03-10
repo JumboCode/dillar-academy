@@ -12,7 +12,6 @@ const EditConversation = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
-  const [allowRender, setAllowRender] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
 
   const params = useParams();
@@ -25,8 +24,6 @@ const EditConversation = () => {
     if (isLoaded) {
       if (!isSignedIn) {
         setLocation("/login");
-      } else {
-        setAllowRender(true);
       }
     }
 
@@ -47,11 +44,6 @@ const EditConversation = () => {
     } catch (error) {
       console.error('Error creating conversation:', error);
     }
-  }
-
-
-  if (!allowRender) {
-    return <div></div>;
   }
 
   if (user?.privilege !== "admin") {

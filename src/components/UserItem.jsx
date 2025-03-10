@@ -4,7 +4,6 @@ import { LuPencil } from "react-icons/lu";
 const UserItem = ({ userData, classes }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [highestClass, setHighestClass] = useState(undefined);
-  const [allowRender, setAllowRender] = useState(false);
 
   useEffect(() => {
     const filteredClasses = classes.filter(cls =>
@@ -15,15 +14,7 @@ const UserItem = ({ userData, classes }) => {
       ? filteredClasses.reduce((prev, curr) => (curr.level > prev.level ? curr : prev))
       : null;
     setHighestClass(maxClass);
-
-    setAllowRender(true);
   }, [classes, userData]);
-
-  useEffect(() => {
-    if (highestClass !== undefined) {
-      setAllowRender(true);
-    }
-  }, [highestClass]);
 
   return (
     <div
@@ -36,7 +27,7 @@ const UserItem = ({ userData, classes }) => {
           {userData.email}
         </p>
         <div>
-          {(userData.privilege !== "teacher" && allowRender) && (
+          {userData.privilege !== "teacher" && (
             <p className="text-gray-500 text-sm">
               {highestClass ? (
                 highestClass.ageGroup === "all" ? (

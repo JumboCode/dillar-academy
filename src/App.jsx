@@ -33,6 +33,7 @@ const App = () => {
       const userFilter = new URLSearchParams(`email=${user.primaryEmailAddress.emailAddress}`);
       const response = await getUser(userFilter);
       setUser(response.data);
+      setAllowRender(true)
     }
 
     if (!isLoaded) {

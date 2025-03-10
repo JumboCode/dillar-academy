@@ -17,7 +17,6 @@ const StudentPortal = () => {
   const { isLoaded, isSignedIn } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -30,8 +29,6 @@ const StudentPortal = () => {
     if (isLoaded) {
       if (!isSignedIn) {
         setLocation("/login");
-      } else {
-        setAllowRender(true);
       }
     }
 
@@ -46,6 +43,7 @@ const StudentPortal = () => {
           })
         );
         setClasses(classes);
+        setAllowRender(true);
       }
     };
 

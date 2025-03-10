@@ -21,11 +21,10 @@ const AdminStudents = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
+        fetchUsers();
       }
     }
 
-    fetchUsers();
   }, [isLoaded, isSignedIn, user]);
 
   const fetchUsers = async () => {
@@ -33,6 +32,7 @@ const AdminStudents = () => {
     setUsers(userData.data.filter((user) => user.privilege === "student"));
     const classData = await getClasses();
     setClasses(classData);
+    setAllowRender(true);
   }
 
   if (!allowRender) {

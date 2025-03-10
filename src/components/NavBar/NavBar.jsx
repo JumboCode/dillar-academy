@@ -36,12 +36,12 @@ const NavBar = () => {
     <div>
       <nav className="w-full fixed top-0 bg-white h-20 shadow-md z-[1000]">
         {/* Navbar content */}
-        <div className='flex justify-between items-center sm:px-8 px-3 h-full'>
+        <div className='flex justify-between items-center px-8 h-full'>
           <Link href="/" className="flex-shrink-0 flex items-center">
             <img className="h-14 w-auto" src={dillarLogo} alt="Dillar Academy" />
           </Link>
           {/* Desktop navigation */}
-          <div className="hidden sm:flex sm:items-center lg:gap-x-20 md:gap-x-10">
+          <div className="hidden lg:flex lg:items-center lg:gap-x-10 xl:gap-x-20">
             {user?.privilege === "admin" ? <>
               <NavLink href="/admin/levels">{t("nav_link_classes")}</NavLink>
               <NavLink href="/admin/students">Students</NavLink>
@@ -61,13 +61,13 @@ const NavBar = () => {
               </SignedIn>
             </>}
           </div>
-          <div className='hidden sm:inline'>
+          <div className='hidden lg:inline'>
             <LanguageDropdown />
           </div>
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="sm:hidden inline-flex items-center justify-center p-2 
+            className="lg:hidden inline-flex items-center justify-center p-2 
             rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 
             focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             aria-expanded={isMenuOpen}
@@ -78,7 +78,7 @@ const NavBar = () => {
           </button>
         </div>
         {/* Mobile menu */}
-        <div ref={mobileMenuRef} className={`sm:hidden flex flex-col items-center w-full pb-6 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
+        <div ref={mobileMenuRef} className={`lg:hidden flex flex-col items-center w-full pb-6 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
           {user?.privilege === "admin" ? <>
             <NavLink href="/admin/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
             <NavLink href="/admin/students" isMobile={true} onClick={closeMenu}>Students</NavLink>

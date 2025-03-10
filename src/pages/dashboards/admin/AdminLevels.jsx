@@ -15,26 +15,24 @@ const AdminLevels = () => {
   const [levels, setLevels] = useState([]);
 
   useEffect(() => {
-    if (isLoaded) {
-      if (!isSignedIn) {
-        setLocation("/login");
-      } else {
-        setAllowRender(true);
-      }
-    }
-  }, [isLoaded, isSignedIn, user]);
-
-  useEffect(() => {
     const fetchLevels = async () => {
       try {
         const levels = await getLevels();
         setLevels(levels);
+        setAllowRender(true);
       } catch (error) {
         console.error("Error fetching levels:", error);
       }
     };
-    fetchLevels();
-  }, []);
+
+    if (isLoaded) {
+      if (!isSignedIn) {
+        setLocation("/login");
+      } else {
+        fetchLevels();
+      }
+    }
+  }, [isLoaded, isSignedIn, user]);
 
   if (!allowRender) {
     return <div></div>;
