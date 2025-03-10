@@ -9,6 +9,11 @@ import { FaRegEdit } from "react-icons/fa";
 import Button from '@/components/Button/Button';
 import { GiH2O } from "react-icons/gi";
 
+import { UserContext } from "@/contexts/UserContext.jsx";
+import { useLocation } from "wouter";
+import { useAuth } from "@clerk/clerk-react";
+import { getClasses } from "@/api/class-wrapper.js";
+import Class from "@/components/Class/Class";
 
 const TeacherView = () => {
     const { user, } = useContext(UserContext);

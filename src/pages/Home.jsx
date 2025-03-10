@@ -1,6 +1,6 @@
 import Button from '@/components/Button/Button';
-import Level from '@/components/Level.jsx';
-import Confirmation from '@/components/Confirmation.jsx';
+import Level from '@/components/Class/Level';
+import Confirmation from '@/components/Confirmation';
 import { useTranslation } from "react-i18next";
 import { useLocation } from 'wouter';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";

@@ -1,4 +1,4 @@
-import EditButton from '@/components/Button/EditButton'
+import EditButton from '@/components/Button/EditButton';
 
 // possible modes: edit or none
 const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
@@ -12,7 +12,7 @@ const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
           <p key={index} className="text-black opacity-50">{schedule.day} {schedule.time}</p>
         ))}
       </div>
-      <div className='flex gap-3'>
+      <div className='flex gap-3 mb-4 ml-5'>
         {modes.includes("edit") && <EditButton classId={conversation._id} editURL={editURL} />}
       </div>
     </div>

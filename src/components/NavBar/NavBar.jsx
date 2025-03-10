@@ -46,6 +46,7 @@ const NavBar = () => {
               <NavLink href="/admin/levels">{t("nav_link_classes")}</NavLink>
               <NavLink href="/admin/students">Students</NavLink>
               <NavLink href="/admin/teachers">Teachers</NavLink>
+              <NavLink href="/admin/schedule">Schedule</NavLink>
               <SignOutButton />
             </> : <>
               <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
@@ -77,19 +78,26 @@ const NavBar = () => {
           </button>
         </div>
         {/* Mobile menu */}
-        <div ref={mobileMenuRef} className={`sm:hidden flex flex-col items-center w-full pb-3 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
-          <NavLink href="/contact" isMobile={true} onClick={closeMenu}>{t("nav_link_contact")}</NavLink>
-          <NavLink href="/about" isMobile={true} onClick={closeMenu}>{t("nav_link_about")}</NavLink>
-          <SignedOut>
-            <NavLink href="/login" isMobile={true} onClick={closeMenu}>{t("nav_link_login")}</NavLink>
-          </SignedOut>
-          <SignedIn>
-            <NavLink href={`/${user?.privilege}`} onClick={closeMenu}>{t("nav_link_dashboard")}</NavLink>
+        <div ref={mobileMenuRef} className={`sm:hidden flex flex-col items-center w-full pb-6 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
+          {user?.privilege === "admin" ? <>
+            <NavLink href="/admin/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
+            <NavLink href="/admin/students" isMobile={true} onClick={closeMenu}>Students</NavLink>
+            <NavLink href="/admin/teachers" isMobile={true} onClick={closeMenu}>Teachers</NavLink>
+            <NavLink href="/admin/schedule" isMobile={true} onClick={closeMenu}>Schedule</NavLink>
             <SignOutButton className="py-2 px-3" />
-          </SignedIn>
-          <div className="w-full h-2 mt-2 mx-3 border-t border-gray-200"></div>
-          <LanguageDropdown />
+          </> : <><NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
+            <NavLink href="/contact" isMobile={true} onClick={closeMenu}>{t("nav_link_contact")}</NavLink>
+            <NavLink href="/about" isMobile={true} onClick={closeMenu}>{t("nav_link_about")}</NavLink>
+            <SignedOut>
+              <NavLink href="/login" isMobile={true} onClick={closeMenu}>{t("nav_link_login")}</NavLink>
+            </SignedOut>
+            <SignedIn>
+              <NavLink href={`/${user?.privilege}`} onClick={closeMenu}>{t("nav_link_dashboard")}</NavLink>
+              <SignOutButton className="py-2 px-3" />
+            </SignedIn>
+            <div className="w-full h-2 mt-2 mx-3 border-t border-gray-200"></div>
+            <LanguageDropdown />
+          </>}
         </div>
       </nav>
     </div>

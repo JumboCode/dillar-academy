@@ -18,10 +18,12 @@ import AdminSchedule from '@/pages/dashboards/admin/AdminSchedule';
 import EditLevel from '@/pages/dashboards/admin/editPages/EditLevel';
 import EditClass from '@/pages/dashboards/admin/editPages/EditClass';
 import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation';
-import EditStudent from '@/pages/dashboards/admin/editPages/EditStudent';
+import AddConversation from '@/pages/dashboards/admin/AddConversation';
+import EditUser from '@/pages/dashboards/admin/editPages/EditUser';
 import TeacherView from '@/pages/dashboards/TeacherView';
 import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
+import AddLevel from '@/pages/dashboards/admin/editPages/AddLevel';
 
 export default function PageRoutes() {
   return (
@@ -39,12 +41,14 @@ export default function PageRoutes() {
       <Route path="/student" component={StudentPortal} />
       <Route path="/admin/levels" component={AdminLevels} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
+      <Route path="/admin/levels/conversations/new" component={AddConversation} />
+      <Route path="/admin/levels/add" component={AddLevel} />
       <Route path="/admin/levels/:id" component={EditLevel} />
       <Route path="/admin/levels/conversations/:id" component={EditConversation} />
       <Route path="/admin/class/:classId" component={EditClass} />
       <Route path="/admin/students" component={AdminStudents} />
-      <Route path="/admin/students/:id" component={EditStudent} />
       <Route path="/admin/teachers" component={AdminTeachers} />
+      <Route path="/admin/user/:id" component={EditUser} />
       <Route path="/admin/schedule" component={AdminSchedule} />
       <Route path="/teacher" component={TeacherView} />
       <Route path="/style" component={StyleGuide} />
