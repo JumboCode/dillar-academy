@@ -92,7 +92,7 @@ const Home = () => {
   return (
     <>
       {/* hero section */}
-      <div className="header-gradient min-h-[60dvh] flex flex-col items-center justify-center w-full py-12 px-10 text-center md:text-left">
+      <div className="header-gradient min-h-[60svh] flex flex-col items-center justify-center w-full py-12 px-10 text-center md:text-left">
         <h5 className="text-blue-600 mb-3">{t("home_motto")}</h5>
         <h1 className="font-extrabold mb-6">Dillar Academy</h1>
         <p className="text-base sm:text-xl">{t("home_purpose")}</p>

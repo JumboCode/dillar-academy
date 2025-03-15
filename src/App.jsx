@@ -77,7 +77,7 @@ const App = () => {
               <Welcome onComplete={handleWelcomeComplete} />
             </div>
           ) : (
-            <div className="row-start-2 min-h-[calc(100vh-5rem)]">
+            <div className="row-start-2 min-h-[calc(100svh-5rem)]">
               <div className='w-full min-h-full flex flex-col items-center'>
                 <PageRoutes />
               </div>

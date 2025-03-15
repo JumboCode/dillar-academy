@@ -66,7 +66,7 @@ const AdminStudents = () => {
       <div>
         <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
           <IoPersonOutline />
-          <p>{users.length} teachers</p>
+          <p>{users.length} students</p>
         </div>
         <div className="grid md:grid-cols-3 gap-x-14">
           {users.map((userData, userIndex) => (

@@ -37,7 +37,6 @@ const EditLevel = () => {
   }, [isLoaded, isSignedIn, user, levelNum]);
 
   useEffect(() => {
-    console.log(level)
     if (level) {
       const skills = Array.isArray(level.skills) ? level.skills : [];
       setLevelData({

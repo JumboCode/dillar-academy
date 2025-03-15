@@ -1,6 +1,7 @@
 import { IoChevronForward } from "react-icons/io5";
 
-const Level = ({ level, isSimplified }) => {
+const Level = ({ level, isSimplified, isShadowRight, numLevels }) => {
+  console.log(level)
   // TODO: modify to account for num levels changing
   const levelColorMapping = {
     1: "shadow-[inset_0.5em_0_theme(colors.turquoise.200)]",

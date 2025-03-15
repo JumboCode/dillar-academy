@@ -9,6 +9,7 @@ const DateDropdown = ({ selectedDates, setSelectedDates }) => {
         ? prevDates.filter(date => date !== day)
         : [...prevDates, day]
     );
+    console.log(selectedDates)
   }
 
   return (
@@ -18,7 +19,7 @@ const DateDropdown = ({ selectedDates, setSelectedDates }) => {
           <span className="text-center w-full">Select dates</span>
         </div>
       }
-      buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300">
+      buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
       {dates.map((day) => (
         <button
           type='button'
