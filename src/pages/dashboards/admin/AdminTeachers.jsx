@@ -44,10 +44,10 @@ const AdminTeachers = () => {
   }
 
   return (
-    <div className="page-format space-y-9">
+    <div className="page-format max-w-[96rem] space-y-9">
       <div>
-        <h3 className="font-extrabold">Teachers</h3>
-        <p>List of all teachers teaching Dillar Classes</p>
+        <h3 className="font-extrabold mb-2">Instructors</h3>
+        <p>List of all instructors teaching Dillar Classes</p>
       </div>
       <div className="w-full inline-flex gap-x-4">
         <div className="w-full inline-flex items-center py-3 px-4 rounded-sm border border-gray-300">
@@ -66,7 +66,7 @@ const AdminTeachers = () => {
       <div>
         <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
           <IoPersonOutline />
-          <p>{users.length} students</p>
+          <p>{users.length} instructors</p>
         </div>
         <div className="grid md:grid-cols-3 gap-x-14">
           {users.map((userData, userIndex) => (

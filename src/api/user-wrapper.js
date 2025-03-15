@@ -31,6 +31,7 @@ const getUsers = async () => {
   }
 };
 
+// get user by id or email
 const getUser = async (query = "") => {
   try {
     const response = await axios.get(`/api/user?${query}`);

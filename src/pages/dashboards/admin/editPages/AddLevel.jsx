@@ -102,8 +102,8 @@ const AddLevel = () => {
   }
 
   return (
-    <div className="page-format space-y-10">
-      <BackButton label="All Levels" href="/admin/levels" />
+    <div className="page-format max-w-[96rem] space-y-10">
+      <BackButton label="All Levels" />
       <h3 className="font-extrabold">Add Level</h3>
       <div className="text-lg text-gray-600">
         Add level information and view all the classes in this level.

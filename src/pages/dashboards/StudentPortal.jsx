@@ -17,7 +17,6 @@ const StudentPortal = () => {
   const { isLoaded, isSignedIn } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -30,8 +29,6 @@ const StudentPortal = () => {
     if (isLoaded) {
       if (!isSignedIn) {
         setLocation("/login");
-      } else {
-        setAllowRender(true);
       }
     }
 
@@ -46,6 +43,7 @@ const StudentPortal = () => {
           })
         );
         setClasses(classes);
+        setAllowRender(true);
       }
     };
 
@@ -99,12 +97,8 @@ const StudentPortal = () => {
     return <div>Unauthorized</div>
   }
 
-  const togglePassword = (e) => {
-    setShowPassword(!showPassword);
-  };
-
   return (
-    <div className='page-format'>
+    <div className='page-format max-w-[96rem]'>
       <br></br>
       <h3 className='font-extrabold mb-4'>
         Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
@@ -115,7 +109,6 @@ const StudentPortal = () => {
             <tr>
               <th className="px-3">Name</th>
               <th className="px-3">Email</th>
-              <th className="px-3">Password</th>
               <th className="px-3">Age</th>
               <th className="px-3">Gender</th>
             </tr>
@@ -124,10 +117,6 @@ const StudentPortal = () => {
             <tr>
               <td className="py-2 px-3">{user.firstName} {user.lastName}</td>
               <td className="py-2 px-3">{user.email}</td>
-              <td className="py-2 px-3 flex gap-2">
-                {showPassword ? user.password : "********"}
-                <input type="checkbox" onClick={togglePassword} />
-              </td>
               <td className="py-2 px-3">{user.age}</td>
               <td className="py-2 px-3">{user.gender}</td>
               <td className="py-2 px-3">

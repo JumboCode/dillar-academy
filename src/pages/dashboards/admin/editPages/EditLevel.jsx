@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getLevelById, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
+import { getLevels, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
@@ -14,6 +14,7 @@ const EditLevel = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const params = useParams();
+  const levelNum = params.id
 
   const [level, setLevel] = useState();
   const [classes, setClasses] = useState();
@@ -21,51 +22,48 @@ const EditLevel = () => {
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
 
   useEffect(() => {
-    if (!params.id) {
-      console.log("Redirecting: No levelId provided");
+    if (!params.id || !levelNum) {
       setLocation("/admin/levels");
       return;
     }
 
     if (isLoaded) {
       if (!isSignedIn) {
-        console.log("Redirecting: User not signed in");
         setLocation("/login");
       } else {
         fetchLevels();
-        setAllowRender(true);
       }
     }
-  }, [isLoaded, isSignedIn, user]);
+  }, [isLoaded, isSignedIn, user, levelNum]);
 
-  const fetchLevels = async () => {
-    try {
-      const levelRes = await getLevelById(params.id);
-      setLevel(levelRes);
-      const classRes = await getClasses(`level=${levelRes.level}`);
-      console.log(levelRes.level)
-      setClasses(classRes);
-
-      const skills = Array.isArray(levelRes.skills) ? levelRes.skills : [];
-
+  useEffect(() => {
+    if (level) {
+      const skills = Array.isArray(level.skills) ? level.skills : [];
       setLevelData({
-        level: levelRes.level,
-        name: levelRes.name,
-        description: levelRes.description || '',
+        level: level.level || '',
+        name: level.name || '',
+        description: level.description || '',
         skills: skills
       });
 
-      console.log(classes)
-
       // Initialize the skills input field
       setSkillsInput(skills.join(', '));
+    }
+  }, [level]);
+
+  const fetchLevels = async () => {
+    try {
+      const levelRes = await getLevels(`level=${levelNum}`);
+      setLevel(levelRes[0]);
+      const classRes = await getClasses(`level=${levelNum}`);
+      setClasses(classRes);
+      setAllowRender(true);
     } catch (error) {
       console.error("Error fetching levels:", error);
     }
   };
 
   const handleLevelChange = (e) => {
-    console.log(`Updating ${e.target.name}:`, e.target.value);
     setLevelData({
       ...levelData,
       [e.target.name]: e.target.value,
@@ -119,9 +117,10 @@ const EditLevel = () => {
     e.preventDefault();
     console.log("Submitting level update:", levelData);
     try {
-      await updateLevel(params.id, levelData);
+      await updateLevel(level._id, levelData);
       console.log("Level updated successfully");
       await fetchLevels();
+      // setLocation("/admin/levels");
     } catch (error) {
       console.error("Error updating level:", error);
     }
@@ -149,7 +148,7 @@ const EditLevel = () => {
     setLocation("/admin/levels");
   };
 
-  if (!allowRender || !level) {
+  if (!allowRender || !level || !classes) {
     return <div>Loading...</div>;
   }
 
@@ -158,16 +157,18 @@ const EditLevel = () => {
   }
 
   return (
-    <div className="page-format space-y-10">
-      <BackButton label="All Levels" href="/admin/levels" />
+    <div className="page-format max-w-[96rem] space-y-10">
+      <BackButton label="All Levels" />
       <h3 className="font-extrabold">Edit Level</h3>
       <div className="text-lg text-gray-600">
         Edit Level information and view all the classes in this level.
       </div>
-      <form onSubmit={handleEditLevel} className="space-y-6">
+      <form onSubmit={handleEditLevel} className="space-y-6 w-2/3">
         {/* Level and Name fields */}
-        <div className="flex gap-x-6">
-          <div className="flex-1 gap-y-2">
+        <div className="flex flex-col lg:flex-row gap-x-6 w-full">
+          <div className="space-y-2">
+            {/* TODO: show error if level is not a number, or allow strings for levels? */}
+            {/* TODO: make sure level num is unique, display message if not */}
             <label>Level</label>
             <FormInput
               type="text"
@@ -178,7 +179,7 @@ const EditLevel = () => {
               isRequired={true}
             />
           </div>
-          <div className="flex-1 gap-y-2">
+          <div className="flex-1 space-y-2">
             <label>Name</label>
             <FormInput
               type="text"
@@ -244,10 +245,12 @@ const EditLevel = () => {
       <div>
         <div className="flex justify-between">
           <h4>Classes in this Level</h4>
-          <Button label="+ Add Class" onClick={() => { setLocation("") }} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
+          <Button label="+ Add Class" onClick={null} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
         </div>
-        <div className="grid grid-cols-3 gap-6">
-          { }
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {classes.map(classObj => (
+            <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
+          ))}
         </div>
       </div>
 

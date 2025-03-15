@@ -21,11 +21,10 @@ const AdminStudents = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
+        fetchUsers();
       }
     }
 
-    fetchUsers();
   }, [isLoaded, isSignedIn, user]);
 
   const fetchUsers = async () => {
@@ -33,6 +32,7 @@ const AdminStudents = () => {
     setUsers(userData.data.filter((user) => user.privilege === "student"));
     const classData = await getClasses();
     setClasses(classData);
+    setAllowRender(true);
   }
 
   if (!allowRender) {
@@ -44,7 +44,7 @@ const AdminStudents = () => {
   }
 
   return (
-    <div className="page-format space-y-9">
+    <div className="page-format max-w-[96rem] space-y-9">
       <div>
         <h3 className="font-extrabold mb-2">Students</h3>
         <p>List of all students enrolled in Dillar Classes</p>
@@ -66,7 +66,7 @@ const AdminStudents = () => {
       <div>
         <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
           <IoPersonOutline />
-          <p>{users.length} teachers</p>
+          <p>{users.length} students</p>
         </div>
         <div className="grid md:grid-cols-3 gap-x-14">
           {users.map((userData, userIndex) => (

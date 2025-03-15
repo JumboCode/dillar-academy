@@ -17,6 +17,7 @@ const TeacherView = () => {
       if (user) {
         const teacherClasses = await getClasses(`instructor=${user.firstName}`);
         setClasses(teacherClasses);
+        setAllowRender(true);
       }
     };
 
@@ -25,7 +26,6 @@ const TeacherView = () => {
         setLocation("/login");
       } else {
         fetchData();
-        setAllowRender(true);
       }
     }
   }, [isLoaded, isSignedIn, user]);
@@ -41,7 +41,7 @@ const TeacherView = () => {
   }
 
   return (
-    <div className="page-format">
+    <div className="page-format max-w-[96rem]">
       <h1 className="text-3xl font-bold mb-4">
         Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
       </h1>

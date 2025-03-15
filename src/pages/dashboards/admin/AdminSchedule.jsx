@@ -10,7 +10,7 @@ const AdminSchedule = () => {
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [classes, setClasses] = useState([]);
-  const [currFilter, setCurrFilter] = useState(null);
+  const [currFilters, setCurrFilters] = useState([]);
   const [allowRender, setAllowRender] = useState(false);
 
   const level = [1, 2, 3, 4, 5];
@@ -20,15 +20,22 @@ const AdminSchedule = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
         const fetchData = async () => {
           const response = await getClasses();
           setClasses(response);
+          setAllowRender(true);
         };
         fetchData();
       }
     }
   }, [isLoaded, isSignedIn, user]);
+
+  const handleAddFilter = (level) => {
+    setCurrFilters(prevFilters =>
+      prevFilters.includes(level)
+        ? prevFilters.filter(filter => filter !== level)
+        : [...currFilters, level])
+  }
 
   if (!allowRender) {
     return <div></div>;
@@ -38,31 +45,30 @@ const AdminSchedule = () => {
     return <div>Unauthorized</div>;
   }
 
-  const handleOptionClick = (level) => {
-    setCurrFilter(level);
-  };
-
   return (
-    <div className="page-format space-y-10">
+    <div className="page-format max-w-[96rem] space-y-10">
       <h3 className="font-extrabold">Schedule</h3>
-      <Dropdown
-        label={
-          <div className="flex items-center justify-center gap-x-1">
-            <span className="whitespace-nowrap">Filter By</span>
-          </div>
-        }
-        buttonClassName="w-fit text-black border border-gray-300 px-5 py-3 gap-1 rounded-sm bg-white"
-      >
-        {level.map((level, index) => (
-          <button
-            key={index}
-            className="w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100"
-            onClick={() => handleOptionClick(level)} /* Handle click here */
-          >
-            Level {level}
-          </button>
-        ))}
-      </Dropdown>
+      <div className="w-fit">
+        <Dropdown
+          label={
+            <div className="flex items-center justify-center gap-x-1">
+              <span className="whitespace-nowrap">Filter By</span>
+            </div>
+          }
+          buttonClassName="w-fit text-black border border-gray-300 px-5 py-3 gap-1 rounded-sm bg-white"
+        >
+          {level.map((level, index) => (
+            <button
+              key={index}
+              className={`text-left px-4 py-2 text-black ${currFilters.includes(level) ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}
+              hover:bg-gray-50`}
+              onClick={() => handleAddFilter(level)}
+            >
+              Level {level}
+            </button>
+          ))}
+        </Dropdown>
+      </div>
       <section>
         <br></br>
         <div className="table w-full table-fixed">
@@ -83,7 +89,7 @@ const AdminSchedule = () => {
                   {classes.length > 0 ? (classes
                     .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor, level: classObj.level })))
                     .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
-                    .filter(schedule => !currFilter || schedule.level === currFilter)
+                    .filter(schedule => currFilters.length === 0 || currFilters.includes(schedule.level))
                     .sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`)) // Sort by time
                     .map((schedule, index) => (
                       <div key={index} className="bg-blue-200 rounded p-2 mb-2">
