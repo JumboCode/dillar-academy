@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'wouter';
+import { useLocation, useParams, Link } from 'wouter';
 import Class from '../components/Class/Class';
 import Level from '@/components/Class/Level';
 import { getClasses, getLevels } from '../api/class-wrapper';
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 
 const ClassesPage = () => {
   const [classes, setClasses] = useState([]);
@@ -27,8 +26,6 @@ const ClassesPage = () => {
       setClasses(classData);
       const levelData = await getLevels();
       setAllLevels(levelData);
-      console.log(levelData)
-      // console.log(levelData.find(l => l.level === levelNum))
       setLevel(levelData.find(l => l.level === parseInt(levelNum)));
       setLoading(false);
     };
@@ -73,26 +70,19 @@ const ClassesPage = () => {
             ))}
           </div>
           <div className='grid grid-cols-2 w-full gap-x-6'>
-            {levelNum > 1 && <Level
-              level={allLevels.find(l => l.level === parseInt(levelNum) - 1)}
-              numLevels={allLevels.length}
-              isSimplified />}
-            {/* <div className='col-start-1 shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-lg w-full'>
-              <button
-                className='w-full text-start py-6 px-7 rounded-lg shadow-[inset_0.5em_0_theme(colors.turquoise.200)]'
-                onClick={() => setLocation(`/levels/${Number(levelNum) - 1}/classes`)}
-              >
-                <div className='flex items-center gap-x-3'>
-                  <IoChevronBack className='text-2xl' />
-                  <h5 className='font-extrabold'>Previous Level</h5>
-                </div>
-              </button>
-            </div> */}
-            {levelNum < allLevels.length && <Level
-              level={allLevels.find(l => l.level === parseInt(levelNum) + 1)}
-              numLevels={allLevels.length}
-              isShadowRight
-              isSimplified />}
+            {levelNum > 1 && <Link href={`/levels/${Number(levelNum) - 1}/classes`} className={"col-start-1"}>
+              <Level
+                level={allLevels.find(l => l.level === parseInt(levelNum) - 1)}
+                numLevels={allLevels.length}
+                isSimplified />
+            </Link>}
+            {levelNum < allLevels.length && <Link href={`/levels/${Number(levelNum) + 1}/classes`} className={"col-start-2"}>
+              <Level
+                level={allLevels.find(l => l.level === parseInt(levelNum) + 1)}
+                numLevels={allLevels.length}
+                isArrowRight
+                isSimplified />
+            </Link>}
           </div>
         </div>
       </div>

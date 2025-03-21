@@ -99,7 +99,7 @@ const Home = () => {
         <p className="mb-4"><b>300+</b> {t("home_student_desc")}</p>
         <div className="flex gap-x-3 items-center">
           <Button
-            label={t("home_learn_title")}
+            label={"Explore Classes"}
             onClick={() => setLocation("/signup")}
             isOutline={false}
           />

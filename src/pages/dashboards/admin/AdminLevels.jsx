@@ -64,7 +64,7 @@ const AdminLevels = () => {
             // change to pass level.level, add function to get level by num?
             <Link key={level.level} href={`/admin/levels/${level.level}`}>
               <div className="rounded-lg">
-                <Level level={level} isSimplified />
+                <Level level={level} numLevels={levels.length} isSimplified isArrowRight />
               </div>
             </Link>
           ))
@@ -76,7 +76,8 @@ const AdminLevels = () => {
             level: "Conversation Classes",
             name: "",
           }}
-            isSimplified />
+            isSimplified
+            isArrowRight />
         </Link>
       </div>
     </div>
