@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
-const mongoSanitize = require('express-mongo-sanitize');
+  const mongoSanitize = require('express-mongo-sanitize');
 const nodemailer = require('nodemailer');
 
 const app = express()
