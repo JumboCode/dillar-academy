@@ -2,11 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getUsers } from '@/api/user-wrapper.js';
+import { getUsers, getStudentsForExport } from '@/api/user-wrapper.js';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import { IoSearch, IoPersonOutline } from "react-icons/io5";
 import { getClasses } from '@/api/class-wrapper';
 import UserItem from '@/components/UserItem';
+import ExcelExport from 'export-xlsx';
+import { SETTINGS_FOR_EXPORT } from '@/assets/excel_export_settings';
 
 const AdminStudents = () => {
   const { user } = useContext(UserContext);
@@ -15,6 +17,7 @@ const AdminStudents = () => {
   const [allowRender, setAllowRender] = useState(false);
   const [classes, setClasses] = useState([]);
   const [users, setUsers] = useState([]);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     if (isLoaded) {
@@ -24,7 +27,6 @@ const AdminStudents = () => {
         fetchUsers();
       }
     }
-
   }, [isLoaded, isSignedIn, user]);
 
   const fetchUsers = async () => {
@@ -34,6 +36,19 @@ const AdminStudents = () => {
     setClasses(classData);
     setAllowRender(true);
   }
+
+  const handleExportStudents = async () => {
+    try {
+      setExporting(true);
+      const data = await getStudentsForExport();
+      const excelExport = new ExcelExport();
+      excelExport.downloadExcel(SETTINGS_FOR_EXPORT, [data]);
+    } catch (error) {
+      console.error('Error exporting students:', error);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   if (!allowRender) {
     return <div></div>;
@@ -45,9 +60,18 @@ const AdminStudents = () => {
 
   return (
     <div className="page-format max-w-[96rem] space-y-9">
-      <div>
-        <h3 className="font-extrabold mb-2">Students</h3>
-        <p>List of all students enrolled in Dillar Classes</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h3 className="font-extrabold mb-2">Students</h3>
+          <p>List of all students enrolled in Dillar Classes</p>
+        </div>
+        <button 
+          onClick={handleExportStudents}
+          disabled={exporting}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          {exporting ? 'Exporting...' : 'Export to Excel'}
+        </button>
       </div>
       <div className="w-full inline-flex gap-x-4">
         <div className="w-full inline-flex items-center py-3 px-4 rounded-sm border border-gray-300">
