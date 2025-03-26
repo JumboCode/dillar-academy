@@ -18,4 +18,4 @@ const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
   )
 }
 
-export default ConversationClass;
+export default ConversationClass; 
