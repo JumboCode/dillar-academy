@@ -10,7 +10,7 @@ import BackButton from "@/components/Button/BackButton";
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
 
 const EditConversation = () => {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext); 
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
