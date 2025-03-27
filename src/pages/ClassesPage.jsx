@@ -39,8 +39,8 @@ const ClassesPage = () => {
       {/* Banner Section */}
       <div className="header-gradient w-full flex flex-col items-center">
         <div className="w-full max-w-[96rem] py-20 lg:py-24 px-4 sm:px-6 lg:px-20">
-          <h5 className="font-light text-dark-blue-700 mb-2">Level {level.level}</h5>
-          <h3 className='font-extrabold text-dark-blue-800 mb-6'>{level.name}</h3>
+          <h3 className="font-light text-dark-blue-700 mb-2">Level {level.level}</h3>
+          <h1 className='font-extrabold text-dark-blue-800 mb-6'>{level.name}</h1>
           <p className="text-neutral-600 text-base sm:text-lg max-w-2xl mb-8">
             This class is for those with little to no experience in English. It will be going over
             the alphabet, basic vocabulary, and simple grammar rules.
@@ -60,7 +60,7 @@ const ClassesPage = () => {
       <div className="w-full flex flex-col items-center">
         {/* Open Classes */}
         <div className='w-full max-w-[96rem] px-4 sm:px-6 lg:px-20 py-12 lg:py-24'>
-          <h4 className="font-extrabold text-dark-blue-800 mb-4">Open Classes</h4>
+          <h2 className="font-extrabold text-dark-blue-800 mb-4">Open Classes</h2>
           <p className="text-base sm:text-lg text-neutral-600 mb-8">
             Here are the open classes in this level. More information will be given by the instructor after you sign up!
           </p>

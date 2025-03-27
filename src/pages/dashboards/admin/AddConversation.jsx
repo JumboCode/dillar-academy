@@ -54,8 +54,8 @@ const EditConversation = () => {
     <div className="page-format max-w-[96rem] space-y-12">
       <BackButton label={"All Conversations"} />
       <div className="space-y-2">
-        <h3 className="font-extrabold">Add Conversation Class</h3>
-        <h5 className="font-light">Add a new conversation class</h5>
+        <h1 className="font-extrabold">Add Conversation Class</h1>
+        <h3 className="font-light">Add a new conversation class</h3>
       </div>
 
       <form onSubmit={handleCreateConversation}>

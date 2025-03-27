@@ -100,9 +100,9 @@ const StudentPortal = () => {
   return (
     <div className='page-format max-w-[96rem]'>
       <br></br>
-      <h3 className='font-extrabold mb-4'>
+      <h1 className='font-extrabold mb-4'>
         Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
-      </h3>
+      </h1>
       <section>
         <table className="table-auto w-full text-left">
           <thead className="bg-neutral-200 text-lg">

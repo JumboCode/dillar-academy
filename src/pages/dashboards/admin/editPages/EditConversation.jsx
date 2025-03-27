@@ -91,8 +91,8 @@ const EditConversation = () => {
     <div className="page-format max-w-[96rem] space-y-12">
       <BackButton label="All Conversations" />
       <div className="space-y-2">
-        <h3 className="font-extrabold">Edit Conversation Class</h3>
-        <h5 className="font-light">Edit conversation class and student information</h5>
+        <h1 className="font-extrabold">Edit Conversation Class</h1>
+        <h3 className="font-light">Edit conversation class and student information</h3>
       </div>
 
       <form onSubmit={handleEditConversation}>

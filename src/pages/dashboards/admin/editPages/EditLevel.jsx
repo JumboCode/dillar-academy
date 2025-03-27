@@ -159,7 +159,7 @@ const EditLevel = () => {
   return (
     <div className="page-format max-w-[96rem] space-y-10">
       <BackButton label="All Levels" />
-      <h3 className="font-extrabold">Edit Level</h3>
+      <h1 className="font-extrabold">Edit Level</h1>
       <div className="text-lg text-gray-600">
         Edit Level information and view all the classes in this level.
       </div>
@@ -244,7 +244,7 @@ const EditLevel = () => {
       </form>
       <div>
         <div className="flex justify-between">
-          <h4>Classes in this Level</h4>
+          <h2>Classes in this Level</h2>
           <Button label="+ Add Class" onClick={null} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
