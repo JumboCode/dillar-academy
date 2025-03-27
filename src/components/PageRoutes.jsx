@@ -25,6 +25,7 @@ import EditTeacher from '@/pages/dashboards/EditTeacher';
 import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
 import AddLevel from '@/pages/dashboards/admin/editPages/AddLevel';
+import TeacherEditClass from '@/pages/dashboards/TeacherEditClass';
 
 export default function PageRoutes() {
   return (
@@ -54,6 +55,8 @@ export default function PageRoutes() {
       <Route path="/teacher" component={TeacherView} />
       <Route path="/teacher/edit/:id" component={EditTeacher} />
       <Route path="/style" component={StyleGuide} />
+      <Route path="/teacher/class/:id" component={TeacherEditClass} />
+
       <Route component={PageNotFound} />
     </Switch>
   );
