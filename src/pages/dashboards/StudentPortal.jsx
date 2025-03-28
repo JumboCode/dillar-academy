@@ -9,6 +9,7 @@ import { Link } from "wouter"
 import Button from '@/components/Button/Button';
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
+import { BsPencilSquare } from "react-icons/bs";
 
 
 const StudentPortal = () => {
@@ -101,11 +102,27 @@ const StudentPortal = () => {
   return (
     <div className='page-format max-w-[96rem]'>
       <br></br>
-      <h3 className='font-extrabold mb-4'>
-        Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
-      </h3>
+      {/* <div className="flex items-center p-4 rounded-lg"> */}
+          <div className="text-3xl mb-4">
+            <h3 className="font-semibold">{user.firstName} {user.lastName}</h3>
+            <Link to={`/user/${encodeURIComponent(user._id)}`}
+              className="p-2 cursor-pointer  text-gray-500 text-sm"
+            >
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <BsPencilSquare style={{ marginRight: '4px' }} />
+                <span>Edit Profile</span>
+              </div>
+              <svg className="h-1">...</svg>
+            </Link>
+            <p className="text-base">
+              <span className="font-bold text-black mr-4">Email </span> 
+              <span className="text-gray-500">{user.email}</span>
+            </p>
+            <br></br>
+          </div> 
+        {/* </div> */}
 
-      <section>
+      {/* <section>
         <table className="table-auto w-full text-left">
           <thead className="bg-neutral-200 text-lg">
             <tr>
@@ -131,7 +148,7 @@ const StudentPortal = () => {
             </tr>
           </tbody>
         </table>
-      </section>
+      </section> */}
       
       <section>
         <h1 className='text-3xl mb-4'> Your courses </h1>
