@@ -10,6 +10,7 @@ import Button from '@/components/Button/Button';
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
 
+
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
   const { user, setUser } = useContext(UserContext);
@@ -103,6 +104,7 @@ const StudentPortal = () => {
       <h3 className='font-extrabold mb-4'>
         Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
       </h3>
+
       <section>
         <table className="table-auto w-full text-left">
           <thead className="bg-neutral-200 text-lg">
@@ -130,6 +132,7 @@ const StudentPortal = () => {
           </tbody>
         </table>
       </section>
+      
       <section>
         <h1 className='text-3xl mb-4'> Your courses </h1>
         <div className='grid grid-cols-3 gap-6'>
@@ -149,6 +152,8 @@ const StudentPortal = () => {
         </div>
       </section>
 
+      
+
       <section>
         <br></br>
         <h1 className='text-3xl mb-4'>Schedule</h1>
@@ -167,11 +172,18 @@ const StudentPortal = () => {
               {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
                 <div key={day} className="table-cell p-2">
                   {classes
-                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor })))
+                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor, classroomLink: classObj.classroomLink })))
                     .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
                     .sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`)) // Sort by time
                     .map((schedule, index) => (
-                      <div key={index} className="bg-blue-200 rounded p-2 mb-2">
+                      <div key={index} className="bg-blue-200 rounded p-2 mb-2" 
+                      onClick={() => {
+                        const url = schedule.classroomLink.startsWith("http://") || schedule.classroomLink.startsWith("https://") 
+                            ? schedule.classroomLink 
+                            : `https://${schedule.classroomLink}`;
+                        window.location.href = url;
+                    }
+                    }>
                         <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
                         <div>Class with {schedule.instructor}</div>
                       </div>
