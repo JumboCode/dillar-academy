@@ -10,16 +10,6 @@ const getClasses = async (query = "") => {
   }
 }
 
-// query should be a string
-const getLevels = async (query = "") => {
-  try {
-    const response = await axios.get(`/api/levels?${query}`);
-    return response.data
-  } catch (error) {
-    console.error('Error fetching levels:', error);
-  }
-}
-
 const getConversations = async () => {
   try {
     const response = await axios.get("/api/conversations/")
@@ -97,15 +87,111 @@ const getClassById = async (classId) => {
   }
 }
 
+// query should be a string
+const getLevels = async (query = "") => {
+  try {
+    const response = await axios.get(`/api/levels?${query}`);
+    return response.data
+  } catch (error) {
+    console.error('Error fetching levels:', error);
+  }
+}
+
+const getLevelById = async (levelId) => {
+  try {
+    const response = await axios.get(`/api/levels/${levelId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching level from id:", error);
+  }
+}
+
+const createLevel = async (LevelData) => {
+  try {
+    const response = await axios.post(`/api/levels/`, LevelData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating level:', error);
+    throw error;
+  }
+}
+
+const updateLevel = async (levelId, LevelData) => {
+  try {
+    const response = await axios.put(`/api/levels/${levelId}`, LevelData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating level:', error);
+    throw error;
+  }
+}
+
+const deleteLevel = async (levelId) => {
+  try {
+    const response = await axios.delete(`/api/levels/${levelId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting level:', error);
+    throw error;
+  }
+}
+
+const getConversationById = async (conversationId = "") => {
+  try {
+    const response = await axios.get(`/api/conversations/${conversationId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching conversation from id:", error);
+  }
+}
+
+const updateConversation = async (conversationId, conversationData) => {
+  try {
+    const response = await axios.put(`/api/conversations/${conversationId}`, conversationData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating conversation:', error);
+    throw error;
+  }
+}
+
+const deleteConversation = async (conversationId) => {
+  try {
+    const response = await axios.delete(`/api/conversations/${conversationId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    throw error;
+  }
+}
+
+const createConversation = async (conversationData) => {
+  try {
+    const response = await axios.post('/api/conversations', conversationData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating/updating conversation:', error);
+    throw error;
+  }
+}
+
 export {
   getClasses,
-  getLevels,
   createClass,
   updateClass,
   deleteClass,
-  getConversations,
   enrollInClass,
   unenrollInClass,
   getStudentsClasses,
   getClassById,
+  getLevels,
+  deleteLevel,
+  updateLevel,
+  createLevel,
+  getLevelById,
+  getConversations,
+  getConversationById,
+  updateConversation,
+  deleteConversation,
+  createConversation
 }

@@ -2,55 +2,32 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getConversationById } from "@/api/class-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import DateDropdown from '@/components/Dropdown/DateDropdown';
 import BackButton from "@/components/Button/BackButton";
-import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
+import { createConversation } from '@/api/class-wrapper.js';
 
 const EditConversation = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
-  const [allowRender, setAllowRender] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
-  const [conversationObj, setConversationObj] = useState(null)
+
+  const params = useParams();
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
     instructor: '',
   });
 
-  const params = useParams();
-
   useEffect(() => {
-    if (!params.id) {
-      setLocation(`/admin/levels/conversations`);
-    }
     if (isLoaded) {
       if (!isSignedIn) {
         setLocation("/login");
-      } else {
-        fetchConversation()
-        setAllowRender(true);
       }
     }
 
   }, [isLoaded, isSignedIn, user]);
-
-  const fetchConversation = async () => {
-    try {
-      const data = await getConversationById(params.id);
-      setConversationObj(data);
-      setConversationData({
-        ageGroup: data.ageGroup,
-        instructor: data.instructor
-      });
-      setConversationData({ ageGroup: data.ageGroup, instructor: data.instructor })
-    } catch (error) {
-      console.error('Error fetching conversations:', error);
-    }
-  };
 
   const handleInputChange = (e) => {
     setConversationData({
@@ -59,43 +36,29 @@ const EditConversation = () => {
     });
   };
 
-  const handleEditConversation = async (e) => {
+  const handleCreateConversation = async (e) => {
     e.preventDefault();
     try {
-      await updateConversation(params.id, conversationData);
-      await fetchConversation();
+      await createConversation(conversationData);
       setLocation("/admin/levels/conversations")
     } catch (error) {
-      console.error('Error updating conversation:', error);
+      console.error('Error creating conversation:', error);
     }
   }
 
-  const handleDeleteConversation = async () => {
-    try {
-      await deleteConversation(params.id);
-      setLocation("/admin/levels/conversations")
-    } catch (error) {
-      console.error('Error deleting conversation:', error);
-    }
-  }
-
-  if (!allowRender || !conversationObj) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
+  if (user?.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
 
   return (
     <div className="page-format max-w-[96rem] space-y-12">
-      <BackButton label="All Conversations" />
+      <BackButton label={"All Conversations"} />
       <div className="space-y-2">
-        <h3 className="font-extrabold">Edit Conversation Class</h3>
-        <h5 className="font-light">Edit conversation class and student information</h5>
+        <h3 className="font-extrabold">Add Conversation Class</h3>
+        <h5 className="font-light">Add a new conversation class</h5>
       </div>
 
-      <form onSubmit={handleEditConversation}>
+      <form onSubmit={handleCreateConversation}>
         <div className="flex justify-start space-x-10 w-2/3 mb-6">
           <div className="w-2/3 space-y-3">
             <label className="mx-1">Age Group</label>
@@ -151,16 +114,14 @@ const EditConversation = () => {
         </div>
 
         <div className="space-x-2 mt-8">
-          <Button label="Save"
-            type="submit" />
+          <Button
+            label="Save" type="submit" />
           <Button
             label="Cancel"
             isOutline={true}
             onClick={() => setLocation("/admin/levels/conversations")} />
         </div>
       </form>
-
-      <Button label="Delete Conversation" onClick={handleDeleteConversation} />
 
     </div>
   )

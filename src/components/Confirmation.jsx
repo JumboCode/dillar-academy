@@ -1,8 +1,7 @@
 
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
-import Button from '@/components/Button/Button'
 
-const Class = ({ classObj }) => {
+const Confirmation = ({ classObj }) => {
   const ageGroup = classObj.ageGroup.toString();
   const day1 = classObj.schedule[0].day.toString();
   const subDay1 = day1.substr(0, 3);
@@ -14,10 +13,8 @@ const Class = ({ classObj }) => {
 
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow w-96">
+    <div className="w-full p-6 bg-white rounded-lg shadow-[0px_4px_16px_0px_rgba(7,79,120,0.12),20px_8px_60px_0px_rgba(183,226,251,0.40)] overflow-hidden">
       <div className="flex flex-col gap-2">
-        {/* Header */}
-
         <div>
           <h5 className="font-extrabold mb-2">You are registered!</h5>
           <p>
@@ -49,4 +46,4 @@ const Class = ({ classObj }) => {
   );
 };
 
-export default Class;
+export default Confirmation;

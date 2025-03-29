@@ -8,9 +8,9 @@ const Welcome = ({ onComplete }) => {
     const [, setLocation] = useLocation();
 
     return (
-        <div className="header-gradient p-4 h-screen flex items-center justify-center">
+        <div className="header-gradient page-format flex items-center justify-center">
             <div className="text-center mb-12 mt-12 px-5">
-                <h1 className="font-extrabold mb-4">Dillar English Academy</h1>
+                <h1 className="font-extrabold mb-4">Dillar Academy</h1>
                 <p className="mb-8 text-lg">{t("home_purpose")}</p>
                 <div className="flex flex-col items-center gap-y-4 mb-6">
                     {/* Language Dropdown with border */}

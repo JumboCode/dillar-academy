@@ -19,7 +19,7 @@ export default function ResetPasswordCode() {
   useEffect(() => {
     const email = sessionStorage.getItem("reset_password_email");
     if (!email) {
-      setLocation("/forgotpassword");
+      setLocation("/forgot-password");
     }
   }, [setLocation]);
 
@@ -42,7 +42,7 @@ export default function ResetPasswordCode() {
       } else {
         setError("Invalid code. Please check your email and try again.");
       }
-    } catch (err) {
+    } catch (err) { // TODO: check that error and retry attempt works
       if (err.response?.status === 429) {
         const retryAfterSecs = parseInt(err.response.headers["retry-after"]) || 30;
         setRetryAfter(retryAfterSecs);
@@ -67,27 +67,30 @@ export default function ResetPasswordCode() {
   if (!isLoaded) return null;
 
   return (
-    <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
-      <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
-        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("Enter Reset Code")}</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-y-6">
-          <FormInput
-            type="text"
-            name="code"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder={t("Reset Code")}
-            isRequired={true}
-            disabled={isSubmitting || retryAfter > 0}
-          />
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          <FormSubmit
-            label={isSubmitting ? t("Verifying") : t("Verify code")}
-            isDisabled={isSubmitting || retryAfter > 0}
-          />
-          {retryAfter > 0 && <p className="text-sm text-gray-600 mt-2">You can try again in {retryAfter} seconds</p>}
-        </form>
-      </Form>
+    <main className="header-gradient page-format flex justify-center items-center">
+      <div className="w-full max-w-[96rem] flex justify-center">
+        <Form width="lg:w-3/5 xl:w-2/5">
+          <h3 className="font-extrabold mb-3">{t("Enter Reset Code")}</h3>
+          <p className="text-base sm:text-lg text-gray-600 mb-5">We've sent a code to your email. Enter it below to verify you're identity.</p>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <FormInput
+              type="text"
+              name="code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder={t("Reset Code")}
+              isRequired={true}
+              disabled={isSubmitting || retryAfter > 0}
+            />
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            <FormSubmit
+              label={isSubmitting ? t("Verifying") : t("Verify code")}
+              isDisabled={isSubmitting || retryAfter > 0}
+            />
+            {retryAfter > 0 && <p className="text-sm text-gray-600 mt-2">You can try again in {retryAfter} seconds</p>}
+          </form>
+        </Form>
+      </div>
     </main>
   );
 }

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useSignIn, useClerk } from "@clerk/clerk-react";
-import { resetPassword as updateMongoPassword } from "../api/user-wrapper";
+import { resetPassword as updateMongoPassword } from "../../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from "@/components/Form/FormInput";
 import FormSubmit from "@/components/Form/FormSubmit";
-import PasswordReqs from "./PasswordReqs";
+import PasswordReqs from "@/components/PasswordReqs";
 import { useTranslation } from "react-i18next";
 
 export default function ResetPassword() {
@@ -23,7 +23,7 @@ export default function ResetPassword() {
     const code = sessionStorage.getItem("reset_password_code");
     const email = sessionStorage.getItem("reset_password_email");
     if (!code || !email) {
-      setLocation("/forgotpassword");
+      setLocation("/forgot-password");
     }
   }, [setLocation]);
 
@@ -43,7 +43,6 @@ export default function ResetPassword() {
     setError("");
 
     try {
-      // Use Clerk to reset the password as part of the reset flow.
       const result = await signIn.resetPassword({ password });
       if (result.status === "complete") {
         // Sign the user out using the clerk instance.
@@ -74,35 +73,37 @@ export default function ResetPassword() {
   if (!isLoaded) return null;
 
   return (
-    <main className="header-gradient h-full py-10 sm:py-32 flex justify-center items-center">
-      <Form width="w-4/5 px-5 sm:px-12 lg:w-2/5">
-        <h1 className="text-2xl sm:text-3xl font-semibold my-3">{t("Reset Your Password")}</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-y-6">
-          <FormInput
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder={t("reset_new_pass")}
-            isRequired={true}
-            disabled={isSubmitting}
-          />
-          <FormInput
-            type="password"
-            name="retypedPassword"
-            value={formData.retypedPassword}
-            onChange={handleChange}
-            placeholder={t("reset_retype_pass")}
-            isRequired={true}
-            disabled={isSubmitting}
-          />
-          <div className="mt-2">
-            <PasswordReqs formData={formData} setIsValid={setIsValid} />
-          </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          <FormSubmit label={isSubmitting ? t("Resetting Password") : t("Reset Password")} isDisabled={!isValid || isSubmitting} />
-        </form>
-      </Form>
+    <main className="header-gradient page-format flex justify-center items-center">
+      <div className="w-full max-w-[96rem] flex justify-center">
+        <Form width="lg:w-3/5 xl:w-2/5">
+          <h3 className="font-extrabold mb-3">{t("Reset Your Password")}</h3>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <FormInput
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder={t("reset_new_pass")}
+              isRequired={true}
+              disabled={isSubmitting}
+            />
+            <FormInput
+              type="password"
+              name="retypedPassword"
+              value={formData.retypedPassword}
+              onChange={handleChange}
+              placeholder={t("reset_retype_pass")}
+              isRequired={true}
+              disabled={isSubmitting}
+            />
+            <div className="mt-2">
+              <PasswordReqs formData={formData} setIsValid={setIsValid} />
+            </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            <FormSubmit label={isSubmitting ? t("Resetting Password") : t("Reset Password")} isDisabled={!isValid || isSubmitting} />
+          </form>
+        </Form>
+      </div>
     </main>
   );
 }

@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-// Helper to build full API URLs using your VITE_API_URL environment variable
-const apiUrl = (path) => `${import.meta.env.VITE_API_URL}${path}`;
-
 const postUser = async (body) => {
   try {
     const response = await axios.post("/api/sign-up", body);
@@ -34,6 +31,7 @@ const getUsers = async () => {
   }
 };
 
+// get user by id or email
 const getUser = async (query = "") => {
   try {
     const response = await axios.get(`/api/user?${query}`);
@@ -43,23 +41,9 @@ const getUser = async (query = "") => {
   }
 };
 
-// Added 12/7: Get user password endpoint (if needed)
-const getUserPassword = async () => {
-  try {
-    const response = await fetch('/api/users/password');
-    const jsonData = await response.json();
-    return jsonData;
-  } catch (error) {
-    console.error('Error fetching user password:', error);
-  }
-};
-
-// Updated resetPassword function:
-// - Uses the apiUrl helper
-// - Parses and returns the JSON response (so your client can check response.success)
 const resetPassword = async (body) => {
   try {
-    const response = await fetch(apiUrl("/api/users/reset-password"), {
+    const response = await fetch("/api/users/reset-password", {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -88,7 +72,6 @@ export {
   postLogin,
   getUsers,
   getUser,
-  getUserPassword,
   resetPassword,
   updateUser
 };
