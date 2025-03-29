@@ -342,6 +342,21 @@ app.get('/api/students-classes/:id', async (req, res) => {
   }
 })
 
+// // Get Student's classes and then for each class use get class by ID to get the
+// // class object from which you get the level
+// app.get('/api/students-class-levels/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     if (!mongoose.Types.ObjectId.isValid(id)) {
+//       return res.status(400).json({ error: 'Invalid ID' });
+//     }
+
+    
+//   } catch (err) {
+//     res.status(500).send(err);
+//   }
+// })
 
 // Get class by ID
 app.get('/api/class/:id', async (req, res) => {
