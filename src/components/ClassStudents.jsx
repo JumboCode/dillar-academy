@@ -46,7 +46,7 @@ const ClassStudents = ({ classID }) => {
         <p>{students.length} enrolled</p>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
         {students.map((student) => (
           <div key={student._id} className="flex py-[12px] px-[16px] justify-between items-center space-x-3 w-full rounded-sm flex-space-between">

@@ -75,7 +75,7 @@ const EditTeacher = () => {
       <BackButton label={"Dashboard"} href={"/teacher"} />
       <h3 className="font-extrabold">Edit Information</h3>
       <form onSubmit={handleEditUser} className="space-y-12">
-        <div className="flex w-full gap-x-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           <div className="w-full">
             <label>First Name</label>
             <FormInput
