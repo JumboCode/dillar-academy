@@ -16,13 +16,11 @@ const ClassStudents = ({ classID }) => {
       try {
         setLoading(true);
 
-        // Fetch class data
         const classData = await getClassById(classID);
 
-        // Fetch all users and filter for students in this class
         const userData = await getUsers();
         if (userData?.data) {
-            setStudents(userData.data.filter((user) => user.privilege === "student" && classData.roster.includes(user._id)));
+          setStudents(userData.data.filter((user) => user.privilege === "student" && classData.roster.includes(user._id)));
         } else {
           setStudents([]);
         }
@@ -42,23 +40,23 @@ const ClassStudents = ({ classID }) => {
   if (students.length === 0) return <p>No students found.</p>;
 
   return (
-<div className="space-y-4">
-    <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
-          <IoPersonOutline />
-          <p>{students.length} enrolled</p>
-        </div>
+    <div className="space-y-4">
+      <div className="text-indigo-900 inline-flex gap-x-2 items-center mt-2">
+        <IoPersonOutline />
+        <p>{students.length} enrolled</p>
+      </div>
+
       <div className="grid grid-cols-4 gap-4">
+
         {students.map((student) => (
-          <div 
-            key={student._id} 
-            className="flex items-center p-4 rounded-lg border border-gray-300"
-          >
+          <div key={student._id} className="flex py-[12px] px-[16px] justify-between items-center space-x-3 w-full rounded-sm flex-space-between">
             <div className="ml-3">
-              <p className="font-semibold">{student.firstName} {student.lastName}</p>
-              <p className="text-gray-500 text-sm">{student.email}</p>
+              <p className="text-gray-900 font-semibold">{student.firstName} {student.lastName}</p>
+              <p className="flex text-gray-500 text-sm">{student.email}</p>
             </div>
           </div>
         ))}
+
       </div>
     </div>
 

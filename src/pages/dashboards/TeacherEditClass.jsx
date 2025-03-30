@@ -74,9 +74,9 @@ const TeacherEditClass = () => {
   return (
 
     <div className="page-format space-y-10">
-      
+
       <div className="flex">
-      <BackButton label={"Dashboard"} href={"/teacher"} />
+        <BackButton label={"Dashboard"} href={"/teacher"} />
       </div>
       <h3 className="font-extrabold">Edit Class</h3>
       <h5 className="font-light">Edit class and student information</h5>
@@ -98,9 +98,6 @@ const TeacherEditClass = () => {
 
         <h4>List of Students</h4>
         <ClassStudents classID={params.id} />
-
-
-      
 
         <div className="space-x-2 mt-8">
           <Button label="Save" type="submit" />
