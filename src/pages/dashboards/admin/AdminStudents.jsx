@@ -3,7 +3,6 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getUsers } from '@/api/user-wrapper.js'
-import Button from '@/components/Button/Button';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import { IoSearch, IoPersonOutline } from "react-icons/io5";
 import { getClasses, getStudentsClasses, getClassById } from '@/api/class-wrapper';
@@ -34,7 +33,6 @@ const AdminStudents = () => {
 
   const fetchUsers = async () => {
     const userData = await getUsers();
-    // setUsers(userData.data.filter((user) => user.privilege === "student"));
     const students = userData.data.filter((user) => user.privilege === "student");
 
     let allLevels = new Set();
@@ -49,13 +47,12 @@ const AdminStudents = () => {
             return classData;
           })
         );
-        // student.enrolledClasses = 
+
         return { ...student, enrolledClasses: classes };
       })
     );
 
     const uniqueLevels = Array.from(allLevels).sort((a, b) => a - b);
-    // console.log("the student's unique levels: ", uniqueLevels);
     setUsers(studentsWithClasses);
     setLevels(uniqueLevels);
   }
@@ -96,7 +93,7 @@ const AdminStudents = () => {
   });
 
   return (
-    <div className="h-full p-8 space-y-7">
+    <div className="h-full p-8 space-y-7 w-5/6">
       <h3 className="font-extrabold">Students</h3>
       <p>List of all students enrolled in Dillar Classes</p>
       <div className="w-full inline-flex">
