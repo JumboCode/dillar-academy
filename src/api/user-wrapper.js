@@ -67,11 +67,22 @@ const updateUser = async (userId, userData) => {
   }
 };
 
+const getStudentsForExport = async () => {
+  try {
+    const response = await axios.get('/api/students-export');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching students for export:', error);
+    throw error;
+  }
+};
+
 export {
   postUser,
   postLogin,
   getUsers,
   getUser,
   resetPassword,
-  updateUser
+  updateUser,
+  getStudentsForExport
 };
