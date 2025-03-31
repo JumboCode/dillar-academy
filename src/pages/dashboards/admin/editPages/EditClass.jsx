@@ -24,6 +24,8 @@ const EditClass = () => {
     level: '',
     ageGroup: '',
     instructor: '',
+    startTime: '',
+    endTime: '',
   });
   const [selectedDates, setSelectedDates] = useState([]);
   const [students, setStudents] = useState([]);
@@ -142,8 +144,8 @@ const EditClass = () => {
                 type="text"
                 name="startTime"
                 placeholder="Start"
-                // value={classData.instructor}
-                // onChange={handleInputChange}
+                value={classData.startTime}
+                onChange={handleInputChange}
                 isRequired={false}
               />
               <p className="text-3xl">-</p>
@@ -151,8 +153,8 @@ const EditClass = () => {
                 type="text"
                 name="endTime"
                 placeholder="End"
-                // value={classData.instructor}
-                // onChange={handleInputChange}
+                value={classData.endTime}
+                onChange={handleInputChange}
                 isRequired={false}
               />
             </div>

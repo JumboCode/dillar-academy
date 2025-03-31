@@ -4,6 +4,8 @@ import { useLocation } from "wouter";
 import { useAuth } from "@clerk/clerk-react";
 import { getClasses } from "@/api/class-wrapper.js";
 import Class from "@/components/Class/Class";
+import { Link } from "wouter";
+
 
 const TeacherView = () => {
   const { user } = useContext(UserContext);
@@ -45,13 +47,27 @@ const TeacherView = () => {
       <h1 className="text-3xl font-bold mb-4">
         Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
       </h1>
-      <div className="grid grid-cols-3 gap-6">
-        {classes.map((classObj) => (
-          <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="" />
-        ))}
-      </div>
+        <section>
+        <h1 className='text-3xl mb-4'> Your courses </h1>
+        <div className='grid grid-cols-3 gap-6'>
+          {classes.map((classObj, classIndex) => (
+            <Class key={classIndex} classObj={classObj} modes={["unenroll"]} />
+          ))}n
+          <div className="flex items-center">
+            <Link
+              to="/levels"
+              className="ml-4 w-12 h-12 bg-blue-500 text-white text-3xl 
+            font-bold rounded-full shadow-md flex items-center justify-center
+            hover:bg-blue-600 transition"
+            >
+              +
+            </Link>
+          </div>
+        </div>
+        </section>
     </div>
   );
 };
+
 
 export default TeacherView;

@@ -19,6 +19,10 @@ const EditConversation = () => {
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
     instructor: '',
+    time: [{
+      date: '',
+      time: ''
+    }]
   });
 
   const params = useParams();
@@ -44,12 +48,14 @@ const EditConversation = () => {
       setConversationObj(data);
       setConversationData({
         ageGroup: data.ageGroup,
-        instructor: data.instructor
+        instructor: data.instructor,
+        time: data.schedule
       });
-      setConversationData({ ageGroup: data.ageGroup, instructor: data.instructor })
+      // setConversationData({ ageGroup: data.ageGroup, instructor: data.instructor, time: data.schedule })
     } catch (error) {
       console.error('Error fetching conversations:', error);
     }
+    console.log('conversation data: ', conversationData);
   };
 
   const handleInputChange = (e) => {
@@ -57,6 +63,21 @@ const EditConversation = () => {
       ...conversationData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleTimeInputChange = (e) => {
+    const updatedTimeArray = [...conversationData.time];
+
+    updatedTimeArray[0] = {
+      ...updatedTimeArray[0],
+      [e.target.name]: e.target.value,
+    };
+  
+    setConversationData({
+      ...conversationData,
+      time: updatedTimeArray,
+    });
+
   };
 
   const handleEditConversation = async (e) => {
@@ -131,19 +152,18 @@ const EditConversation = () => {
             <div className="flex space-x-4 mt-3 items-center">
               <FormInput
                 type="text"
-                name="startTime"
-                placeholder="Start"
-                // value={conversationData.instructor}
-                // onChange={handleInputChange}
+                name="time"
+                placeholder=""
+                value={conversationData.time[0].time}
+                onChange={handleTimeInputChange}
                 isRequired={false}
               />
               <p className="text-3xl">-</p>
               <FormInput
                 type="text"
                 name="endTime"
-                placeholder="End"
-                // value={conversationData.instructor}
-                // onChange={handleInputChange}
+                value={conversationData.time}
+                onChange={handleInputChange}
                 isRequired={false}
               />
             </div>
