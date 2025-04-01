@@ -100,8 +100,8 @@ const EditClass = () => {
     <div className="page-format max-w-[96rem] space-y-10">
       <BackButton label="Back to Level" />
       <div>
-        <h3 className="font-extrabold mb-2">Edit Class</h3>
-        <h5 className="font-light">Edit class and student information</h5>
+        <h1 className="font-extrabold mb-2">Edit Class</h1>
+        <h3 className="font-light">Edit class and student information</h3>
       </div>
 
       <form onSubmit={handleEditClass}>
@@ -168,7 +168,7 @@ const EditClass = () => {
         </div>
       </form>
       <div>
-        <h5 className="mb-2">List of Students</h5>
+        <h3 className="mb-2">List of Students</h3>
         <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
           <IoPersonOutline />
           <p>{students.length} enrolled</p>

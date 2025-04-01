@@ -47,7 +47,7 @@ const AdminSchedule = () => {
 
   return (
     <div className="page-format max-w-[96rem] space-y-10">
-      <h3 className="font-extrabold">Schedule</h3>
+      <h1 className="font-extrabold">Schedule</h1>
       <div className="w-fit">
         <Dropdown
           label={

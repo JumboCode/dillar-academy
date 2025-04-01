@@ -76,7 +76,7 @@ export default function ResetPassword() {
     <main className="header-gradient page-format flex justify-center items-center">
       <div className="w-full max-w-[96rem] flex justify-center">
         <Form width="lg:w-3/5 xl:w-2/5">
-          <h3 className="font-extrabold mb-3">{t("Reset Your Password")}</h3>
+          <h1 className="font-extrabold mb-3">{t("Reset Your Password")}</h1>
           <form onSubmit={handleSubmit} className="space-y-3">
             <FormInput
               type="password"

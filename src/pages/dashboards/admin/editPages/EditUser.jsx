@@ -84,7 +84,7 @@ const EditUser = () => {
   return (
     <div className="page-format max-w-[96rem] space-y-12">
       <BackButton label="Back" />
-      <h3 className="font-extrabold">{userData.firstName + " " + userData.lastName}</h3>
+      <h1 className="font-extrabold">{userData.firstName + " " + userData.lastName}</h1>
       <form onSubmit={handleEditUser} className="space-y-12">
         <div className="flex w-full gap-x-6">
           <div className="w-full">
@@ -125,7 +125,7 @@ const EditUser = () => {
       <Button label="Save" type="submit" />
       {/* TODO: display teacher's classes */}
       <div>
-        <h4 className="font-extrabold mb-6">{userData.firstName}'s Classes</h4>
+        <h2 className="font-extrabold mb-6">{userData.firstName}'s Classes</h2>
         <div className="grid grid-cols-3 gap-6">
           {userData.enrolledClasses.map((classObj) => (
             <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="" />
