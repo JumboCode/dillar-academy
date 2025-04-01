@@ -8,6 +8,7 @@ const langMapping = {
   Русский: "ru",
   中文: "zh",
   Türkçe: "tr",
+  Uyghurche: "ug"
 };
 
 const LanguageDropdown = () => {

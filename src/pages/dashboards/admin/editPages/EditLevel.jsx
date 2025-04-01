@@ -149,7 +149,7 @@ const EditLevel = () => {
   };
 
   if (!allowRender || !level || !classes) {
-    return <div>Loading...</div>;
+    return <div>Loading.....</div>;
   }
 
   if (user.privilege !== "admin") {
