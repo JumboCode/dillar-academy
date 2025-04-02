@@ -16,21 +16,21 @@ const TeacherView = () => {
   const [allowRender, setAllowRender] = useState(false);
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (user) {
+        const teacherClasses = await getClasses(`instructor=${user.firstName}`);
+        setClasses(teacherClasses);
+        setAllowRender(true);
+      }
+    };
+
     if (isLoaded) {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
+        fetchData();
+        fetchUser();
       }
-
-      const classFilter = new URLSearchParams(`instructor=${user.firstName}`);
-
-      const fetchData = async () => {
-        const classData = await getClasses(classFilter);
-        setClasses(classData);
-      };
-      fetchData();
-      fetchUser();
     }
   }, [isLoaded, isSignedIn, user]);
 
@@ -68,10 +68,9 @@ const TeacherView = () => {
 
   return (
     <div className="page-format">
-      <br></br>
-      <h3 className='font-extrabold mb-2'>
-        {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}
-      </h3>
+      <h1 className="text-3xl font-bold mb-4">
+        {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+      </h1>
       <button className="flex"
         onClick={() => setLocation(`/teacher/edit/${encodeURIComponent(user._id)}`)}>
         <FaRegEdit className="mr-1 fill-neutral-400 mt-1" />

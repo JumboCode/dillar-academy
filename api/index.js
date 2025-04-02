@@ -183,8 +183,6 @@ app.post('/api/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
-      console.log(password)
-      console.log("fetched password: " + user.password)
       if (user.password === password) {
         console.log('Login successful for user:', email);
         res.status(200).json(user);

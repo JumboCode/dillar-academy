@@ -3,7 +3,7 @@ import Level from '@/components/Class/Level';
 import Confirmation from '@/components/Confirmation';
 import { useTranslation } from "react-i18next";
 import { useLocation } from 'wouter';
-import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
+import { IoTimeOutline, IoCalendarOutline, IoStar } from "react-icons/io5";
 
 const HomeClass = ({ classObj }) => {
   const day1 = classObj.schedule[0].day.toString();
@@ -17,7 +17,7 @@ const HomeClass = ({ classObj }) => {
       <div className="flex flex-col gap-1.5">
         {/* Header */}
         <div>
-          <h5 className="font-extrabold mb-1">{classObj.ageGroup}'s Class</h5>
+          <h3 className="font-extrabold mb-1">{classObj.ageGroup}'s Class</h3>
           <p>  w/ {classObj.instructor} </p>
         </div>
         {/* Schedule */}
@@ -32,11 +32,11 @@ const HomeClass = ({ classObj }) => {
           </div>
         </div>
         <div className='gap-3 w-24'>
-          <button
+          <div
             className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 py-2 px-4 rounded-sm text-neutral-400 font-extrabold transition-colors duration-300 w-full`}
           >
             Register
-          </button>
+          </div>
         </div>
       </div>
     </div>
@@ -89,17 +89,19 @@ const Home = () => {
     instructors: ["Dilziba"]
   }
 
+  // const stepStyle = 
+
   return (
     <>
       {/* hero section */}
-      <div className="header-gradient min-h-[60dvh] flex flex-col items-center justify-center w-full py-12 px-10 text-center md:text-left">
-        <h5 className="text-blue-600 mb-3">{t("home_motto")}</h5>
-        <h1 className="font-extrabold mb-6">Dillar Academy</h1>
+      <div className="header-gradient min-h-[60svh] flex flex-col items-center justify-center w-full py-12 px-10 text-center md:text-left">
+        <h3 className="text-blue-600 mb-3">{t("home_motto")}</h3>
+        <h1 className="font-extrabold text-4xl sm:text-5xl mb-6">Dillar Academy</h1>
         <p className="text-base sm:text-xl">{t("home_purpose")}</p>
         <p className="mb-4"><b>300+</b> {t("home_student_desc")}</p>
         <div className="flex gap-x-3 items-center">
           <Button
-            label={t("home_learn_title")}
+            label={"Explore Classes"}
             onClick={() => setLocation("/signup")}
             isOutline={false}
           />
@@ -111,45 +113,54 @@ const Home = () => {
         </div>
       </div>
       {/* Learn more section */}
-      <div className="flex flex-col items-center w-full max-w-[96rem] py-20 md:py-40 px-4 sm:px-6 lg:px-20 xl:px-40 gap-y-28 md:gap-y-40">
-        {/* About levels */}
-        <div className="w-full flex flex-col-reverse items-center md:grid md:grid-cols-2 md:gap-x-10 xl:gap-x-28 sm:justify-items-center">
-          <div className="w-full grid grid-cols-1 gap-y-6 md:gap-x-4 md:grid-cols-2 pointer-events-none">
-            <div className="rounded-xl shadow-[0px_4px_16px_0px_rgba(76,75,99,0.12),_-20px_-8px_60px_0px_rgba(197,190,248,0.40)]">
-              <Level level={level1} isSimplified={false} />
-            </div>
-            <div className="rounded-xl shadow-[0px_4px_16px_0px_rgba(7,79,120,0.12),20px_8px_60px_0px_rgba(183,226,251,0.40)]">
-              <Level level={level4} isSimplified={false} />
-            </div>
-          </div>
-          <div className={`text-center md:text-left mb-10 md:mb-0`}>
-            <h3 className="font-extrabold mb-3 md:mb-4">{t("home_class_level_title")}</h3>
-            <h5 className="">{t("home_class_level_desc")}</h5>
-          </div>
+      <div className="flex flex-col items-center w-full max-w-[96rem] py-20 md:py-40 px-4 sm:px-6 lg:px-20 xl:px-40 gap-y-10 sm:gap-y-28">
+        <div className='flex gap-x-4 items-center'>
+          <IoStar
+            style={{ fontSize: '32px' }}
+            className="text-blue-700"
+          />
+          <h2 className='font-extrabold text-3xl sm:text-4xl text-blue-700'>How to Sign Up for Classes</h2>
         </div>
-        {/* About classes */}
-        <div className="w-full flex flex-col items-center md:grid md:grid-cols-2 md:gap-x-10 xl:gap-x-28 sm:justify-items-center">
-          <div className={"text-center md:text-left mb-10 md:mb-0"}>
-            <h3 className="font-extrabold mb-3 md:mb-4">{t("home_level_title")}</h3>
-            <h5 className="">{t("home_level_desc")}</h5>
-          </div>
-          <div className="w-full flex flex-col gap-y-6 md:gap-x-4 md:grid md:grid-cols-2">
-            <div className='rounded-xl shadow-[0px_4px_16px_0px_rgba(76,75,99,0.12),_-20px_-8px_60px_0px_rgba(197,190,248,0.40)]'>
-              <HomeClass classObj={class1} />
+        <div className="flex flex-col gap-y-28 md:gap-y-40">
+          {/* About levels */}
+          <div className="w-full flex flex-col-reverse items-center md:grid md:grid-cols-2 md:gap-x-10 xl:gap-x-28 sm:justify-items-center">
+            <div className="w-full grid grid-cols-1 gap-y-6 md:gap-x-4 md:grid-cols-2 pointer-events-none">
+              <div className="rounded-xl shadow-[0px_4px_16px_0px_rgba(76,75,99,0.12),_-20px_-8px_60px_0px_rgba(197,190,248,0.40)]">
+                <Level level={level1} isSimplified={false} />
+              </div>
+              <div className="rounded-xl shadow-[0px_4px_16px_0px_rgba(7,79,120,0.12),20px_8px_60px_0px_rgba(183,226,251,0.40)]">
+                <Level level={level4} isSimplified={false} />
+              </div>
             </div>
-            <div className="rounded-xl shadow-[0px_4px_16px_0px_rgba(7,79,120,0.12),20px_8px_60px_0px_rgba(183,226,251,0.40)]">
-              <HomeClass classObj={class2} />
+            <div className={`text-center md:text-left mb-10 md:mb-0`}>
+              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">1. {t("home_class_level_title")}</h3>
+              <p className="text-lg sm:text-2xl">{t("home_class_level_desc")}</p>
             </div>
           </div>
-        </div>
-        {/* About registering */}
-        <div className="w-full flex flex-col-reverse items-center md:grid md:grid-cols-2 md:gap-x-10 xl:gap-x-28 sm:justify-items-center">
-          <div className="flex flex-col items-center w-full">
-            <Confirmation classObj={class1} />
+          {/* About classes */}
+          <div className="w-full flex flex-col items-center md:grid md:grid-cols-2 md:gap-x-10 xl:gap-x-28 sm:justify-items-center">
+            <div className={"text-center md:text-left mb-10 md:mb-0"}>
+              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">2. {t("home_level_title")}</h3>
+              <p className="text-lg sm:text-2xl">{t("home_level_desc")}</p>
+            </div>
+            <div className="w-full flex flex-col gap-y-6 md:gap-x-4 md:grid md:grid-cols-2">
+              <div className='rounded-xl shadow-[0px_4px_16px_0px_rgba(76,75,99,0.12),_-20px_-8px_60px_0px_rgba(197,190,248,0.40)]'>
+                <HomeClass classObj={class1} />
+              </div>
+              <div className="rounded-xl shadow-[0px_4px_16px_0px_rgba(7,79,120,0.12),20px_8px_60px_0px_rgba(183,226,251,0.40)]">
+                <HomeClass classObj={class2} />
+              </div>
+            </div>
           </div>
-          <div className='text-center md:text-left mb-10 md:mb-0'>
-            <h3 className="font-extrabold mb-3 md:mb-4">{t("home_learn_title")}</h3>
-            <h5 className="">{t("home_learn_desc")}</h5>
+          {/* About registering */}
+          <div className="w-full flex flex-col-reverse items-center md:grid md:grid-cols-2 md:gap-x-10 xl:gap-x-28 sm:justify-items-center">
+            <div className="flex flex-col items-center w-full">
+              <Confirmation classObj={class1} />
+            </div>
+            <div className='text-center md:text-left mb-10 md:mb-0'>
+              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">3. {t("home_learn_title")}</h3>
+              <h3 className="text-lg sm:text-2xl">{t("home_learn_desc")}</h3>
+            </div>
           </div>
         </div>
       </div>

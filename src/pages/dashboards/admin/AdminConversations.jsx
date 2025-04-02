@@ -20,7 +20,6 @@ const AdminConversations = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
         fetchConversations();
       }
     }
@@ -30,6 +29,7 @@ const AdminConversations = () => {
     try {
       const data = await getConversations();
       setConversationClasses(data);
+      setAllowRender(true);
     } catch (error) {
       console.error("Failed to fetch conversation classes", error);
     }
@@ -44,11 +44,11 @@ const AdminConversations = () => {
   }
 
   return (
-    <div className="page-format space-y-10">
-      <BackButton label={"All Levels"} href={"/admin/levels/"} />
+    <div className="page-format max-w-[96rem] space-y-10">
+      <BackButton label={"All Levels"} />
       <div className="flex justify-between items-end">
         <div>
-          <h3 className="font-extrabold mb-2">All Conversation Classes</h3>
+          <h1 className="font-extrabold mb-2">All Conversation Classes</h1>
           <p>Browse, edit and delete conversation classes.</p>
         </div>
         <div>

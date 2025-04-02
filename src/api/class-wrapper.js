@@ -10,16 +10,6 @@ const getClasses = async (query = "") => {
   }
 }
 
-// query should be a string
-const getLevels = async (query = "") => {
-  try {
-    const response = await axios.get(`/api/levels?${query}`);
-    return response.data
-  } catch (error) {
-    console.error('Error fetching levels:', error);
-  }
-}
-
 const getConversations = async () => {
   try {
     const response = await axios.get("/api/conversations/")
@@ -94,6 +84,16 @@ const getClassById = async (classId) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching class from id:", error);
+  }
+}
+
+// query should be a string
+const getLevels = async (query = "") => {
+  try {
+    const response = await axios.get(`/api/levels?${query}`);
+    return response.data
+  } catch (error) {
+    console.error('Error fetching levels:', error);
   }
 }
 

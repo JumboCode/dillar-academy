@@ -12,7 +12,6 @@ const EditConversation = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
-  const [allowRender, setAllowRender] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
 
   const params = useParams();
@@ -25,8 +24,6 @@ const EditConversation = () => {
     if (isLoaded) {
       if (!isSignedIn) {
         setLocation("/login");
-      } else {
-        setAllowRender(true);
       }
     }
 
@@ -49,21 +46,16 @@ const EditConversation = () => {
     }
   }
 
-
-  if (!allowRender) {
-    return <div></div>;
-  }
-
   if (user?.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
 
   return (
-    <div className="page-format space-y-12">
-      <BackButton label={"All Conversations"} href={"/admin/levels/conversations/"} />
+    <div className="page-format max-w-[96rem] space-y-12">
+      <BackButton label={"All Conversations"} />
       <div className="space-y-2">
-        <h3 className="font-extrabold">Add Conversation Class</h3>
-        <h5 className="font-light">Add a new conversation class</h5>
+        <h1 className="font-extrabold">Add Conversation Class</h1>
+        <h3 className="font-light">Add a new conversation class</h3>
       </div>
 
       <form onSubmit={handleCreateConversation}>

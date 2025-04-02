@@ -9,7 +9,7 @@ import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 
-const EditUser = () => {
+const UserEditStudent = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
@@ -73,18 +73,15 @@ const EditUser = () => {
     }
   };
 
+
   if (!allowRender || !userData) {
     return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
   }
 
   return (
     <div className="page-format max-w-[96rem] space-y-12">
       <BackButton label="Back" />
-      <h1 className="font-extrabold">{userData.firstName + " " + userData.lastName}</h1>
+      <h3 className="font-extrabold">{userData.firstName + " " + userData.lastName}</h3>
       <form onSubmit={handleEditUser} className="space-y-12">
         <div className="flex w-full gap-x-6">
           <div className="w-full">
@@ -122,18 +119,13 @@ const EditUser = () => {
           </div>
         </div>
       </form>
-      <Button label="Save" type="submit" />
-      {/* TODO: display teacher's classes */}
-      <div>
-        <h2 className="font-extrabold mb-6">{userData.firstName}'s Classes</h2>
-        <div className="grid grid-cols-3 gap-6">
-          {userData.enrolledClasses.map((classObj) => (
-            <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="" />
-          ))}
-        </div>
+      <div className="flex gap-x-4">
+        <Button label="Save" onClick={handleEditUser} />
+        <Button label="Cancel" onClick={fetchUser} />
       </div>
+
     </div>
   )
 }
 
-export default EditUser;
+export default UserEditStudent;
