@@ -25,7 +25,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
         {confirming ? <div className='flex flex-col gap-y-5'>
           <div className='flex flex-col gap-y-4'>
             <div>
-              <h5 className='font-extrabold'>You are registering for:</h5>
+              <h3 className='font-extrabold'>You are registering for:</h3>
               <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}</p>
             </div>
             <p className="text-base text-[#86858F]">Instructor: {classObj.instructor}</p>
@@ -54,7 +54,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
         </div> : <div className='flex flex-col gap-y-5'>
           <div className='flex flex-col gap-y-4'>
             <div>
-              <h5 className='font-extrabold'>Congrats! You are registered for: </h5>
+              <h3 className='font-extrabold'>Congrats! You are registered for: </h3>
               <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`} (with {classObj.instructor})</p>
             </div>
             <p className='text-base text-[#86858F]'>Checkout your class schedule in your profile! Made a mistake? Select “Undo”</p>
@@ -87,7 +87,7 @@ const UnenrollPopup = ({ classObj, userId, setShowPopup }) => {
     <div className="bg-black bg-opacity-30 fixed z-50 inset-0 grid place-items-center">
       <div className="w-[22rem] bg-white rounded-lg p-6 space-y-5">
         <div className="space-y-1">
-          <h5 className='font-extrabold'>Are you sure you want to unenroll from:</h5>
+          <h3 className='font-extrabold'>Are you sure you want to unenroll from:</h3>
           <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}</p>
         </div>
         <div className='flex gap-x-2'>
@@ -109,7 +109,7 @@ const SignUpPopup = ({ setShowPopup }) => {
     <div className="bg-black bg-opacity-30 fixed z-50 inset-0 grid place-items-center">
       <div className="w-[24rem] bg-white rounded-lg p-6 space-y-5">
         <div>
-          <h5 className='font-extrabold'>Create an account first!</h5>
+          <h3 className='font-extrabold'>Create an account first!</h3>
           <p className='text-base sm:text-lg'>Please sign up for an account with Dillar before registering for classes.</p>
         </div>
         <div className='flex gap-x-2'>
