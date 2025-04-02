@@ -70,7 +70,6 @@ const AdminSchedule = () => {
         </Dropdown>
       </div>
       <section>
-        <br></br>
         <div className="table w-full table-fixed">
           <div className="table-header-group">
             <div className="table-row">

@@ -24,6 +24,7 @@ import TeacherView from '@/pages/dashboards/TeacherView';
 import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
 import AddLevel from '@/pages/dashboards/admin/editPages/AddLevel';
+import UserEditStudent from "../pages/dashboards/UserEditStudent";
 
 export default function PageRoutes() {
   return (
@@ -39,6 +40,7 @@ export default function PageRoutes() {
       <Route path="/reset-password-code" component={ResetPasswordCode} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/student" component={StudentPortal} />
+      <Route path="/user/:id" component={UserEditStudent} />
       <Route path="/admin/levels" component={AdminLevels} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
       <Route path="/admin/levels/conversations/new" component={AddConversation} />

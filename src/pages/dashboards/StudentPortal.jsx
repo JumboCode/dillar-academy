@@ -9,6 +9,8 @@ import { Link } from "wouter"
 import Button from '@/components/Button/Button';
 import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
+import { BsPencilSquare } from "react-icons/bs";
+
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
@@ -99,37 +101,25 @@ const StudentPortal = () => {
 
   return (
     <div className='page-format max-w-[96rem]'>
-      <br></br>
-      <h1 className='font-extrabold mb-4'>
-        Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
-      </h1>
-      <section>
-        <table className="table-auto w-full text-left">
-          <thead className="bg-neutral-200 text-lg">
-            <tr>
-              <th className="px-3">Name</th>
-              <th className="px-3">Email</th>
-              <th className="px-3">Age</th>
-              <th className="px-3">Gender</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="py-2 px-3">{user.firstName} {user.lastName}</td>
-              <td className="py-2 px-3">{user.email}</td>
-              <td className="py-2 px-3">{user.age}</td>
-              <td className="py-2 px-3">{user.gender}</td>
-              <td className="py-2 px-3">
-                <Button
-                  label="Edit"
-                  isOutline={true}
-                  onClick={() => openEditStudent()}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+      <div className="text-3xl mb-4">
+        <h1 className='font-extrabold mb-4'>
+          Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+        </h1>
+        <Link to={`/user/${encodeURIComponent(user._id)}`}
+          className="p-2 cursor-pointer  text-gray-500 text-sm"
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <BsPencilSquare style={{ marginRight: '4px' }} />
+            <span>Edit Profile</span>
+          </div>
+          <svg className="h-1">...</svg>
+        </Link>
+        <p className="text-base">
+          <span className="font-bold text-black mr-4">Email </span>
+          <span className="text-gray-500">{user.email}</span>
+        </p>
+      </div>
+
       <section>
         <h1 className='text-3xl mb-4'> Your courses </h1>
         <div className='grid grid-cols-3 gap-6'>
@@ -148,15 +138,16 @@ const StudentPortal = () => {
           </div>
         </div>
       </section>
-
       <section>
-        <br></br>
         <h1 className='text-3xl mb-4'>Schedule</h1>
         <div className="table w-full table-fixed">
           <div className="table-header-group">
             <div className="table-row">
-              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
-                <div key={day} className="table-cell text-center font-semibold p-2">
+              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day, index, array) => (
+                <div
+                  key={day}
+                  className={`table-cell text-center font-semibold p-2 ${index !== array.length - 1 ? 'border-r-2 border-gray-300' : ''}`}
+                >
                   {day}
                 </div>
               ))}
@@ -164,14 +155,24 @@ const StudentPortal = () => {
           </div>
           <div className="table-row-group">
             <div className="table-row h-24">
-              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
-                <div key={day} className="table-cell p-2">
+              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day, index, array) => (
+                <div
+                  key={day}
+                  className={`table-cell p-2 align-top ${index !== array.length - 1 ? 'border-r-2 border-gray-300' : ''}`}
+                >
                   {classes
-                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor })))
+                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor, classroomLink: classObj.classroomLink })))
                     .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
                     .sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`)) // Sort by time
                     .map((schedule, index) => (
-                      <div key={index} className="bg-blue-200 rounded p-2 mb-2">
+                      <div key={index} className="bg-blue-200 rounded p-2 mb-2"
+                      // onClick={() => {
+                      //   const url = schedule.classroomLink.startsWith("http://") || schedule.classroomLink.startsWith("https://")
+                      //     ? schedule.classroomLink
+                      //     : `https://${schedule.classroomLink}`;
+                      //   window.location.href = url;
+                      // }}
+                      >
                         <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
                         <div>Class with {schedule.instructor}</div>
                       </div>
