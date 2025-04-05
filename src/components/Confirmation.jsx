@@ -16,7 +16,7 @@ const Confirmation = ({ classObj }) => {
     <div className="w-full p-6 bg-white rounded-lg shadow-[0px_4px_16px_0px_rgba(7,79,120,0.12),20px_8px_60px_0px_rgba(183,226,251,0.40)] overflow-hidden">
       <div className="flex flex-col gap-2">
         <div>
-          <h5 className="font-extrabold mb-2">You are registered!</h5>
+          <h3 className="font-extrabold mb-2">You are registered!</h3>
           <p>
             {ageGroup.charAt(0).toUpperCase() + ageGroup.slice(1)}'s Class w/ {classObj.instructor}
           </p>

@@ -48,7 +48,7 @@ const AdminConversations = () => {
       <BackButton label={"All Levels"} />
       <div className="flex justify-between items-end">
         <div>
-          <h3 className="font-extrabold mb-2">All Conversation Classes</h3>
+          <h1 className="font-extrabold mb-2">All Conversation Classes</h1>
           <p>Browse, edit and delete conversation classes.</p>
         </div>
         <div>

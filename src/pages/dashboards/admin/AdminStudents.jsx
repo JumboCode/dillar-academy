@@ -95,55 +95,51 @@ const AdminStudents = () => {
   });
 
   return (
-    <div className="h-full p-8 space-y-7 w-5/6">
-      <h3 className="font-extrabold">Students</h3>
-      <p>List of all students enrolled in Dillar Classes</p>
-      <div className="w-full inline-flex">
-        <div className="w-[91%] inline-flex items-center p-1 pl-2 gap-3 border border-black rounded-xs border-gray-300">
+    <div className="page-format max-w-[96rem] space-y-9">
+      <div>
+        <h1 className="font-extrabold mb-2">Students</h1>
+        <p>List of all students enrolled in Dillar Classes</p>
+      </div>
+      <div className="w-full inline-flex gap-x-4">
+        <div className="w-full inline-flex gap-x-3 items-center py-3 px-4 rounded-sm border border-gray-300">
           <IoSearch size={16.81} className="text-gray-400" />
           <input
             type="text"
-            className="w-5/6 border-none outline-none text-[18px]"
-            placeholder="Search names, levels, or classes..."
+            className="w-full border-none outline-none text-[18px]"
+            placeholder="Search for student by name"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
-        <div className="inline-flex">
-          <Dropdown
-            label={
-              <div className="flex items-center justify-center gap-x-1">
-                <span className="text-[18px] pt-2">
-                  {currFilter ? `Level ${currFilter}` : "All Levels"}
-                </span>
-              </div>
-            }
-            buttonClassName="flex items-center justify-center w-full text-base font-normal text-black min-w-fit   sm:px-5 gap-1 rounded-lg bg-white"
+        <Dropdown
+          label={
+            <div className="flex items-center justify-center gap-x-1">
+              <span className="whitespace-nowrap">{currFilter ? `Level ${currFilter}` : "All Levels"}</span>
+            </div>
+          }
+          buttonClassName="text-black min-w-fit border border-gray-300 px-5 py-3 gap-1 rounded-sm bg-white"
+        >
+          <button
+            key="all"
+            className={`w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100 ${currFilter === null ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}`}
+            onClick={() => handleOptionClick(null)}
           >
+            All Levels
+          </button>
+
+          {levels.map((level) => (
             <button
-              key="all"
-              className="w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100"
-              onClick={() => handleOptionClick(null)}
+              key={level}
+              className={`w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100 ${currFilter === level ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}`}
+              onClick={() => handleOptionClick(level)} /* Handle click here */
             >
-              All Levels
+              Level {level}
             </button>
-
-            {levels.map((level) => (
-              <button
-                key={level}
-                className="w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100"
-                onClick={() => handleOptionClick(level)} /* Handle click here */
-              >
-                Level {level}
-              </button>
-            ))}
-
-          </Dropdown>
-        </div>
-
+          ))}
+        </Dropdown>
       </div>
-      <div className="text-indigo-900 inline-flex text-[18px] items-center ">
-        <IoPersonOutline size={18.43} />
+      <div className="text-indigo-900 inline-flex items-center gap-x-2">
+        <IoPersonOutline />
         <p>{filteredUsers.length} student(s)</p>
       </div>
       <div className="grid md:grid-cols-3 gap-x-14">

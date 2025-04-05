@@ -70,7 +70,7 @@ export default function ResetPasswordCode() {
     <main className="header-gradient page-format flex justify-center items-center">
       <div className="w-full max-w-[96rem] flex justify-center">
         <Form width="lg:w-3/5 xl:w-2/5">
-          <h3 className="font-extrabold mb-3">{t("Enter Reset Code")}</h3>
+          <h1 className="font-extrabold mb-3">{t("Enter Reset Code")}</h1>
           <p className="text-base sm:text-lg text-gray-600 mb-5">We've sent a code to your email. Enter it below to verify you're identity.</p>
           <form onSubmit={handleSubmit} className="space-y-3">
             <FormInput
