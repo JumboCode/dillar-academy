@@ -181,7 +181,7 @@ const StyleGuide = () => {
   const sectionStyle = `py-6 px-8`
 
   return (
-    <div className="py-6 h-full">
+    <div className="h-full flex-1">
       <h1 className="px-8 text-4xl my-6 font-extrabold">Style Guide</h1>
       {/* color palette */}
       <section className={`${sectionStyle} bg-indigo-100`}>
@@ -191,7 +191,7 @@ const StyleGuide = () => {
         <div className="flex">
           {colorPalette.map((color, index) => (
             <div key={index} className="flex-auto flex flex-col gap-y-4 items-center p-5 min-h-fit">
-              <h3 className="text-xl whitespace-nowrap">Color name: {color.name}</h3>
+              <h1 className="text-xl whitespace-nowrap">Color name: {color.name}</h1>
               {color.variations ? (
                 color.variations.map((variation, variationIndex) => (
                   <div key={variationIndex} className="flex items-center gap-x-5">

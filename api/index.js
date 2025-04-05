@@ -99,6 +99,7 @@ const Contact = mongoose.model('Contact', ContactSchema);
 
 
 // Schedule Schema
+// timezone is automatically UTC
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
   time: { type: String, required: true },
@@ -132,7 +133,8 @@ const Conversation = mongoose.model("Conversation", ConversationSchema)
 const LevelSchema = new Schema({
   level: { type: Number, required: true },
   name: { type: String, required: true },
-  instructors: { type: [String], required: true, default: [] },
+  description: { type: String, required: true },
+  skills: { type: [String], default: [] }
 }, { collection: 'levels' })
 
 const Level = mongoose.model("Level", LevelSchema)
@@ -223,60 +225,6 @@ app.get('/api/user', async (req, res) => {
   }
 })
 
-// Enroll Student
-app.post('/api/enroll-student', async (req, res) => {
-  console.log("📩 Received request to enroll student:", req.body); // Debugging log
-
-  const { email, classId } = req.body;
-
-  try {
-    // Validate inputs
-    if (!email || !classId) {
-      console.log("📩 Received request to enroll student:", req.body); // Debugging log
-      return res.status(400).json({ message: "Email and class ID are required." });
-    }
-
-    // Find the student by email
-    const student = await User.findOne({ email });
-
-    if (!student) {
-      console.log("❌ Student not found:", email); // Debugging log
-      return res.status(404).json({ message: "Student not found." });
-    }
-
-    // Check if the student is already enrolled
-    if (student.enrolledClasses.includes(classId)) {
-      console.log("❌ Student already enrolled:", classId); // Debugging log
-      return res.status(400).json({ message: "Student is already enrolled in this class." });
-    }
-
-    if (student.privilege !== "student") {
-      console.log("❌ User is not a student:", student.privilege); // Debugging log
-      return res.status(403).json({ message: "Only students can be enrolled" });
-    }
-
-    // Add class to student's enrolled classes
-    await User.findByIdAndUpdate(
-      student._id,
-      { $addToSet: { enrolledClasses: classId } },
-      { new: true }
-    );
-
-    // Add student to class roster
-    await Class.findByIdAndUpdate(
-      classId,
-      { $addToSet: { roster: student._id } },
-      { new: true }
-    );
-
-    console.log("✅ Student successfully enrolled:", student.email);
-    return res.status(200).json({ message: "Student successfully enrolled to class." });
-
-  } catch (error) {
-    console.error("Enrollment error:", error);
-    return res.status(500).json({ message: "Server error during enrollment." });
-  }
-});
 
 /* CONTACT RELATED ENDPOINTS */
 
@@ -375,6 +323,108 @@ app.get("/api/conversations", async (req, res) => {
   }
 })
 
+// Get Conversation by ID
+app.get('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await Conversation.findOne({ _id: id });
+    res.json(data)
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Update Conversation
+app.put('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const updatedConversation = await Conversation.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedConversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    res.status(200).json(updatedConversation);
+  } catch (error) {
+    console.error('Error updating conversation:', error);
+    res.status(500).json({ message: 'Error updating conversation' });
+  }
+});
+
+// Delete Conversation
+app.delete('/api/conversations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedConversation = await Conversation.findOne({ _id: id });
+    if (!deletedConversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    // delete conversation
+    await Conversation.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Conversation deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    res.status(500).json({ message: 'Error deleting conversation' });
+  }
+});
+
+// Create conversation
+app.post('/api/conversations', async (req, res) => {
+  try {
+    const { ageGroup, instructor, schedule } = req.body;
+
+    // Check if conversation already exists
+    const query = { ageGroup, instructor };
+    if (schedule) {
+      query.$expr = { $setEquals: ["$schedule", schedule] };
+    }
+    const existingConversation = await Conversation.findOne(query);
+
+    if (existingConversation) {
+      return res.status(409).json({
+        message: 'Conversation already exists',
+        class: existingConversation
+      });
+    } else {
+      const newConversation = new Conversation({
+        ageGroup,
+        instructor,
+        schedule
+      });
+
+      await newConversation.save();
+      return res.status(201).json({
+        message: 'Conversation created successfully',
+        class: newConversation
+      });
+    }
+  } catch (error) {
+    console.error('Error creating:', error);
+    return res.status(500).json({ message: 'Error creating conversation' });
+  }
+});
 
 // Get Student's classes by ID
 app.get('/api/students-classes/:id', async (req, res) => {
@@ -387,17 +437,10 @@ app.get('/api/students-classes/:id', async (req, res) => {
 
     const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
     res.json(data);
-
-    // Validate if the user is a student or exists at all
-    if (!student || student.privilege !== "student") {
-      throw new Error("User is not a student or does not exist");
-    }
-
   } catch (err) {
     res.status(500).send(err);
   }
 })
-
 
 // Get class by ID
 app.get('/api/class/:id', async (req, res) => {
@@ -483,6 +526,7 @@ app.put('/api/classes/:id', async (req, res) => {
 });
 
 
+//instead of Class, use level
 // Delete Class
 app.delete('/api/classes/:id', async (req, res) => {
   try {
@@ -548,6 +592,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
   const { id } = req.params;
+  console.log("unenrolling")
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID' });
@@ -579,17 +624,140 @@ app.put('/api/users/reset-password', async (req, res) => {
   const user = await User.findOne({ email });
   try {
     if (user) {
-      const user = { email: email };
-      const updatedPassword = { password: password };
-      const options = { returnDocument: 'after' };
-      await User.findOneAndUpdate(user, updatedPassword, options);
-
-      res.status(200).send("Password updated successfully.");
+      // Update the password (make sure to hash it if needed)
+      await User.findOneAndUpdate({ email }, { password }, { returnDocument: 'after' });
+      res.status(200).json({ success: true, message: "Password updated successfully." });
     } else {
-      res.status(401).send('Invalid email.');
+      res.status(401).json({ success: false, message: "Invalid email." });
     }
   } catch (err) {
-    console.error('Error resetting password');
-    res.status(500).send("Server error resetting password.");
+    console.error('Error resetting password', err);
+    res.status(500).json({ success: false, message: "Server error resetting password." });
+  }
+});
+
+// Update user
+app.put('/api/user/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Error updating user' });
+  }
+});
+
+// Get level by ID
+app.get('/api/levels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const data = await Level.findOne({ _id: id });
+    res.json(data)
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Edit Level
+app.put('/api/levels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const updatedLevel = await Level.findByIdAndUpdate(
+      id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedLevel) {
+      return res.status(404).json({ message: 'Level not found' });
+    }
+
+    res.status(200).json(updatedLevel);
+  } catch (error) {
+    console.error('Error updating level:', error);
+    res.status(500).json({ message: 'Error updating level' });
+  }
+});
+
+// Delete Level
+app.delete('/api/levels/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedLevel = await Level.findById(id);
+    if (!deletedLevel) {
+      return res.status(404).json({ message: 'Level not found' });
+    }
+
+    await Level.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Level deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting level:', error);
+    res.status(500).json({ message: 'Error deleting level' });
+  }
+});
+
+// Create Level 
+app.post('/api/levels', async (req, res) => {
+  try {
+    const { level, name, description, skills } = req.body;
+
+    // Check if level already exists
+    const query = { level };
+    const existingLevel = await Level.findOne(query);
+
+    if (existingLevel) {
+      return res.status(409).json({
+        message: 'Level already exists',
+        level: existingLevel
+      });
+    } else {
+      const newLevel = new Level({
+        level,
+        name,
+        description,
+        skills,
+      });
+      await newLevel.save();
+      return res.status(201).json({
+        message: 'Level created successfully',
+        level: newLevel
+      });
+    }
+  } catch (error) {
+    console.error('Error creating:', error);
+    return res.status(500).json({ message: 'Error creating class' });
   }
 });
