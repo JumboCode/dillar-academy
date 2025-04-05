@@ -49,8 +49,14 @@ const EditConversation = () => {
       setConversationData({
         ageGroup: data.ageGroup,
         instructor: data.instructor,
-        schedule: data.schedule
+        schedule: conversationData.schedule
       });
+      if (data.schedule.length !== 0) {
+        setConversationData(prev => ({
+          ...prev,
+          schedule: data.schedule
+        }))
+      }
       setAllowRender(true);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -75,7 +81,7 @@ const EditConversation = () => {
 
       await updateConversation(params.id, filteredConversationData);
       await fetchConversation();
-      history.back();
+      // history.back();
     } catch (error) {
       console.error('Error updating conversation:', error);
     }
@@ -99,7 +105,7 @@ const EditConversation = () => {
   }
 
   return (
-    <div className="page-format max-w-[96rem] space-y-12">
+    <div className="page-format max-w-[96rem] space-y-8">
       <BackButton label="All Conversations" />
       <div className="space-y-2">
         <h1 className="font-extrabold">Edit Conversation Class</h1>
@@ -162,8 +168,8 @@ const EditConversation = () => {
                 }));
               };
               return (
-                <div key={index} className="flex items-center w-screen gap-x-4">
-                  <div className="grid grid-cols-2 w-2/3 gap-x-10">
+                <div key={index} className="flex items-center w-full gap-x-4">
+                  <div className="grid grid-cols-2 w-full gap-x-10">
                     <DayDropdown selectedDay={time.day} setSelectedDay={handleSelectedDay} />
                     <div className="w-full">
                       <div className="flex space-x-4 items-center">

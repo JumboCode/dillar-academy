@@ -16,15 +16,16 @@ import AdminStudents from '@/pages/dashboards/admin/AdminStudents';
 import AdminTeachers from '@/pages/dashboards/admin/AdminTeachers';
 import AdminSchedule from '@/pages/dashboards/admin/AdminSchedule';
 import EditLevel from '@/pages/dashboards/admin/editPages/EditLevel';
+import AddLevel from '@/pages/dashboards/admin/editPages/AddLevel';
 import EditClass from '@/pages/dashboards/admin/editPages/EditClass';
+import AddClass from '@/pages/dashboards/admin/editPages/AddClass';
 import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation';
-import AddConversation from '@/pages/dashboards/admin/AddConversation';
+import AddConversation from '@/pages/dashboards/admin/editPages/AddConversation';
 import EditUser from '@/pages/dashboards/admin/editPages/EditUser';
 import TeacherView from '@/pages/dashboards/TeacherView';
 import EditTeacher from '@/pages/dashboards/EditTeacher';
 import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
-import AddLevel from '@/pages/dashboards/admin/editPages/AddLevel';
 // TODO
 import TeacherEditClass from '@/pages/dashboards/TeacherEditClass';
 import UserEditStudent from "../pages/dashboards/UserEditStudent";
@@ -47,9 +48,10 @@ export default function PageRoutes() {
       <Route path="/admin/levels" component={AdminLevels} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
       <Route path="/admin/levels/conversations/new" component={AddConversation} />
+      <Route path="/admin/levels/conversations/:id" component={EditConversation} />
       <Route path="/admin/levels/new" component={AddLevel} />
       <Route path="/admin/levels/:id" component={EditLevel} />
-      <Route path="/admin/levels/conversations/:id" component={EditConversation} />
+      <Route path="/admin/class/new" component={AddClass} />
       <Route path="/admin/class/:classId" component={EditClass} />
       <Route path="/admin/students" component={AdminStudents} />
       <Route path="/admin/instructors" component={AdminTeachers} />
