@@ -7,7 +7,7 @@ import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import UserItem from "@/components/UserItem";
-import { IoPersonOutline } from "react-icons/io5";
+import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
 import { getUser } from '@/api/user-wrapper';
 
@@ -90,7 +90,7 @@ const EditClass = () => {
 
       await updateClass(params.classId, filteredClassData);
       await fetchClass();
-      setLocation("/admin/levels")
+      history.back();
     } catch (error) {
       console.error('Error updating class:', error);
     }
@@ -99,7 +99,7 @@ const EditClass = () => {
   const handleDeleteClass = async () => {
     try {
       await deleteClass(params.classId);
-      setLocation("/admin/levels")
+      history.back();
     } catch (error) {
       console.error('Error deleting class:', error);
     }
@@ -121,9 +121,9 @@ const EditClass = () => {
         <h3 className="font-light">Edit class and student information</h3>
       </div>
 
-      <form onSubmit={handleEditClass} className="w-2/3 bg-slate-50">
-        <div className="flex justify-start w-full bg-amber-50 space-x-10 mb-6">
-          <div className="space-y-3">
+      <form onSubmit={handleEditClass} className="w-2/3">
+        <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
+          <div className="w-full space-y-3">
             <label className="mx-1">Age Group</label>
             <FormInput
               type="text"
@@ -134,7 +134,7 @@ const EditClass = () => {
               isRequired={true}
             />
           </div>
-          <div className="space-y-3">
+          <div className="w-full space-y-3">
             <label className="mx-1">Instructor</label>
             <FormInput
               type="text"
@@ -147,35 +147,87 @@ const EditClass = () => {
           </div>
         </div>
 
-        <div className="flex justify-start space-x-10 w-2/3">
-          <div className="w-2/3 space-y-3">
-            <label className="mx-1">Date</label>
-            {/* <DayDropdown selectedDay={selectedDates} setSelectedDay={setSelectedDates} /> */}
-          </div>
-          <div className="w-2/3">
+        <div className="w-full space-y-3 mb-6">
+          <div className="grid grid-cols-2 gap-x-10">
+            <label className="mx-1">Day</label>
             <label className="mx-1">Time</label>
-            <div className="flex space-x-4 mt-3 items-center">
-              <FormInput
-                type="text"
-                name="startTime"
-                placeholder="Start"
-                value={classData.startTime}
-                onChange={handleInputChange}
-                isRequired={false}
-              />
-              <p className="text-3xl">-</p>
-              <FormInput
-                type="text"
-                name="endTime"
-                placeholder="End"
-                value={classData.endTime}
-                onChange={handleInputChange}
-                isRequired={false}
-              />
-            </div>
+          </div>
+          <div className="space-y-4">
+            {classData.schedule.map((time, index) => {
+              const handleTimeInputChange = (e) => {
+                const updatedTimeArray = [...classData.schedule];
+                updatedTimeArray[index] = {
+                  ...updatedTimeArray[index],
+                  [e.target.name]: e.target.value,
+                };
+                setClassData({
+                  ...classData,
+                  schedule: updatedTimeArray,
+                });
+              };
+              const handleSelectedDay = (day) => {
+                const updatedTimes = [...classData.schedule];
+                updatedTimes[index] = {
+                  ...updatedTimes[index],
+                  day,
+                };
+                setClassData(prev => ({
+                  ...prev,
+                  schedule: updatedTimes,
+                }));
+              };
+              return (
+                <div key={index} className="flex items-center w-screen gap-x-4">
+                  <div className="grid grid-cols-2 w-2/3 gap-x-10">
+                    <DayDropdown selectedDay={time.day} setSelectedDay={handleSelectedDay} />
+                    <div className="w-full">
+                      <div className="flex space-x-4 items-center">
+                        <FormInput
+                          type="text"
+                          name="time"
+                          placeholder="Start Time"
+                          value={time.time}
+                          onChange={handleTimeInputChange}
+                          isRequired={false}
+                        />
+                        {/* <p className="text-3xl">-</p>
+                          <FormInput
+                            type="text"
+                            name="endTime"
+                            value={classData.time}
+                            onChange={handleInputChange}
+                            isRequired={false}
+                          /> */}
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    label={<IoTrashBinOutline />}
+                    isOutline
+                    onClick={() => {
+                      setClassData(prevData => ({
+                        ...prevData,
+                        schedule: prevData.schedule.filter((_, i) => i !== index)
+                      }));
+                    }} />
+                </div>
+              )
+            })}
           </div>
         </div>
-
+        <Button
+          type="button"
+          label={<div className="flex items-center gap-x-2">Add time<IoAdd /></div>}
+          isOutline
+          onClick={() => {
+            setClassData(prevData => ({
+              ...prevData,
+              schedule: [
+                ...prevData.schedule,
+                { day: '', time: '' }
+              ]
+            }));
+          }} />
         <div className="space-x-2 mt-8">
           <Button label="Save" type="submit" />
           <Button
