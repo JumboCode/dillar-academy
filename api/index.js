@@ -782,7 +782,7 @@ app.get('/api/students-export', async (req, res) => {
         if (!classInfo) return null;
 
         // Format schedules
-        const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n');
+        const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n'); 
         
         // Convert EST to Istanbul time (EST + 7 hours)
         const scheduleIstanbul = classInfo.schedule.map(s => {
