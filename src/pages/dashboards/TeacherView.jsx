@@ -72,7 +72,7 @@ const TeacherView = () => {
         {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
       </h1>
       <button className="flex"
-        onClick={() => setLocation(`/teacher/edit/${encodeURIComponent(user._id)}`)}>
+        onClick={() => setLocation(`/instructor/edit/${encodeURIComponent(user._id)}`)}>
         <FaRegEdit className="mr-1 fill-neutral-400 mt-1" />
         <p className="text-neutral-400">Edit Profile</p>
       </button>
@@ -109,7 +109,7 @@ const TeacherView = () => {
                       <div key={index} className="bg-blue-200 rounded p-2 mb-2">
                         <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
                         <div>Class with {schedule.instructor}</div>
-                        <div className="mt-2"> <Button label="Edit" onClick={() => setLocation(`/teacher/class/${schedule._id}`)} /> </div>
+                        <div className="mt-2"> <Button label="Edit" onClick={() => setLocation(`/instructor/class/${schedule._id}`)} /> </div>
                       </div>
                     ))}
                 </div>

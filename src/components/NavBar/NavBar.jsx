@@ -45,7 +45,7 @@ const NavBar = () => {
             {user?.privilege === "admin" ? <>
               <NavLink href="/admin/levels">{t("nav_link_classes")}</NavLink>
               <NavLink href="/admin/students">Students</NavLink>
-              <NavLink href="/admin/teachers">Teachers</NavLink>
+              <NavLink href="/admin/instructors">Instructors</NavLink>
               <NavLink href="/admin/schedule">Schedule</NavLink>
             </> : <>
               <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
@@ -83,7 +83,7 @@ const NavBar = () => {
           {user?.privilege === "admin" ? <>
             <NavLink href="/admin/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
             <NavLink href="/admin/students" isMobile={true} onClick={closeMenu}>Students</NavLink>
-            <NavLink href="/admin/teachers" isMobile={true} onClick={closeMenu}>Teachers</NavLink>
+            <NavLink href="/admin/instructors" isMobile={true} onClick={closeMenu}>Instructors</NavLink>
             <NavLink href="/admin/schedule" isMobile={true} onClick={closeMenu}>Schedule</NavLink>
             <SignOutButton className="py-2 px-3" />
           </> : <><NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>

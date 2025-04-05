@@ -23,7 +23,7 @@ const TeacherEditClass = () => {
 
   useEffect(() => {
     if (!params.id) {
-      setLocation(`/teacher`);
+      setLocation(`/instructor`);
     }
     if (isLoaded) {
       if (!isSignedIn) {
@@ -57,7 +57,7 @@ const TeacherEditClass = () => {
     try {
       await updateClass(params.id, classData);
       await fetchClass();
-      setLocation("/teacher")
+      setLocation("/instructor")
     } catch (error) {
       console.error('Error updating class:', error);
     }
@@ -76,7 +76,7 @@ const TeacherEditClass = () => {
     <div className="page-format space-y-10">
 
       <div className="flex">
-        <BackButton label={"Dashboard"} href={"/teacher"} />
+        <BackButton label={"Dashboard"} href={"/instructor"} />
       </div>
       <h3 className="font-extrabold">Edit Class</h3>
       <h5 className="font-light">Edit class and student information</h5>
@@ -104,7 +104,7 @@ const TeacherEditClass = () => {
           <Button
             label="Cancel"
             isOutline={true}
-            onClick={() => setLocation("/teacher")} />
+            onClick={() => setLocation("/instructor")} />
         </div>
       </form>
 

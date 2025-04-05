@@ -56,7 +56,7 @@ const EditTeacher = () => {
     try {
       await updateUser(params.id, userData);
       await fetchUser();
-      setLocation("/teacher")
+      setLocation("/instructor")
     } catch (error) {
       console.error('Error updating user:', error);
     }
@@ -72,7 +72,7 @@ const EditTeacher = () => {
 
   return (
     <div className="page-format space-y-12">
-      <BackButton label={"Dashboard"} href={"/teacher"} />
+      <BackButton label={"Dashboard"} href={"/instructor"} />
       <h3 className="font-extrabold">Edit Information</h3>
       <form onSubmit={handleEditUser} className="space-y-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
