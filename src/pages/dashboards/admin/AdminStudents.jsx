@@ -34,6 +34,8 @@ const AdminStudents = () => {
   const fetchUsers = async () => {
     const userData = await getUsers();
     const students = userData.data.filter((user) => user.privilege === "student");
+    const classData = await getClasses();
+    setClasses(classData);
 
     let allLevels = new Set();
 
@@ -99,7 +101,7 @@ const AdminStudents = () => {
       <div className="w-full inline-flex">
         <div className="w-[91%] inline-flex items-center p-1 pl-2 gap-3 border border-black rounded-xs border-gray-300">
           <IoSearch size={16.81} className="text-gray-400" />
-          <input 
+          <input
             type="text"
             className="w-5/6 border-none outline-none text-[18px]"
             placeholder="Search names, levels, or classes..."
@@ -145,7 +147,6 @@ const AdminStudents = () => {
         <p>{filteredUsers.length} student(s)</p>
       </div>
       <div className="grid md:grid-cols-3 gap-x-14">
-
         {filteredUsers.map((userData) => (
           <UserItem userData={userData} classes={classes} key={userData._id} />
 
