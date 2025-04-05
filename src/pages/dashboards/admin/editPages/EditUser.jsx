@@ -8,6 +8,7 @@ import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
+import { Link } from "wouter"
 
 const EditUser = () => {
   const { user } = useContext(UserContext);
@@ -130,9 +131,20 @@ const EditUser = () => {
           {userData.enrolledClasses.map((classObj) => (
             <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="" />
           ))}
+
+          <div className="flex items-center">
+            <Link
+              to="/levels"
+              className="ml-4 w-12 h-12 bg-blue-500 text-white text-3xl 
+                font-bold rounded-full shadow-md flex items-center justify-center
+                hover:bg-blue-600 transition"
+            >
+              +
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

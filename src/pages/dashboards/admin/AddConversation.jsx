@@ -4,7 +4,7 @@ import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
-import DateDropdown from '@/components/Dropdown/DateDropdown';
+import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import { createConversation } from '@/api/class-wrapper.js';
 
@@ -87,7 +87,7 @@ const EditConversation = () => {
         <div className="flex justify-start space-x-10 w-2/3">
           <div className="w-2/3 space-y-3">
             <label className="mx-1">Dates</label>
-            <DateDropdown selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+            <DayDropdown selectedDay={selectedDates} setSelectedDay={setSelectedDates} />
           </div>
           <div className="w-2/3">
             <label className="mx-1">Time</label>
