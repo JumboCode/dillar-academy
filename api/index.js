@@ -99,7 +99,7 @@ const Contact = mongoose.model('Contact', ContactSchema);
 
 
 // Schedule Schema
-// timezone is automatically EST
+// timezone is automatically UTC
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
   time: { type: String, required: true },

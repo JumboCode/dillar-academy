@@ -21,9 +21,13 @@ import EditConversation from '@/pages/dashboards/admin/editPages/EditConversatio
 import AddConversation from '@/pages/dashboards/admin/AddConversation';
 import EditUser from '@/pages/dashboards/admin/editPages/EditUser';
 import TeacherView from '@/pages/dashboards/TeacherView';
+import EditTeacher from '@/pages/dashboards/EditTeacher';
 import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
 import AddLevel from '@/pages/dashboards/admin/editPages/AddLevel';
+// TODO
+import TeacherEditClass from '@/pages/dashboards/TeacherEditClass';
+import UserEditStudent from "../pages/dashboards/UserEditStudent";
 
 export default function PageRoutes() {
   return (
@@ -39,6 +43,7 @@ export default function PageRoutes() {
       <Route path="/reset-password-code" component={ResetPasswordCode} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/student" component={StudentPortal} />
+      <Route path="/user/:id" component={UserEditStudent} />
       <Route path="/admin/levels" component={AdminLevels} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
       <Route path="/admin/levels/conversations/new" component={AddConversation} />
@@ -51,7 +56,10 @@ export default function PageRoutes() {
       <Route path="/admin/user/:id" component={EditUser} />
       <Route path="/admin/schedule" component={AdminSchedule} />
       <Route path="/teacher" component={TeacherView} />
+      <Route path="/teacher/edit/:id" component={EditTeacher} />
       <Route path="/style" component={StyleGuide} />
+      <Route path="/teacher/class/:id" component={TeacherEditClass} />
+
       <Route component={PageNotFound} />
     </Switch>
   );

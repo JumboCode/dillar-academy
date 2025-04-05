@@ -46,7 +46,7 @@ const AdminLevels = () => {
     <div className="page-format max-w-[96rem] space-y-10">
       <div className="flex justify-between items-end">
         <div>
-          <h3 className="font-extrabold mb-2">All Levels</h3>
+          <h1 className="font-extrabold mb-2">All Levels</h1>
           <p>Browse, add, and delete levels.</p>
         </div>
         <div>
@@ -64,7 +64,7 @@ const AdminLevels = () => {
             // change to pass level.level, add function to get level by num?
             <Link key={level.level} href={`/admin/levels/${level.level}`}>
               <div className="rounded-lg">
-                <Level level={level} isSimplified />
+                <Level level={level} numLevels={levels.length} isSimplified isArrowRight />
               </div>
             </Link>
           ))
@@ -76,7 +76,8 @@ const AdminLevels = () => {
             level: "Conversation Classes",
             name: "",
           }}
-            isSimplified />
+            isSimplified
+            isArrowRight />
         </Link>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { useAuth } from '@clerk/clerk-react';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
-import DateDropdown from '@/components/Dropdown/DateDropdown';
+import DayDropdown from '@/components/Dropdown/DayDropdown';
 import UserItem from "@/components/UserItem";
 import { IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
@@ -24,10 +24,13 @@ const EditClass = () => {
     level: '',
     ageGroup: '',
     instructor: '',
-    startTime: '',
-    endTime: '',
+    schedule: [
+      {
+        day: '',
+        time: ''
+      }
+    ]
   });
-  const [selectedDates, setSelectedDates] = useState([]);
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
@@ -39,6 +42,7 @@ const EditClass = () => {
         setLocation("/login");
       } else {
         fetchClass();
+        console.log(classData)
       }
     }
   }, [isLoaded, isSignedIn, user]);
@@ -49,7 +53,12 @@ const EditClass = () => {
       setClasses(data);
       const classObj = data.find(c => c._id === params.classId);
       setClassObj(classObj);
-      setClassData({ level: classObj.level, ageGroup: classObj.ageGroup, instructor: classObj.instructor });
+      setClassData({
+        level: classObj.level,
+        ageGroup: classObj.ageGroup,
+        instructor: classObj.instructor,
+        schedule: classObj.schedule
+      });
       const students = await Promise.all(
         classObj.roster.map(async (studentId) => {
           const studentRes = await getUser(`_id=${studentId}`);
@@ -73,7 +82,13 @@ const EditClass = () => {
   const handleEditClass = async (e) => {
     e.preventDefault();
     try {
-      await updateClass(params.classId, classData);
+      // Filter out any time objects that are empty (i.e., missing a day or time)
+      const filteredClassData = {
+        ...classData,
+        schedule: classData.schedule.filter(time => time.day && time.time),
+      };
+
+      await updateClass(params.classId, filteredClassData);
       await fetchClass();
       setLocation("/admin/levels")
     } catch (error) {
@@ -102,13 +117,13 @@ const EditClass = () => {
     <div className="page-format max-w-[96rem] space-y-10">
       <BackButton label="Back to Level" />
       <div>
-        <h3 className="font-extrabold mb-2">Edit Class</h3>
-        <h5 className="font-light">Edit class and student information</h5>
+        <h1 className="font-extrabold mb-2">Edit Class</h1>
+        <h3 className="font-light">Edit class and student information</h3>
       </div>
 
-      <form onSubmit={handleEditClass}>
-        <div className="flex justify-start space-x-10 w-2/3 mb-6">
-          <div className="w-2/3 space-y-3">
+      <form onSubmit={handleEditClass} className="w-2/3 bg-slate-50">
+        <div className="flex justify-start w-full bg-amber-50 space-x-10 mb-6">
+          <div className="space-y-3">
             <label className="mx-1">Age Group</label>
             <FormInput
               type="text"
@@ -119,7 +134,7 @@ const EditClass = () => {
               isRequired={true}
             />
           </div>
-          <div className="w-2/3 space-y-3">
+          <div className="space-y-3">
             <label className="mx-1">Instructor</label>
             <FormInput
               type="text"
@@ -135,7 +150,7 @@ const EditClass = () => {
         <div className="flex justify-start space-x-10 w-2/3">
           <div className="w-2/3 space-y-3">
             <label className="mx-1">Date</label>
-            <DateDropdown selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+            {/* <DayDropdown selectedDay={selectedDates} setSelectedDay={setSelectedDates} /> */}
           </div>
           <div className="w-2/3">
             <label className="mx-1">Time</label>
@@ -170,7 +185,7 @@ const EditClass = () => {
         </div>
       </form>
       <div>
-        <h5 className="mb-2">List of Students</h5>
+        <h3 className="mb-2">List of Students</h3>
         <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
           <IoPersonOutline />
           <p>{students.length} enrolled</p>

@@ -87,7 +87,7 @@ export default function SignUp() {
         <Form
           width={"lg:w-3/5 xl:w-2/5"}
         >
-          <h3 className="font-extrabold">{t("sign_up_text")}</h3>
+          <h1 className="font-extrabold">{t("sign_up_text")}</h1>
           <p className="text-base sm:text-lg mt-3 mb-5 text-gray-500">{t("sign_up_login1")}
             <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("login_text")}</Link>
           </p>

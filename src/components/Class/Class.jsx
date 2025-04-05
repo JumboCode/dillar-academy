@@ -15,9 +15,9 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
       {/* Header */}
       <div className='mb-4'>
-        <h5 className="font-extrabold text-dark-blue-800 mb-1">
+        <h3 className="font-extrabold text-dark-blue-800 mb-1">
           {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}
-        </h5>
+        </h3>
         <span className="text-sm text-neutral-400">with {classObj.instructor}</span>
       </div>
       {/* Schedule */}
