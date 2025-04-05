@@ -28,7 +28,7 @@ export default function ResetPasswordCode() {
     if (isSubmitting || retryAfter > 0) return;
     setIsSubmitting(true);
     setError("");
-
+ 
     try {
       // Attempt to verify the code with Clerk
       const result = await signIn.attemptFirstFactor({

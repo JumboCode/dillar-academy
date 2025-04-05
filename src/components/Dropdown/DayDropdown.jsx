@@ -22,7 +22,7 @@ const DayDropdown = ({ selectedDay, setSelectedDay }) => {
           className={`
             block w-full py-3 px-4 text-base sm:text-lg 
             ${selectedDay === day ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}
-            hover:bg-gray-50`}
+            hover:bg-gray-100`}
           onClick={() => handleSelectedDay(day)}>
           {day}
         </button>

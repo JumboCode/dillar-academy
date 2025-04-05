@@ -52,13 +52,13 @@ export default function PageRoutes() {
       <Route path="/admin/levels/conversations/:id" component={EditConversation} />
       <Route path="/admin/class/:classId" component={EditClass} />
       <Route path="/admin/students" component={AdminStudents} />
-      <Route path="/admin/teachers" component={AdminTeachers} />
+      <Route path="/admin/instructors" component={AdminTeachers} />
       <Route path="/admin/user/:id" component={EditUser} />
       <Route path="/admin/schedule" component={AdminSchedule} />
-      <Route path="/teacher" component={TeacherView} />
-      <Route path="/teacher/edit/:id" component={EditTeacher} />
+      <Route path="/instructor" component={TeacherView} />
+      <Route path="/instructor/edit/:id" component={EditTeacher} />
       <Route path="/style" component={StyleGuide} />
-      <Route path="/teacher/class/:id" component={TeacherEditClass} />
+      <Route path="/instructor/class/:id" component={TeacherEditClass} />
 
       <Route component={PageNotFound} />
     </Switch>

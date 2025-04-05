@@ -15,6 +15,7 @@ const AdminTeachers = () => {
   const [allowRender, setAllowRender] = useState(false);
   const [classes, setClasses] = useState([]);
   const [users, setUsers] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
     if (isLoaded) {
@@ -35,6 +36,20 @@ const AdminTeachers = () => {
     setClasses(classData);
   }
 
+  const filteredUsers = users.filter((user) => {
+    const search = searchInput.toLowerCase();
+
+    // Combines first + last name both ways
+    const fullName1 = `${user.firstName}${user.lastName}`.toLowerCase();
+    const fullName2 = `${user.lastName}${user.firstName}`.toLowerCase();
+
+    // Flattens all class data into searchable strings
+    const matchesName =
+      fullName1.includes(search) || fullName2.includes(search);
+
+    return matchesName;
+  });
+
   if (!allowRender) {
     return <div></div>;
   }
@@ -49,30 +64,24 @@ const AdminTeachers = () => {
         <h1 className="font-extrabold mb-2">Instructors</h1>
         <p>List of all instructors teaching Dillar Classes</p>
       </div>
-      <div className="w-full inline-flex gap-x-4">
-        <div className="w-full inline-flex items-center py-3 px-4 rounded-sm border border-gray-300">
-          <IoSearch size={16.81} className="text-gray-400" />
-          <input type="text" className="w-full border-none outline-none text-[18px]" placeholder="Search names, levels, or classes..."></input>
-        </div>
-        <Dropdown
-          label={
-            <div className="flex items-center justify-center gap-x-1">
-              <span className="whitespace-nowrap">Filter By</span>
-            </div>
-          }
-          buttonClassName="text-black min-w-fit border border-gray-300 px-5 py-3 gap-1 rounded-sm bg-white"
-        ></Dropdown>
+      <div className="w-full inline-flex gap-x-3 items-center py-3 px-4 rounded-sm border border-gray-300">
+        <IoSearch size={16.81} className="text-gray-400" />
+        <input
+          type="text"
+          className="w-full border-none outline-none text-[18px]"
+          placeholder="Search for instructor by name"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
       </div>
-      <div>
-        <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
-          <IoPersonOutline />
-          <p>{users.length} instructors</p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-x-14">
-          {users.map((userData, userIndex) => (
-            <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}><UserItem userData={userData} classes={classes} /></Link>
-          ))}
-        </div>
+      <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
+        <IoPersonOutline />
+        <p>{filteredUsers.length} instructors</p>
+      </div>
+      <div className="grid md:grid-cols-3 gap-x-14">
+        {filteredUsers.map((userData, userIndex) => (
+          <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}><UserItem userData={userData} classes={classes} /></Link>
+        ))}
       </div>
     </div>
   )
