@@ -393,13 +393,13 @@ app.delete('/api/conversations/:id', async (req, res) => {
 // Create conversation
 app.post('/api/conversations', async (req, res) => {
   try {
-    const { ageGroup, instructor } = req.body;
+    const { ageGroup, instructor, schedule } = req.body;
 
     // Check if conversation already exists
     const query = { ageGroup, instructor };
-    // if (schedule) {
-    //   query.$expr = { $setEquals: ["$schedule", schedule] };
-    // }
+    if (schedule) {
+      query.$expr = { $setEquals: ["$schedule", schedule] };
+    }
     const existingConversation = await Conversation.findOne(query);
 
     if (existingConversation) {
@@ -410,7 +410,8 @@ app.post('/api/conversations', async (req, res) => {
     } else {
       const newConversation = new Conversation({
         ageGroup,
-        instructor
+        instructor,
+        schedule
       });
 
       await newConversation.save();
@@ -441,22 +442,6 @@ app.get('/api/students-classes/:id', async (req, res) => {
     res.status(500).send(err);
   }
 })
-
-// // Get Student's classes and then for each class use get class by ID to get the
-// // class object from which you get the level
-// app.get('/api/students-class-levels/:id', async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       return res.status(400).json({ error: 'Invalid ID' });
-//     }
-
-    
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// })
 
 // Get class by ID
 app.get('/api/class/:id', async (req, res) => {
