@@ -96,17 +96,16 @@ const Home = () => {
       {/* hero section */}
       <div className="header-gradient min-h-[60svh] flex flex-col items-center justify-center w-full py-12 px-10 text-center md:text-left">
         <h3 className="text-blue-600 mb-3">{t("home_motto")}</h3>
-        <h1 className="font-extrabold text-4xl sm:text-5xl mb-6">Dillar Academy</h1>
-        <p className="text-base sm:text-xl">{t("home_purpose")}</p>
-        <p className="mb-4"><b>300+</b> {t("home_student_desc")}</p>
+        <h1 className="font-extrabold text-4xl sm:text-5xl">Dillar Academy</h1>
+        <p className="text-base sm:text-xl my-6">{t("home_desc")}</p>
         <div className="flex gap-x-3 items-center">
           <Button
-            label={"Explore Classes"}
+            label={t("home_explore_button")}
             onClick={() => setLocation("/signup")}
             isOutline={false}
           />
           <Button
-            label={t("learn_more")}
+            label={t("home_learn_button")}
             onClick={() => setLocation("/about")}
             isOutline={true}
           />
@@ -119,7 +118,7 @@ const Home = () => {
             style={{ fontSize: '32px' }}
             className="text-blue-700"
           />
-          <h2 className='font-extrabold text-3xl sm:text-4xl text-blue-700'>How to Sign Up for Classes</h2>
+          <h2 className='font-extrabold text-3xl sm:text-4xl text-blue-700'>{t("home_how_to")}</h2>
         </div>
         <div className="flex flex-col gap-y-28 md:gap-y-40">
           {/* About levels */}
@@ -133,15 +132,15 @@ const Home = () => {
               </div>
             </div>
             <div className={`text-center md:text-left mb-10 md:mb-0`}>
-              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">1. {t("home_class_level_title")}</h3>
-              <p className="text-lg sm:text-2xl">{t("home_class_level_desc")}</p>
+              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">1. {t("home_step1_title")}</h3>
+              <p className="text-lg sm:text-2xl">{t("home_step1_desc")}</p>
             </div>
           </div>
           {/* About classes */}
           <div className="w-full flex flex-col items-center md:grid md:grid-cols-2 md:gap-x-10 xl:gap-x-28 sm:justify-items-center">
             <div className={"text-center md:text-left mb-10 md:mb-0"}>
-              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">2. {t("home_level_title")}</h3>
-              <p className="text-lg sm:text-2xl">{t("home_level_desc")}</p>
+              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">2. {t("home_step2_title")}</h3>
+              <p className="text-lg sm:text-2xl">{t("home_step2_desc")}</p>
             </div>
             <div className="w-full flex flex-col gap-y-6 md:gap-x-4 md:grid md:grid-cols-2">
               <div className='rounded-xl shadow-[0px_4px_16px_0px_rgba(76,75,99,0.12),_-20px_-8px_60px_0px_rgba(197,190,248,0.40)]'>
@@ -158,8 +157,8 @@ const Home = () => {
               <Confirmation classObj={class1} />
             </div>
             <div className='text-center md:text-left mb-10 md:mb-0'>
-              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">3. {t("home_learn_title")}</h3>
-              <h3 className="text-lg sm:text-2xl">{t("home_learn_desc")}</h3>
+              <h3 className="font-extrabold text-xl sm:text-[1.75rem] sm:leading-8 mb-3 md:mb-4">3. {t("home_welcome_start")}</h3>
+              <h3 className="text-lg sm:text-2xl">{t("home_step3_desc")}</h3>
             </div>
           </div>
         </div>

@@ -5,8 +5,10 @@ import { enrollInClass, unenrollInClass } from '@/api/class-wrapper';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import { useLocation } from 'wouter';
 import { useUser } from '@clerk/clerk-react';
+import { useTranslation } from "react-i18next";
 
 const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
+  const { t } = useTranslation();
   const [confirming, setConfirming] = useState(true);
   const [, setLocation] = useLocation();
 
@@ -76,6 +78,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
 }
 
 const UnenrollPopup = ({ classObj, userId, setShowPopup }) => {
+  const { t } = useTranslation();
   const handleUnenroll = async () => {
     await unenrollInClass(classObj._id, userId);
     setShowPopup(false);
@@ -100,6 +103,7 @@ const UnenrollPopup = ({ classObj, userId, setShowPopup }) => {
 }
 
 const SignUpPopup = ({ setShowPopup }) => {
+  const { t } = useTranslation();
   const [, setLocation] = useLocation();
 
   return (

@@ -23,7 +23,8 @@ import EditConversation from '@/pages/dashboards/admin/editPages/EditConversatio
 import AddConversation from '@/pages/dashboards/admin/editPages/AddConversation';
 import EditUser from '@/pages/dashboards/admin/editPages/EditUser';
 import TeacherView from '@/pages/dashboards/TeacherView';
-import EditTeacher from '@/pages/dashboards/EditTeacher';
+import EditTeacher from '@/pages/dashboards/EditTeacher'; // TODO
+import AdminTranslations from '@/pages/dashboards/admin/AdminTranslations';
 import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
 // TODO
@@ -57,6 +58,7 @@ export default function PageRoutes() {
       <Route path="/admin/instructors" component={AdminTeachers} />
       <Route path="/admin/user/:id" component={EditUser} />
       <Route path="/admin/schedule" component={AdminSchedule} />
+      <Route path="/admin/translations" component={AdminTranslations} />
       <Route path="/instructor" component={TeacherView} />
       <Route path="/instructor/edit/:id" component={EditTeacher} />
       <Route path="/style" component={StyleGuide} />

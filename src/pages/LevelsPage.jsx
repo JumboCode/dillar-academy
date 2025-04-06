@@ -4,10 +4,12 @@ import Level from '@/components/Class/Level'
 import ConversationClass from '../components/Class/ConversationClass';
 import { getConversations, getLevels } from '../api/class-wrapper';
 import { Link } from "wouter"
+import { useTranslation } from "react-i18next";
 
 const LevelsPage = () => {
   const [levels, setLevels] = useState([]);
   const [conversations, setConversations] = useState([]);
+  const { t } = useTranslation();
 
   // styles
   const descriptionStyle = "font-light text-base sm:text-lg"
@@ -31,12 +33,12 @@ const LevelsPage = () => {
   return (
     <div className="page-format max-w-[96rem] lg:py-24">
       <section className={sectionStyle}>
-        <h1 className='font-extrabold mb-2 text-blue-700'>Browse Classes</h1>
-        <p className={descriptionStyle}>Dillar Academy offers classes at a variety of levels, based on your English skill level! Browse all the levels and classes here.</p>
+        <h1 className='font-extrabold mb-2 text-blue-700'>{t("levelspage_browse_classes")}</h1>
+        <p className={descriptionStyle}>{t("levelspage_description")}</p>
       </section>
       <section className={sectionStyle}>
-        <h2 className="font-extrabold mb-1">Regular English Classes</h2>
-        <p className={descriptionStyle}>Beginner-friendly English classes focused on reading, grammar, and speaking. Build confidence step by step, from alphabets to everyday conversations.</p>
+        <h2 className="font-extrabold mb-1">{t("levelspage_reg_class_heading")}</h2>
+        <p className={descriptionStyle}>{t("levelspage_reg_class_descrip")}</p>
         <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 flex flex-col`}>
           {levels.map((level, levelIndex) => (
             <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
@@ -46,10 +48,10 @@ const LevelsPage = () => {
         </div>
       </section>
       <section className={sectionStyle}>
-        <h2 className="font-extrabold mb-1">Supplementary Classes</h2>
-        <p className={descriptionStyle}>Extra practice for dedicated learners! Improve fluency with conversation classes led by native English speakers or prepare for the IELTS with targeted lessons.</p>
+        <h2 className="font-extrabold mb-1">{t("levelspage_supp_class_heading")}</h2>
+        <p className={descriptionStyle}>{t("levelspage_supp_class_descrip")}</p>
         <section className='mt-8'>
-          <h3 className='font-extrabold'>Conversation Classes</h3>
+          <h3 className='font-extrabold'>{t("levelspage_convo_class_heading")}</h3>
           <div className={`${courseDivStyle} lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 flex flex-col`}>
             {conversations.map((conversation, conversationIndex) => (
               <ConversationClass key={conversationIndex} conversation={conversation} />
@@ -57,7 +59,7 @@ const LevelsPage = () => {
           </div>
         </section>
         <section className='mt-8'>
-          <h3 className='font-extrabold'>IELTS Classes</h3>
+          <h3 className='font-extrabold'>{t("levelspage_ietl_class_heading")}</h3>
         </section>
       </section>
     </div>

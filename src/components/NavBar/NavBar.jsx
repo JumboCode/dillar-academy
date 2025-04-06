@@ -47,6 +47,7 @@ const NavBar = () => {
               <NavLink href="/admin/students">Students</NavLink>
               <NavLink href="/admin/instructors">Instructors</NavLink>
               <NavLink href="/admin/schedule">Schedule</NavLink>
+              <NavLink href="/admin/translations">Translations</NavLink>
             </> : <>
               <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
               <NavLink href="/contact">{t("nav_link_contact")}</NavLink>
@@ -85,6 +86,7 @@ const NavBar = () => {
             <NavLink href="/admin/students" isMobile={true} onClick={closeMenu}>Students</NavLink>
             <NavLink href="/admin/instructors" isMobile={true} onClick={closeMenu}>Instructors</NavLink>
             <NavLink href="/admin/schedule" isMobile={true} onClick={closeMenu}>Schedule</NavLink>
+            <NavLink href="/admin/translations" isMobile={true} onClick={closeMenu}>Translations</NavLink>
             <SignOutButton className="py-2 px-3" />
           </> : <><NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
             <NavLink href="/contact" isMobile={true} onClick={closeMenu}>{t("nav_link_contact")}</NavLink>

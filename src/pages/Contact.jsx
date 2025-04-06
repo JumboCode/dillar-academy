@@ -29,7 +29,7 @@ export default function Contact() {
       const response = await postContact(formData);
 
       if (response.ok) {
-        alert("Message submitted successfully!");
+        alert("Message submitted successfully!"); //TODO
       } else {
         const errorResponse = await response.json();
         setAlertData({ message: `Failed to send message: ${errorResponse.message}` })
@@ -60,7 +60,7 @@ export default function Contact() {
             <FormInput
               type="text"
               name="name"
-              placeholder={t("name_field")}
+              placeholder={t("contact_name_field")}
               value={formData.name}
               onChange={handleChange}
               isRequired={true}
@@ -68,7 +68,7 @@ export default function Contact() {
             <FormInput
               type="email"
               name="email"
-              placeholder={t("email_field")}
+              placeholder={t("contact_email_field")}
               value={formData.email}
               onChange={handleChange}
               isRequired={true}
@@ -76,7 +76,7 @@ export default function Contact() {
             <FormInput
               type="text"
               name="subject"
-              placeholder={t("subject_field")}
+              placeholder={t("contact_subject_field")}
               value={formData.subject}
               onChange={handleChange}
               isRequired={true}
@@ -84,12 +84,12 @@ export default function Contact() {
             <FormInput
               type="textarea"
               name="message"
-              placeholder={t("message_field")}
+              placeholder={t("contact_message_field")}
               value={formData.message}
               onChange={handleChange}
               required
             />
-            <FormSubmit label={t("submit_button")} />
+            <FormSubmit label={t("contact_submit_button")} />
           </form>
         </Form>
       </div>
