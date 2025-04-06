@@ -437,7 +437,6 @@ app.get('/api/students-classes/:id', async (req, res) => {
 
     const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
     res.json(data);
-
   } catch (err) {
     res.status(500).send(err);
   }
@@ -570,6 +569,12 @@ app.put('/api/users/:id/enroll', async (req, res) => {
   }
 
   try {
+    // check that student isn't already enrolled
+    const user = await User.findById(id);
+    if (user.enrolledClasses.includes(classId)) {
+      return res.status(400).json({ message: 'Already enrolled in this class' });
+    }
+
     // add class id to user's classes
     await User.findByIdAndUpdate(
       id,
@@ -600,6 +605,12 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
   }
 
   try {
+    // check that student is enrolled
+    const user = await User.findById(id);
+    if (!user.enrolledClasses.includes(classId)) {
+      return res.status(400).json({ message: 'Not enrolled in this class' });
+    }
+
     // remove class id from user's classes
     await User.findByIdAndUpdate(
       id,
@@ -768,7 +779,7 @@ app.get('/api/students-export', async (req, res) => {
   try {
     // Get all students with privilege "student"
     const students = await User.find({ privilege: 'student' });
-    
+
     // Get all classes for reference
     const classes = await Class.find();
     // Create a map for quick access to class details
@@ -782,23 +793,23 @@ app.get('/api/students-export', async (req, res) => {
         if (!classInfo) return null;
 
         // Format schedules
-        const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n'); 
-        
+        const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n');
+
         // Convert EST to Istanbul time (EST + 7 hours)
         const scheduleIstanbul = classInfo.schedule.map(s => {
           // Parse the time string (e.g., "10:00am")
           const [hourStr, minuteStr] = s.time.split(':');
           const [hour, minute] = [parseInt(hourStr), parseInt(minuteStr || 0)];
-          
+
           // Create date objects for conversion
           const estTime = new Date();
           estTime.setHours(hour, minute);
-          
+
           // Istanbul is EST + 7 hours
           const istTime = new Date(estTime.getTime() + (7 * 60 * 60 * 1000));
           const istHours = istTime.getHours();
           const istMinutes = istTime.getMinutes();
-          
+
           return `${s.day} ${istHours}:${istMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}`;
         }).join('\n');
 

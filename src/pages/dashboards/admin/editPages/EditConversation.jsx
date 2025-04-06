@@ -138,7 +138,7 @@ const EditConversation = () => {
           </div>
         </div>
 
-        <div className="w-full space-y-3 mb-6">
+        <div className="w-full space-y-3 mb-6 bg-gray-50">
           <div className="grid grid-cols-2 gap-x-10">
             <label className="mx-1">Day</label>
             <label className="mx-1">Time</label>

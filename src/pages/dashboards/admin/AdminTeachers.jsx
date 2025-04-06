@@ -3,10 +3,10 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getUsers } from '@/api/user-wrapper.js'
-import Dropdown from '@/components/Dropdown/Dropdown';
-import { IoSearch, IoPersonOutline } from "react-icons/io5";
+import { IoPersonOutline } from "react-icons/io5";
 import { getClasses } from '@/api/class-wrapper';
 import UserItem from '@/components/UserItem'
+import SearchBar from '@/components/SearchBar';
 
 const AdminTeachers = () => {
   const { user } = useContext(UserContext);
@@ -22,11 +22,10 @@ const AdminTeachers = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
+        fetchUsers();
       }
     }
 
-    fetchUsers();
   }, [isLoaded, isSignedIn, user]);
 
   const fetchUsers = async () => {
@@ -34,6 +33,7 @@ const AdminTeachers = () => {
     setUsers(userData.data.filter((user) => user.privilege === "teacher"));
     const classData = await getClasses();
     setClasses(classData);
+    setAllowRender(true);
   }
 
   const filteredUsers = users.filter((user) => {
@@ -64,16 +64,7 @@ const AdminTeachers = () => {
         <h1 className="font-extrabold mb-2">Instructors</h1>
         <p>List of all instructors teaching Dillar Classes</p>
       </div>
-      <div className="w-full inline-flex gap-x-3 items-center py-3 px-4 rounded-sm border border-gray-300">
-        <IoSearch size={16.81} className="text-gray-400" />
-        <input
-          type="text"
-          className="w-full border-none outline-none text-[18px]"
-          placeholder="Search for instructor by name"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-      </div>
+      <SearchBar input={searchInput} setInput={setSearchInput} placeholder={"Search for instructor by name"} />
       <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
         <IoPersonOutline />
         <p>{filteredUsers.length} instructors</p>
