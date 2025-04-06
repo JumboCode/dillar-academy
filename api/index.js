@@ -762,3 +762,79 @@ app.post('/api/levels', async (req, res) => {
     return res.status(500).json({ message: 'Error creating class' });
   }
 });
+
+// Get Students Export Data
+app.get('/api/students-export', async (req, res) => {
+  try {
+    // Get all students with privilege "student"
+    const students = await User.find({ privilege: 'student' });
+    
+    // Get all classes for reference
+    const classes = await Class.find();
+    // Create a map for quick access to class details
+    const classMap = new Map(classes.map(c => [c._id.toString(), c]));
+
+    // Format student data for export
+    const formattedStudents = await Promise.all(students.map(async (student) => {
+      // Get enrolled classes for student
+      const enrolledClasses = student.enrolledClasses.map(classId => {
+        const classInfo = classMap.get(classId.toString());
+        if (!classInfo) return null;
+
+        // Format schedules
+        const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n'); 
+        
+        // Convert EST to Istanbul time (EST + 7 hours)
+        const scheduleIstanbul = classInfo.schedule.map(s => {
+          // Parse the time string (e.g., "10:00am")
+          const [hourStr, minuteStr] = s.time.split(':');
+          const [hour, minute] = [parseInt(hourStr), parseInt(minuteStr || 0)];
+          
+          // Create date objects for conversion
+          const estTime = new Date();
+          estTime.setHours(hour, minute);
+          
+          // Istanbul is EST + 7 hours
+          const istTime = new Date(estTime.getTime() + (7 * 60 * 60 * 1000));
+          const istHours = istTime.getHours();
+          const istMinutes = istTime.getMinutes();
+          
+          return `${s.day} ${istHours}:${istMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}`;
+        }).join('\n');
+
+        return {
+          level: classInfo.level,
+          ageGroup: classInfo.ageGroup,
+          instructor: classInfo.instructor,
+          classroomLink: classInfo.classroomLink,
+          scheduleEST,
+          scheduleIstanbul
+        };
+      }).filter(Boolean);
+
+      // Get the first class info (or empty strings if no classes)
+      const classInfo = enrolledClasses[0] || {
+        level: '',
+        ageGroup: '',
+        instructor: '',
+        classroomLink: '',
+        scheduleEST: '',
+        scheduleIstanbul: ''
+      };
+
+      return {
+        firstName: student.firstName,
+        lastName: student.lastName,
+        email: student.email,
+        creationDate: student.creationDate.toISOString().split('T')[0],
+        ...classInfo
+      };
+    }));
+
+    // Return data in the format expected by export-xlsx
+    res.json({ student_data: formattedStudents });
+  } catch (err) {
+    console.error('Error exporting students:', err);
+    res.status(500).json({ message: 'Error exporting students' });
+  }
+});

@@ -2,11 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getUsers } from '@/api/user-wrapper.js'
+import { getUsers, getStudentsForExport } from '@/api/user-wrapper.js';
 import Dropdown from '@/components/Dropdown/Dropdown';
+import Button from '@/components/Button/Button';
 import { IoSearch, IoPersonOutline } from "react-icons/io5";
 import { getClasses, getStudentsClasses, getClassById } from '@/api/class-wrapper';
-import UserItem from '@/components/UserItem'
+import UserItem from '@/components/UserItem';
+import ExcelExport from 'export-xlsx';
+import { SETTINGS_FOR_EXPORT } from '@/assets/excel_export_settings';
 
 const AdminStudents = () => {
   const { user } = useContext(UserContext);
@@ -24,11 +27,10 @@ const AdminStudents = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        setAllowRender(true);
+        fetchUsers();
       }
     }
 
-    fetchUsers();
   }, [isLoaded, isSignedIn, user]);
 
   const fetchUsers = async () => {
@@ -57,7 +59,18 @@ const AdminStudents = () => {
     const uniqueLevels = Array.from(allLevels).sort((a, b) => a - b);
     setUsers(studentsWithClasses);
     setLevels(uniqueLevels);
+    setAllowRender(true);
   }
+
+  const handleExportStudents = async () => {
+    try {
+      const data = await getStudentsForExport();
+      const excelExport = new ExcelExport();
+      excelExport.downloadExcel(SETTINGS_FOR_EXPORT, [data]);
+    } catch (error) {
+      console.error('Error exporting students:', error);
+    }
+  };
 
   if (!allowRender) {
     return <div></div>;
@@ -96,9 +109,15 @@ const AdminStudents = () => {
 
   return (
     <div className="page-format max-w-[96rem] space-y-9">
-      <div>
-        <h1 className="font-extrabold mb-2">Students</h1>
-        <p>List of all students enrolled in Dillar Classes</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="font-extrabold mb-2">Students</h1>
+          <p>List of all students enrolled in Dillar Classes</p>
+        </div>
+        <Button
+          label={'Export Students'}
+          onClick={handleExportStudents}
+        />
       </div>
       <div className="w-full inline-flex gap-x-4">
         <div className="w-full inline-flex gap-x-3 items-center py-3 px-4 rounded-sm border border-gray-300">
