@@ -9,6 +9,7 @@ import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 
+// allow user to edit their personal data
 const UserEditStudent = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
