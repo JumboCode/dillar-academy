@@ -3,7 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getUsers } from '@/api/user-wrapper.js'
-import { IoSearch, IoPersonOutline } from "react-icons/io5";
+import { IoPersonOutline } from "react-icons/io5";
 import { getClasses } from '@/api/class-wrapper';
 import UserItem from '@/components/UserItem'
 import SearchBar from '@/components/SearchBar';

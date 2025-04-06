@@ -3,7 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { updateUser, getUser } from '@/api/user-wrapper.js';
-import { getClassById, getClasses } from '@/api/class-wrapper';
+import { getClassById, getClasses, enrollInClass } from '@/api/class-wrapper';
 import { IoAdd } from "react-icons/io5";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
@@ -81,6 +81,20 @@ const EditUser = () => {
     }
   };
 
+  const filteredClasses = classes.filter((cls) => {
+    const search = searchInput.toLowerCase().split(" ");
+    if (search.length <= 1 && search[0] === '') {
+      return true;
+    }
+
+    const matchesClass =
+      search.includes(String(cls.level)) ||
+      search.some(term => cls.ageGroup.toLowerCase().includes(term)) ||
+      search.some(term => cls.instructor.toLowerCase().includes(term));
+
+    return matchesClass;
+  });
+
   if (!allowRender || !userData) {
     return <div></div>;
   }
@@ -148,15 +162,23 @@ const EditUser = () => {
         </div>
       </div>
       {showOverlay && <Overlay width={'w-1/2'}>
-        <div>
-          <h3>Search for class</h3>
-          <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for class by level, age, instructor" />
-        </div>
-        <div className="h-[500px] overflow-y-auto mt-4 flex flex-col gap-y-3">
-          {classes.map(classObj => (
-            <Class key={classObj._id} classObj={classObj} />
+        <h3>Search for class</h3>
+        <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for class by level, age, instructor" />
+        <div className="h-[50vh] overflow-y-auto mt-4 flex flex-col gap-y-3">
+          {filteredClasses.map(classObj => (
+            <button
+              key={classObj._id}
+              onClick={() => {
+                enrollInClass(classObj._id, userData._id);
+                fetchData();
+                setShowOverlay(false);
+              }}
+            >
+              <Class classObj={classObj} isSimplified />
+            </button>
           ))}
         </div>
+        <Button label={'Cancel'} onClick={() => setShowOverlay(false)} />
       </Overlay>}
     </div >
   )
