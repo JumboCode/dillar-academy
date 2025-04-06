@@ -143,11 +143,13 @@ const Level = mongoose.model("Level", LevelSchema)
 // Translation Schema
 const TranslationSchema = new Schema({
   key: { type: String, required: true },
-  en: { type: String, required: true },
-  ru: { type: String, required: true },
-  zh: { type: String, required: true },
-  tr: { type: String, required: true },
-  ug: { type: String, required: true }
+  translations: {
+    en: { type: String, required: true },
+    ru: { type: String, required: true },
+    zh: { type: String, required: true },
+    tr: { type: String, required: true },
+    ug: { type: String, required: true }
+  }
 }, { collection: 'translations' })
 
 const Translation = mongoose.model("Translation", TranslationSchema)
@@ -224,13 +226,20 @@ app.post('/api/transfer-translations/', async (req, res) => {
 
         if (existingTranslation) {
           // If the translation already exists in the array update the language value
-          existingTranslation[lang] = languageData.default[key];
+          existingTranslation.translations[lang] = languageData.default[key];
         } else {
           // Otherwise create new translation document for this key
           const newTranslation = {
             key,
-            [lang]: languageData.default[key]
+            translations: {
+              en: languageData.default['en'] || '',
+              ru: languageData.default['ru'] || '',
+              zh: languageData.default['zh'] || '',
+              tr: languageData.default['tr'] || '',
+              ug: languageData.default['ug'] || ''
+            }
           };
+          newTranslation.translations[lang] = languageData.default[key];
           translationsToInsert.push(newTranslation);
         }
       }
