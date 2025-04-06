@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'wouter';
+import { useLocation, useParams, Link } from 'wouter';
 import Class from '../components/Class/Class';
 import Level from '@/components/Class/Level';
 import { getClasses, getLevels } from '../api/class-wrapper';
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 
 const ClassesPage = () => {
   const [classes, setClasses] = useState([]);
@@ -27,8 +26,6 @@ const ClassesPage = () => {
       setClasses(classData);
       const levelData = await getLevels();
       setAllLevels(levelData);
-      console.log(levelData)
-      // console.log(levelData.find(l => l.level === levelNum))
       setLevel(levelData.find(l => l.level === parseInt(levelNum)));
       setLoading(false);
     };
@@ -42,8 +39,8 @@ const ClassesPage = () => {
       {/* Banner Section */}
       <div className="header-gradient w-full flex flex-col items-center">
         <div className="w-full max-w-[96rem] py-20 lg:py-24 px-4 sm:px-6 lg:px-20">
-          <h5 className="font-light text-dark-blue-700 mb-2">Level {level.level}</h5>
-          <h3 className='font-extrabold text-dark-blue-800 mb-6'>{level.name}</h3>
+          <h3 className="font-light text-dark-blue-700 mb-2">Level {level.level}</h3>
+          <h1 className='font-extrabold text-dark-blue-800 mb-6'>{level.name}</h1>
           <p className="text-neutral-600 text-base sm:text-lg max-w-2xl mb-8">
             This class is for those with little to no experience in English. It will be going over
             the alphabet, basic vocabulary, and simple grammar rules.
@@ -63,7 +60,7 @@ const ClassesPage = () => {
       <div className="w-full flex flex-col items-center">
         {/* Open Classes */}
         <div className='w-full max-w-[96rem] px-4 sm:px-6 lg:px-20 py-12 lg:py-24'>
-          <h4 className="font-extrabold text-dark-blue-800 mb-4">Open Classes</h4>
+          <h2 className="font-extrabold text-dark-blue-800 mb-4">Open Classes</h2>
           <p className="text-base sm:text-lg text-neutral-600 mb-8">
             Here are the open classes in this level. More information will be given by the instructor after you sign up!
           </p>
@@ -73,26 +70,19 @@ const ClassesPage = () => {
             ))}
           </div>
           <div className='grid grid-cols-2 w-full gap-x-6'>
-            {levelNum > 1 && <Level
-              level={allLevels.find(l => l.level === parseInt(levelNum) - 1)}
-              numLevels={allLevels.length}
-              isSimplified />}
-            {/* <div className='col-start-1 shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-lg w-full'>
-              <button
-                className='w-full text-start py-6 px-7 rounded-lg shadow-[inset_0.5em_0_theme(colors.turquoise.200)]'
-                onClick={() => setLocation(`/levels/${Number(levelNum) - 1}/classes`)}
-              >
-                <div className='flex items-center gap-x-3'>
-                  <IoChevronBack className='text-2xl' />
-                  <h5 className='font-extrabold'>Previous Level</h5>
-                </div>
-              </button>
-            </div> */}
-            {levelNum < allLevels.length && <Level
-              level={allLevels.find(l => l.level === parseInt(levelNum) + 1)}
-              numLevels={allLevels.length}
-              isShadowRight
-              isSimplified />}
+            {levelNum > 1 && <Link href={`/levels/${Number(levelNum) - 1}/classes`} className={"col-start-1"}>
+              <Level
+                level={allLevels.find(l => l.level === parseInt(levelNum) - 1)}
+                numLevels={allLevels.length}
+                isSimplified />
+            </Link>}
+            {levelNum < allLevels.length && <Link href={`/levels/${Number(levelNum) + 1}/classes`} className={"col-start-2"}>
+              <Level
+                level={allLevels.find(l => l.level === parseInt(levelNum) + 1)}
+                numLevels={allLevels.length}
+                isArrowRight
+                isSimplified />
+            </Link>}
           </div>
         </div>
       </div>

@@ -25,7 +25,7 @@ const Dropdown = ({ label, children, buttonClassName = "text-right" }) => {
     <div ref={dropdownRef} className="relative sm:w-auto w-full">
       {/* dropdown button */}
       <button
-        className={`box-border flex items-center h-full ${buttonClassName}`}
+        className={`box-border flex items-center h-full bg-white ${buttonClassName}`}
         onClick={() => setIsOpen(!isOpen)}
         type="button"
       >

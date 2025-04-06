@@ -26,7 +26,7 @@ export default function Login() {
       if (user?.privilege === "admin") {
         setLocation("/admin/levels");
       } else if (user?.privilege === "teacher") {
-        setLocation("/teacher")
+        setLocation("/instructor")
       } else {
         setLocation("/student")
       }
@@ -81,7 +81,7 @@ export default function Login() {
         {alertData.message && <Alert message={alertData.message} />}
         <div className="w-full max-w-[96rem] flex justify-center">
           <Form width="lg:w-3/5 xl:w-2/5">
-            <h3 className="font-extrabold">{t("login_text")}</h3>
+            <h1 className="font-extrabold">{t("login_text")}</h1>
             <p className="text-base sm:text-lg text-gray-500 mt-3 mb-5">{t("login_signup1")}
               <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
             </p>

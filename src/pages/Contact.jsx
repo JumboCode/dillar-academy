@@ -49,7 +49,7 @@ export default function Contact() {
       {/* form box */}
       <div className="max-w-[96rem] w-full flex justify-center">
         <Form width="lg:w-3/5">
-          <h3 className="font-extrabold mb-2">{t("contact_heading")}</h3>
+          <h1 className="font-extrabold mb-2">{t("contact_heading")}</h1>
           <p className="text-base sm:text-lg mb-4 text-gray-600 opacity-70">
             {t("contact_form_description")}
           </p >

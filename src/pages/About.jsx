@@ -6,23 +6,28 @@ function About() {
   const { t } = useTranslation();
 
   return (
-    <div className="page-format max-w-[96rem] flex flex-col items-center lg:flex-row-reverse lg:justify-between">
-      <div className="flex items-center justify-center lg:w-1/3">
-        <img src={stepping_stones_landscape} alt="stepping_stones_landscape" className="rounded-3xl shadow-xl lg:aspect-square object-cover" title="stepping_stones_landscape"></img>
-      </div>
-      <div className="my-8 lg:w-7/12 sm:text-lg">
-        <div className="w-full flex gap-x-4 items-center justify-center lg:justify-start mb-4 sm:mb-7">
-          <IoStar
-            style={{ fontSize: '32px' }}
-            className="text-blue-700"
-          />
-          <h2 className="font-extrabold text-blue-700">{t("about_heading")}</h2>
+    <div className="page-format max-w-[96rem] flex flex-col py-20 lg:py-24 gap-20">
+      <section className='flex flex-col lg:flex-row-reverse lg:justify-between items-center'>
+        <div className="flex items-center justify-center lg:w-1/3">
+          <img src={stepping_stones_landscape} alt="stepping_stones_landscape" className="rounded-3xl shadow-xl lg:aspect-square object-cover" title="stepping_stones_landscape"></img>
         </div>
-        <p>{t("about_desc_1")}
-          <br /><br />
-          {t("about_desc_2")}
-        </p>
-      </div>
+        <div className="my-8 lg:w-7/12 sm:text-lg">
+          <div className="w-full flex gap-x-4 items-center justify-center lg:justify-start mb-4 sm:mb-7">
+            <IoStar
+              style={{ fontSize: '32px' }}
+              className="text-blue-700"
+            />
+            <h1 className="font-extrabold text-3xl sm:text-[2.5rem] text-blue-700">{t("about_heading")}</h1>
+          </div>
+          <p>{t("about_desc_1")}
+            <br /><br />
+            {t("about_desc_2")}
+          </p>
+        </div>
+      </section>
+      <section>
+        <h1 className='font-extrabold'>Privacy Commitment</h1>
+      </section>
     </div>
   )
 }

@@ -99,7 +99,7 @@ const Contact = mongoose.model('Contact', ContactSchema);
 
 
 // Schedule Schema
-// timezone is automatically EST
+// timezone is automatically UTC
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
   time: { type: String, required: true },
@@ -393,13 +393,13 @@ app.delete('/api/conversations/:id', async (req, res) => {
 // Create conversation
 app.post('/api/conversations', async (req, res) => {
   try {
-    const { ageGroup, instructor } = req.body;
+    const { ageGroup, instructor, schedule } = req.body;
 
     // Check if conversation already exists
     const query = { ageGroup, instructor };
-    // if (schedule) {
-    //   query.$expr = { $setEquals: ["$schedule", schedule] };
-    // }
+    if (schedule) {
+      query.$expr = { $setEquals: ["$schedule", schedule] };
+    }
     const existingConversation = await Conversation.findOne(query);
 
     if (existingConversation) {
@@ -410,7 +410,8 @@ app.post('/api/conversations', async (req, res) => {
     } else {
       const newConversation = new Conversation({
         ageGroup,
-        instructor
+        instructor,
+        schedule
       });
 
       await newConversation.save();
@@ -441,7 +442,6 @@ app.get('/api/students-classes/:id', async (req, res) => {
     res.status(500).send(err);
   }
 })
-
 
 // Get class by ID
 app.get('/api/class/:id', async (req, res) => {

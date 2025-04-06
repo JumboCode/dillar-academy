@@ -15,6 +15,7 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.16.0",
     "axios": "^1.7.7",
+    "d3-interpolate": "^3.0.1",
     "esbuild": "^0.25.0",
     "export-xlsx": "^0.1.4",
     "i18next": "^23.16.4",

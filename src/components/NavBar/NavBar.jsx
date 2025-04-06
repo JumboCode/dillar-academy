@@ -45,9 +45,8 @@ const NavBar = () => {
             {user?.privilege === "admin" ? <>
               <NavLink href="/admin/levels">{t("nav_link_classes")}</NavLink>
               <NavLink href="/admin/students">Students</NavLink>
-              <NavLink href="/admin/teachers">Teachers</NavLink>
+              <NavLink href="/admin/instructors">Instructors</NavLink>
               <NavLink href="/admin/schedule">Schedule</NavLink>
-              <SignOutButton />
             </> : <>
               <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
               <NavLink href="/contact">{t("nav_link_contact")}</NavLink>
@@ -57,11 +56,13 @@ const NavBar = () => {
               </SignedOut>
               <SignedIn>
                 <NavLink href={`/${user?.privilege}`}>{t("nav_link_dashboard")}</NavLink>
-                <SignOutButton className="hover:text-neutral-300 px-3 py-2" />
               </SignedIn>
             </>}
           </div>
-          <div className='hidden lg:inline'>
+          <div className='hidden lg:flex lg:items-center'>
+            <SignedIn>
+              <SignOutButton className="hover:text-neutral-300 px-3 py-2" />
+            </SignedIn>
             <LanguageDropdown />
           </div>
           {/* Mobile menu button */}
@@ -82,7 +83,7 @@ const NavBar = () => {
           {user?.privilege === "admin" ? <>
             <NavLink href="/admin/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
             <NavLink href="/admin/students" isMobile={true} onClick={closeMenu}>Students</NavLink>
-            <NavLink href="/admin/teachers" isMobile={true} onClick={closeMenu}>Teachers</NavLink>
+            <NavLink href="/admin/instructors" isMobile={true} onClick={closeMenu}>Instructors</NavLink>
             <NavLink href="/admin/schedule" isMobile={true} onClick={closeMenu}>Schedule</NavLink>
             <SignOutButton className="py-2 px-3" />
           </> : <><NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>

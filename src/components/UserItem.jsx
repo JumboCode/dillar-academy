@@ -7,8 +7,7 @@ const UserItem = ({ userData, classes }) => {
 
   useEffect(() => {
     const filteredClasses = classes.filter(cls =>
-      userData.enrolledClasses.includes(cls._id)
-    );
+      userData.enrolledClasses.some(enrolled => enrolled._id === cls._id));
 
     const maxClass = filteredClasses.length > 0
       ? filteredClasses.reduce((prev, curr) => (curr.level > prev.level ? curr : prev))
