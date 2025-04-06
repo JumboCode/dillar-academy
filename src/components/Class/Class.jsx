@@ -5,12 +5,15 @@ import EnrollButton from '@/components/Button/EnrollButton'
 import Button from '@/components/Button/Button'
 import EditButton from '@/components/Button/EditButton'
 import { UserContext } from "../../contexts/UserContext";
+import { useTranslation } from "react-i18next";
 
 // possible modes: enroll, unenroll, edit, delete
 // editURL used for edit page URL to navigate to
 // handleDelete is function used for deleting class
 const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null }) => {
+  const { t } = useTranslation();
   const { user, } = useContext(UserContext);
+
   return (
     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
       {/* Header */}

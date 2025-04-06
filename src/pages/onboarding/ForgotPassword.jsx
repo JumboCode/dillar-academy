@@ -45,7 +45,7 @@ export default function ForgotPassword() {
     <main className="header-gradient page-format flex justify-center items-center">
       <div className="w-full max-w-[96rem] flex justify-center">
         <Form width="lg:w-3/5 xl:w-2/5">
-          <h1 className="font-extrabold mb-3">Forgot Password</h1>
+          <h1 className="font-extrabold mb-3">{t("forgotpass_forgot_text")}</h1>
           <p className="text-base sm:text-lg text-gray-600 mb-5">Enter your email below for password reset instructions.</p>
           <form onSubmit={handleSubmit} className="space-y-3">
             <FormInput

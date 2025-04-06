@@ -25,7 +25,7 @@ const Welcome = ({ onComplete }) => {
     <div className="header-gradient page-format flex items-center justify-center">
       <div className="text-center mb-12 mt-12 px-5">
         <h1 className="font-extrabold text-4xl sm:text-5xl mb-4">Dillar Academy</h1>
-        <p className="mb-8 text-lg">{t("home_purpose")}</p>
+        <p className="mb-8 text-lg">{t("welcome_purpose")}</p>
         <div className="flex flex-col items-center gap-y-4 mb-6">
           {/* Language Dropdown with border */}
           <div className="w-full max-w-xs border border-dark-blue-800 rounded-lg bg-white">
@@ -39,7 +39,7 @@ const Welcome = ({ onComplete }) => {
               setLocation("/");
             }}
           >
-            {t("home_learn_title")}
+            {t("home_welcome_start")}
           </button>
         </div>
         {/* Login Link */}
