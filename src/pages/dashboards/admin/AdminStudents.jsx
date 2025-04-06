@@ -4,6 +4,7 @@ import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getUsers, getStudentsForExport } from '@/api/user-wrapper.js';
 import Dropdown from '@/components/Dropdown/Dropdown';
+import Button from '@/components/Button/Button';
 import { IoSearch, IoPersonOutline } from "react-icons/io5";
 import { getClasses, getStudentsClasses, getClassById } from '@/api/class-wrapper';
 import UserItem from '@/components/UserItem';
@@ -17,7 +18,6 @@ const AdminStudents = () => {
   const [allowRender, setAllowRender] = useState(false);
   const [classes, setClasses] = useState([]);
   const [users, setUsers] = useState([]);
-  const [exporting, setExporting] = useState(false);
   const [levels, setLevels] = useState([]);
   const [currFilter, setCurrFilter] = useState(null);
   const [searchInput, setSearchInput] = useState('');
@@ -64,14 +64,11 @@ const AdminStudents = () => {
 
   const handleExportStudents = async () => {
     try {
-      setExporting(true);
       const data = await getStudentsForExport();
       const excelExport = new ExcelExport();
       excelExport.downloadExcel(SETTINGS_FOR_EXPORT, [data]);
     } catch (error) {
       console.error('Error exporting students:', error);
-    } finally {
-      setExporting(false);
     }
   };
 
@@ -117,13 +114,10 @@ const AdminStudents = () => {
           <h1 className="font-extrabold mb-2">Students</h1>
           <p>List of all students enrolled in Dillar Classes</p>
         </div>
-        <button
+        <Button
+          label={'Export Students'}
           onClick={handleExportStudents}
-          disabled={exporting}
-          className="bg-dark-blue-800 hover:bg-white hover:border hover:border-dark-blue-800 hover:text-black text-white px-4 py-2 rounded"
-        >
-          {exporting ? 'Exporting...' : 'Export to Excel'}
-        </button>
+        />
       </div>
       <div className="w-full inline-flex gap-x-4">
         <div className="w-full inline-flex gap-x-3 items-center py-3 px-4 rounded-sm border border-gray-300">
