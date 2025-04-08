@@ -21,6 +21,7 @@ const EditUser = () => {
   const [showOverlay, setShowOverlay] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [classes, setClasses] = useState([]);
+  const [userClasses, setUserClasses] = useState([]);
   const [userData, setUserData] = useState(null);
   const [userFormData, setUserFormData] = useState({
     firstName: '',
@@ -39,7 +40,8 @@ const EditUser = () => {
 
   }, [isLoaded, isSignedIn, user]);
 
-  // TODO: if user is a teacher, fetch their classes they teach
+  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
   const fetchData = async () => {
     try {
       const allClasses = await getClasses();
@@ -50,15 +52,19 @@ const EditUser = () => {
         firstName: userData.data.firstName,
         lastName: userData.data.lastName,
         email: userData.data.email,
-        password: userData.data.password
       });
-      const userClasses = await Promise.all(
-        userData.data.enrolledClasses.map(async (classID) => {
-          const classResponse = await getClassById(classID);
-          return classResponse; // Return the class details
-        })
-      );
-      userData.data.enrolledClasses = userClasses;
+      let userClasses;
+      if (userData.data.privilege === "student") {
+        userClasses = await Promise.all(
+          userData.data.enrolledClasses.map(async (classID) => {
+            const classResponse = await getClassById(classID);
+            return classResponse; // Return the class details
+          })
+        );
+      } else {
+        userClasses = await getClasses(`instructor=${toTitleCase(userData.data.firstName)}`)
+      }
+      setUserClasses(userClasses);
       setUserData(userData.data);
       setAllowRender(true);
     } catch (error) {
@@ -74,7 +80,7 @@ const EditUser = () => {
     e.preventDefault();
     try {
       await updateUser(params.id, userFormData);
-      setUserFormData({ firstName: '', lastName: '', email: '', password: '' })
+      setUserFormData({ firstName: '', lastName: '', email: '' })
       await fetchData();
     } catch (error) {
       console.error('Error updating user:', error);
@@ -106,7 +112,10 @@ const EditUser = () => {
   return (
     <div className={`page-format max-w-[96rem] space-y-12`}>
       <BackButton label="Back" />
-      <h1 className="font-extrabold">{userData.firstName + " " + userData.lastName}</h1>
+      <span className="flex items-baseline gap-x-5 mb-1">
+        <h1 className="font-extrabold">{toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}</h1>
+        <p className="text-blue-500">{toTitleCase(userData.privilege)}</p>
+      </span>
       <form onSubmit={handleEditUser} className="space-y-12">
         <div className="flex w-full gap-x-6">
           <div className="w-full">
@@ -143,24 +152,24 @@ const EditUser = () => {
             />
           </div>
         </div>
+        <Button label="Save" type="submit" />
       </form>
-      <Button label="Save" type="submit" />
-      {/* TODO: display teacher's classes */}
       <div>
-        <h2 className="font-extrabold mb-6">{userData.firstName}'s Classes</h2>
+        <h2 className="font-extrabold mb-6">{toTitleCase(userData.firstName)}'s Classes</h2>
         <div className="grid grid-cols-3 gap-6">
-          {userData.enrolledClasses.map((classObj) => (
+          {userClasses.map((classObj) => (
             <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="/admin/class" />
           ))}
-          <div className="flex items-center">
+          {userData.privilege === "student" && <div className="flex items-center">
             <Button
               label={<IoAdd className="text-2xl font-extrabold" />}
               onClick={() => setShowOverlay(true)}
               isRound
             />
-          </div>
+          </div>}
         </div>
       </div>
+
       {showOverlay && <Overlay width={'w-1/2'}>
         <h3>Search for class</h3>
         <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for class by level, age, instructor" />

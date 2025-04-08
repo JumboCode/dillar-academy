@@ -26,7 +26,7 @@ const UserItem = ({ userData, classes }) => {
           {userData.email}
         </p>
         <div>
-          {userData.privilege !== "teacher" && (
+          {userData.privilege !== "instructor" && (
             <p className="text-gray-500 text-sm">
               {highestClass ? (
                 highestClass.ageGroup === "all" ? (

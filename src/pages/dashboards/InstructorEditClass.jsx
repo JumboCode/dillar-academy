@@ -9,7 +9,7 @@ import { updateClass } from '@/api/class-wrapper.js';
 import BackButton from "@/components/Button/BackButton";
 import ClassStudents from "@/components/ClassStudents";
 
-const TeacherEditClass = () => {
+const InstructorEditClass = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
@@ -67,7 +67,7 @@ const TeacherEditClass = () => {
     return <div></div>;
   }
 
-  if (user.privilege !== "teacher") {
+  if (user.privilege !== "instructor") {
     return <div>Unauthorized</div>;
   }
 
@@ -113,4 +113,4 @@ const TeacherEditClass = () => {
   )
 }
 
-export default TeacherEditClass;
+export default InstructorEditClass;

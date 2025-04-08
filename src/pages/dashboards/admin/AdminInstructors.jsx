@@ -8,7 +8,7 @@ import { getClasses } from '@/api/class-wrapper';
 import UserItem from '@/components/UserItem'
 import SearchBar from '@/components/SearchBar';
 
-const AdminTeachers = () => {
+const AdminInstructors = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
@@ -30,7 +30,7 @@ const AdminTeachers = () => {
 
   const fetchUsers = async () => {
     const userData = await getUsers();
-    setUsers(userData.data.filter((user) => user.privilege === "teacher"));
+    setUsers(userData.data.filter((user) => user.privilege === "instructor"));
     const classData = await getClasses();
     setClasses(classData);
     setAllowRender(true);
@@ -78,4 +78,4 @@ const AdminTeachers = () => {
   )
 }
 
-export default AdminTeachers;
+export default AdminInstructors;

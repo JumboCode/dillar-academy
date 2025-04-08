@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
 import { getClassById, getStudentsClasses } from '@/api/class-wrapper';
-import { updateUser, getUser } from '@/api/user-wrapper';
+import { updateUser } from '@/api/user-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
-import Class from '@/components/Class/Class'
 import { Link } from "wouter"
+import Class from '@/components/Class/Class'
 import Button from '@/components/Button/Button';
-import Form from '@/components/Form/Form';
 import FormInput from '@/components/Form/FormInput';
-import { BsPencilSquare } from "react-icons/bs";
+import Overlay from '@/components/Overlay';
+import { IoAdd, IoCreateOutline } from "react-icons/io5";
 
 
 const StudentPortal = () => {
@@ -19,7 +19,7 @@ const StudentPortal = () => {
   const { isLoaded, isSignedIn } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [formData, setFormData] = useState({
+  const [editFormData, setEditFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -28,13 +28,6 @@ const StudentPortal = () => {
   });
 
   useEffect(() => {
-    if (isLoaded) {
-      if (!isSignedIn) {
-        setLocation("/login");
-      }
-    }
-
-    // get student's classes
     const fetchData = async () => {
       if (user) {
         const response = await getStudentsClasses(user?._id);
@@ -49,47 +42,54 @@ const StudentPortal = () => {
       }
     };
 
-    fetchData();
+    if (isLoaded) {
+      if (!isSignedIn) {
+        setLocation("/login");
+      } else {
+        fetchData();
+      }
+    }
   }, [isLoaded, isSignedIn, user]);
 
-  const fetchUser = async () => {
-    const userFilter = new URLSearchParams(`_id=${user._id}`);
-    const response = await getUser(userFilter);
-    setUser(response.data);
-  }
+  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
-  const handleEditInfo = async (e) => {
+  const handleEditUser = async (e) => {
     e.preventDefault();
     try {
-      await updateUser(user._id, formData);
-      await fetchUser();
+      await updateUser(user._id, editFormData);
+      setUser(prev => ({
+        ...prev,
+        firstName: editFormData.firstName,
+        lastName: editFormData.lastName,
+        email: editFormData.email,
+        age: editFormData.age,
+        gender: editFormData.gender
+      }))
       setShowEditModal(false);
-      setFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
+      setEditFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
     } catch (error) {
       console.error('Error updating data:', error);
     }
   };
 
-  const openEditStudent = () => {
-    setFormData({
+  const openEditUser = () => {
+    setEditFormData({
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       email: user.email || '',
       age: user.age || '',
-      gender: user.gender || '',
+      gender: user.gender ? toTitleCase(user.gender) : '',
     });
     setShowEditModal(true);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
+    setEditFormData((prevEditFormData) => ({
+      ...prevEditFormData,
       [name]: value,
     }));
   };
-
-  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   if (!allowRender) {
     return;
@@ -100,41 +100,44 @@ const StudentPortal = () => {
   }
 
   return (
-    <div className='page-format max-w-[96rem]'>
-      <div className="text-3xl mb-4">
-        <h1 className='font-extrabold mb-4'>
-          Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
-        </h1>
-        <Link to={`/user/${encodeURIComponent(user._id)}`}
-          className="p-2 cursor-pointer  text-gray-500 text-sm"
+    <div className='page-format max-w-[96rem] lg:py-24'>
+      <div>
+        <span className='flex items-baseline gap-x-5 mb-1'>
+          <h1 className='font-extrabold'>
+            Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+          </h1>
+          <p className='text-blue-500'>{toTitleCase(user.privilege)}</p>
+        </span>
+        <button onClick={openEditUser}
+          className="text-gray-500 text-sm sm:text-base flex gap-x-2 items-center mb-4"
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <BsPencilSquare style={{ marginRight: '4px' }} />
-            <span>Edit Profile</span>
-          </div>
-          <svg className="h-1">...</svg>
-        </Link>
-        <p className="text-base">
-          <span className="font-bold text-black mr-4">Email </span>
-          <span className="text-gray-500">{user.email}</span>
-        </p>
+          <IoCreateOutline className="font-extrabold" />
+          <span>Edit Profile</span>
+        </button>
+        <div className="grid grid-cols-[min-content_auto] w-fit gap-x-4 gap-y-1">
+          <p className='text-black col-start-1'>Email</p>
+          <p className='text-gray-500 col-start-2'>{user.email}</p>
+          <p className='text-black col-start-1'>WhatsApp</p>
+          <p className='text-gray-500 col-start-2'>{user.email}</p>
+          <p className='text-black col-start-1'>Age</p>
+          <p className='text-gray-500 col-start-2'>{user.age ? user.age : "N/A"}</p>
+          <p className='text-black col-start-1'>Gender</p>
+          <p className='text-gray-500 col-start-2'>{user.gender ? toTitleCase(user.gender) : "N/A"}</p>
+        </div>
       </div>
 
-      <section>
-        <h1 className='text-3xl mb-4'> Your courses </h1>
+      <section className='my-12'>
+        <h2 className='font-extrabold mb-6'> Your courses </h2>
         <div className='grid grid-cols-3 gap-6'>
           {classes.map((classObj, classIndex) => (
             <Class key={classIndex} classObj={classObj} modes={["unenroll"]} />
           ))}
           <div className="flex items-center">
-            <Link
-              to="/levels"
-              className="ml-4 w-12 h-12 bg-blue-500 text-white text-3xl 
-            font-bold rounded-full shadow-md flex items-center justify-center
-            hover:bg-blue-600 transition"
-            >
-              +
-            </Link>
+            <Button
+              label={<IoAdd className="text-2xl font-extrabold" />}
+              isRound
+              onClick={() => setLocation("/levels")}
+            />
           </div>
         </div>
       </section>
@@ -184,64 +187,78 @@ const StudentPortal = () => {
         </div>
       </section>
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <Form width="w-1/2">
-            <h2 className="text-2xl font-bold mb-6">Edit User Info</h2>
-            <form onSubmit={handleEditInfo} className="space-y-3">
+        <Overlay width={'w-1/2'}>
+          <form onSubmit={handleEditUser} className="flex flex-col gap-y-6 py-3 px-2">
+            <div className="sm:flex gap-y-6 sm:gap-y-0 sm:gap-x-6">
+              <div className="w-full">
+                <label>First Name</label>
+                <FormInput
+                  type="text"
+                  name="firstName"
+                  placeholder="First Name"
+                  value={editFormData.firstName}
+                  onChange={handleInputChange}
+                  isRequired={true}
+                />
+              </div>
+              <div className="w-full">
+                <label>Last Name</label>
+                <FormInput
+                  type="text"
+                  name="lastName"
+                  placeholder="Last Name"
+                  value={editFormData.lastName}
+                  onChange={handleInputChange}
+                  isRequired={true}
+                />
+              </div>
+            </div>
+            <div className="w-full">
+              <label>Email</label>
               <FormInput
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                isRequired={true}
-              />
-              <FormInput
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                isRequired={true}
-              />
-              <FormInput
-                type="text"
+                type="email"
                 name="email"
                 placeholder="Email"
-                value={formData.email}
+                value={editFormData.email}
                 onChange={handleInputChange}
                 isRequired={true}
               />
+            </div>
+            <div className='w-full'>
+              <label>Age</label>
               <FormInput
                 type="text"
                 name="age"
                 placeholder="Age"
-                value={formData.age}
+                value={editFormData.age}
                 onChange={handleInputChange}
                 isRequired={false}
               />
+            </div>
+            <div className="w-full">
+              <label>Gender</label>
               <FormInput
                 type="text"
                 name="gender"
                 placeholder="Gender"
-                value={formData.gender}
+                value={editFormData.gender}
                 onChange={handleInputChange}
                 isRequired={false}
               />
-              <div className="flex justify-end space-x-2">
-                <Button
-                  label="Cancel"
-                  isOutline={true}
-                  onClick={() => {
-                    setShowEditModal(false);
-                    setFormData({ firstName: '', lastName: '', email: '' });
-                  }}
-                />
-                <Button label="Save Info" type="submit" />
-              </div>
-            </form>
-          </Form>
-        </div>
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                label="Cancel"
+                isOutline={true}
+                onClick={() => {
+                  setShowEditModal(false);
+                  setEditFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
+                }}
+              />
+              <Button label="Save Info" type="submit" />
+            </div>
+          </form>
+        </Overlay>
       )}
     </div>
   );
