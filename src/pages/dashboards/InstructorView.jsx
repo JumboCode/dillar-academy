@@ -8,6 +8,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import Overlay from '@/components/Overlay';
+import Schedule from '@/components/Schedule';
 
 
 const InstructorView = () => {
@@ -92,7 +93,7 @@ const InstructorView = () => {
   }
 
   return (
-    <div className="page-format max-w-[96rem] lg:py-24">
+    <div className="page-format max-w-[96rem] lg:py-24 space-y-12">
       <div>
         <span className='flex items-baseline gap-x-5 mb-1'>
           <h1 className='font-extrabold'>
@@ -118,41 +119,11 @@ const InstructorView = () => {
         </div>
       </div>
 
-      <h4 className='font-extrabold mb-4 mt-8'>
-        Class Schedule
-      </h4>
       <section>
-        <br></br>
-        <div className="table w-full table-fixed">
-          <div className="table-header-group">
-            <div className="table-row">
-              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
-                <div key={day} className="table-cell text-center font-semibold p-2">
-                  {day}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="table-row-group">
-            <div className="table-row h-24">
-              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day) => (
-                <div key={day} className="table-cell p-2">
-                  {classes
-                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor, _id: classObj._id })))
-                    .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
-                    .sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`)) // Sort by time
-                    .map((schedule, index) => (
-                      <div key={index} className="bg-blue-200 rounded p-2 mb-2">
-                        <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
-                        <div>Class with {schedule.instructor}</div>
-                        <div className="mt-2"> <Button label="Edit" onClick={() => setLocation(`/instructor/class/${schedule._id}`)} /> </div>
-                      </div>
-                    ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <h2 className='font-extrabold my-8'>
+          Class Schedule
+        </h2>
+        <Schedule classes={classes} />
       </section>
 
       {showEditModal && <Overlay width={'w-1/2'}>

@@ -158,9 +158,9 @@ const EditLevel = () => {
   return (
     <div className="page-format max-w-[96rem] space-y-8">
       <BackButton label="All Levels" />
-      <h1 className="font-extrabold">Edit Level</h1>
-      <div className="text-lg text-gray-600">
-        Edit Level information and view all the classes in this level.
+      <div>
+        <h1 className="font-extrabold mb-2">Edit Level</h1>
+        <p className="sm:text-lg">Edit Level information and view all the classes in this level.</p>
       </div>
       <form onSubmit={handleEditLevel} className="space-y-6 w-2/3">
         {/* Level and Name fields */}

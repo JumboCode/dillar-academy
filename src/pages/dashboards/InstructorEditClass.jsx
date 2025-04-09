@@ -6,8 +6,9 @@ import { getClassById } from "@/api/class-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import { updateClass } from '@/api/class-wrapper.js';
+import { getUser } from '@/api/user-wrapper.js';
 import BackButton from "@/components/Button/BackButton";
-import ClassStudents from "@/components/ClassStudents";
+import UserItem from "@/components/UserItem";
 
 const InstructorEditClass = () => {
   const { user } = useContext(UserContext);
@@ -17,9 +18,8 @@ const InstructorEditClass = () => {
 
   const params = useParams();
   const [classObj, setClassObj] = useState(null);
-  const [classData, setClassData] = useState({
-    classroomLink: ''
-  });
+  const [classroomLink, setClassroomLink] = useState('');
+  const [students, setStudents] = useState([]);
 
   useEffect(() => {
     if (!params.id) {
@@ -30,7 +30,6 @@ const InstructorEditClass = () => {
         setLocation("/login");
       } else {
         fetchClass();
-        setAllowRender(true);
       }
     }
   }, [isLoaded, isSignedIn, user]);
@@ -39,23 +38,29 @@ const InstructorEditClass = () => {
     try {
       const data = await getClassById(params.id);
       setClassObj(data);
-      setClassData({ classroomLink: data.classroomLink })
+      setClassroomLink(data.classroomLink || '');
+      const students = await Promise.all(
+        data.roster.map(async (studentId) => {
+          const studentRes = await getUser(`_id=${studentId}`);
+          return studentRes.data
+        })
+      );
+      setStudents(students);
+      setAllowRender(true);
     } catch (error) {
       console.error('Error fetching classes:', error);
     }
   };
 
   const handleInputChange = (e) => {
-    setClassData({
-      ...classData,
-      [e.target.name]: e.target.value,
-    });
+    setClassroomLink(e.target.value);
+    console.log(classroomLink)
   };
 
   const handleEditClass = async (e) => {
     e.preventDefault();
     try {
-      await updateClass(params.id, classData);
+      await updateClass(params.id, { classroomLink });
       await fetchClass();
       setLocation("/instructor")
     } catch (error) {
@@ -73,13 +78,12 @@ const InstructorEditClass = () => {
 
   return (
 
-    <div className="page-format space-y-10">
-
-      <div className="flex">
-        <BackButton label={"Dashboard"} href={"/instructor"} />
+    <div className="page-format max-w-[96rem] space-y-8">
+      <BackButton label={"Dashboard"} href={"/instructor"} />
+      <div>
+        <h1 className="font-extrabold mb-1">Edit Class</h1>
+        <p className="sm:text-lg">Edit class and student information</p>
       </div>
-      <h3 className="font-extrabold">Edit Class</h3>
-      <h5 className="font-light">Edit class and student information</h5>
 
       <form onSubmit={handleEditClass}>
         <div className="flex justify-start space-x-10 w-2/3 mb-6">
@@ -89,26 +93,25 @@ const InstructorEditClass = () => {
               type="text"
               name="classroomLink"
               placeholder="Google Classroom Link"
-              value={classData.classroomLink}
+              value={classroomLink}
               onChange={handleInputChange}
               isRequired={true}
             />
           </div>
         </div>
-
-        <h4>List of Students</h4>
-        <ClassStudents classID={params.id} />
-
-        <div className="space-x-2 mt-8">
+        <div className="mt-8">
           <Button label="Save" type="submit" />
-          <Button
-            label="Cancel"
-            isOutline={true}
-            onClick={() => setLocation("/instructor")} />
         </div>
       </form>
 
-
+      <div>
+        <h2 className="font-extrabold mb-2">Enrolled Students</h2>
+        <div className="grid md:grid-cols-3 gap-x-14">
+          {students.map((student) => (
+            <UserItem key={student._id} userData={student} />
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

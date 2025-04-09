@@ -110,7 +110,7 @@ const EditUser = () => {
   }
 
   return (
-    <div className={`page-format max-w-[96rem] space-y-12`}>
+    <div className={`page-format max-w-[96rem] space-y-8`}>
       <BackButton label="Back" />
       <span className="flex items-baseline gap-x-5 mb-1">
         <h1 className="font-extrabold">{toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}</h1>

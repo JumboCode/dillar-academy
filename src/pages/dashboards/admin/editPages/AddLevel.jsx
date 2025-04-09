@@ -104,9 +104,9 @@ const AddLevel = () => {
   return (
     <div className="page-format max-w-[96rem] space-y-8">
       <BackButton label="All Levels" />
-      <h1 className="font-extrabold">Add Level</h1>
-      <div className="sm:text-lg text-gray-600">
-        Add level information and view all the classes in this level.
+      <div>
+        <h1 className="font-extrabold mb-2">Add Level</h1>
+        <p className="sm:text-lg">Add level information and view all the classes in this level.</p>
       </div>
       <form onSubmit={handleAddLevel} className="space-y-6">
         {/* Level and Name fields */}
