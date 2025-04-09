@@ -153,9 +153,16 @@ const EditConversation = () => {
         </div>
 
         <div className="w-full space-y-3 mb-6">
-          <div className="grid grid-cols-2 gap-x-10">
-            <label className="mx-1">Day</label>
-            <label className="mx-1">Time</label>
+          <div className="flex w-full gap-x-4">
+            <div className="w-full grid grid-cols-2 gap-x-10">
+              <label className="mx-1">Day</label>
+              <label className="mx-1">Time</label>
+            </div>
+            <div className="invisible h-0">
+              <Button
+                label={<IoTrashBinOutline />}
+                onClick={null} />
+            </div>
           </div>
           <div className="space-y-4">
             {conversationData.schedule.map((time, index) => {

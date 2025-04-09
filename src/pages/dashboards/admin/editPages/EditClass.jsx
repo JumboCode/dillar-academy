@@ -184,7 +184,7 @@ const EditClass = () => {
               <label className="mx-1">Day</label>
               <label className="mx-1">Time</label>
             </div>
-            <div className="invisible">
+            <div className="invisible h-0">
               <Button
                 label={<IoTrashBinOutline />}
                 onClick={null} />
