@@ -39,7 +39,7 @@ const Schedule = ({ classes, filters = [] }) => {
           {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day, index, array) => (
             <div
               key={day}
-              className={`table-cell sm:p-2 align-top ${index !== array.length - 1 ? 'border-r border-gray-300' : ''}`}
+              className={`table-cell p-[.125rem] sm:p-2 align-top ${index !== array.length - 1 ? 'border-r border-gray-300' : ''}`}
             >
               {classes
                 .flatMap(classObj => classObj.schedule.map(schedule => (
@@ -96,10 +96,10 @@ const ScheduleClass = ({ classObj, isMobile }) => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   return (
-    <div className="bg-blue-100 rounded-sm border-[0.5px] border-gray-200 p-1 sm:p-3 mb-2">
+    <div className="bg-blue-100 rounded-xs sm:rounded-sm border-[0.5px] border-gray-200 p-1 sm:p-3 mb-1 sm:mb-2">
       <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem]">{classObj.time}</p>
       <p className="font-extrabold text-[0.75rem] sm:text-[0.875rem] sm:mt-2">Level {classObj.level}</p>
-      <p className="text-gray-800 text-[0.675rem] sm:text-xs sm:mb-3">{classObj.ageGroup === "all" ? "ALL AGES" : `${classObj.ageGroup.toUpperCase()}'s CLASS`}</p>
+      <p className="text-gray-800 text-[0.675rem] sm:text-xs sm:mb-3 break-words">{classObj.ageGroup === "all" ? "ALL AGES" : `${classObj.ageGroup.toUpperCase()}'s CLASS`}</p>
       {!isMobile && (
         user.privilege === "student" ? (
           <a href={classObj.classroomLink}>

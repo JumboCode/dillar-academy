@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 
 const NavBar = () => {
   const mobileMenuRef = useRef(null);
+  const menuButtonRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, } = useContext(UserContext)
   const { t } = useTranslation();
@@ -17,7 +18,9 @@ const NavBar = () => {
   // close dropdown when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target)) {
+      // exclude menu button
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target) &&
+        menuButtonRef.current && !menuButtonRef.current.contains(e.target)) {
         setIsMenuOpen(false)
       }
     }
@@ -72,6 +75,7 @@ const NavBar = () => {
             className="lg:hidden inline-flex items-center justify-center p-2 
             rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 
             focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+            ref={menuButtonRef}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
           >
@@ -80,7 +84,7 @@ const NavBar = () => {
           </button>
         </div>
         {/* Mobile menu */}
-        <div ref={mobileMenuRef} className={`lg:hidden flex flex-col items-center w-full pb-6 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
+        <div ref={mobileMenuRef} className={`lg:hidden flex flex-col items-center w-full pb-4 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
           {user?.privilege === "admin" ? <>
             <NavLink href="/admin/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
             <NavLink href="/admin/students" isMobile={true} onClick={closeMenu}>Students</NavLink>
@@ -88,6 +92,8 @@ const NavBar = () => {
             <NavLink href="/admin/schedule" isMobile={true} onClick={closeMenu}>Schedule</NavLink>
             <NavLink href="/admin/translations" isMobile={true} onClick={closeMenu}>Translations</NavLink>
             <SignOutButton className="py-2 px-3" />
+            <div className="w-full h-2 mt-2 mx-3 border-t border-gray-200"></div>
+            <LanguageDropdown />
           </> : <><NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
             <NavLink href="/contact" isMobile={true} onClick={closeMenu}>{t("nav_link_contact")}</NavLink>
             <NavLink href="/about" isMobile={true} onClick={closeMenu}>{t("nav_link_about")}</NavLink>

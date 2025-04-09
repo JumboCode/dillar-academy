@@ -21,9 +21,9 @@ const UserItem = ({ userData, classes = [], isShowClass }) => {
     <div
       onMouseOver={() => setIsHovering(true)}
       onMouseOut={() => setIsHovering(false)}
-      className="flex py-[12px] px-[16px] justify-between items-center hover:bg-sky-100 space-x-3 w-full rounded-sm flex-space-between ">
+      className="flex py-3 px-4 justify-between items-center hover:bg-sky-100 space-x-3 w-full rounded-sm flex-space-between ">
       <div>
-        <p className="text-gray-900 font-semibold">{userData.firstName} {userData.lastName}</p>
+        <p className="text-gray-900 font-semibold truncate w-full block">{userData.firstName} {userData.lastName}</p>
         <p className="flex text-gray-500 text-sm">{userData.email}</p>
         <p className="flex text-gray-500 text-sm"></p> {/* TODO: add phone */}
         <div>
@@ -49,7 +49,6 @@ const UserItem = ({ userData, classes = [], isShowClass }) => {
         }
       </div>
     </div>
-
   );
 };
 
