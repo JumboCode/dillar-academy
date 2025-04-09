@@ -127,7 +127,18 @@ const EditClass = () => {
       </div>
 
       <form onSubmit={handleEditClass} className="w-2/3">
-        <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
+        <div className="grid grid-cols-3 gap-x-10 w-full mb-6">
+          <div className="w-full space-y-3">
+            <label className="mx-1">Level</label>
+            <FormInput
+              type="text"
+              name="level"
+              placeholder="Level"
+              value={classData.level}
+              onChange={handleInputChange}
+              isRequired={true}
+            />
+          </div>
           <div className="w-full space-y-3">
             <label className="mx-1">Age Group</label>
             <FormInput
@@ -153,9 +164,16 @@ const EditClass = () => {
         </div>
 
         <div className="w-full space-y-3 mb-6">
-          <div className="grid grid-cols-2 gap-x-10">
-            <label className="mx-1">Day</label>
-            <label className="mx-1">Time</label>
+          <div className="flex w-full gap-x-4">
+            <div className="w-full grid grid-cols-2 gap-x-10">
+              <label className="mx-1">Day</label>
+              <label className="mx-1">Time</label>
+            </div>
+            <div className="invisible">
+              <Button
+                label={<IoTrashBinOutline />}
+                onClick={null} />
+            </div>
           </div>
           <div className="space-y-4">
             {classData.schedule.map((time, index) => {
