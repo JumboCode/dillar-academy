@@ -87,6 +87,14 @@ const EditUser = () => {
     }
   };
 
+  const handleReset = () => {
+    setUserFormData({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+    });
+  }
+
   const filteredClasses = classes.filter((cls) => {
     const search = searchInput.toLowerCase().split(" ");
     if (search.length <= 1 && search[0] === '') {
@@ -152,7 +160,13 @@ const EditUser = () => {
             />
           </div>
         </div>
-        <Button label="Save" type="submit" />
+        <div className="space-x-2">
+          <Button label="Save" type="submit" />
+          <Button
+            label="Reset"
+            isOutline={true}
+            onClick={handleReset} />
+        </div>
       </form>
       <div>
         <h2 className="font-extrabold mb-6">{toTitleCase(userData.firstName)}'s Classes</h2>
@@ -170,6 +184,7 @@ const EditUser = () => {
         </div>
       </div>
 
+      {/* TODO: prevent enrolling student in already enrolled class and from enrolling anybody but students */}
       {showOverlay && <Overlay width={'w-1/2'}>
         <h3>Search for class</h3>
         <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for class by level, age, instructor" />

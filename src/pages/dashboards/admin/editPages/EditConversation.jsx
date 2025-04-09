@@ -96,6 +96,20 @@ const EditConversation = () => {
     }
   }
 
+  const handleReset = () => {
+    setConversationData({
+      ageGroup: conversationObj.ageGroup,
+      instructor: conversationObj.instructor,
+      schedule: conversationData.schedule
+    });
+    if (conversationObj.schedule.length !== 0) {
+      setConversationData(prev => ({
+        ...prev,
+        schedule: conversationObj.schedule
+      }))
+    }
+  }
+
   if (!allowRender || !conversationObj) {
     return <div></div>;
   }
@@ -138,7 +152,7 @@ const EditConversation = () => {
           </div>
         </div>
 
-        <div className="w-full space-y-3 mb-6 bg-gray-50">
+        <div className="w-full space-y-3 mb-6">
           <div className="grid grid-cols-2 gap-x-10">
             <label className="mx-1">Day</label>
             <label className="mx-1">Time</label>
@@ -223,9 +237,9 @@ const EditConversation = () => {
         <div className="space-x-2 mt-8">
           <Button label="Save" type="submit" />
           <Button
-            label="Cancel"
+            label="Reset"
             isOutline={true}
-            onClick={() => setLocation("/admin/levels/conversations")} />
+            onClick={handleReset} />
         </div>
       </form>
 

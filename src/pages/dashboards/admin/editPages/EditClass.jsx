@@ -110,6 +110,21 @@ const EditClass = () => {
     }
   }
 
+  const handleReset = async () => {
+    setClassData({
+      level: classObj.level,
+      ageGroup: classObj.ageGroup,
+      instructor: classObj.instructor,
+      schedule: classData.schedule
+    });
+    if (classObj.schedule.length !== 0) {
+      setClassData(prev => ({
+        ...prev,
+        schedule: classObj.schedule
+      }))
+    }
+  }
+
   if (!allowRender || !classObj) {
     return <div></div>;
   }
@@ -254,9 +269,9 @@ const EditClass = () => {
         <div className="space-x-2 mt-8">
           <Button label="Save" type="submit" />
           <Button
-            label="Cancel"
+            label="Reset"
             isOutline={true}
-            onClick={() => setLocation("/admin/levels")} />
+            onClick={handleReset} />
         </div>
       </form>
       <div>

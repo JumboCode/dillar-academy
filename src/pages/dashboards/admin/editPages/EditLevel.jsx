@@ -135,7 +135,7 @@ const EditLevel = () => {
     }
   };
 
-  const handleCancel = () => {
+  const handleReset = () => {
     const skills = Array.isArray(level.skills) ? level.skills : [];
     setLevelData({
       level: level.level,
@@ -144,7 +144,6 @@ const EditLevel = () => {
       skills: skills
     });
     setSkillsInput(skills.join(', '));
-    setLocation("/admin/levels");
   };
 
   if (!allowRender || !level || !classes) {
@@ -238,7 +237,7 @@ const EditLevel = () => {
         {/* Action buttons */}
         <div className="flex gap-x-2">
           <Button label="Save" />
-          <Button label="Cancel" onClick={handleCancel} isOutline />
+          <Button label="Reset" onClick={handleReset} isOutline />
         </div>
       </form>
       <div>
