@@ -53,6 +53,7 @@ const StudentPortal = () => {
   }, [isLoaded, isSignedIn, user]);
 
   const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+  console.log(user)
 
   const handleEditUser = async (e) => {
     e.preventDefault();

@@ -13,6 +13,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
   const { t } = useTranslation();
   const [confirming, setConfirming] = useState(true);
   const [, setLocation] = useLocation();
+  const { user, setUser } = useContext(UserContext);
 
   const handleEnrollOrUnenroll = async () => {
     if (isEnroll) {
@@ -22,6 +23,37 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
       setShowPopup(false);
     }
     setConfirming(false);
+  }
+  console.log(user.enrolledClasses)
+  console.log(classObj._id)
+
+  if (user.enrolledClasses.includes(classObj._id)) {
+    return (
+      <Overlay width={'w-[28rem]'}>
+        <div>
+          <h3 className='font-extrabold'>Already enrolled in this class</h3>
+          <p className='sm:text-lg'>You are already enrolled in this class. Would you like to unenroll?</p>
+        </div>
+        <div className="flex gap-x-2">
+          <Button
+            label="Unenroll"
+            onClick={() => {
+              setShowPopup(false)
+              isEnroll = false;
+              handleEnrollOrUnenroll();
+              setUser(prev => ({
+                ...prev,
+                enrolledClasses: user.enrolledClasses.filter(id => id !== classObj._id)
+              }))
+            }}
+          />
+          <Button
+            label={"Cancel"}
+            isOutline={true}
+            onClick={() => { setShowPopup(false) }} />
+        </div>
+      </Overlay>
+    )
   }
 
   return (
@@ -50,10 +82,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
           <Button
             label={"Cancel"}
             isOutline={true}
-            onClick={() => {
-              isEnroll = false;
-              handleEnrollOrUnenroll();
-            }} />
+            onClick={() => { setShowPopup(false) }} />
         </div>
       </div> : <div className='flex flex-col gap-y-5'>
         <div className='flex flex-col gap-y-4'>
@@ -64,7 +93,13 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
           <p className='text-base text-[#86858F]'>Checkout your class schedule in your profile! Made a mistake? Select “Undo”</p>
         </div>
         <div className='flex gap-x-2'>
-          <Button label={"My Schedule"} onClick={() => setLocation('/student')} />
+          <Button label={"My Schedule"} onClick={() => {
+            setUser(prev => ({
+              ...prev,
+              enrolledClasses: [...prev.enrolledClasses, classObj._id]
+            }))
+            setLocation('/student')
+          }} />
           <Button
             label={"Undo"}
             isOutline={true}
