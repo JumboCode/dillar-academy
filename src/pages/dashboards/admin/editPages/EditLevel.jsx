@@ -128,7 +128,7 @@ const EditLevel = () => {
   const handleDeleteLevel = async () => {
     try {
       console.log("Deleting level:", params.id);
-      await deleteLevel(params.id);
+      await deleteLevel(level._id);
       setLocation("/admin/levels");
     } catch (error) {
       console.error("Error deleting level:", error);

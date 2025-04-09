@@ -6,6 +6,7 @@ import { useAuth } from '@clerk/clerk-react';
 import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import BackButton from "@/components/Button/BackButton";
+import Alert from "@/components/Alert";
 
 const AddLevel = () => {
   const { user } = useContext(UserContext);
@@ -13,6 +14,7 @@ const AddLevel = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
+  const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
     if (isLoaded) {
@@ -82,19 +84,11 @@ const AddLevel = () => {
       setLocation("/admin/levels");
     } catch (error) {
       console.error("Error adding level:", error);
+      setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("")
+      }, 5000);
     }
-  };
-
-  const handleCancel = () => {
-    const skills = Array.isArray(level.skills) ? level.skills : [];
-    setLevelData({
-      level: level.level,
-      name: level.name,
-      description: level.description || '',
-      skills: skills
-    });
-    setSkillsInput(skills.join(', '));
-    setLocation("/admin/levels")
   };
 
   if (user?.privilege !== "admin") {
@@ -102,90 +96,87 @@ const AddLevel = () => {
   }
 
   return (
-    <div className="page-format max-w-[96rem] space-y-8">
-      <BackButton label="All Levels" />
-      <div>
-        <h1 className="font-extrabold mb-2">Add Level</h1>
-        <p className="sm:text-lg">Add level information and view all the classes in this level.</p>
-      </div>
-      <form onSubmit={handleAddLevel} className="space-y-6">
-        {/* Level and Name fields */}
-        <div className="flex gap-x-6">
-          <div className="flex-1 gap-y-2">
-            <label>Level</label>
+    <>
+      {alertMessage !== "" && <Alert message={alertMessage} />}
+      <div className="page-format max-w-[96rem] space-y-8">
+        <BackButton label="All Levels" />
+        <div>
+          <h1 className="font-extrabold mb-2">Add Level</h1>
+          <p className="sm:text-lg">Add level information and view all the classes in this level.</p>
+        </div>
+        <form onSubmit={handleAddLevel} className="space-y-6">
+          {/* Level and Name fields */}
+          <div className="flex gap-x-6">
+            <div className="flex-1 gap-y-2">
+              <label>Level</label>
+              <FormInput
+                type="text"
+                name="level"
+                placeholder="Level"
+                value={levelData.level}
+                onChange={handleLevelChange}
+                isRequired={true}
+              />
+            </div>
+            <div className="flex-1 gap-y-2">
+              <label>Name</label>
+              <FormInput
+                type="text"
+                name="name"
+                placeholder="Name"
+                value={levelData.name}
+                onChange={handleLevelChange}
+                isRequired={true}
+              />
+            </div>
+          </div>
+          {/* Description field */}
+          <div className="space-y-2">
+            <label>Description</label>
             <FormInput
-              type="text"
-              name="level"
-              placeholder="Level"
-              value={levelData.level}
+              type="textarea"
+              name="description"
+              placeholder="Description"
+              value={levelData.description}
               onChange={handleLevelChange}
               isRequired={true}
             />
           </div>
-          <div className="flex-1 gap-y-2">
-            <label>Name</label>
+          {/* Skills field with deletable tags */}
+          <div className="space-y-2">
+            <label>Relevant Skills</label>
             <FormInput
               type="text"
-              name="name"
-              placeholder="Name"
-              value={levelData.name}
-              onChange={handleLevelChange}
-              isRequired={true}
+              name="skills"
+              placeholder="Use commas to separate skills (Ex. the alphabet, simple vocabulary, basic conversation)"
+              value={skillsInput}
+              onChange={handleSkillsInputChange}
+              onKeyDown={handleSkillsInputKeyDown}
             />
-          </div>
-        </div>
-
-        {/* Description field */}
-        <div className="space-y-2">
-          <label>Description</label>
-          <FormInput
-            type="textarea"
-            name="description"
-            placeholder="Description"
-            value={levelData.description}
-            onChange={handleLevelChange}
-            isRequired={true}
-          />
-        </div>
-
-        {/* Skills field with deletable tags */}
-        <div className="space-y-2">
-          <label>Relevant Skills</label>
-          <FormInput
-            type="text"
-            name="skills"
-            placeholder="Ex. the alphabet, simple vocabulary, basic conversation"
-            value={skillsInput}
-            onChange={handleSkillsInputChange}
-            onKeyDown={handleSkillsInputKeyDown}
-          />
-          {/* Display the current skills as deletable tags */}
-          <div className="mt-2 flex flex-wrap gap-2">
-            {levelData.skills.map((skill, index) => (
-              <div
-                key={index}
-                className="bg-gray-100 px-2 py-1 rounded text-sm flex items-center group"
-              >
-                <span>{skill}</span>
-                <button
-                  type="button"
-                  className="ml-2 text-gray-500 hover:text-red-500 focus:outline-none"
-                  onClick={() => handleRemoveSkill(skill)}
-                  aria-label={`Remove ${skill}`}
+            {/* Display the current skills as deletable tags */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {levelData.skills.map((skill, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-100 px-2 py-1 rounded text-sm flex items-center group"
                 >
-                  ×
-                </button>
-              </div>
-            ))}
+                  <span>{skill}</span>
+                  <button
+                    type="button"
+                    className="ml-2 text-gray-500 hover:text-red-500 focus:outline-none"
+                    onClick={() => handleRemoveSkill(skill)}
+                    aria-label={`Remove ${skill}`}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        {/* Action buttons */}
-        <div className="flex gap-x-2">
-          <Button label="Save" />
-          <Button label="Cancel" onClick={handleCancel} isOutline />
-        </div>
-      </form>
-    </div>
+          <Button label="Save" type="submit" />
+        </form>
+      </div>
+    </>
   );
 };
 //need to make sure the save button actually saves

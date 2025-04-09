@@ -871,7 +871,7 @@ app.post('/api/levels', async (req, res) => {
 
     if (existingLevel) {
       return res.status(409).json({
-        message: 'Level already exists',
+        message: 'Level number already exists',
         level: existingLevel
       });
     } else {
@@ -889,7 +889,7 @@ app.post('/api/levels', async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Error creating class' });
+    return res.status(500).json({ message: 'Failed to add level' });
   }
 });
 
