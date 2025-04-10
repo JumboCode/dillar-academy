@@ -81,7 +81,7 @@ const AddLevel = () => {
       if (isNaN(parseFloat(levelData.level))) {
         setAlertMessage(`Error: Level input must be a number`)
         setTimeout(() => {
-          setAlertMessage("")
+          setAlertMessage("");
         }, 4000);
       } else {
         await createLevel(levelData);
@@ -91,7 +91,7 @@ const AddLevel = () => {
       console.error("Error adding level:", error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
-        setAlertMessage("")
+        setAlertMessage("");
       }, 4000);
     }
   };

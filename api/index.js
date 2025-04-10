@@ -529,7 +529,7 @@ app.delete('/api/conversations/:id', async (req, res) => {
   }
 });
 
-// Create conversation
+// Create Conversation
 app.post('/api/conversations', async (req, res) => {
   try {
     const { ageGroup, instructor, schedule } = req.body;
@@ -565,7 +565,7 @@ app.post('/api/conversations', async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Error creating conversation' });
+    return res.status(500).json({ message: 'Failed to create conversation class' });
   }
 });
 
@@ -603,7 +603,7 @@ app.get('/api/class/:id', async (req, res) => {
 })
 
 
-// Create class
+// Create Class
 app.post('/api/classes', async (req, res) => {
   try {
     const { level, ageGroup, instructor, schedule } = req.body;
@@ -639,8 +639,8 @@ app.post('/api/classes', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Error creating class' });
+    console.error('Failed to create class:', error);
+    return res.status(500).json({ message: 'Failed to create class' });
   }
 });
 
@@ -944,7 +944,7 @@ app.post('/api/levels', async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Failed to add level' });
+    return res.status(500).json({ message: 'Failed to create level' });
   }
 });
 

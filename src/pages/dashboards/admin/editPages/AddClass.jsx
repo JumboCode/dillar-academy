@@ -65,6 +65,10 @@ const AddClass = () => {
       }
     } catch (error) {
       console.error('Error creating class:', error);
+      setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("")
+      }, 4000);
     }
   }
 
