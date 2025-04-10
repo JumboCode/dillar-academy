@@ -7,6 +7,7 @@ import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
+import Alert from '@/components/Alert';
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -20,6 +21,7 @@ const EditLevel = () => {
   const [classes, setClasses] = useState();
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
+  const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
     if (!params.id || !levelNum) {
@@ -115,19 +117,28 @@ const EditLevel = () => {
 
   const handleEditLevel = async (e) => {
     e.preventDefault();
-    console.log("Submitting level update:", levelData);
     try {
-      await updateLevel(level._id, levelData);
-      await fetchLevels();
-      // setLocation("/admin/levels");
+      if (typeof levelData.level !== 'number') {
+        setAlertMessage(`Error: Level input must be a number`)
+        setTimeout(() => {
+          setAlertMessage("")
+        }, 5000);
+      } else {
+        await updateLevel(level._id, levelData);
+        await fetchLevels();
+        // setLocation("/admin/levels");
+      }
     } catch (error) {
       console.error("Error updating level:", error);
+      setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("")
+      }, 5000);
     }
   };
 
   const handleDeleteLevel = async () => {
     try {
-      console.log("Deleting level:", params.id);
       await deleteLevel(level._id);
       setLocation("/admin/levels");
     } catch (error) {
@@ -155,105 +166,103 @@ const EditLevel = () => {
   }
 
   return (
-    <div className="page-format max-w-[96rem] space-y-8">
-      <BackButton label="All Levels" />
-      <div>
-        <h1 className="font-extrabold mb-2">Edit Level</h1>
-        <p className="sm:text-lg">Edit Level information and view all the classes in this level.</p>
-      </div>
-      <form onSubmit={handleEditLevel} className="space-y-6 w-2/3">
-        {/* Level and Name fields */}
-        <div className="flex flex-col lg:flex-row gap-x-6 w-full">
+    <>
+      {alertMessage !== "" && <Alert message={alertMessage} />}
+      <div className="page-format max-w-[96rem] space-y-8">
+        <BackButton label="All Levels" />
+        <div>
+          <h1 className="font-extrabold mb-2">Edit Level</h1>
+          <p className="sm:text-lg">Edit Level information and view all the classes in this level.</p>
+        </div>
+        <form onSubmit={handleEditLevel} className="space-y-6 w-2/3">
+          {/* Level and Name fields */}
+          <div className="flex flex-col lg:flex-row gap-x-6 w-full">
+            <div className="space-y-2">
+              <label>Level</label>
+              <FormInput
+                type="text"
+                name="level"
+                placeholder="Level"
+                value={levelData.level}
+                onChange={handleLevelChange}
+                isRequired={true}
+              />
+            </div>
+            <div className="flex-1 space-y-2">
+              <label>Name</label>
+              <FormInput
+                type="text"
+                name="name"
+                placeholder="Name"
+                value={levelData.name}
+                onChange={handleLevelChange}
+                isRequired={true}
+              />
+            </div>
+          </div>
+          {/* Description field */}
           <div className="space-y-2">
-            {/* TODO: show error if level is not a number, or allow strings for levels? */}
-            {/* TODO: make sure level num is unique, display message if not */}
-            <label>Level</label>
+            <label>Description</label>
             <FormInput
-              type="text"
-              name="level"
-              placeholder="Level"
-              value={levelData.level}
+              type="textarea"
+              name="description"
+              placeholder="Description"
+              value={levelData.description}
               onChange={handleLevelChange}
               isRequired={true}
             />
           </div>
-          <div className="flex-1 space-y-2">
-            <label>Name</label>
+          {/* Skills field with deletable tags */}
+          <div className="space-y-2">
+            <label>Relevant Skills</label>
             <FormInput
               type="text"
-              name="name"
-              placeholder="Name"
-              value={levelData.name}
-              onChange={handleLevelChange}
-              isRequired={true}
+              name="skills"
+              placeholder="Ex. the alphabet, simple vocabulary, basic conversation"
+              value={skillsInput}
+              onChange={handleSkillsInputChange}
+              onKeyDown={handleSkillsInputKeyDown}
             />
-          </div>
-        </div>
-
-        {/* Description field */}
-        <div className="space-y-2">
-          <label>Description</label>
-          <FormInput
-            type="textarea"
-            name="description"
-            placeholder="Description"
-            value={levelData.description}
-            onChange={handleLevelChange}
-            isRequired={true}
-          />
-        </div>
-
-        {/* Skills field with deletable tags */}
-        <div className="space-y-2">
-          <label>Relevant Skills</label>
-          <FormInput
-            type="text"
-            name="skills"
-            placeholder="Ex. the alphabet, simple vocabulary, basic conversation"
-            value={skillsInput}
-            onChange={handleSkillsInputChange}
-            onKeyDown={handleSkillsInputKeyDown}
-          />
-          {/* Display the current skills as deletable tags */}
-          <div className="mt-2 flex flex-wrap gap-2">
-            {levelData.skills.map((skill, index) => (
-              <div
-                key={index}
-                className="bg-gray-100 px-2 py-1 rounded text-sm flex items-center group"
-              >
-                <span>{skill}</span>
-                <button
-                  type="button"
-                  className="ml-2 text-gray-500 hover:text-red-500 focus:outline-none"
-                  onClick={() => handleRemoveSkill(skill)}
-                  aria-label={`Remove ${skill}`}
+            {/* Display the current skills as deletable tags */}
+            <div className="mt-2 flex flex-wrap gap-2">
+              {levelData.skills.map((skill, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-100 px-2 py-1 rounded text-sm flex items-center group"
                 >
-                  ×
-                </button>
-              </div>
+                  <span>{skill}</span>
+                  <button
+                    type="button"
+                    className="ml-2 text-gray-500 hover:text-red-500 focus:outline-none"
+                    onClick={() => handleRemoveSkill(skill)}
+                    aria-label={`Remove ${skill}`}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Action buttons */}
+          <div className="flex gap-x-2">
+            <Button label="Save" type="submit" />
+            <Button label="Reset" onClick={handleReset} isOutline />
+          </div>
+        </form>
+        <div>
+          <div className="flex justify-between">
+            <h2>Classes in this Level</h2>
+            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {classes.map(classObj => (
+              <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
             ))}
           </div>
         </div>
-        {/* Action buttons */}
-        <div className="flex gap-x-2">
-          <Button label="Save" />
-          <Button label="Reset" onClick={handleReset} isOutline />
-        </div>
-      </form>
-      <div>
-        <div className="flex justify-between">
-          <h2>Classes in this Level</h2>
-          <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {classes.map(classObj => (
-            <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
-          ))}
-        </div>
+        <Button label="Delete Level" onClick={handleDeleteLevel} />
       </div>
-
-      <Button label="Delete Level" onClick={handleDeleteLevel} />
-    </div>
+    </>
   );
 };
 

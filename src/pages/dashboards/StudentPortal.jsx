@@ -101,7 +101,7 @@ const StudentPortal = () => {
   }
 
   return (
-    <div className='page-format max-w-[96rem] lg:py-24 overflow-x-clip'>
+    <div className='page-format max-w-[96rem] lg:py-24 space-y-12'>
       <div>
         <span className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
           <h1 title={`Name: ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`} className='font-extrabold truncate'>

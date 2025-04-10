@@ -77,11 +77,16 @@ const AddLevel = () => {
 
   const handleAddLevel = async (e) => {
     e.preventDefault();
-    console.log("Creating level:", levelData);
     try {
-      await createLevel(levelData);
-      console.log("Level added successfully");
-      setLocation("/admin/levels");
+      if (isNaN(parseFloat(levelData.level))) {
+        setAlertMessage(`Error: Level input must be a number`)
+        setTimeout(() => {
+          setAlertMessage("")
+        }, 5000);
+      } else {
+        await createLevel(levelData);
+        setLocation("/admin/levels");
+      }
     } catch (error) {
       console.error("Error adding level:", error);
       setAlertMessage(`Error: ${error.response.data.message}`);
@@ -104,10 +109,10 @@ const AddLevel = () => {
           <h1 className="font-extrabold mb-2">Add Level</h1>
           <p className="sm:text-lg">Add level information and view all the classes in this level.</p>
         </div>
-        <form onSubmit={handleAddLevel} className="space-y-6">
+        <form onSubmit={handleAddLevel} className="space-y-6 w-2/3">
           {/* Level and Name fields */}
-          <div className="flex gap-x-6">
-            <div className="flex-1 gap-y-2">
+          <div className="flex flex-col lg:flex-row gap-x-6">
+            <div className="space-y-2">
               <label>Level</label>
               <FormInput
                 type="text"
@@ -118,7 +123,7 @@ const AddLevel = () => {
                 isRequired={true}
               />
             </div>
-            <div className="flex-1 gap-y-2">
+            <div className="flex-1 space-y-2">
               <label>Name</label>
               <FormInput
                 type="text"
