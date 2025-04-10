@@ -95,9 +95,14 @@ const InstructorView = () => {
   return (
     <div className="page-format max-w-[96rem] lg:py-24 space-y-12">
       <div>
-        <span className='flex items-baseline gap-x-5 mb-1'>
-          <h1 className='font-extrabold'>
-            Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+        <span className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
+          <h1 title={`Name: ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`} className='font-extrabold truncate'>
+            <span className='block sm:inline'>
+              Welcome&nbsp;
+            </span>
+            <span className='block sm:inline'>
+              {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+            </span>
           </h1>
           <p className='text-blue-500'>{toTitleCase(user.privilege)}</p>
         </span>

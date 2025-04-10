@@ -17,15 +17,27 @@ const UserItem = ({ userData, classes = [], isShowClass }) => {
     setHighestClass(maxClass);
   }, [classes, userData]);
 
+  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
   return (
     <div
       onMouseOver={() => setIsHovering(true)}
       onMouseOut={() => setIsHovering(false)}
-      className="flex py-3 px-4 justify-between items-center hover:bg-sky-100 space-x-3 w-full rounded-sm flex-space-between ">
-      <div>
-        <p className="text-gray-900 font-semibold truncate w-full block">{userData.firstName} {userData.lastName}</p>
-        <p className="flex text-gray-500 text-sm">{userData.email}</p>
-        <p className="flex text-gray-500 text-sm"></p> {/* TODO: add phone */}
+      className="flex py-3 px-4 justify-between items-center hover:bg-sky-100 space-x-3 w-full rounded-sm flex-space-between">
+      <div className="flex-1 min-w-0 *:truncate *:w-full">
+        <p
+          title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`}
+          className="text-gray-900 font-semibold">
+          {toTitleCase(userData.firstName)} {toTitleCase(userData.lastName)}
+        </p>
+        <p
+          title={`Email: ${userData.email}`}
+          className="flex text-gray-500 text-sm">
+          {userData.email}
+        </p>
+        <p
+          className="flex text-gray-500 text-sm">
+        </p> {/* TODO: add phone */}
         <div>
           {userData.privilege !== "instructor" && isShowClass && (
             <p className="text-gray-500 text-sm">
@@ -43,9 +55,9 @@ const UserItem = ({ userData, classes = [], isShowClass }) => {
           )}
         </div>
       </div>
-      <div>
+      <div className="flex-shrink-0">
         {isHovering && user.privilege === "admin" &&
-          <LuPencil className="text-lg text-right" />
+          <LuPencil className="text-lg" />
         }
       </div>
     </div>

@@ -121,7 +121,7 @@ const EditUser = () => {
     <div className={`page-format max-w-[96rem] space-y-8`}>
       <BackButton label="Back" />
       <span className="flex items-baseline gap-x-5 mb-1">
-        <h1 className="font-extrabold">{toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}</h1>
+        <h1 title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`} className="font-extrabold truncate">{toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}</h1>
         <p className="text-blue-500">{toTitleCase(userData.privilege)}</p>
       </span>
       <form onSubmit={handleEditUser} className="space-y-12">

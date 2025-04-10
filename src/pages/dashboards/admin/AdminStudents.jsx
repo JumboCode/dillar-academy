@@ -155,7 +155,7 @@ const AdminStudents = () => {
       </div>
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-14">
         {filteredUsers.map((userData) => (
-          <Link key={userData._id} href={`/admin/user/${encodeURIComponent(userData._id)}`}>
+          <Link key={userData._id} to={`/admin/user/${encodeURIComponent(userData._id)}`}>
             <UserItem key={userData._id} userData={userData} classes={classes} isShowClass />
           </Link>
         ))}

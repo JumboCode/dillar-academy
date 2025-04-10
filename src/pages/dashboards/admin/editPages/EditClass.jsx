@@ -280,7 +280,7 @@ const EditClass = () => {
           <IoPersonOutline />
           <p>{students.length} enrolled</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {students.map(student => (
             <Link key={student._id} href={`/admin/user/${encodeURIComponent(student._id)}`}><UserItem userData={student} classes={classes} /></Link>
           ))}

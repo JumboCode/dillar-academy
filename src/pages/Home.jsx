@@ -57,7 +57,7 @@ const Home = () => {
         <h3 className="text-blue-600 mb-3">{t("home_motto")}</h3>
         <h1 className="font-extrabold text-4xl sm:text-5xl">Dillar Academy</h1>
         <p className="text-base sm:text-xl my-6">{t("home_desc")}</p>
-        <div className="flex gap-x-3 items-center">
+        <div className="flex flex-wrap gap-3 items-center *:flex-1 *:min-w-fit">
           <Button
             label={t("home_explore_button")}
             onClick={() => setLocation("/signup")}

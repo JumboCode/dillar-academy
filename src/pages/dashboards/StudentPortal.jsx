@@ -53,7 +53,6 @@ const StudentPortal = () => {
   }, [isLoaded, isSignedIn, user]);
 
   const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
-  console.log(user)
 
   const handleEditUser = async (e) => {
     e.preventDefault();
@@ -102,11 +101,16 @@ const StudentPortal = () => {
   }
 
   return (
-    <div className='page-format max-w-[96rem] lg:py-24'>
+    <div className='page-format max-w-[96rem] lg:py-24 overflow-x-clip'>
       <div>
-        <span className='flex items-baseline gap-x-5 mb-1'>
-          <h1 className='font-extrabold'>
-            Welcome {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+        <span className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
+          <h1 title={`Name: ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`} className='font-extrabold truncate'>
+            <span className='block sm:inline'>
+              Welcome&nbsp;
+            </span>
+            <span className='block sm:inline'>
+              {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
+            </span>
           </h1>
           <p className='text-blue-500'>{toTitleCase(user.privilege)}</p>
         </span>
@@ -130,11 +134,11 @@ const StudentPortal = () => {
 
       <section className='my-12'>
         <h2 className='font-extrabold mb-6'> Your courses </h2>
-        <div className='grid grid-cols-3 gap-6'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
           {classes.map((classObj, classIndex) => (
             <Class key={classIndex} classObj={classObj} modes={["unenroll"]} />
           ))}
-          <div className="flex items-center">
+          <div className="flex justify-center sm:justify-normal items-center w-full">
             <Button
               label={<IoAdd className="text-2xl font-extrabold" />}
               isRound
