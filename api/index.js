@@ -291,8 +291,8 @@ app.post('/api/sign-up', async (req, res) => {
     res.status(201).json(newUser);
 
   } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Error creating user' });
+    console.error('Failed to sign up:', error);
+    res.status(500).json({ message: 'Failed to sign up' });
   }
 })
 
@@ -316,8 +316,8 @@ app.post('/api/login', async (req, res) => {
       res.status(401).send('Invalid email.');
     }
   } catch (error) {
-    console.error('Error during login.', error);
-    res.status(500).send({ message: 'Server Error.' });
+    console.error('Failed to login:', error);
+    res.status(500).send({ message: 'Failed to login' });
   }
 })
 
