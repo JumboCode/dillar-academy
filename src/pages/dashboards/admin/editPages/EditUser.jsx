@@ -3,8 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { updateUser, getUser } from '@/api/user-wrapper.js';
-import { getClassById, getClasses, enrollInClass } from '@/api/class-wrapper';
-import { IoAdd } from "react-icons/io5";
+import { getClassById, getClasses, enrollInClass, unenrollInClass } from '@/api/class-wrapper';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
@@ -169,40 +168,48 @@ const EditUser = () => {
         </div>
       </form>
       <div>
-        <h2 className="font-extrabold mb-6">{toTitleCase(userData.firstName)}'s Classes</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4">
+          <h2 className="font-extrabold">{toTitleCase(userData.firstName)}'s Classes</h2>
+          {userData.privilege === "student" && <div className="flex items-center">
+            <Button
+              label={"Edit User's Classes"}
+              onClick={() => setShowOverlay(true)}
+            />
+          </div>}
+        </div>
         <div className="grid grid-cols-3 gap-6">
           {userClasses.map((classObj) => (
             <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="/admin/class" />
           ))}
-          {userData.privilege === "student" && <div className="flex items-center">
-            <Button
-              label={<IoAdd className="text-2xl font-extrabold" />}
-              onClick={() => setShowOverlay(true)}
-              isRound
-            />
-          </div>}
         </div>
       </div>
 
-      {/* TODO: prevent enrolling student in already enrolled class and from enrolling anybody but students */}
       {showOverlay && <Overlay width={'w-1/2'}>
         <h3>Search for class</h3>
         <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for class by level, age, instructor" />
         <div className="h-[50vh] overflow-y-auto mt-4 flex flex-col gap-y-3">
-          {filteredClasses.map(classObj => (
-            <button
-              key={classObj._id}
-              onClick={() => {
-                enrollInClass(classObj._id, userData._id);
-                fetchData();
-                setShowOverlay(false);
-              }}
-            >
-              <Class classObj={classObj} isSimplified />
-            </button>
-          ))}
+          {filteredClasses.map(classObj => {
+            const isEnrolled = userData.enrolledClasses.includes(classObj._id);
+            return (
+              <button
+                key={classObj._id}
+                className={`${isEnrolled && 'border-2 border-blue-300 rounded-lg *:bg-blue-100'}`}
+                onClick={() => {
+                  if (isEnrolled) {
+                    unenrollInClass(classObj._id, userData._id);
+                  } else {
+                    enrollInClass(classObj._id, userData._id);
+                  }
+
+                  fetchData();
+                }}
+              >
+                <Class classObj={classObj} isSimplified />
+              </button>
+            )
+          })}
         </div>
-        <Button label={'Cancel'} onClick={() => setShowOverlay(false)} />
+        <Button label={'Close'} onClick={() => setShowOverlay(false)} />
       </Overlay>}
     </div >
   )
