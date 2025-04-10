@@ -17,6 +17,7 @@ const EditConversation = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [alertMessage, setAlertMessage] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
   const [conversationObj, setConversationObj] = useState(null)
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
@@ -81,7 +82,7 @@ const EditConversation = () => {
         setAlertMessage(`Age group must be all, children, or adult`);
         setTimeout(() => {
           setAlertMessage("")
-        }, 5000);
+        }, 4000);
       } else {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredConversationData = {
@@ -90,15 +91,18 @@ const EditConversation = () => {
         };
 
         await updateConversation(params.id, filteredConversationData);
+        setSuccessMessage("Successfully updated conversation class details");
         await fetchConversation();
-        // history.back();
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 4000);
       }
     } catch (error) {
       console.error('Error updating conversation:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
-        setAlertMessage("")
-      }, 5000);
+        setAlertMessage("");
+      }, 4000);
     }
   }
 
@@ -108,6 +112,10 @@ const EditConversation = () => {
       history.back();
     } catch (error) {
       console.error('Error deleting conversation:', error);
+      setAlertMessage(`Error: ${error.response.data.message}`)
+      setTimeout(() => {
+        setAlertMessage("")
+      }, 4000);
     }
   }
 
@@ -136,6 +144,7 @@ const EditConversation = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
+      {successMessage !== "" && <Alert message={successMessage} isSuccess />}
       <div className="page-format max-w-[96rem] space-y-8">
         <BackButton label="All Conversations" />
         <div className="space-y-2">

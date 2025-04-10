@@ -51,7 +51,7 @@ const EditConversation = () => {
         setAlertMessage(`Age group must be all, children, or adult`);
         setTimeout(() => {
           setAlertMessage("")
-        }, 5000);
+        }, 4000);
       } else {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredConversationData = {
@@ -66,7 +66,7 @@ const EditConversation = () => {
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
         setAlertMessage("")
-      }, 5000);
+      }, 4000);
     }
   }
 

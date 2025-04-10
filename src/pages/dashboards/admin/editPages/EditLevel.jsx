@@ -22,6 +22,7 @@ const EditLevel = () => {
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
   const [alertMessage, setAlertMessage] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
 
   useEffect(() => {
     if (!params.id || !levelNum) {
@@ -122,18 +123,21 @@ const EditLevel = () => {
         setAlertMessage(`Error: Level input must be a number`)
         setTimeout(() => {
           setAlertMessage("")
-        }, 5000);
+        }, 4000);
       } else {
         await updateLevel(level._id, levelData);
+        setSuccessMessage("Successfully updated level details");
         await fetchLevels();
-        // setLocation("/admin/levels");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 4000);
       }
     } catch (error) {
       console.error("Error updating level:", error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
-        setAlertMessage("")
-      }, 5000);
+        setAlertMessage("");
+      }, 4000);
     }
   };
 
@@ -143,6 +147,10 @@ const EditLevel = () => {
       setLocation("/admin/levels");
     } catch (error) {
       console.error("Error deleting level:", error);
+      setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("");
+      }, 4000);
     }
   };
 
@@ -168,6 +176,7 @@ const EditLevel = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
+      {successMessage !== "" && <Alert message={successMessage} isSuccess />}
       <div className="page-format max-w-[96rem] space-y-8">
         <BackButton label="All Levels" />
         <div>

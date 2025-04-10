@@ -71,7 +71,7 @@ export default function Login() {
       }, 10);
       setTimeout(() => {
         setAlertData({ message: "" })
-      }, 5000)
+      }, 4000)
     }
   };
 
