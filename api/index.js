@@ -291,8 +291,8 @@ app.post('/api/sign-up', async (req, res) => {
     res.status(201).json(newUser);
 
   } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Error creating user' });
+    console.error('Failed to sign up:', error);
+    res.status(500).json({ message: 'Failed to sign up' });
   }
 })
 
@@ -316,8 +316,8 @@ app.post('/api/login', async (req, res) => {
       res.status(401).send('Invalid email.');
     }
   } catch (error) {
-    console.error('Error during login.', error);
-    res.status(500).send({ message: 'Server Error.' });
+    console.error('Failed to login:', error);
+    res.status(500).send({ message: 'Failed to login' });
   }
 })
 
@@ -466,10 +466,9 @@ app.put('/api/conversations/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    console.log(updates)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
+      return res.status(400).json({ error: 'Invalid Conversation Class ID' });
     }
 
     const existingConversations = await Conversation.find({ ageGroup: updates.ageGroup, instructor: updates.instructor });
@@ -497,13 +496,13 @@ app.put('/api/conversations/:id', async (req, res) => {
     );
 
     if (!updatedConversation) {
-      return res.status(404).json({ message: 'Conversation not found' });
+      return res.status(404).json({ message: 'Conversation class not found' });
     }
 
     res.status(200).json(updatedConversation);
   } catch (error) {
-    console.error('Error updating conversation:', error);
-    res.status(500).json({ message: 'Error updating conversation' });
+    console.error('Failed to update conversation class:', error);
+    res.status(500).json({ message: 'Failed to update conversation class' });
   }
 });
 
@@ -525,12 +524,12 @@ app.delete('/api/conversations/:id', async (req, res) => {
 
     res.status(204).json({ message: 'Conversation deleted successfully' });
   } catch (error) {
-    console.error('Error deleting conversation:', error);
-    res.status(500).json({ message: 'Error deleting conversation' });
+    console.error('Failed to delete conversation class:', error);
+    res.status(500).json({ message: 'Failed to delete conversation class' });
   }
 });
 
-// Create conversation
+// Create Conversation
 app.post('/api/conversations', async (req, res) => {
   try {
     const { ageGroup, instructor, schedule } = req.body;
@@ -566,7 +565,7 @@ app.post('/api/conversations', async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Error creating conversation' });
+    return res.status(500).json({ message: 'Failed to create conversation class' });
   }
 });
 
@@ -604,7 +603,7 @@ app.get('/api/class/:id', async (req, res) => {
 })
 
 
-// Create class
+// Create Class
 app.post('/api/classes', async (req, res) => {
   try {
     const { level, ageGroup, instructor, schedule } = req.body;
@@ -640,8 +639,8 @@ app.post('/api/classes', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Error creating class' });
+    console.error('Failed to create class:', error);
+    return res.status(500).json({ message: 'Failed to create class' });
   }
 });
 
@@ -687,8 +686,8 @@ app.put('/api/classes/:id', async (req, res) => {
 
     res.status(200).json(updatedClass);
   } catch (error) {
-    console.error('Error updating class:', error);
-    res.status(500).json({ message: 'Error updating class' });
+    console.error('Failed to update class details:', error);
+    res.status(500).json({ message: 'Failed to update class details' });
   }
 });
 
@@ -711,7 +710,7 @@ app.delete('/api/classes/:id', async (req, res) => {
     await Promise.all(
       deletedClass.roster.map(studentId =>
         User.findByIdAndUpdate(studentId, { $pull: { enrolledClasses: id } })
-          .catch(err => console.error(`Failed to update student ${studentId}:`, err))
+          .catch(err => console.error(`Failed to update student ${studentId}:`, err)) // TODO: throw error?
       )
     );
 
@@ -720,8 +719,8 @@ app.delete('/api/classes/:id', async (req, res) => {
 
     res.status(204).json({ message: 'Class deleted successfully' });
   } catch (error) {
-    console.error('Error deleting class:', error);
-    res.status(500).json({ message: 'Error deleting class' });
+    console.error('Failed to delete class:', error);
+    res.status(500).json({ message: 'Failed to delete class' });
   }
 });
 
@@ -814,7 +813,7 @@ app.put('/api/users/reset-password', async (req, res) => {
   }
 });
 
-// Update user
+// Edit user
 app.put('/api/user/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -836,8 +835,8 @@ app.put('/api/user/:id', async (req, res) => {
 
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).json({ message: 'Error updating user' });
+    console.error('Failed to update user:', error);
+    res.status(500).json({ message: 'Failed to update user' });
   }
 });
 
@@ -889,8 +888,8 @@ app.put('/api/levels/:id', async (req, res) => {
 
     res.status(200).json(updatedLevel);
   } catch (error) {
-    console.error('Error updating level:', error);
-    res.status(500).json({ message: 'Error updating level' });
+    console.error('Failed to update level details:', error);
+    res.status(500).json({ message: 'Failed to update level details' });
   }
 });
 
@@ -911,8 +910,8 @@ app.delete('/api/levels/:id', async (req, res) => {
 
     res.status(204).json({ message: 'Level deleted successfully' });
   } catch (error) {
-    console.error('Error deleting level:', error);
-    res.status(500).json({ message: 'Error deleting level' });
+    console.error('Failed to delete level:', error);
+    res.status(500).json({ message: 'Failed to delete level' });
   }
 });
 
@@ -945,7 +944,7 @@ app.post('/api/levels', async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Failed to add level' });
+    return res.status(500).json({ message: 'Failed to create level' });
   }
 });
 

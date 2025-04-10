@@ -19,7 +19,7 @@ export default function Login() {
     email: '',
     password: '',
   })
-  const [alertData, setAlertData] = useState({ message: "" })
+  const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
     if (isSignedIn && user) {
@@ -60,25 +60,20 @@ export default function Login() {
 
         setLocation(dashboardURL);
       } else {
-        console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
+        console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2)); // TODO
       }
     } catch (error) {
-      console.error(error)
-      setAlertData({ message: "" });
+      setAlertData(`Error: ${error.response.data.message}`);
       setTimeout(() => {
-        console.log(error.message)
-        setAlertData({ message: "Error: " + (error.message || "There was an error during login.") });
-      }, 10);
-      setTimeout(() => {
-        setAlertData({ message: "" })
-      }, 5000)
+        setAlertData("");
+      }, 4000)
     }
   };
 
   return (
     <>
+      {alertMessage && <Alert message={alertMessage} />}
       <div className="header-gradient page-format flex justify-center items-center">
-        {alertData.message && <Alert message={alertData.message} />}
         <div className="w-full max-w-[96rem] flex justify-center">
           <Form width="lg:w-3/5 xl:w-2/5">
             <h1 className="font-extrabold">{t("login_text")}</h1>

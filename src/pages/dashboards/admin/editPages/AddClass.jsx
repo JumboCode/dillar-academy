@@ -52,8 +52,8 @@ const AddClass = () => {
       if (!allowedAges.includes(classData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);
         setTimeout(() => {
-          setAlertMessage("")
-        }, 5000);
+          setAlertMessage("");
+        }, 4000);
       } else {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredClassData = {
@@ -65,6 +65,10 @@ const AddClass = () => {
       }
     } catch (error) {
       console.error('Error creating class:', error);
+      setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("");
+      }, 4000);
     }
   }
 

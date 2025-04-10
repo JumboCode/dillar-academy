@@ -18,6 +18,7 @@ const EditClass = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [alertMessage, setAlertMessage] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
 
   const params = useParams();
   const [classes, setClasses] = useState(null);
@@ -95,8 +96,8 @@ const EditClass = () => {
       if (!allowedAges.includes(classData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);
         setTimeout(() => {
-          setAlertMessage("")
-        }, 5000);
+          setAlertMessage("");
+        }, 4000);
       } else {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredClassData = {
@@ -105,15 +106,18 @@ const EditClass = () => {
         };
 
         await updateClass(params.classId, filteredClassData);
+        setSuccessMessage("Successfully updated class details");
         await fetchClass();
-        // history.back();
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 4000);
       }
     } catch (error) {
       console.error('Error updating class:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
-        setAlertMessage("")
-      }, 5000);
+        setAlertMessage("");
+      }, 4000);
     }
   }
 
@@ -123,6 +127,10 @@ const EditClass = () => {
       history.back();
     } catch (error) {
       console.error('Error deleting class:', error);
+      setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("")
+      }, 4000);
     }
   }
 
@@ -152,6 +160,7 @@ const EditClass = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
+      {successMessage !== "" && <Alert message={successMessage} isSuccess />}
       <div className="page-format max-w-[96rem] space-y-8">
         <BackButton label="Back to Level" />
         <div>
