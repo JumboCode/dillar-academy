@@ -961,61 +961,74 @@ app.get('/api/students-export', async (req, res) => {
     const classMap = new Map(classes.map(c => [c._id.toString(), c]));
 
     // Format student data for export
-    const formattedStudents = await Promise.all(students.map(async (student) => {
+    const formattedStudents = [];
+
+    for (const student of students) {
       // Get enrolled classes for student
-      const enrolledClasses = student.enrolledClasses.map(classId => {
-        const classInfo = classMap.get(classId.toString());
-        if (!classInfo) return null;
+      const enrolledClasses = student.enrolledClasses
+        .map(classId => {
+          const classInfo = classMap.get(classId.toString());
+          if (!classInfo) return null;
 
-        // Format schedules
-        const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n');
+          // Format schedules
+          const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n');
 
-        // Convert EST to Istanbul time (EST + 7 hours)
-        const scheduleIstanbul = classInfo.schedule.map(s => {
-          // Parse the time string (e.g., "10:00am")
-          const [hourStr, minuteStr] = s.time.split(':');
-          const [hour, minute] = [parseInt(hourStr), parseInt(minuteStr || 0)];
+          // Convert EST to Istanbul time (EST + 7 hours)
+          const scheduleIstanbul = classInfo.schedule.map(s => {
+            // Parse the time string (e.g., "10:00am")
+            const [hourStr, minuteStr] = s.time.split(':');
+            const [hour, minute] = [parseInt(hourStr), parseInt(minuteStr || 0)];
 
-          // Create date objects for conversion
-          const estTime = new Date();
-          estTime.setHours(hour, minute);
+            // Create date objects for conversion
+            const estTime = new Date();
+            estTime.setHours(hour, minute);
 
-          // Istanbul is EST + 7 hours
-          const istTime = new Date(estTime.getTime() + (7 * 60 * 60 * 1000));
-          const istHours = istTime.getHours();
-          const istMinutes = istTime.getMinutes();
+            // Istanbul is EST + 7 hours
+            const istTime = new Date(estTime.getTime() + (7 * 60 * 60 * 1000));
+            const istHours = istTime.getHours();
+            const istMinutes = istTime.getMinutes();
 
-          return `${s.day} ${istHours}:${istMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}`;
-        }).join('\n');
+            return `${s.day} ${istHours}:${istMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}`;
+          }).join('\n');
 
-        return {
-          level: classInfo.level,
-          ageGroup: classInfo.ageGroup,
-          instructor: classInfo.instructor,
-          classroomLink: classInfo.classroomLink,
-          scheduleEST,
-          scheduleIstanbul
-        };
-      }).filter(Boolean);
+          return {
+            level: classInfo.level,
+            ageGroup: classInfo.ageGroup,
+            instructor: classInfo.instructor,
+            classroomLink: classInfo.classroomLink,
+            scheduleEST,
+            scheduleIstanbul
+          };
+        })
+        .filter(Boolean);
 
-      // Get the first class info (or empty strings if no classes)
-      const classInfo = enrolledClasses[0] || {
-        level: '',
-        ageGroup: '',
-        instructor: '',
-        classroomLink: '',
-        scheduleEST: '',
-        scheduleIstanbul: ''
-      };
-
-      return {
-        firstName: student.firstName,
-        lastName: student.lastName,
-        email: student.email,
-        creationDate: student.creationDate.toISOString().split('T')[0],
-        ...classInfo
-      };
-    }));
+      // If student has no classes, add one row with empty class info
+      if (enrolledClasses.length === 0) {
+        formattedStudents.push({
+          firstName: student.firstName,
+          lastName: student.lastName,
+          email: student.email,
+          creationDate: student.creationDate.toISOString().split('T')[0],
+          level: '',
+          ageGroup: '',
+          instructor: '',
+          classroomLink: '',
+          scheduleEST: '',
+          scheduleIstanbul: ''
+        });
+      } else {
+        // For each enrolled class, add a separate row in the spreadsheet
+        for (const classInfo of enrolledClasses) {
+          formattedStudents.push({
+            firstName: student.firstName,
+            lastName: student.lastName,
+            email: student.email,
+            creationDate: student.creationDate.toISOString().split('T')[0],
+            ...classInfo
+          });
+        }
+      }
+    }
 
     // Return data in the format expected by export-xlsx
     res.json({ student_data: formattedStudents });
