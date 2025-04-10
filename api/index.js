@@ -48,6 +48,8 @@ purpose: check that the input key is allowed
 argument types:
   inputs: object
   allowedFields: array
+return type:
+  array containing fields that are in allowedFields
 
 example of using to get filters for classes: validateInput(req.query, classFields)
 */
@@ -64,7 +66,6 @@ const validateInput = (input, allowedFields) => {
 }
 
 
-
 //------------------ MONGOOSE SCHEMAS ------------------//
 
 const Schema = mongoose.Schema
@@ -77,7 +78,7 @@ const UserSchema = new Schema({
   age: { type: Number },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  privilege: { type: String, default: "student", enum: ["admin", "teacher", "student"] },
+  privilege: { type: String, default: "student", enum: ["admin", "instructor", "student"] },
   clerkId: { type: String, required: true },
   creationDate: { type: Date, default: Date.now },
   enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
@@ -131,7 +132,7 @@ const Conversation = mongoose.model("Conversation", ConversationSchema)
 
 // Level Schema
 const LevelSchema = new Schema({
-  level: { type: Number, required: true },
+  level: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
   skills: { type: [String], default: [] }
@@ -460,14 +461,33 @@ app.get('/api/conversations/:id', async (req, res) => {
   }
 })
 
-// Update Conversation
+// Edit Conversation
 app.put('/api/conversations/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+    console.log(updates)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const existingConversations = await Conversation.find({ ageGroup: updates.ageGroup, instructor: updates.instructor });
+    const matchingSchedules = existingConversations.filter(convo =>
+      convo.schedule.length === updates.schedule.length &&
+      convo.schedule.every(itemA =>
+        updates.schedule.some(itemB =>
+          itemA.day === itemB.day && itemA.time === itemB.time
+        )
+      )
+    );
+    const duplicate = matchingSchedules.find(convo => convo._id.toString() !== id.toString());
+
+    if (duplicate) {
+      return res.status(409).json({
+        message: 'Conversation class already exists',
+        class: duplicate
+      });
     }
 
     const updatedConversation = await Conversation.findByIdAndUpdate(
@@ -516,16 +536,20 @@ app.post('/api/conversations', async (req, res) => {
     const { ageGroup, instructor, schedule } = req.body;
 
     // Check if conversation already exists
-    const query = { ageGroup, instructor };
-    if (schedule) {
-      query.$expr = { $setEquals: ["$schedule", schedule] };
-    }
-    const existingConversation = await Conversation.findOne(query);
+    const existingConversations = await Conversation.find({ ageGroup, instructor });
+    const matchingSchedules = existingConversations.filter(convo =>
+      convo.schedule.length === schedule.length &&
+      convo.schedule.every(itemA =>
+        schedule.some(itemB =>
+          itemA.day === itemB.day && itemA.time === itemB.time
+        )
+      )
+    );
 
-    if (existingConversation) {
+    if (matchingSchedules.length > 0) {
       return res.status(409).json({
-        message: 'Conversation already exists',
-        class: existingConversation
+        message: 'Conversation class already exists',
+        class: matchingSchedules[0]
       });
     } else {
       const newConversation = new Conversation({
@@ -586,16 +610,20 @@ app.post('/api/classes', async (req, res) => {
     const { level, ageGroup, instructor, schedule } = req.body;
 
     // Check if class already exists
-    const query = { level, ageGroup, instructor };
-    if (schedule) {
-      query.$expr = { $setEquals: ["$schedule", schedule] };
-    }
-    const existingClass = await Class.findOne(query);
+    const existingClasses = await Class.find({ level, ageGroup, instructor });
+    const matchingSchedules = existingClasses.filter(cls =>
+      cls.schedule.length === schedule.length &&
+      cls.schedule.every(itemA =>
+        schedule.some(itemB =>
+          itemA.day === itemB.day && itemA.time === itemB.time
+        )
+      )
+    );
 
-    if (existingClass) {
+    if (matchingSchedules.length > 0) {
       return res.status(409).json({
         message: 'Class already exists',
-        class: existingClass
+        class: matchingSchedules[0]
       });
     } else {
       const newClass = new Class({
@@ -618,14 +646,33 @@ app.post('/api/classes', async (req, res) => {
 });
 
 
-// Update Class
+// Edit Class
 app.put('/api/classes/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+    const { level, ageGroup, instructor, schedule } = updates;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const existingClasses = await Class.find({ level: level, ageGroup: ageGroup, instructor: instructor });
+    const matchingSchedules = existingClasses.filter(cls =>
+      cls.schedule.length === schedule.length &&
+      cls.schedule.every(itemA =>
+        schedule.some(itemB =>
+          itemA.day === itemB.day && itemA.time === itemB.time
+        )
+      )
+    );
+    const duplicate = matchingSchedules.find(cls => cls._id.toString() !== id.toString());
+
+    if (duplicate) {
+      return res.status(409).json({
+        message: 'Class already exists',
+        class: duplicate
+      });
     }
 
     const updatedClass = await Class.findByIdAndUpdate(
@@ -718,7 +765,6 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
   const { id } = req.params;
-  console.log("unenrolling")
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID' });
@@ -817,9 +863,18 @@ app.put('/api/levels/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+    console.log(updates)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const existingLevel = await Level.findOne({ level: updates.level });
+    if (existingLevel && existingLevel._id.toString() !== id.toString()) {
+      return res.status(409).json({
+        message: 'Level with this number already exists',
+        level: existingLevel
+      })
     }
 
     const updatedLevel = await Level.findByIdAndUpdate(
@@ -872,7 +927,7 @@ app.post('/api/levels', async (req, res) => {
 
     if (existingLevel) {
       return res.status(409).json({
-        message: 'Level already exists',
+        message: 'Level with this number already exists',
         level: existingLevel
       });
     } else {
@@ -890,7 +945,7 @@ app.post('/api/levels', async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Error creating class' });
+    return res.status(500).json({ message: 'Failed to add level' });
   }
 });
 

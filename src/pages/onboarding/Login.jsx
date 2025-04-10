@@ -25,7 +25,7 @@ export default function Login() {
     if (isSignedIn && user) {
       if (user?.privilege === "admin") {
         setLocation("/admin/levels");
-      } else if (user?.privilege === "teacher") {
+      } else if (user?.privilege === "instructor") {
         setLocation("/instructor")
       } else {
         setLocation("/student")

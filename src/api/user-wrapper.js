@@ -1,6 +1,10 @@
 import axios from 'axios';
 
+const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
 const postUser = async (body) => {
+  userData.firstName = toTitleCase(userData.firstName);
+  userData.lastName = toTitleCase(userData.lastName);
   try {
     const response = await axios.post("/api/sign-up", body);
     return response;
@@ -59,6 +63,15 @@ const resetPassword = async (body) => {
 
 const updateUser = async (userId, userData) => {
   try {
+    if (Object.hasOwn(userData, "firstName")) {
+      userData.firstName = toTitleCase(userData.firstName);
+    }
+    if (Object.hasOwn(userData, "lastName")) {
+      userData.lastName = toTitleCase(userData.lastName);
+    }
+    if (Object.hasOwn(userData, "gender")) {
+      userData.gender = userData.gender.toLowerCase();
+    }
     const response = await axios.put(`/api/user/${userId}`, userData);
     return response.data;
   } catch (error) {
