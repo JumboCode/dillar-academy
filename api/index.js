@@ -48,6 +48,8 @@ purpose: check that the input key is allowed
 argument types:
   inputs: object
   allowedFields: array
+return type:
+  array containing fields that are in allowedFields
 
 example of using to get filters for classes: validateInput(req.query, classFields)
 */
@@ -64,7 +66,6 @@ const validateInput = (input, allowedFields) => {
 }
 
 
-
 //------------------ MONGOOSE SCHEMAS ------------------//
 
 const Schema = mongoose.Schema
@@ -77,7 +78,7 @@ const UserSchema = new Schema({
   age: { type: Number },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  privilege: { type: String, default: "student", enum: ["admin", "teacher", "student"] },
+  privilege: { type: String, default: "student", enum: ["admin", "instructor", "student"] },
   clerkId: { type: String, required: true },
   creationDate: { type: Date, default: Date.now },
   enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
@@ -131,7 +132,7 @@ const Conversation = mongoose.model("Conversation", ConversationSchema)
 
 // Level Schema
 const LevelSchema = new Schema({
-  level: { type: Number, required: true },
+  level: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
   skills: { type: [String], default: [] }
@@ -140,8 +141,128 @@ const LevelSchema = new Schema({
 const Level = mongoose.model("Level", LevelSchema)
 
 
+// Translation Schema
+const TranslationSchema = new Schema({
+  key: { type: String, required: true },
+  translations: {
+    en: { type: String, required: true },
+    ru: { type: String, required: true },
+    zh: { type: String, required: true },
+    tr: { type: String, required: true },
+    ug: { type: String, required: true }
+  }
+}, { collection: 'translations' })
+
+const Translation = mongoose.model("Translation", TranslationSchema)
+
+
 
 //------------------ ENDPOINTS ------------------//
+
+/* TRANSLATION RELATED ENDPOINTS */
+
+// Get Translations
+app.get('/api/translations', async (req, res) => {
+  try {
+    const translations = await Translation.find();
+    return res.status(200).json(translations);
+  } catch (error) {
+    res.status(500).json({ message: 'Error getting translations' });
+  }
+})
+
+
+// Edit Translation
+app.put('/api/translation/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const updatedTranslation = await Translation.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true, upsert: true, runValidators: true }
+    );
+    res.status(200).json(updatedTranslation);
+  } catch (error) {
+    res.status(500).json({ message: 'Error editing translation' });
+  }
+})
+
+
+// Delete Translation
+app.delete('/api/translation/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+    await Translation.findByIdAndDelete(id);
+    res.status(204);
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting translation' });
+  }
+})
+
+
+// Move all i18nexus translations to MongoDB
+app.post('/api/transfer-translations/', async (req, res) => {
+  try {
+    const response = await fetch(`https://api.i18nexus.com/project_resources/translations.json?api_key=${process.env.I18NEXUS_API_KEY}`)
+    if (!response.ok) {
+      return res.status(response.status).json({ message: 'Failed to fetch translations' });
+    }
+
+    const translations = await response.json();
+
+    const translationsToInsert = [];
+    for (const lang in translations) {
+      const languageData = translations[lang];
+
+      // Loop through each key in the language's translations
+      for (const key in languageData.default) {
+        const existingTranslation = translationsToInsert.find(t => t.key === key);
+
+        if (existingTranslation) {
+          // If the translation already exists in the array update the language value
+          existingTranslation.translations[lang] = languageData.default[key];
+        } else {
+          // Otherwise create new translation document for this key
+          const newTranslation = {
+            key,
+            translations: {
+              en: languageData.default['en'] || '',
+              ru: languageData.default['ru'] || '',
+              zh: languageData.default['zh'] || '',
+              tr: languageData.default['tr'] || '',
+              ug: languageData.default['ug'] || ''
+            }
+          };
+          newTranslation.translations[lang] = languageData.default[key];
+          translationsToInsert.push(newTranslation);
+        }
+      }
+    }
+
+    // Ensure each translation has all language fields
+    translationsToInsert.forEach(translation => {
+      ['en', 'ru', 'zh', 'tr', 'ug'].forEach(lang => {
+        if (!translation[lang]) {
+          translation[lang] = '';
+        }
+      });
+    });
+
+    await Translation.insertMany(translationsToInsert);
+
+    return res.status(200).json({ message: "Successfully inserted translations" })
+  } catch (error) {
+    res.status(500).json({ message: 'Error transferring translations' })
+  }
+})
+
 
 /* USER RELATED ENDPOINTS */
 
@@ -340,14 +461,33 @@ app.get('/api/conversations/:id', async (req, res) => {
   }
 })
 
-// Update Conversation
+// Edit Conversation
 app.put('/api/conversations/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+    console.log(updates)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const existingConversations = await Conversation.find({ ageGroup: updates.ageGroup, instructor: updates.instructor });
+    const matchingSchedules = existingConversations.filter(convo =>
+      convo.schedule.length === updates.schedule.length &&
+      convo.schedule.every(itemA =>
+        updates.schedule.some(itemB =>
+          itemA.day === itemB.day && itemA.time === itemB.time
+        )
+      )
+    );
+    const duplicate = matchingSchedules.find(convo => convo._id.toString() !== id.toString());
+
+    if (duplicate) {
+      return res.status(409).json({
+        message: 'Conversation class already exists',
+        class: duplicate
+      });
     }
 
     const updatedConversation = await Conversation.findByIdAndUpdate(
@@ -383,7 +523,7 @@ app.delete('/api/conversations/:id', async (req, res) => {
     // delete conversation
     await Conversation.findByIdAndDelete(id);
 
-    res.status(200).json({ message: 'Conversation deleted successfully' });
+    res.status(204).json({ message: 'Conversation deleted successfully' });
   } catch (error) {
     console.error('Error deleting conversation:', error);
     res.status(500).json({ message: 'Error deleting conversation' });
@@ -396,16 +536,20 @@ app.post('/api/conversations', async (req, res) => {
     const { ageGroup, instructor, schedule } = req.body;
 
     // Check if conversation already exists
-    const query = { ageGroup, instructor };
-    if (schedule) {
-      query.$expr = { $setEquals: ["$schedule", schedule] };
-    }
-    const existingConversation = await Conversation.findOne(query);
+    const existingConversations = await Conversation.find({ ageGroup, instructor });
+    const matchingSchedules = existingConversations.filter(convo =>
+      convo.schedule.length === schedule.length &&
+      convo.schedule.every(itemA =>
+        schedule.some(itemB =>
+          itemA.day === itemB.day && itemA.time === itemB.time
+        )
+      )
+    );
 
-    if (existingConversation) {
+    if (matchingSchedules.length > 0) {
       return res.status(409).json({
-        message: 'Conversation already exists',
-        class: existingConversation
+        message: 'Conversation class already exists',
+        class: matchingSchedules[0]
       });
     } else {
       const newConversation = new Conversation({
@@ -437,7 +581,6 @@ app.get('/api/students-classes/:id', async (req, res) => {
 
     const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
     res.json(data);
-
   } catch (err) {
     res.status(500).send(err);
   }
@@ -467,16 +610,20 @@ app.post('/api/classes', async (req, res) => {
     const { level, ageGroup, instructor, schedule } = req.body;
 
     // Check if class already exists
-    const query = { level, ageGroup, instructor };
-    if (schedule) {
-      query.$expr = { $setEquals: ["$schedule", schedule] };
-    }
-    const existingClass = await Class.findOne(query);
+    const existingClasses = await Class.find({ level, ageGroup, instructor });
+    const matchingSchedules = existingClasses.filter(cls =>
+      cls.schedule.length === schedule.length &&
+      cls.schedule.every(itemA =>
+        schedule.some(itemB =>
+          itemA.day === itemB.day && itemA.time === itemB.time
+        )
+      )
+    );
 
-    if (existingClass) {
+    if (matchingSchedules.length > 0) {
       return res.status(409).json({
         message: 'Class already exists',
-        class: existingClass
+        class: matchingSchedules[0]
       });
     } else {
       const newClass = new Class({
@@ -499,14 +646,33 @@ app.post('/api/classes', async (req, res) => {
 });
 
 
-// Update Class
+// Edit Class
 app.put('/api/classes/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+    const { level, ageGroup, instructor, schedule } = updates;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const existingClasses = await Class.find({ level: level, ageGroup: ageGroup, instructor: instructor });
+    const matchingSchedules = existingClasses.filter(cls =>
+      cls.schedule.length === schedule.length &&
+      cls.schedule.every(itemA =>
+        schedule.some(itemB =>
+          itemA.day === itemB.day && itemA.time === itemB.time
+        )
+      )
+    );
+    const duplicate = matchingSchedules.find(cls => cls._id.toString() !== id.toString());
+
+    if (duplicate) {
+      return res.status(409).json({
+        message: 'Class already exists',
+        class: duplicate
+      });
     }
 
     const updatedClass = await Class.findByIdAndUpdate(
@@ -552,7 +718,7 @@ app.delete('/api/classes/:id', async (req, res) => {
     // delete class
     await Class.findByIdAndDelete(id);
 
-    res.status(200).json({ message: 'Class deleted successfully' });
+    res.status(204).json({ message: 'Class deleted successfully' });
   } catch (error) {
     console.error('Error deleting class:', error);
     res.status(500).json({ message: 'Error deleting class' });
@@ -570,6 +736,12 @@ app.put('/api/users/:id/enroll', async (req, res) => {
   }
 
   try {
+    // check that student isn't already enrolled
+    const user = await User.findById(id);
+    if (user.enrolledClasses.includes(classId)) {
+      return res.status(400).json({ message: 'Already enrolled in this class' });
+    }
+
     // add class id to user's classes
     await User.findByIdAndUpdate(
       id,
@@ -593,13 +765,18 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 app.put('/api/users/:id/unenroll', async (req, res) => {
   const { classId } = req.body
   const { id } = req.params;
-  console.log("unenrolling")
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid ID' });
   }
 
   try {
+    // check that student is enrolled
+    const user = await User.findById(id);
+    if (!user.enrolledClasses.includes(classId)) {
+      return res.status(400).json({ message: 'Not enrolled in this class' });
+    }
+
     // remove class id from user's classes
     await User.findByIdAndUpdate(
       id,
@@ -686,9 +863,18 @@ app.put('/api/levels/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+    console.log(updates)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const existingLevel = await Level.findOne({ level: updates.level });
+    if (existingLevel && existingLevel._id.toString() !== id.toString()) {
+      return res.status(409).json({
+        message: 'Level with this number already exists',
+        level: existingLevel
+      })
     }
 
     const updatedLevel = await Level.findByIdAndUpdate(
@@ -723,7 +909,7 @@ app.delete('/api/levels/:id', async (req, res) => {
 
     await Level.findByIdAndDelete(id);
 
-    res.status(200).json({ message: 'Level deleted successfully' });
+    res.status(204).json({ message: 'Level deleted successfully' });
   } catch (error) {
     console.error('Error deleting level:', error);
     res.status(500).json({ message: 'Error deleting level' });
@@ -741,7 +927,7 @@ app.post('/api/levels', async (req, res) => {
 
     if (existingLevel) {
       return res.status(409).json({
-        message: 'Level already exists',
+        message: 'Level with this number already exists',
         level: existingLevel
       });
     } else {
@@ -759,7 +945,7 @@ app.post('/api/levels', async (req, res) => {
     }
   } catch (error) {
     console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Error creating class' });
+    return res.status(500).json({ message: 'Failed to add level' });
   }
 });
 
@@ -768,7 +954,7 @@ app.get('/api/students-export', async (req, res) => {
   try {
     // Get all students with privilege "student"
     const students = await User.find({ privilege: 'student' });
-    
+
     // Get all classes for reference
     const classes = await Class.find();
     // Create a map for quick access to class details
@@ -785,23 +971,23 @@ app.get('/api/students-export', async (req, res) => {
           if (!classInfo) return null;
 
           // Format schedules
-          const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n'); 
-          
+          const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n');
+
           // Convert EST to Istanbul time (EST + 7 hours)
           const scheduleIstanbul = classInfo.schedule.map(s => {
             // Parse the time string (e.g., "10:00am")
             const [hourStr, minuteStr] = s.time.split(':');
             const [hour, minute] = [parseInt(hourStr), parseInt(minuteStr || 0)];
-            
+
             // Create date objects for conversion
             const estTime = new Date();
             estTime.setHours(hour, minute);
-            
+
             // Istanbul is EST + 7 hours
             const istTime = new Date(estTime.getTime() + (7 * 60 * 60 * 1000));
             const istHours = istTime.getHours();
             const istMinutes = istTime.getMinutes();
-            
+
             return `${s.day} ${istHours}:${istMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}`;
           }).join('\n');
 

@@ -13,7 +13,7 @@ import StudentPortal from '@/pages/dashboards/StudentPortal';
 import AdminLevels from '@/pages/dashboards/admin/AdminLevels';
 import AdminConversations from '@/pages/dashboards/admin/AdminConversations';
 import AdminStudents from '@/pages/dashboards/admin/AdminStudents';
-import AdminTeachers from '@/pages/dashboards/admin/AdminTeachers';
+import AdminInstructors from '@/pages/dashboards/admin/AdminInstructors';
 import AdminSchedule from '@/pages/dashboards/admin/AdminSchedule';
 import EditLevel from '@/pages/dashboards/admin/editPages/EditLevel';
 import AddLevel from '@/pages/dashboards/admin/editPages/AddLevel';
@@ -22,13 +22,12 @@ import AddClass from '@/pages/dashboards/admin/editPages/AddClass';
 import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation';
 import AddConversation from '@/pages/dashboards/admin/editPages/AddConversation';
 import EditUser from '@/pages/dashboards/admin/editPages/EditUser';
-import TeacherView from '@/pages/dashboards/TeacherView';
-import EditTeacher from '@/pages/dashboards/EditTeacher';
+import InstructorView from '@/pages/dashboards/InstructorView';
+import AdminTranslations from '@/pages/dashboards/admin/AdminTranslations';
 import PageNotFound from '@/pages/PageNotFound';
 import StyleGuide from "@/pages/StyleGuide";
 // TODO
-import TeacherEditClass from '@/pages/dashboards/TeacherEditClass';
-import UserEditStudent from "../pages/dashboards/UserEditStudent";
+import InstructorEditClass from '@/pages/dashboards/InstructorEditClass';
 
 export default function PageRoutes() {
   return (
@@ -44,7 +43,6 @@ export default function PageRoutes() {
       <Route path="/reset-password-code" component={ResetPasswordCode} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/student" component={StudentPortal} />
-      <Route path="/user/:id" component={UserEditStudent} />
       <Route path="/admin/levels" component={AdminLevels} />
       <Route path="/admin/levels/conversations" component={AdminConversations} />
       <Route path="/admin/levels/conversations/new" component={AddConversation} />
@@ -54,13 +52,13 @@ export default function PageRoutes() {
       <Route path="/admin/class/new" component={AddClass} />
       <Route path="/admin/class/:classId" component={EditClass} />
       <Route path="/admin/students" component={AdminStudents} />
-      <Route path="/admin/instructors" component={AdminTeachers} />
+      <Route path="/admin/instructors" component={AdminInstructors} />
       <Route path="/admin/user/:id" component={EditUser} />
       <Route path="/admin/schedule" component={AdminSchedule} />
-      <Route path="/instructor" component={TeacherView} />
-      <Route path="/instructor/edit/:id" component={EditTeacher} />
+      <Route path="/admin/translations" component={AdminTranslations} />
+      <Route path="/instructor" component={InstructorView} />
       <Route path="/style" component={StyleGuide} />
-      <Route path="/instructor/class/:id" component={TeacherEditClass} />
+      <Route path="/instructor/class/:id" component={InstructorEditClass} />
 
       <Route component={PageNotFound} />
     </Switch>

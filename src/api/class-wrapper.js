@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
 // query should be a string
 const getClasses = async (query = "") => {
   try {
@@ -20,6 +22,7 @@ const getConversations = async () => {
 }
 
 const createClass = async (classData) => {
+  classData.instructor = toTitleCase(classData.instructor);
   try {
     const response = await axios.post('/api/classes', classData);
     return response.data;
@@ -30,6 +33,9 @@ const createClass = async (classData) => {
 }
 
 const updateClass = async (classId, classData) => {
+  if (Object.hasOwn(classData, "instructor")) {
+    classData.instructor = toTitleCase(classData.instructor);
+  }
   try {
     const response = await axios.put(`/api/classes/${classId}`, classData);
     return response.data;
@@ -146,6 +152,9 @@ const getConversationById = async (conversationId = "") => {
 }
 
 const updateConversation = async (conversationId, conversationData) => {
+  if (Object.hasOwn(conversationData, "instructor")) {
+    conversationData.instructor = toTitleCase(conversationData.instructor);
+  }
   try {
     const response = await axios.put(`/api/conversations/${conversationId}`, conversationData);
     return response.data;
@@ -166,6 +175,7 @@ const deleteConversation = async (conversationId) => {
 }
 
 const createConversation = async (conversationData) => {
+  conversationData.instructor = toTitleCase(conversationData.instructor);
   try {
     const response = await axios.post('/api/conversations', conversationData);
     return response.data;

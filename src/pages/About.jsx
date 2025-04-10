@@ -19,9 +19,9 @@ function About() {
             />
             <h1 className="font-extrabold text-3xl sm:text-[2.5rem] text-blue-700">{t("about_heading")}</h1>
           </div>
-          <p>{t("about_desc_1")}
+          <p>{t("about_body1")}
             <br /><br />
-            {t("about_desc_2")}
+            {t("about_body2")}
           </p>
         </div>
       </section>

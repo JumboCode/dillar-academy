@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import Dropdown from '../../../components/Dropdown/Dropdown';
+import Schedule from '@/components/Schedule';
 import { getClasses } from '@/api/class-wrapper';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
@@ -69,39 +70,7 @@ const AdminSchedule = () => {
           ))}
         </Dropdown>
       </div>
-      <section>
-        <div className="table w-full table-fixed">
-          <div className="table-header-group">
-            <div className="table-row">
-              {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
-                <div key={day} className="table-cell text-center font-semibold p-2">
-                  {day}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="table-row-group">
-            <div className="table-row h-24">
-              {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => (
-                <div key={day} className="table-cell p-2">
-
-                  {classes.length > 0 ? (classes
-                    .flatMap(classObj => classObj.schedule.map(schedule => ({ ...schedule, instructor: classObj.instructor, level: classObj.level })))
-                    .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
-                    .filter(schedule => currFilters.length === 0 || currFilters.includes(schedule.level))
-                    .sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`)) // Sort by time
-                    .map((schedule, index) => (
-                      <div key={index} className="bg-blue-200 rounded p-2 mb-2">
-                        <div className="text-gray-600 text-sm">{schedule.day} {schedule.time}</div>
-                        <div>Class with {schedule.instructor}</div>
-                      </div>))) : (<div>no classes</div>)
-                  }
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <Schedule classes={classes} filters={currFilters} />
     </div>
   )
 }

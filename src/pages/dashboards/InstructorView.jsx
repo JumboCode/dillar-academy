@@ -1,23 +1,21 @@
-import { useContext, useEffect, useState } from 'react';
-import { getClassById, getStudentsClasses } from '@/api/class-wrapper';
-import { updateUser } from '@/api/user-wrapper';
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
-import { Link } from "wouter"
-import Class from '@/components/Class/Class'
+import { updateUser } from '@/api/user-wrapper';
+import { getClasses } from '@/api/class-wrapper'
+import { IoCreateOutline } from "react-icons/io5";
 import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import Overlay from '@/components/Overlay';
 import Schedule from '@/components/Schedule';
-import { IoAdd, IoCreateOutline } from "react-icons/io5";
 
 
-const StudentPortal = () => {
-  const [classes, setClasses] = useState([]);
+const InstructorView = () => {
+  const [classes, setClasses] = useState([])
   const { user, setUser } = useContext(UserContext);
   const [, setLocation] = useLocation();
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editFormData, setEditFormData] = useState({
@@ -31,14 +29,8 @@ const StudentPortal = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const response = await getStudentsClasses(user?._id);
-        const classes = await Promise.all(
-          response.enrolledClasses.map(async (classID) => {
-            const classResponse = await getClassById(classID);
-            return classResponse; // Return the class details
-          })
-        );
-        setClasses(classes);
+        const instructorClasses = await getClasses(`instructor=${toTitleCase(user.firstName)}`); // TODO: will it always be first name or possibly last name? or both?
+        setClasses(instructorClasses);
         setAllowRender(true);
       }
     };
@@ -96,12 +88,12 @@ const StudentPortal = () => {
     return;
   }
 
-  if (user.privilege !== "student") {
+  if (user?.privilege !== "instructor") {
     return <div>Unauthorized</div>
   }
 
   return (
-    <div className='page-format max-w-[96rem] lg:py-24 space-y-12'>
+    <div className="page-format max-w-[96rem] lg:py-24 space-y-12">
       <div>
         <span className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
           <h1 title={`Name: ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`} className='font-extrabold truncate'>
@@ -132,22 +124,6 @@ const StudentPortal = () => {
         </div>
       </div>
 
-      <section className='my-12'>
-        <h2 className='font-extrabold mb-6'> Your courses </h2>
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
-          {classes.map((classObj, classIndex) => (
-            <Class key={classIndex} classObj={classObj} modes={["unenroll"]} />
-          ))}
-          <div className="flex justify-center sm:justify-normal items-center w-full">
-            <Button
-              label={<IoAdd className="text-2xl font-extrabold" />}
-              isRound
-              onClick={() => setLocation("/levels")}
-            />
-          </div>
-        </div>
-      </section>
-
       <section>
         <h2 className='font-extrabold my-8'>
           Class Schedule
@@ -155,82 +131,81 @@ const StudentPortal = () => {
         <Schedule classes={classes} />
       </section>
 
-      {showEditModal && (
-        <Overlay width={'w-1/2'}>
-          <form onSubmit={handleEditUser} className="flex flex-col gap-y-6 py-3 px-2">
-            <div className="sm:flex gap-y-6 sm:gap-y-0 sm:gap-x-6">
-              <div className="w-full">
-                <label>First Name</label>
-                <FormInput
-                  type="text"
-                  name="firstName"
-                  placeholder="First Name"
-                  value={editFormData.firstName}
-                  onChange={handleInputChange}
-                  isRequired={true}
-                />
-              </div>
-              <div className="w-full">
-                <label>Last Name</label>
-                <FormInput
-                  type="text"
-                  name="lastName"
-                  placeholder="Last Name"
-                  value={editFormData.lastName}
-                  onChange={handleInputChange}
-                  isRequired={true}
-                />
-              </div>
-            </div>
+      {showEditModal && <Overlay width={'w-1/2'}>
+        <form onSubmit={handleEditUser} className="flex flex-col gap-y-6 py-3 px-2">
+          <div className="sm:flex gap-y-6 sm:gap-y-0 sm:gap-x-6">
             <div className="w-full">
-              <label>Email</label>
+              <label>First Name</label>
               <FormInput
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={editFormData.email}
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                value={editFormData.firstName}
                 onChange={handleInputChange}
                 isRequired={true}
               />
             </div>
-            <div className='w-full'>
-              <label>Age</label>
-              <FormInput
-                type="text"
-                name="age"
-                placeholder="Age"
-                value={editFormData.age}
-                onChange={handleInputChange}
-                isRequired={false}
-              />
-            </div>
             <div className="w-full">
-              <label>Gender</label>
+              <label>Last Name</label>
               <FormInput
                 type="text"
-                name="gender"
-                placeholder="Gender"
-                value={editFormData.gender}
+                name="lastName"
+                placeholder="Last Name"
+                value={editFormData.lastName}
                 onChange={handleInputChange}
-                isRequired={false}
+                isRequired={true}
               />
             </div>
-            <div className="flex space-x-2">
-              <Button
-                label="Cancel"
-                isOutline={true}
-                onClick={() => {
-                  setShowEditModal(false);
-                  setEditFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
-                }}
-              />
-              <Button label="Save Info" type="submit" />
-            </div>
-          </form>
-        </Overlay>
-      )}
+          </div>
+          <div className="w-full">
+            <label>Email</label>
+            <FormInput
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={editFormData.email}
+              onChange={handleInputChange}
+              isRequired={true}
+            />
+          </div>
+          <div className='w-full'>
+            <label>Age</label>
+            <FormInput
+              type="text"
+              name="age"
+              placeholder="Age"
+              value={editFormData.age}
+              onChange={handleInputChange}
+              isRequired={false}
+            />
+          </div>
+          <div className="w-full">
+            <label>Gender</label>
+            <FormInput
+              type="text"
+              name="gender"
+              placeholder="Gender"
+              value={editFormData.gender}
+              onChange={handleInputChange}
+              isRequired={false}
+            />
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              label="Cancel"
+              isOutline={true}
+              onClick={() => {
+                setShowEditModal(false);
+                setEditFormData({ firstName: '', lastName: '', email: '', age: '', gender: '' });
+              }}
+            />
+            <Button label="Save Info" type="submit" />
+          </div>
+        </form>
+      </Overlay>}
     </div>
   );
-}
+};
 
-export default StudentPortal;
+
+export default InstructorView;

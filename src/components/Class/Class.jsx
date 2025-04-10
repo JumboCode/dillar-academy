@@ -5,13 +5,26 @@ import EnrollButton from '@/components/Button/EnrollButton'
 import Button from '@/components/Button/Button'
 import EditButton from '@/components/Button/EditButton'
 import { UserContext } from "../../contexts/UserContext";
+import { useTranslation } from "react-i18next";
 
 // possible modes: enroll, unenroll, edit, delete
 // editURL used for edit page URL to navigate to
 // handleDelete is function used for deleting class
-const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null }) => {
+const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null, isSimplified }) => {
+  const { t } = useTranslation();
   const { user, } = useContext(UserContext);
-  return (
+
+  return isSimplified ? (
+    <div className='shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-2xl py-8 px-7 flex gap-x-3 items-center justify-between'>
+      <div className='flex items-center gap-x-6'>
+        <h3 className='text-dark-blue-800 font-extrabold'>Level {classObj.level}</h3>
+        <p className='text-neutral-600'>
+          {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}
+        </p>
+      </div>
+      <p className='sm:text-lg'>Taught by {classObj.instructor}</p>
+    </div>
+  ) : (
     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
       {/* Header */}
       <div className='mb-4'>
