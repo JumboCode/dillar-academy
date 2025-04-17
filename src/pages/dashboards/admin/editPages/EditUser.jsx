@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { updateUser, getUser } from '@/api/user-wrapper.js';
+import { updateUser, getUser, deleteUser } from '@/api/user-wrapper.js';
 import { getClassById, getClasses, enrollInClass, unenrollInClass } from '@/api/class-wrapper';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
@@ -27,6 +27,7 @@ const EditUser = () => {
     firstName: '',
     lastName: '',
     email: '',
+    privilege: ''
   });
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
@@ -54,6 +55,7 @@ const EditUser = () => {
         firstName: userData.data.firstName,
         lastName: userData.data.lastName,
         email: userData.data.email,
+        privilege: userData.data.privilege
       });
       let userClasses;
       if (userData.data.privilege === "student") {
@@ -83,7 +85,7 @@ const EditUser = () => {
     try {
       await updateUser(params.id, userFormData);
       setSuccessMessage("Successfully updated user information")
-      setUserFormData({ firstName: '', lastName: '', email: '' })
+      setUserFormData({ firstName: '', lastName: '', email: '', privilege: ''})
       await fetchData();
       setTimeout(() => {
         setSuccessMessage("");
@@ -97,14 +99,28 @@ const EditUser = () => {
     }
   };
 
+  const handleDeleteUser = async () => {
+    try {
+      await deleteUser(params.id);
+      history.back();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("")
+      }, 4000);
+    }
+  }
+
   const handleReset = () => {
     setUserFormData({
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
+      privilege: userData.privilege
     });
   }
-
+  
   const filteredClasses = classes.filter((cls) => {
     const search = searchInput.toLowerCase().split(" ");
     if (search.length <= 1 && search[0] === '') {
@@ -172,6 +188,19 @@ const EditUser = () => {
                 isRequired={true}
               />
             </div>
+            <div className="w-full flex flex-col"> 
+              <label>Privilege</label>
+              <select name="privilege" 
+                      id="privileges" 
+                      className="text-base sm:text-lg w-full py-3 px-4 border
+                              border-gray-400 rounded-sm focus:outline-none focus:ring-2 
+                              focus:ring-blue-300 placeholder-gray-500"
+                      onChange={handleUserInputChange}
+              >
+                <option value="student">Student</option>
+                <option value="instructor">Instructor</option>
+              </select>
+            </div>
           </div>
           <div className="space-x-2">
             <Button label="Save" type="submit" />
@@ -179,6 +208,10 @@ const EditUser = () => {
               label="Reset"
               isOutline={true}
               onClick={handleReset} />
+            <Button
+              label="Delete User"
+              isOutline={true}
+              onClick={handleDeleteUser} />
           </div>
         </form>
         <div>
