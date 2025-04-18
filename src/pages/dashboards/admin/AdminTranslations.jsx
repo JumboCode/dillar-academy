@@ -4,8 +4,10 @@ import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getClasses, getLevels, getConversations } from '@/api/class-wrapper';
 import SearchBar from '@/components/SearchBar';
-import Dropdown from '@/components/Dropdown/Dropdown';
-import { IoChevronDownOutline } from "react-icons/io5";
+import Overlay from '@/components/Overlay';
+import Button from '@/components/Button/Button';
+import { IoChevronDownOutline, IoCreateOutline } from "react-icons/io5";
+// import { editTranslation } from '@/api/translation-wrapper';
 
 const AdminTranslations = () => {
   const { user } = useContext(UserContext);
@@ -100,8 +102,6 @@ const AdminTranslations = () => {
 }
 
 const TranslationTable = ({ translations }) => {
-  const supportedLngs = ["English", "Uyghurche", "Russian", "Turkish", "Chinese"];
-
   return (
     <div className="flex flex-col rounded-sm border border-dark-blue-800 overflow-hidden">
       <div className="w-full grid grid-cols-[1fr_2fr] py-4 px-8 bg-dark-blue-800 text-white text-center">
@@ -125,7 +125,32 @@ const TableRow = ({ id, translations }) => {
     Turkish: "tr",
     Uyghurche: "ug"
   };
-  const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showEditOverlay, setShowEditOverlay] = useState(false);
+  const [formData, setFormData] = useState({
+    lng: "",
+    key: "",
+    translation: ""
+  });
+
+  const resetForm = () => {
+    setFormData({
+      lng: "",
+      key: "",
+      translation: ""
+    });
+  }
+
+  const handleEditTranslation = async (e) => {
+    e.preventDefault();
+
+    try {
+      // await editTranslation(formData.lng, formData.key, formData.translation);
+      resetForm();
+    } catch (error) {
+      console.error("handleEditTranslation failed:", error);
+    }
+  }
 
   return (
     <div className="w-full text-base sm:text-lg border-t border-dark-blue-800">
@@ -134,19 +159,25 @@ const TableRow = ({ id, translations }) => {
           <div className="relative w-full border-r border-dark-blue-800 h-full px-3 py-4 flex items-center justify-center">
             <button
               className="absolute left-3 top-1/2 -translate-y-1/2 p-2"
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => setIsExpanded(!isExpanded)}
             >
-              <IoChevronDownOutline className={`text-xl text-black transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+              <IoChevronDownOutline className={`text-xl text-dark-blue-800 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
             </button>
             <p className="text-center px-10">English</p>
           </div>
-          <div className='w-full text-left px-5 py-4'>
+          <div className='w-full text-left px-5 py-4 flex gap-x-4 items-center justify-between'>
             <p>{translations.en[id]}</p>
+            <button
+              className='p-2 h-fit'
+              onClick={() => setShowEditOverlay(true)}
+            >
+              <IoCreateOutline className='text-2xl text-dark-blue-800' />
+            </button>
           </div>
           <div
             className={`
           col-span-2 overflow-hidden transition-[max-height] duration-300 ease-in-out
-          ${isOpen ? 'max-h-[1000px]' : 'max-h-0'}
+          ${isExpanded ? 'max-h-[1000px]' : 'max-h-0'}
         `}
           >
             <div className="grid grid-cols-[1fr_2fr]">
@@ -155,43 +186,38 @@ const TableRow = ({ id, translations }) => {
                   <div className="w-full border-r border-t border-dark-blue-800 h-full flex items-center justify-between">
                     <div className="w-14 h-full bg-dark-blue-800"></div>
                     <p className="px-3 py-4">{lng}</p>
+                    {/* use invisible div to keep text centered */}
                     <div className="w-14 h-full"></div>
                   </div>
-                  <div className="w-full border-t border-dark-blue-800 h-full text-left px-5 py-4">
+                  <div className="w-full border-t border-dark-blue-800 h-full text-left px-5 py-4 flex gap-x-4 items-center justify-between">
                     <p>{translations[supportedLngs[lng]][id]}</p>
+                    <button className='p-2 h-fit'>
+                      <IoCreateOutline className='text-2xl text-dark-blue-800' />
+                    </button>
                   </div>
                 </React.Fragment>
               ))}
             </div>
           </div>
-          {/* {Object.keys(supportedLngs)
-            .slice(1)
-            .map((lng, index) => (
-              <React.Fragment key={lng}>
-                <div
-                  className={`
-                    w-full h-full flex items-center justify-between
-                    transition-all duration-300 ease-in-out
-                    ${isOpen ? 'opacity-100 border-r border-t border-dark-blue-800' : 'opacity-0 max-h-0 overflow-hidden'}
-                  `}
-                >
-                  <div className="w-14 h-full bg-dark-blue-800" />
-                  <p className="px-3">{lng}</p>
-                  <div className="w-14 h-full" />
-                </div>
-                <div
-                  className={`
-                    w-full h-full text-left
-                    transition-all duration-300 ease-in-out
-                    ${isOpen ? 'opacity-100 py-4 px-5 border-t border-dark-blue-800' : 'opacity-0 max-h-0 overflow-hidden px-5'}
-                  `}
-                >
-                  <p>{translations[supportedLngs[lng]][id]}</p>
-                </div>
-              </React.Fragment>
-            ))} */}
         </div>
       </div>
+
+      {showEditOverlay && <Overlay>
+        <form action={handleEditTranslation}>
+          {/* make fields required */}
+          <div className="grid grid-cols-2 gap-x-2">
+            <Button
+              label="Cancel"
+              isOutline={true}
+              onClick={() => {
+                setShowEditOverlay(false);
+                resetForm();
+              }}
+            />
+            <Button label="Save" type="submit" />
+          </div>
+        </form>
+      </Overlay>}
     </div>
   )
 }

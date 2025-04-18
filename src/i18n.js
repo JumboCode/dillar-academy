@@ -18,9 +18,9 @@ i18n
 
     supportedLngs: ["en", "ug", "ru", "tr", "zh"],
 
-    // backend: {
-    //   loadPath: loadPath
-    // }
+    backend: {
+      loadPath: "/api/locales/{{lng}}/{{ns}}"
+    }
   })
 
 export default i18n;

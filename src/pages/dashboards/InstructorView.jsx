@@ -190,7 +190,7 @@ const InstructorView = () => {
               isRequired={false}
             />
           </div>
-          <div className="flex space-x-2">
+          <div className="grid grid-cols-2 gap-x-2">
             <Button
               label="Cancel"
               isOutline={true}

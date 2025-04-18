@@ -202,7 +202,7 @@ const AddClass = () => {
                 ]
               }));
             }} />
-          <div className="space-x-2 mt-8">
+          <div className="w-fit grid grid-cols-2 gap-x-2 mt-8">
             <Button
               label="Save" type="submit" />
             <Button
