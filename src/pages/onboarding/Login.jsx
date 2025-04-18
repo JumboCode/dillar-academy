@@ -63,9 +63,9 @@ export default function Login() {
         console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2)); // TODO
       }
     } catch (error) {
-      setAlertData(`Error: ${error.response.data.message}`);
+      setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
-        setAlertData("");
+        setAlertMessage("");
       }, 4000)
     }
   };

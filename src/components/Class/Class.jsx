@@ -34,7 +34,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
         <span className="text-sm text-neutral-400">with {classObj.instructor}</span>
       </div>
       {/* Schedule */}
-      <div className="grid grid-rows-2 grid-cols-[min-content] items-center gap-x-2 gap-y-1 mb-5">
+      <div className="grid grid-rows-2 w-min items-center gap-x-2 gap-y-1 mb-5">
         <IoTimeOutline className="text-xl row-start-1" />
         <IoCalendarOutline className="text-xl row-start-2" />
         {classObj.schedule.map((schedule, index) => (

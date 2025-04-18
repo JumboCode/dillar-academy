@@ -103,7 +103,7 @@ const AddLevel = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label="All Levels" />
         <div>
           <h1 className="font-extrabold mb-2">Add Level</h1>

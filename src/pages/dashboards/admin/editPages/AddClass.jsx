@@ -79,7 +79,7 @@ const AddClass = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label={"All Classs"} />
         <div className="space-y-2">
           <h1 className="font-extrabold">Add Class</h1>

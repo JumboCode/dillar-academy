@@ -65,7 +65,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
             <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}</p>
           </div>
           <p className="text-base text-[#86858F]">Instructor: {classObj.instructor}</p>
-          <div className="grid grid-rows-2 grid-cols-[min-content] items-center gap-x-2 gap-y-1">
+          <div className="grid grid-rows-2 w-min items-center gap-x-2 gap-y-1">
             <IoTimeOutline className="text-xl row-start-1" />
             <IoCalendarOutline className="text-xl row-start-2" />
             {classObj.schedule.map((schedule, index) => (

@@ -78,7 +78,7 @@ const InstructorEditClass = () => {
 
   return (
 
-    <div className="page-format max-w-[96rem] space-y-8">
+    <div className="page-format max-w-[96rem] space-y-10">
       <BackButton label={"Dashboard"} href={"/instructor"} />
       <div>
         <h1 className="font-extrabold mb-1">Edit Class</h1>

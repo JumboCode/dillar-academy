@@ -109,7 +109,7 @@ const AdminStudents = () => {
   }
 
   return (
-    <div className="page-format max-w-[96rem] space-y-9">
+    <div className="page-format max-w-[96rem] space-y-10">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="font-extrabold mb-2">Students</h1>

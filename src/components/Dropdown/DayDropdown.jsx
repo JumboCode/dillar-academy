@@ -10,8 +10,8 @@ const DayDropdown = ({ selectedDay, setSelectedDay }) => {
   return (
     <Dropdown
       label={
-        <div className="flex items-center justify-center gap-x-1">
-          <span className={`text-center w-full ${selectedDay ? "" : "text-gray-500"}`}>{selectedDay ? selectedDay : "Select Day"}</span>
+        <div>
+          <p className={`text-center w-full ${selectedDay ? "" : "text-gray-500"}`}>{selectedDay ? selectedDay : "Select Day"}</p>
         </div>
       }
       buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-300">

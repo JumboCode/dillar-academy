@@ -177,7 +177,7 @@ const EditLevel = () => {
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
       {successMessage !== "" && <Alert message={successMessage} isSuccess />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label="All Levels" />
         <div>
           <h1 className="font-extrabold mb-2">Edit Level</h1>

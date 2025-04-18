@@ -77,7 +77,7 @@ const EditConversation = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label={"All Conversations"} />
         <div className="space-y-2">
           <h1 className="font-extrabold">Add Conversation Class</h1>
