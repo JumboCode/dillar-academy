@@ -178,16 +178,6 @@ const Level = mongoose.model("Level", LevelSchema)
 //   });
 // })
 
-// // Get Translations
-// app.get('/api/translations', async (req, res) => {
-//   try {
-//     const translations = await Translation.find();
-//     return res.status(200).json(translations);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error getting translations' });
-//   }
-// })
-
 // // Edit Translation
 // app.put('/api/translation/:id', async (req, res) => {
 //   try {

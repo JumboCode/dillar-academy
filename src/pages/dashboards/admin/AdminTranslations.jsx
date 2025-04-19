@@ -6,8 +6,10 @@ import { getClasses, getLevels, getConversations } from '@/api/class-wrapper';
 import SearchBar from '@/components/SearchBar';
 import Overlay from '@/components/Overlay';
 import Button from '@/components/Button/Button';
+import FormInput from '@/components/Form/FormInput';
+import Alert from '@/components/Alert';
 import { IoChevronDownOutline, IoCreateOutline } from "react-icons/io5";
-// import { editTranslation } from '@/api/translation-wrapper';
+import { getTranslations, editTranslation } from '@/api/translation-wrapper';
 
 const AdminTranslations = () => {
   const { user } = useContext(UserContext);
@@ -33,25 +35,8 @@ const AdminTranslations = () => {
       setClasses(allClasses);
       const allConversations = await getConversations();
       setConversations(allConversations);
-      setAllowRender(true);
-
       await fetchTranslations();
-    }
-
-    const fetchTranslations = async () => {
-      const enJson = await fetch("/locales/en/default.json").then(r => r.json());
-      const trJson = await fetch("/locales/tr/default.json").then(r => r.json());
-      const ruJson = await fetch("/locales/ru/default.json").then(r => r.json());
-      const ugJson = await fetch("/locales/ug/default.json").then(r => r.json());
-      const zhJson = await fetch("/locales/zh/default.json").then(r => r.json());
-      setTranslations({
-        en: enJson,
-        tr: trJson,
-        ru: ruJson,
-        ug: ugJson,
-        zh: zhJson,
-      })
-      // console.log(translations.en.about_body1)
+      setAllowRender(true);
     }
 
     if (isLoaded) {
@@ -62,6 +47,21 @@ const AdminTranslations = () => {
       }
     }
   }, [isLoaded, isSignedIn, user])
+
+  const fetchTranslations = async () => {
+    const enJson = await getTranslations("en", "default");
+    const trJson = await getTranslations("tr", "default");
+    const ruJson = await getTranslations("ru", "default");
+    const ugJson = await getTranslations("ug", "default");
+    const zhJson = await getTranslations("zh", "default");
+    setTranslations({
+      en: enJson.data,
+      tr: trJson.data,
+      ru: ruJson.data,
+      ug: ugJson.data,
+      zh: zhJson.data,
+    })
+  }
 
   if (!allowRender) {
     return <div></div>;
@@ -96,28 +96,64 @@ const AdminTranslations = () => {
       <TranslationTable
         label={"General and Student Page Translations"}
         translations={translations}
+        fetchTranslations={fetchTranslations}
       />
     </div>
   )
 }
 
-const TranslationTable = ({ translations }) => {
+// TODO: entering ; / and maybe other characters breaks the search
+const TranslationTable = ({ translations, fetchTranslations }) => {
+  const [searchInput, setSearchInput] = useState('');
+
+  const filterTranslations = (translations, filter) => {
+    const filterInsensitive = filter.toLowerCase();
+    const filteredTranslations = {}
+
+    const keys = Object.keys(translations.en)
+    for (const key of keys) {
+      const matches = Object.entries(translations).some(([lang, keys]) => {
+        const value = keys[key];
+        return value && value.toLowerCase().includes(filterInsensitive);
+      });
+
+      if (matches) {
+        // Add this key and its value for each language
+        for (const [lang, keys] of Object.entries(translations)) {
+          if (!filteredTranslations[lang]) filteredTranslations[lang] = {};
+          filteredTranslations[lang][key] = keys[key];
+        }
+      }
+    }
+
+    return filteredTranslations;
+  }
+
+  const filteredTranslations = filterTranslations(translations, searchInput);
+
   return (
-    <div className="flex flex-col rounded-sm border border-dark-blue-800 overflow-hidden">
-      <div className="w-full grid grid-cols-[1fr_2fr] py-4 px-8 bg-dark-blue-800 text-white text-center">
-        <h4 className='font-extrabold text-base sm:text-xl'>Language</h4>
-        <h4 className='font-extrabold text-base sm:text-xl'>Translation</h4>
+    <div className='space-y-4'>
+      <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for translation" />
+      <div className="flex flex-col rounded-sm border border-dark-blue-800 overflow-hidden">
+        <div className="w-full grid grid-cols-[1fr_2fr] py-4 px-8 bg-dark-blue-800 text-white text-center">
+          <h4 className='font-extrabold text-base sm:text-xl'>Language</h4>
+          <h4 className='font-extrabold text-base sm:text-xl'>Translation</h4>
+        </div>
+        <div>
+          {Object.keys(filteredTranslations.en).map(id => (
+            <TableRow
+              key={id} id={id}
+              translations={filteredTranslations}
+              namespace={"default"}
+              fetchTranslations={fetchTranslations} />
+          ))}
+        </div>
       </div>
-      <div>
-        {Object.keys(translations.en).map((id, index) => (
-          <TableRow key={id} id={id} translations={translations} />
-        ))}
-      </div>
-    </div >
+    </div>
   )
 }
 
-const TableRow = ({ id, translations }) => {
+const TableRow = ({ id, translations, namespace, fetchTranslations }) => {
   const supportedLngs = {
     English: "en",
     Russian: "ru",
@@ -141,12 +177,29 @@ const TableRow = ({ id, translations }) => {
     });
   }
 
+  const handleOpenOverlay = (target, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [target]: value,
+    }));
+  };
+
+  const handleTranslationChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleEditTranslation = async (e) => {
     e.preventDefault();
+    console.log(formData);
 
     try {
-      // await editTranslation(formData.lng, formData.key, formData.translation);
+      await editTranslation(formData.lng, namespace, formData.key, formData.translation);
       resetForm();
+      await fetchTranslations();
+      setShowEditOverlay(false);
     } catch (error) {
       console.error("handleEditTranslation failed:", error);
     }
@@ -169,42 +222,66 @@ const TableRow = ({ id, translations }) => {
             <p>{translations.en[id]}</p>
             <button
               className='p-2 h-fit'
-              onClick={() => setShowEditOverlay(true)}
+              onClick={() => {
+                handleOpenOverlay("lng", "en");
+                handleOpenOverlay("key", id);
+                handleOpenOverlay("translation", translations.en[id])
+                setShowEditOverlay(true);
+              }}
             >
               <IoCreateOutline className='text-2xl text-dark-blue-800' />
             </button>
           </div>
-          <div
+          {/* <div
             className={`
           col-span-2 overflow-hidden transition-[max-height] duration-300 ease-in-out
           ${isExpanded ? 'max-h-[1000px]' : 'max-h-0'}
         `}
-          >
-            <div className="grid grid-cols-[1fr_2fr]">
-              {Object.keys(supportedLngs).slice(1).map((lng) => (
-                <React.Fragment key={lng}>
-                  <div className="w-full border-r border-t border-dark-blue-800 h-full flex items-center justify-between">
-                    <div className="w-14 h-full bg-dark-blue-800"></div>
-                    <p className="px-3 py-4">{lng}</p>
-                    {/* use invisible div to keep text centered */}
-                    <div className="w-14 h-full"></div>
-                  </div>
-                  <div className="w-full border-t border-dark-blue-800 h-full text-left px-5 py-4 flex gap-x-4 items-center justify-between">
-                    <p>{translations[supportedLngs[lng]][id]}</p>
-                    <button className='p-2 h-fit'>
-                      <IoCreateOutline className='text-2xl text-dark-blue-800' />
-                    </button>
-                  </div>
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
+          > */}
+          {/* <div className="grid grid-cols-[1fr_2fr]"> */}
+          {isExpanded && Object.keys(supportedLngs).slice(1).map(lng => (
+            <React.Fragment key={supportedLngs[lng]}>
+              <div className="w-full border-r border-t border-dark-blue-800 h-full flex items-center justify-between">
+                <div className="w-14 h-full bg-dark-blue-800"></div>
+                <p className="px-3 py-4">{lng}</p>
+                {/* use invisible div to keep text centered */}
+                <div className="w-14 h-full"></div>
+              </div>
+              <div className="w-full border-t border-dark-blue-800 h-full text-left px-5 py-4 flex gap-x-4 items-center justify-between">
+                <p>{translations[supportedLngs[lng]][id]}</p>
+                <button
+                  className='p-2 h-fit'
+                  onClick={() => {
+                    handleOpenOverlay("lng", supportedLngs[lng]);
+                    handleOpenOverlay("key", id);
+                    handleOpenOverlay("translation", translations[supportedLngs[lng]][id])
+                    setShowEditOverlay(true);
+                  }}
+                >
+                  <IoCreateOutline className='text-2xl text-dark-blue-800' />
+                </button>
+              </div>
+            </React.Fragment>
+          ))}
+          {/* </div>
+          </div> */}
         </div>
       </div>
 
-      {showEditOverlay && <Overlay>
-        <form action={handleEditTranslation}>
-          {/* make fields required */}
+      {showEditOverlay && <Overlay width='w-1/2'>
+        <form onSubmit={handleEditTranslation} className='space-y-6'>
+          <h4 className='font-extrabold text-base sm:text-lg'>Language: {Object.keys(supportedLngs).find(lng => supportedLngs[lng] === formData.lng)}</h4>
+          <div className="space-y-2">
+            <label>Edit Translation</label>
+            <FormInput
+              type="textarea"
+              name="translation"
+              placeholder="Enter translated text"
+              value={formData.translation}
+              onChange={handleTranslationChange}
+              isRequired={true}
+            />
+          </div>
           <div className="grid grid-cols-2 gap-x-2">
             <Button
               label="Cancel"

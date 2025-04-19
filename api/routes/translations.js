@@ -7,7 +7,6 @@ router.get('/:lng/:ns', async (req, res) => {
   try {
     const { lng, ns } = req.params;
     const data = await Translation.find({ lng, ns });
-    console.log(data);
 
     const translations = {}
     data.forEach(kv => {
@@ -15,7 +14,30 @@ router.get('/:lng/:ns', async (req, res) => {
     });
     res.json(translations);
   } catch (error) {
-    console.error("Failed to get translation:", error)
+    res.status(500).json({ message: "Failed to get translation" })
+  }
+})
+
+// Edit Translation
+router.put('/:lng/:ns/:key/', async (req, res) => {
+  const { lng, ns, key } = req.params;
+  const { newTranslation } = req.body;
+
+  try {
+    const updated = await Translation.findOneAndUpdate(
+      { lng, ns, key },
+      { $set: { value: newTranslation } },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: 'Translation key not found' });
+    }
+
+    res.status(200).json({ message: 'Successfully updated translation', translation: updated });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update translation" });
+    console.error(error)
   }
 })
 
