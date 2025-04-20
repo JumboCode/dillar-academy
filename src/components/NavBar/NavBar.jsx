@@ -46,7 +46,7 @@ const NavBar = () => {
           {/* Desktop navigation */}
           <div className="hidden lg:flex lg:items-center lg:gap-x-10 xl:gap-x-20">
             {user?.privilege === "admin" ? <>
-              <NavLink href="/admin/levels">{t("nav_link_classes")}</NavLink>
+              <NavLink href="/admin/levels">Classes</NavLink>
               <NavLink href="/admin/students">Students</NavLink>
               <NavLink href="/admin/instructors">Instructors</NavLink>
               <NavLink href="/admin/schedule">Schedule</NavLink>

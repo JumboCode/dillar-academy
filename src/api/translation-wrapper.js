@@ -15,7 +15,6 @@ const editTranslation = async (lng, ns, key, newTranslation) => {
     const response = await axios.put(`/api/locales/${lng}/${ns}/${key}`, {
       newTranslation
     });
-    console.log(response)
     return response;
   } catch (error) {
     console.error('Failed to edit translation:', error);

@@ -5,7 +5,7 @@ const SearchBar = ({ input, setInput, placeholder }) => {
     <div className="w-full inline-flex gap-x-3 items-center py-3 px-4 rounded-sm border border-gray-400">
       <IoSearch size={16.81} className="text-gray-400" />
       <input
-        type="text"
+        type="search"
         className="w-full border-none outline-none text-[18px]"
         placeholder={placeholder}
         value={input}

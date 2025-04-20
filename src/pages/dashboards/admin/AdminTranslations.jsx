@@ -126,10 +126,12 @@ const TranslationTable = ({ translations, fetchTranslations }) => {
       }
     }
 
-    return filteredTranslations;
+    return Object.keys(filteredTranslations).length === 0 ? { en: {}, tr: {}, ru: {}, ug: {}, zh: {} } : filteredTranslations;
   }
 
   const filteredTranslations = filterTranslations(translations, searchInput);
+  console.log(searchInput)
+  console.log(filteredTranslations)
 
   return (
     <div className='space-y-4'>
