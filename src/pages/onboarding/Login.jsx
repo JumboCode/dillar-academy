@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { postLogin } from "../../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
-import FormSubmit from "../../components/Form/FormSubmit";
+import Button from "@/components/Button/Button";
 import Alert from "@/components/Alert";
 import { useSignIn, useAuth } from "@clerk/clerk-react";
 import { UserContext } from '@/contexts/UserContext.jsx';
@@ -63,9 +63,9 @@ export default function Login() {
         console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2)); // TODO
       }
     } catch (error) {
-      setAlertData(`Error: ${error.response.data.message}`);
+      setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
-        setAlertData("");
+        setAlertMessage("");
       }, 4000)
     }
   };
@@ -76,10 +76,11 @@ export default function Login() {
       <div className="header-gradient page-format flex justify-center items-center">
         <div className="w-full max-w-[96rem] flex justify-center">
           <Form width="lg:w-3/5 xl:w-2/5">
-            <h1 className="font-extrabold">{t("login_text")}</h1>
-            <p className="text-base sm:text-lg text-gray-500 mt-3 mb-5">{t("login_signup1")}
-              <Link href="/signup" className="ml-2 font-extrabold text-blue-400">{t("sign_up_text")}</Link>
-            </p>
+            <h1 className="font-extrabold">{t("login")}</h1>
+            <div className="flex gap-x-2 text-base sm:text-lg mt-3 mb-5">
+              <p className="text-gray-500">{t("dont_have_account")}</p>
+              <Link href="/signup" className="font-extrabold text-blue-400">{t("sign_up")}</Link>
+            </div>
             <form method="POST"
               onSubmit={handleSubmit}
               className="space-y-3"
@@ -89,17 +90,20 @@ export default function Login() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder={t("username_field")}
+                placeholder={t("email")}
                 isRequired={true} />
               <FormInput
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder={t("password_field")}
+                placeholder={t("password")}
                 isRequired={true} />
-              <p className="text-sm flex justify-end text-black opacity-50"><Link href="/forgot-password">{t("forgot_pass")}</Link></p>
-              <FormSubmit label={t("login_text")} />
+              <Link href="/forgot-password" className="text-sm flex justify-end text-black opacity-50">{t("forgot_password")}</Link>
+              <Button
+                type="submit"
+                label={t("login")}
+              />
             </form >
           </Form >
         </div>

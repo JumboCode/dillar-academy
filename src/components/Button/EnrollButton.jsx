@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { UserContext } from '@/contexts/UserContext.jsx';
 
 const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [confirming, setConfirming] = useState(true);
   const [, setLocation] = useLocation();
   const { user, setUser } = useContext(UserContext);
@@ -24,8 +24,17 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
     }
     setConfirming(false);
   }
-  console.log(user.enrolledClasses)
-  console.log(classObj._id)
+
+  function localizeNumber(number, lang) {
+    let locale = lang;
+
+    // Use Han characters for Chinese
+    if (lang.startsWith('zh')) {
+      locale = 'zh-CN-u-nu-hanidec';
+    }
+
+    return new Intl.NumberFormat(locale).format(number);
+  }
 
   if (user.enrolledClasses.includes(classObj._id)) {
     return (
@@ -62,17 +71,17 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
         <div className='flex flex-col gap-y-4'>
           <div>
             <h3 className='font-extrabold'>You are registering for:</h3>
-            <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}</p>
+            <p className='text-base sm:text-lg'>{t('level', { num: localizeNumber(classObj.level, i18n.language) })}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}</p>
           </div>
-          <p className="text-base text-[#86858F]">Instructor: {classObj.instructor}</p>
-          <div className="grid grid-rows-2 grid-cols-[min-content] items-center gap-x-2 gap-y-1">
+          <p className="text-base text-[#86858F]">{t('instructor_name', { name: classObj.instructor })}</p>
+          <div className="grid grid-rows-2 w-min items-center gap-x-2 gap-y-1">
             <IoTimeOutline className="text-xl row-start-1" />
             <IoCalendarOutline className="text-xl row-start-2" />
             {classObj.schedule.map((schedule, index) => (
               <React.Fragment key={index}>
                 {index === 1 && <div className="row-span-full w-0 h-full border-[1px]"></div>}
-                <p className="row-start-1">{schedule.time}</p>
-                <p className="row-start-2">{schedule.day}</p>
+                <p className="row-start-1 w-max">{schedule.time}</p>
+                <p className="row-start-2 w-max">{schedule.day}</p>
               </React.Fragment>
             ))}
           </div>
@@ -80,7 +89,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
         <div className='flex gap-x-2'>
           <Button label={"Confirm"} onClick={handleEnrollOrUnenroll} />
           <Button
-            label={"Cancel"}
+            label={t("cancel")}
             isOutline={true}
             onClick={() => { setShowPopup(false) }} />
         </div>

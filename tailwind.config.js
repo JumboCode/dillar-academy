@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        avenir: ["Avenir", "sans-serif"],
+        avenir: ["Avenir", "Noto Sans SC", "Noto Sans Arabic", "sans-serif"],
       },
       borderRadius: {
         "xs": "4px",

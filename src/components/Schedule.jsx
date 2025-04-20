@@ -2,10 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import Button from '@/components/Button/Button';
+import { useTranslation } from "react-i18next";
 
 const Schedule = ({ classes, filters = [] }) => {
   const { user } = useContext(UserContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -20,23 +22,49 @@ const Schedule = ({ classes, filters = [] }) => {
     <div className="table w-full table-fixed">
       <div className="table-header-group">
         <div className="table-row">
-          {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day, index, array) => (
+          {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map((day, index, array) => (
             <div
               key={day}
               className={`table-cell text-center font-semibold sm:p-2 ${index !== array.length - 1 ? 'border-r border-gray-300' : ''}`}
             >
-              {isMobile
-                ? ['SAT', 'SUN', 'TUE', 'THU'].includes(day)
-                  ? day[0] + day[1].toLowerCase()
-                  : day[0]
-                : day}
+              {/* TODO: check that these abbr are correct as well */}
+              {(() => {
+                switch (i18n.language) {
+                  case 'tr':
+                    return (
+                      isMobile
+                        ? t(`${day}_abbr`)[0]
+                        : t(`${day}_abbr`).toUpperCase()
+                    );
+                  case 'ru':
+                    return t(`${day}_abbr`).toUpperCase();
+                  case 'ru':
+                    return t(`${day}_abbr`).toUpperCase();
+                  case 'ug':
+                    return (
+                      isMobile
+                        ? t(`${day}_abbr`)[0]
+                        : t(`${day}_abbr`).toUpperCase()
+                    );
+                  case 'zh':
+                    return (isMobile ? t(`${day}_abbr`)[1] : t(`${day}_abbr`));
+                  default:
+                    return (
+                      isMobile
+                        ? ['sat', 'sun', 'tue', 'thu'].includes(day)
+                          ? t(`${day}_abbr`).slice(0, 2)
+                          : t(`${day}_abbr`)[0]
+                        : t(`${day}_abbr`).toUpperCase()
+                    );
+                }
+              })()}
             </div>
           ))}
         </div>
       </div>
       <div className="table-row-group">
         <div className="table-row h-24">
-          {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day, index, array) => (
+          {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map((day, index, array) => (
             <div
               key={day}
               className={`table-cell p-[.125rem] sm:p-2 align-top ${index !== array.length - 1 ? 'border-r border-gray-300' : ''}`}

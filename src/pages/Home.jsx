@@ -139,7 +139,7 @@ const HomeClass = ({ classObj }) => {
         {/* Header */}
         <div>
           <h3 className="font-extrabold mb-1">{classObj.ageGroup}'s Class</h3>
-          <p>  w/ {classObj.instructor} </p>
+          <p>  with {classObj.instructor} </p>
         </div>
         {/* Schedule */}
         <div className="flex flex-col text-neutral-400 text-sm mb-2">
@@ -171,7 +171,7 @@ const Confirmation = () => {
         <div>
           <h3 className="font-extrabold mb-2">You are registered!</h3>
           <p>
-            All Ages w/ Dilziba
+            All Ages with Dilziba
           </p>
         </div>
         {/* Schedule */}

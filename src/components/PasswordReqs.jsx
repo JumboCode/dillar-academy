@@ -17,10 +17,10 @@ const PasswordReqs = ({ formData, setIsValid }) => {
             valueAgain={formData.retypedPassword}
             onChange={(isValid) => setIsValid(isValid)}
             messages={{
-                minLength: t("password_qual1_text"),
-                number: t("password_qual3_text"),
-                specialChar: t("password_qual4_text"),
-                match: t("password_qual5_text"),
+                minLength: t("password_req_chars"),
+                number: t("password_req_number"),
+                specialChar: t("password_req_special_chars"),
+                match: t("password_req_match"),
             }}
         />
     )

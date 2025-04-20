@@ -161,7 +161,7 @@ const EditClass = () => {
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
       {successMessage !== "" && <Alert message={successMessage} isSuccess />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label="Back to Level" />
         <div>
           <h1 className="font-extrabold mb-2">Edit Class</h1>

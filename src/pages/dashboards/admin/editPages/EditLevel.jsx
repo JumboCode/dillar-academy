@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation, useParams, Link } from 'wouter';
+import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getLevels, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
@@ -177,7 +177,7 @@ const EditLevel = () => {
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
       {successMessage !== "" && <Alert message={successMessage} isSuccess />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label="All Levels" />
         <div>
           <h1 className="font-extrabold mb-2">Edit Level</h1>
@@ -261,7 +261,7 @@ const EditLevel = () => {
         <div>
           <div className="flex justify-between">
             <h2>Classes in this Level</h2>
-            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
+            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* TODO: when clicking add class, should take to edit class with level set in form? */}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {classes.map(classObj => (

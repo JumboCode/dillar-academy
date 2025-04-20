@@ -79,7 +79,7 @@ const AddClass = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label={"All Classs"} />
         <div className="space-y-2">
           <h1 className="font-extrabold">Add Class</h1>
@@ -202,7 +202,7 @@ const AddClass = () => {
                 ]
               }));
             }} />
-          <div className="space-x-2 mt-8">
+          <div className="w-fit grid grid-cols-2 gap-x-2 mt-8">
             <Button
               label="Save" type="submit" />
             <Button

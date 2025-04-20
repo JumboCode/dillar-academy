@@ -131,7 +131,7 @@ const EditUser = () => {
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
       {successMessage !== "" && <Alert message={successMessage} isSuccess />}
-      <div className={`page-format max-w-[96rem] space-y-8`}>
+      <div className={`page-format max-w-[96rem] space-y-10`}>
         <BackButton label="Back" />
         <span className="flex items-baseline gap-x-5 mb-1">
           <h1 title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`} className="font-extrabold truncate">{toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}</h1>
