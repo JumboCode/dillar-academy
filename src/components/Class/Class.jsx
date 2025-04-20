@@ -39,9 +39,9 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
         <IoCalendarOutline className="text-xl row-start-2" />
         {classObj.schedule.map((schedule, index) => (
           <React.Fragment key={index}>
-            {index === 1 && <div className="row-span-full w-0 h-full border-[1px]"></div>}
-            <p className="row-start-1">{schedule.time}</p>
-            <p className="row-start-2">{schedule.day}</p>
+            {index === 1 && <div className="row-span-full h-full border-[1px]"></div>}
+            <p className="row-start-1 w-max">{schedule.time}</p>
+            <p className="row-start-2 w-max">{t(`${schedule.day.toLowerCase()}`)}</p>
           </React.Fragment>
         ))}
       </div>

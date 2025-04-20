@@ -71,8 +71,8 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
             {classObj.schedule.map((schedule, index) => (
               <React.Fragment key={index}>
                 {index === 1 && <div className="row-span-full w-0 h-full border-[1px]"></div>}
-                <p className="row-start-1">{schedule.time}</p>
-                <p className="row-start-2">{schedule.day}</p>
+                <p className="row-start-1 w-max">{schedule.time}</p>
+                <p className="row-start-2 w-max">{schedule.day}</p>
               </React.Fragment>
             ))}
           </div>
@@ -80,7 +80,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
         <div className='flex gap-x-2'>
           <Button label={"Confirm"} onClick={handleEnrollOrUnenroll} />
           <Button
-            label={"Cancel"}
+            label={t("cancel")}
             isOutline={true}
             onClick={() => { setShowPopup(false) }} />
         </div>

@@ -4,11 +4,11 @@ import { useSignIn, useClerk } from "@clerk/clerk-react";
 import { resetPassword as updateMongoPassword } from "../../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from "@/components/Form/FormInput";
-import FormSubmit from "@/components/Form/FormSubmit";
+import Button from "@/components/Button/Button";
 import PasswordReqs from "@/components/PasswordReqs";
 import { useTranslation } from "react-i18next";
 
-export default function ResetPassword() {
+const ResetPassword = () => {
   const { t } = useTranslation();
   const { isLoaded, signIn } = useSignIn();
   const clerk = useClerk();
@@ -76,14 +76,14 @@ export default function ResetPassword() {
     <main className="header-gradient page-format flex justify-center items-center">
       <div className="w-full max-w-[96rem] flex justify-center">
         <Form width="lg:w-3/5 xl:w-2/5">
-          <h1 className="font-extrabold mb-3">{t("Reset Your Password")}</h1>
+          <h1 className="font-extrabold mb-3">{t("enter_new_password")}</h1>
           <form onSubmit={handleSubmit} className="space-y-3">
             <FormInput
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder={t("reset_new_pass")}
+              placeholder={t("password")}
               isRequired={true}
               disabled={isSubmitting}
             />
@@ -92,7 +92,7 @@ export default function ResetPassword() {
               name="retypedPassword"
               value={formData.retypedPassword}
               onChange={handleChange}
-              placeholder={t("reset_retype_pass")}
+              placeholder={t("reset_password")}
               isRequired={true}
               disabled={isSubmitting}
             />
@@ -100,10 +100,16 @@ export default function ResetPassword() {
               <PasswordReqs formData={formData} setIsValid={setIsValid} />
             </div>
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            <FormSubmit label={isSubmitting ? t("Resetting Password") : t("Reset Password")} isDisabled={!isValid || isSubmitting} />
+            <Button
+              type="submit"
+              label={t("reset_password")}
+              isDisabled={!isValid || isSubmitting}
+            />
           </form>
         </Form>
       </div>
     </main>
   );
 }
+
+export default ResetPassword;

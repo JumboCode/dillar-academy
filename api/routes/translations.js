@@ -41,6 +41,24 @@ router.put('/:lng/:ns/:key/', async (req, res) => {
   }
 })
 
+router.post('/create', async (req, res) => {
+  const { lng, ns, key, value } = req.body;
+
+  try {
+    const translation = new Translation({
+      lng,
+      ns,
+      key,
+      value
+    })
+
+    await translation.save();
+    return res.status(201).json({ message: 'Translation created successfully', data: translation })
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create translation' });
+  }
+})
+
 // Move all i18nexus translations to MongoDB
 router.post('/transfer-translations/', async (req, res) => {
   try {

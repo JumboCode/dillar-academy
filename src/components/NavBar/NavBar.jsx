@@ -52,20 +52,22 @@ const NavBar = () => {
               <NavLink href="/admin/schedule">Schedule</NavLink>
               <NavLink href="/admin/translations">Translations</NavLink>
             </> : <>
-              <NavLink href="/levels">{t("nav_link_classes")}</NavLink>
-              <NavLink href="/contact">{t("nav_link_contact")}</NavLink>
-              <NavLink href="/about">{t("nav_link_about")}</NavLink>
+              <NavLink href="/levels">{t("classes")}</NavLink>
+              <NavLink href="/contact">{t("contact")}</NavLink>
+              <NavLink href="/about">{t("about")}</NavLink>
               <SignedOut>
-                <NavLink href="/login">{t("nav_link_login")}</NavLink>
+                <NavLink href="/login">{t("login")}</NavLink>
               </SignedOut>
               <SignedIn>
-                <NavLink href={`/${user?.privilege}`}>{t("nav_link_dashboard")}</NavLink>
+                <NavLink href={`/${user?.privilege}`}>{t("dashboard")}</NavLink>
               </SignedIn>
             </>}
           </div>
           <div className='hidden lg:flex lg:items-center'>
             <SignedIn>
-              <SignOutButton className="hover:text-neutral-300 px-3 py-2" />
+              <SignOutButton className="hover:text-neutral-300 px-3 py-2">
+                {t("sign_out")}
+              </SignOutButton>
             </SignedIn>
             <LanguageDropdown />
           </div>
@@ -86,7 +88,7 @@ const NavBar = () => {
         {/* Mobile menu */}
         <div ref={mobileMenuRef} className={`lg:hidden flex flex-col items-center w-full pb-4 shadow-md bg-white ${isMenuOpen ? 'block' : 'hidden'}`}>
           {user?.privilege === "admin" ? <>
-            <NavLink href="/admin/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
+            <NavLink href="/admin/levels" isMobile={true} onClick={closeMenu}>Classes</NavLink>
             <NavLink href="/admin/students" isMobile={true} onClick={closeMenu}>Students</NavLink>
             <NavLink href="/admin/instructors" isMobile={true} onClick={closeMenu}>Instructors</NavLink>
             <NavLink href="/admin/schedule" isMobile={true} onClick={closeMenu}>Schedule</NavLink>
@@ -94,14 +96,14 @@ const NavBar = () => {
             <SignOutButton className="py-2 px-3" />
             <div className="w-full h-2 mt-2 mx-3 border-t border-gray-200"></div>
             <LanguageDropdown />
-          </> : <><NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("nav_link_classes")}</NavLink>
-            <NavLink href="/contact" isMobile={true} onClick={closeMenu}>{t("nav_link_contact")}</NavLink>
-            <NavLink href="/about" isMobile={true} onClick={closeMenu}>{t("nav_link_about")}</NavLink>
+          </> : <><NavLink href="/levels" isMobile={true} onClick={closeMenu}>{t("classes")}</NavLink>
+            <NavLink href="/contact" isMobile={true} onClick={closeMenu}>{t("contact")}</NavLink>
+            <NavLink href="/about" isMobile={true} onClick={closeMenu}>{t("about")}</NavLink>
             <SignedOut>
-              <NavLink href="/login" isMobile={true} onClick={closeMenu}>{t("nav_link_login")}</NavLink>
+              <NavLink href="/login" isMobile={true} onClick={closeMenu}>{t("login")}</NavLink>
             </SignedOut>
             <SignedIn>
-              <NavLink href={`/${user?.privilege}`} onClick={closeMenu}>{t("nav_link_dashboard")}</NavLink>
+              <NavLink href={`/${user?.privilege}`} onClick={closeMenu}>{t("dashboard")}</NavLink>
               <SignOutButton className="py-2 px-3" />
             </SignedIn>
             <div className="w-full h-2 mt-2 mx-3 border-t border-gray-200"></div>

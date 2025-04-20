@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getClasses, getLevels, getConversations } from '@/api/class-wrapper';
 import SearchBar from '@/components/SearchBar';
 import Overlay from '@/components/Overlay';
 import Button from '@/components/Button/Button';
@@ -15,11 +14,29 @@ const AdminTranslations = () => {
   const { user } = useContext(UserContext);
   const { isSignedIn, isLoaded } = useAuth();
   const [, setLocation] = useLocation();
-  const [levels, setLevels] = useState([]);
-  const [classes, setClasses] = useState([]);
-  const [conversations, setConversations] = useState([]);
   const [allowRender, setAllowRender] = useState(false);
-  const [translations, setTranslations] = useState({
+  const [defaultTranslations, setDefaultTranslations] = useState({
+    en: {},
+    ru: {},
+    tr: {},
+    ug: {},
+    zh: {},
+  });
+  const [levelTranslations, setLevelTranslations] = useState({
+    en: {},
+    ru: {},
+    tr: {},
+    ug: {},
+    zh: {},
+  });
+  const [classTranslations, setClassTranslations] = useState({
+    en: {},
+    ru: {},
+    tr: {},
+    ug: {},
+    zh: {},
+  });
+  const [conversationTranslations, setConversationTranslations] = useState({
     en: {},
     ru: {},
     tr: {},
@@ -29,13 +46,7 @@ const AdminTranslations = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const allLevels = await getLevels();
-      setLevels(allLevels);
-      const allClasses = await getClasses();
-      setClasses(allClasses);
-      const allConversations = await getConversations();
-      setConversations(allConversations);
-      await fetchTranslations();
+      await fetchDefaultTranslations();
       setAllowRender(true);
     }
 
@@ -48,19 +59,23 @@ const AdminTranslations = () => {
     }
   }, [isLoaded, isSignedIn, user])
 
-  const fetchTranslations = async () => {
+  const fetchDefaultTranslations = async () => {
     const enJson = await getTranslations("en", "default");
     const trJson = await getTranslations("tr", "default");
     const ruJson = await getTranslations("ru", "default");
     const ugJson = await getTranslations("ug", "default");
     const zhJson = await getTranslations("zh", "default");
-    setTranslations({
+    setDefaultTranslations({
       en: enJson.data,
       tr: trJson.data,
       ru: ruJson.data,
       ug: ugJson.data,
       zh: zhJson.data,
     })
+  }
+
+  const fetchLevelTranslations = async () => {
+
   }
 
   if (!allowRender) {
@@ -80,29 +95,30 @@ const AdminTranslations = () => {
       <div className='space-y-6'>
         <h2 className='font-extrabold'>Edit translations for levels and classes</h2>
         <div>
-          <h3 className="font-extrabold">Levels</h3>
+          <h3 className="font-extrabold mb-6">Levels</h3>
+          {/* <TranslationTable
+
+          /> */}
         </div>
         <div>
-          <h3 className="font-extrabold">Classes</h3>
+          <h3 className="font-extrabold mb-6">Classes</h3>
         </div>
         <div>
-          <h3 className="font-extrabold">Conversations</h3>
+          <h3 className="font-extrabold mb-6">Conversations</h3>
         </div>
       </div>
 
       <div>
-        <h2 className='font-extrabold'>Edit general and student page translation</h2>
+        <h2 className='font-extrabold mb-6'>Edit general and student page translation</h2>
+        <TranslationTable
+          translations={defaultTranslations}
+          fetchTranslations={fetchDefaultTranslations}
+        />
       </div>
-      <TranslationTable
-        label={"General and Student Page Translations"}
-        translations={translations}
-        fetchTranslations={fetchTranslations}
-      />
     </div>
   )
 }
 
-// TODO: entering ; / and maybe other characters breaks the search
 const TranslationTable = ({ translations, fetchTranslations }) => {
   const [searchInput, setSearchInput] = useState('');
 
@@ -130,8 +146,6 @@ const TranslationTable = ({ translations, fetchTranslations }) => {
   }
 
   const filteredTranslations = filterTranslations(translations, searchInput);
-  console.log(searchInput)
-  console.log(filteredTranslations)
 
   return (
     <div className='space-y-4'>
@@ -225,6 +239,7 @@ const TableRow = ({ id, translations, namespace, fetchTranslations }) => {
             <button
               className='p-2 h-fit'
               onClick={() => {
+                console.log(id)
                 handleOpenOverlay("lng", "en");
                 handleOpenOverlay("key", id);
                 handleOpenOverlay("translation", translations.en[id])
@@ -254,6 +269,7 @@ const TableRow = ({ id, translations, namespace, fetchTranslations }) => {
                 <button
                   className='p-2 h-fit'
                   onClick={() => {
+                    console.log(id)
                     handleOpenOverlay("lng", supportedLngs[lng]);
                     handleOpenOverlay("key", id);
                     handleOpenOverlay("translation", translations[supportedLngs[lng]][id])

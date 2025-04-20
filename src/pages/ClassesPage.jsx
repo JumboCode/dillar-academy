@@ -41,7 +41,7 @@ const ClassesPage = () => {
       {/* Banner Section */}
       <div className="header-gradient w-full flex flex-col items-center">
         <div className="w-full max-w-[96rem] py-20 lg:py-24 px-4 sm:px-6 lg:px-20">
-          <h3 className="font-light text-dark-blue-700 mb-2">{t("classespage_level")} {level.level}</h3>
+          <h3 className="font-light text-dark-blue-700 mb-2">{t(`level_${level.level}`)}</h3>
           <h1 className='font-extrabold text-dark-blue-800 mb-6'>{level.name}</h1>
           <p className="text-neutral-600 text-base sm:text-lg max-w-2xl mb-8">
             {level.description}
@@ -64,7 +64,7 @@ const ClassesPage = () => {
           <p className="text-base sm:text-lg text-neutral-600 mb-8">
             {t("classespage_open_classes_desc")}
           </p>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-24'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mb-24'>
             {classes.map((classObj, classIndex) => (
               <Class key={classIndex} classObj={classObj} />
             ))}

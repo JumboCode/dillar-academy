@@ -261,7 +261,7 @@ const EditLevel = () => {
         <div>
           <div className="flex justify-between">
             <h2>Classes in this Level</h2>
-            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
+            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* TODO: when clicking add class, should take to edit class with level set in form? */}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {classes.map(classObj => (
