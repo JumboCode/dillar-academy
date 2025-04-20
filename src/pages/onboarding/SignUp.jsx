@@ -50,8 +50,6 @@ export default function SignUp() {
         password: password
       });
 
-      // placeholder for possible account verification?
-
       if (createUser.status === "complete") {
         await setActive({ session: createUser.createdSessionId })
         const userData = { ...formData, clerkId: createUser.createdUserId };

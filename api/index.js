@@ -1,7 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-// const fs = require('fs');
-// const path = require('path');
 const cors = require('cors');
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
@@ -151,52 +149,6 @@ const Level = mongoose.model("Level", LevelSchema)
 //------------------ ENDPOINTS ------------------//
 
 /* TRANSLATION RELATED ENDPOINTS */
-
-// Update translation in local JSON file
-// app.put('/api/translation', (req, res) => {
-//   const { lng, key, translation } = req.body;
-//   console.log("lng:", lng, "key:", key, "translation:", translation)
-//   const filePath = path.join(__dirname, `../public/locales/${lng}/default.json`);
-
-//   fs.readFile(filePath, 'utf8', (err, data) => {
-//     if (err) return res.status(500).send(err);
-
-//     let jsonData;
-//     try {
-//       jsonData = JSON.parse(data);
-//     } catch (parseErr) {
-//       return res.status(500).send(parseErr);
-//     }
-
-//     jsonData[key] = translation;
-
-//     fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (writeErr) => {
-//       if (writeErr) return res.status(500).send(writeErr);
-
-//       res.status(400).json({ data: jsonData });
-//     });
-//   });
-// })
-
-// // Edit Translation
-// app.put('/api/translation/:id', async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       return res.status(400).json({ error: 'Invalid ID' });
-//     }
-
-//     const updatedTranslation = await Translation.findByIdAndUpdate(
-//       id,
-//       req.body,
-//       { new: true, upsert: true, runValidators: true }
-//     );
-//     res.status(200).json(updatedTranslation);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error editing translation' });
-//   }
-// })
-
 
 // // Delete Translation
 // app.delete('/api/translation/:id', async (req, res) => {
