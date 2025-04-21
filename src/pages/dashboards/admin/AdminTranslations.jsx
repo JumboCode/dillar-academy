@@ -32,7 +32,10 @@ const AdminTranslations = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchDefaultTranslations();
+      const defaultTranslations = await fetchNamespaceTranslations("default");
+      setDefaultTranslations(defaultTranslations);
+      const levelTranslations = await fetchNamespaceTranslations("levels");
+      setLevelTranslations(levelTranslations);
       setAllowRender(true);
     }
 
@@ -45,23 +48,19 @@ const AdminTranslations = () => {
     }
   }, [isLoaded, isSignedIn, user])
 
-  const fetchDefaultTranslations = async () => {
-    const enJson = await getTranslations("en", "default");
-    const trJson = await getTranslations("tr", "default");
-    const ruJson = await getTranslations("ru", "default");
-    const ugJson = await getTranslations("ug", "default");
-    const zhJson = await getTranslations("zh", "default");
-    setDefaultTranslations({
+  const fetchNamespaceTranslations = async (ns) => {
+    const enJson = await getTranslations("en", ns);
+    const trJson = await getTranslations("tr", ns);
+    const ruJson = await getTranslations("ru", ns);
+    const ugJson = await getTranslations("ug", ns);
+    const zhJson = await getTranslations("zh", ns);
+    return ({
       en: enJson.data,
       tr: trJson.data,
       ru: ruJson.data,
       ug: ugJson.data,
       zh: zhJson.data,
-    })
-  }
-
-  const fetchLevelTranslations = async () => {
-
+    });
   }
 
   if (!allowRender) {
@@ -74,33 +73,26 @@ const AdminTranslations = () => {
 
   return (
     <div className="page-format max-w-[96rem] space-y-10">
-      <div>
-        <h1 className="font-extrabold">Edit Translations</h1>
-      </div>
+      <h1 className="font-extrabold">Edit Translations</h1>
 
-      <div className='space-y-6'>
-        <h2 className='font-extrabold'>Edit translations for levels</h2>
-        <div>
-          {/* <h3 className="font-extrabold mb-6">Levels</h3> */}
-          {/* <TranslationTable
-
-          /> */}
-        </div>
-      </div>
-
-      <div>
-        <h2 className='font-extrabold mb-6'>Edit translations for general and student pages</h2>
+      <div className='space-y-16'>
         <TranslationTable
+          label={"Edit translations for levels"}
+          translations={levelTranslations}
+        />
+        <TranslationTable
+          label={"Edit translations for general and student pages"}
           translations={defaultTranslations}
-          fetchTranslations={fetchDefaultTranslations}
+          fetchTranslations={fetchNamespaceTranslations}
         />
       </div>
     </div>
   )
 }
 
-const TranslationTable = ({ translations, fetchTranslations }) => {
+const TranslationTable = ({ label, translations, fetchTranslations }) => {
   const [searchInput, setSearchInput] = useState('');
+  const [isFullyExpanded, setIsFullyExpanded] = useState(false);
 
   const filterTranslations = (translations, filter) => {
     const filterInsensitive = filter.toLowerCase();
@@ -125,31 +117,58 @@ const TranslationTable = ({ translations, fetchTranslations }) => {
     return Object.keys(filteredTranslations).length === 0 ? { en: {}, tr: {}, ru: {}, ug: {}, zh: {} } : filteredTranslations;
   }
 
-  const filteredTranslations = filterTranslations(translations, searchInput);
+  const condensedTranslations = (translations, end) => {
+    const slicedKeys = Object.keys(translations.en).slice(0, end);
+
+    const condensed = { en: {}, tr: {}, ru: {}, ug: {}, zh: {} }
+    for (const key of slicedKeys) {
+      condensed.en[key] = translations.en[key];
+      condensed.tr[key] = translations.tr[key];
+      condensed.ru[key] = translations.ru[key];
+      condensed.ug[key] = translations.ug[key];
+      condensed.zh[key] = translations.zh[key];
+    }
+
+    return condensed;
+  }
+
+  const filteredTranslations =
+    isFullyExpanded
+      ? filterTranslations(translations, searchInput)
+      : condensedTranslations(filterTranslations(translations, searchInput), 5);
 
   return (
-    <div className='space-y-4'>
-      <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for translation" />
-      <div className="flex flex-col rounded-sm border border-dark-blue-800 overflow-hidden">
-        <div className="w-full grid grid-cols-[1fr_2fr] py-4 px-8 bg-dark-blue-800 text-white text-center">
-          <h4 className='font-extrabold text-base sm:text-xl'>Language</h4>
-          <h4 className='font-extrabold text-base sm:text-xl'>Translation</h4>
-        </div>
-        <div>
-          {Object.keys(filteredTranslations.en).map(id => (
-            <TableRow
-              key={id} id={id}
-              translations={filteredTranslations}
-              namespace={"default"}
-              fetchTranslations={fetchTranslations} />
-          ))}
+    <div className='flex flex-col items-center gap-y-5'>
+      <div className='space-y-4 w-full'>
+        <h2 className='font-extrabold mb-2'>{label}</h2>
+        <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for translation" />
+        <div className="flex flex-col rounded-sm border border-dark-blue-800 overflow-hidden">
+          <div className="w-full grid grid-cols-[1fr_2fr] py-4 px-8 bg-dark-blue-800 text-white text-center">
+            <h4 className='font-extrabold text-base sm:text-xl'>Language</h4>
+            <h4 className='font-extrabold text-base sm:text-xl'>Translation</h4>
+          </div>
+          <div>
+            {Object.keys(filteredTranslations.en).map(id => (
+              <TableRow
+                key={id}
+                id={id}
+                translations={filteredTranslations}
+                ns={"default"}
+                fetchTranslations={fetchTranslations} />
+            ))}
+          </div>
         </div>
       </div>
+      <Button
+        label={isFullyExpanded ? "Minimize" : "View More"}
+        onClick={() => setIsFullyExpanded(!isFullyExpanded)}
+        isOutline
+      />
     </div>
   )
 }
 
-const TableRow = ({ id, translations, namespace, fetchTranslations }) => {
+const TableRow = ({ id, translations, ns, fetchTranslations }) => {
   const supportedLngs = {
     English: "en",
     Russian: "ru",
@@ -192,9 +211,9 @@ const TableRow = ({ id, translations, namespace, fetchTranslations }) => {
     console.log(formData);
 
     try {
-      await editTranslation(formData.lng, namespace, formData.key, formData.translation);
+      await editTranslation(formData.lng, ns, formData.key, formData.translation);
       resetForm();
-      await fetchTranslations();
+      await fetchTranslations(ns);
       setShowEditOverlay(false);
     } catch (error) {
       console.error("handleEditTranslation failed:", error);
