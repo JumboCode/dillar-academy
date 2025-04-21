@@ -28,21 +28,21 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
   return isSimplified ? (
     <div className='shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-2xl py-8 px-7 flex gap-x-3 items-center justify-between'>
       <div className='flex items-center gap-x-6'>
-        <h3 className='text-dark-blue-800 font-extrabold'>{t('level', { num: localizeNumber(classObj.level, i18n.language) })}</h3>
+        <h3 className='text-dark-blue-800 font-extrabold'>{t('level_num', { num: localizeNumber(classObj.level, i18n.language) })}</h3>
         <p className='text-neutral-600'>
-          {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}
+          {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
         </p>
       </div>
-      <p className='sm:text-lg'>{t('taught_by', { name: classObj.instructor })}</p>
+      <p className='sm:text-lg'>{t('taught_by_name', { name: classObj.instructor })}</p>
     </div>
   ) : (
     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
       {/* Header */}
       <div className='mb-4'>
         <h3 className="font-extrabold text-dark-blue-800 mb-1">
-          {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}
+          {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
         </h3>
-        <span className="text-sm text-neutral-400">{t('with_name', { name: classObj.instructor })}</span>
+        <p className="text-sm text-neutral-400">{t('with_name', { name: classObj.instructor })}</p>
       </div>
       {/* Schedule */}
       <div className="grid grid-rows-2 w-min items-center gap-x-2 gap-y-1 mb-5">

@@ -26,7 +26,7 @@ function About() {
         </div>
       </section>
       <section>
-        <h1 className='text-center lg:text-left font-extrabold mb-4 sm:mb-7'>Privacy Commitment</h1>
+        <h1 className='text-center lg:text-left font-extrabold mb-4 sm:mb-7'>{t('privacy_commitment')}</h1>
         <div className="space-y-6">
           <p>{t("privacy_body1")}</p>
           <p>{t("privacy_body2")}</p>

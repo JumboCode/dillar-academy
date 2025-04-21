@@ -28,7 +28,7 @@ export default function Contact() {
     e.preventDefault();
     try {
       await postContact(formData);
-      setSuccessMessage("Your message has been sent successfully. We will get back to you as soon as possible.");
+      setSuccessMessage('contact_success_alert');
       setTimeout(() => {
         setSuccessMessage("");
       }, 4000);
@@ -40,7 +40,7 @@ export default function Contact() {
       });
     } catch (err) {
       console.error('Error submitting message:', err);
-      setAlertMessage(`Error: ${err.response.data.message}`);
+      setAlertMessage(`Error: ${err.response.data.message}`); // TODO: translations
       setTimeout(() => {
         setAlertMessage("");
       }, 4000);

@@ -56,12 +56,14 @@ export default function SignUp() {
         const response = await postUser(userData);
         if (response.status === 201) {
           setUser(response.data);
-        } else {
-          // TODO
         }
         setLocation(`/${response.data.privilege}`);
       } else {
-        console.log("Failed to create Clerk user:", JSON.stringify(createUser, null, 2)); // TODO
+        console.log("Failed to create Clerk user:", JSON.stringify(createUser, null, 2));
+        setAlertMessage(`Error: ${JSON.stringify(createUser, null, 2)}`); // TODO: translation
+        setTimeout(() => {
+          setAlertMessage("");
+        }, 4000)
       }
     } catch (error) {
       setAlertMessage(`Error: ${error.response.data.message}`);

@@ -26,9 +26,9 @@ const Level = ({ level, isSimplified, isArrowRight, numLevels }) => {
         style={{ boxShadow: isArrowRight ? `inset -0.5em 0 ${levelColor}` : `inset 0.5em 0 ${levelColor}` }}>
         <div className={`w-full flex flex-col ${isArrowRight ? "sm:flex-row-reverse" : "sm:flex-row"} sm:justify-between sm:items-center`}>
           <h3 className="font-extrabold text-dark-blue-800">
-            {isString ? t(`${level.level}_level`) : t('level', { num: localizeNumber(level.level, i18n.language) })}
+            {isString ? t(`${level.level}_level`) : t('level_num', { num: localizeNumber(level.level, i18n.language), ns: "levels" })}
           </h3>
-          <p className="text-neutral-600">{level.name}</p>
+          <p className="text-neutral-600">{level._id ? t(`level_name_${level._id}`, { ns: "levels" }) : ""}</p>
         </div>
         {isArrowRight ? <IoChevronForward className="text-2xl text-[#2F2F32]" /> : <IoChevronBack className="text-2xl text-[#2F2F32]" />}
       </div>
@@ -38,9 +38,9 @@ const Level = ({ level, isSimplified, isArrowRight, numLevels }) => {
       <div className="bg-[url('/images/blue_mountains.png')] bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
       <div className="bg-white px-6 py-8 row-start-2 rounded-b-2xl space-y-1">
         <h3 className='font-extrabold'>
-          {isString ? t(`${level.level}_level`) : t('level', { num: localizeNumber(level.level, i18n.language) })}
+          {isString ? t(`${level.level}_level`) : t('level_num', { num: localizeNumber(level.level, i18n.language), ns: "levels" })}
         </h3>
-        <p className="text-base sm:text-lg">{level.name}</p>
+        <p className="text-base sm:text-lg">{t(`level_name_${level._id}`, { ns: "levels" })}</p>
       </div>
     </div>
   )

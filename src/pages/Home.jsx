@@ -9,8 +9,7 @@ const Home = () => {
   const { t } = useTranslation();
 
   const class1 = {
-    level: "1",
-    ageGroup: "Children",
+    ageGroup: "children",
     instructor: "Subhat",
     schedule: [
       {
@@ -24,8 +23,7 @@ const Home = () => {
     ]
   };
   const class2 = {
-    level: "1",
-    ageGroup: "Adult",
+    ageGroup: "adults",
     instructor: "Ehtibar",
     schedule: [
       {
@@ -40,14 +38,12 @@ const Home = () => {
   };
 
   const level1 = {
-    level: "1",
-    name: "Alphabet and Phonetics",
-    instructors: ["Subat", "Ehtibar"]
+    level: 1,
+    name: "Alphabet and Phonetics"
   }
   const level4 = {
-    level: "4",
-    name: "Higher Level Writing",
-    instructors: ["Dilziba"]
+    level: 4,
+    name: "Higher Level Writing"
   }
 
   return (
@@ -132,53 +128,54 @@ const HomeClass = ({ classObj }) => {
   const time = classObj.schedule[0].time.toString();
   const day2 = classObj.schedule[1].day.toString();
   const subDay2 = day2.substr(0, 3);
+  const { t } = useTranslation();
 
   return (
-    <div className="p-6 bg-white rounded-xl overflow-hidden w-full">
-      <div className="flex flex-col gap-1.5">
-        {/* Header */}
+    <div className="p-6 bg-white rounded-xl overflow-hidden w-full h-full flex flex-col justify-between">
+      {/* Header */}
+      <div className='flex flex-col gap-y-1.5'>
         <div>
-          <h3 className="font-extrabold mb-1">{classObj.ageGroup}'s Class</h3>
-          <p>  with {classObj.instructor} </p>
+          <h3 className="font-extrabold mb-1">{t(`${classObj.ageGroup}_class`)}</h3>
+          <p>{t('with_name', { name: classObj.instructor })}</p>
         </div>
         {/* Schedule */}
         <div className="flex flex-col text-neutral-400 text-sm mb-2">
           <div className="flex items-left gap-2">
             <IoCalendarOutline className="text-lg" />
-            <span>{subDay1} & {subDay2}</span>
+            <span>{t(`${subDay1.toLowerCase()}_abbr`)} | {t(`${subDay2.toLowerCase()}_abbr`)}</span>
           </div>
           <div className="flex items-left gap-2">
             <IoTimeOutline className="text-lg" />
             <span>{time}</span>
           </div>
         </div>
-        <div className='gap-3 w-24'>
-          <div
-            className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 py-2 px-4 rounded-sm text-neutral-400 font-extrabold transition-colors duration-300 w-full`}
-          >
-            Register
-          </div>
-        </div>
+      </div>
+      <div
+        className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 py-2 px-4 rounded-sm text-neutral-400 font-extrabold transition-colors duration-300 w-fit`}
+      >
+        Enroll
       </div>
     </div>
   )
 }
 
 const Confirmation = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-full p-6 bg-white rounded-lg shadow-[0px_4px_16px_0px_rgba(7,79,120,0.12),20px_8px_60px_0px_rgba(183,226,251,0.40)] overflow-hidden">
       <div className="flex flex-col gap-2">
         <div>
-          <h3 className="font-extrabold mb-2">You are registered!</h3>
+          <h3 className="font-extrabold mb-2">{t('you_are_registered')}</h3>
           <p>
-            All Ages with Dilziba
+            {t('for_all')} {t('with_name', { name: "Dilziba" })}
           </p>
         </div>
         {/* Schedule */}
         <div className="flex flex-col text-neutral-400 text-sm mb-2">
           <div className="flex items-left gap-2">
             <IoCalendarOutline className="text-lg" />
-            <p>Sat & Sun</p>
+            <p>{t(`sat_abbr`)} | {t(`sun_abbr`)}</p>
           </div>
           <div className="flex items-left gap-2">
             <IoTimeOutline className="text-lg" />
@@ -186,7 +183,7 @@ const Confirmation = () => {
           </div>
         </div>
         <div className='flex justify-center px-4 py-2 rounded-lg transition-colors duration-300 border border-dark-blue-800 w-full'>
-          Got it!
+          {t('got_it')}
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ i18n
   .init({
     fallbackLng: "en",
 
-    ns: ["default"],
+    ns: ["default", "levels"],
     defaultNS: "default",
 
     supportedLngs: ["en", "ug", "ru", "tr", "zh"],

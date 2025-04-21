@@ -45,7 +45,7 @@ const EditConversation = () => {
   const handleCreateConversation = async (e) => {
     e.preventDefault();
     conversationData.ageGroup = conversationData.ageGroup.toLowerCase();
-    const allowedAges = ["all", "children", "adult"]
+    const allowedAges = ["all", "children", "adults"]
     try {
       if (!allowedAges.includes(conversationData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);

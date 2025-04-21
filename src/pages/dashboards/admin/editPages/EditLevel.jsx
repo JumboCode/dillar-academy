@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
+import { useTranslation } from "react-i18next";
 import { getLevels, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
@@ -14,8 +15,10 @@ const EditLevel = () => {
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const params = useParams();
   const levelNum = params.id
+  const { i18n } = useTranslation();
 
   const [level, setLevel] = useState();
   const [classes, setClasses] = useState();
@@ -125,12 +128,15 @@ const EditLevel = () => {
           setAlertMessage("")
         }, 4000);
       } else {
+        setIsSaving(true);
         await updateLevel(level._id, levelData);
         setSuccessMessage("Successfully updated level details");
         await fetchLevels();
         setTimeout(() => {
           setSuccessMessage("");
         }, 4000);
+        await i18n.reloadResources();
+        setIsSaving(false);
       }
     } catch (error) {
       console.error("Error updating level:", error);
@@ -166,7 +172,7 @@ const EditLevel = () => {
   };
 
   if (!allowRender || !level || !classes) {
-    return <div>Loading.....</div>;
+    return <div>Loading...</div>;
   }
 
   if (user.privilege !== "admin") {
@@ -254,7 +260,7 @@ const EditLevel = () => {
           </div>
           {/* Action buttons */}
           <div className="flex gap-x-2">
-            <Button label="Save" type="submit" />
+            <Button label={isSaving ? "Saving..." : "Save"} type="submit" isDisabled={isSaving} />
             <Button label="Reset" onClick={handleReset} isOutline />
           </div>
         </form>

@@ -56,15 +56,15 @@ const ResetPassword = () => {
           sessionStorage.removeItem("reset_password_email");
           setLocation("/login");
         } else {
-          setError("Failed to update password in database. Please contact support.");
+          setError('reset_password_database_failed_alert');
           console.error("MongoDB update failed:", response.error);
         }
       } else {
-        setError("Failed to update password. Please try again.");
+        setError('reset_password_update_failed_alert');
       }
     } catch (err) {
       console.error("Reset password error:", err);
-      setError(err.errors?.[0]?.longMessage || "An error occurred while resetting the password.");
+      setError(err.errors?.[0]?.longMessage || 'reset_password_error_alert'); // TODO: or lhs translation
     } finally {
       setIsSubmitting(false);
     }
@@ -99,7 +99,7 @@ const ResetPassword = () => {
             <div className="mt-2">
               <PasswordReqs formData={formData} setIsValid={setIsValid} />
             </div>
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-2">{t(error)}</p>}
             <Button
               type="submit"
               label={t("reset_password")}

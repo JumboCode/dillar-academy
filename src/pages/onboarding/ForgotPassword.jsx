@@ -22,7 +22,7 @@ const ForgotPassword = () => {
 
     try {
       // Save the email for later steps
-      sessionStorage.setItem("reset_password_email", email);
+      sessionStorage.setItem("reset_password_email", email); // Not very foolproof, if entered email for code but never entered code, this will always stay in session storage
 
       // Initiate the reset password flow via Clerk
       await signIn.create({
@@ -33,7 +33,7 @@ const ForgotPassword = () => {
       // Navigate to the code verification page
       setLocation("/reset-password-code");
     } catch (err) {
-      setError(err.errors?.[0]?.longMessage || "An error occurred. Please try again.");
+      setError(err.errors?.[0]?.longMessage || 'error_occurred'); // TODO: first or translation
     } finally {
       setIsSubmitting(false);
     }
@@ -58,7 +58,7 @@ const ForgotPassword = () => {
               disabled={isSubmitting}
               className="mb-4"
             />
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-2">{t(error)}</p>}
             <Button
               type="submit"
               label={t("submit_button")}

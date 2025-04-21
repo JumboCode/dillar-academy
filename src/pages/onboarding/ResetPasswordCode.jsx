@@ -40,13 +40,13 @@ const ResetPasswordCode = () => {
         sessionStorage.setItem("reset_password_code", code);
         setLocation("/reset-password");
       } else {
-        setError("Invalid code. Please check your email and try again.");
+        setError('invalid_code_error');
       }
     } catch (err) { // TODO: check that error and retry attempt works
       if (err.response?.status === 429) {
         const retryAfterSecs = parseInt(err.response.headers["retry-after"]) || 30;
         setRetryAfter(retryAfterSecs);
-        setError(`Too many attempts. Please wait ${retryAfterSecs} seconds.`);
+        setError('too_many_attempts_wait_sec');
         const timer = setInterval(() => {
           setRetryAfter((prev) => {
             if (prev <= 1) {
@@ -57,7 +57,7 @@ const ResetPasswordCode = () => {
           });
         }, 1000);
       } else {
-        setError(err.errors?.[0]?.longMessage || "An error occurred. Please try again.");
+        setError(err.errors?.[0]?.longMessage || 'error_occurred');
       }
     } finally {
       setIsSubmitting(false);
@@ -82,13 +82,13 @@ const ResetPasswordCode = () => {
               isRequired={true}
               disabled={isSubmitting || retryAfter > 0}
             />
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {/* TODO: test translation */}
+            {error && <p className="text-red-500 text-sm mt-2">{t(error, { sec: retryAfter })}</p>}
             <Button
               type="submit"
               label={t("verify_code")}
               isDisabled={isSubmitting || retryAfter > 0}
             />
-            {retryAfter > 0 && <p className="text-sm text-gray-600 mt-2">Too many attempts. Please wait {retryAfter} seconds.</p>}
           </form>
         </Form>
       </div>

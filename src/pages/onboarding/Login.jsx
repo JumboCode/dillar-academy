@@ -53,17 +53,19 @@ export default function Login() {
         const response = await postLogin(formData);
         if (response.status === 200) {
           setUser(response.data)
-        } else {
-          // TODO
         }
         const dashboardURL = response.data.privilege === "admin" ? "/admin/levels" : `/${response.data.privilege}`;
 
         setLocation(dashboardURL);
       } else {
-        console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2)); // TODO
+        console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
+        setAlertMessage(`Error: ${JSON.stringify(createUser, null, 2)}`); // TODO: translation
+        setTimeout(() => {
+          setAlertMessage("");
+        }, 4000)
       }
     } catch (error) {
-      setAlertMessage(`Error: ${error.response.data.message}`);
+      setAlertMessage(`Error: ${error.response.data.message}`); // TODO: translation
       setTimeout(() => {
         setAlertMessage("");
       }, 4000)
