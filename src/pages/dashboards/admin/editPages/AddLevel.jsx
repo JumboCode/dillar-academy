@@ -85,7 +85,7 @@ const AddLevel = () => {
         }, 4000);
       } else {
         await createLevel(levelData);
-        setLocation("/admin/levels");
+        setLocation("/admin/levels"); // TODO: when navigating back to admin levels page the translation isn't automatically loaded
       }
     } catch (error) {
       console.error("Error adding level:", error);

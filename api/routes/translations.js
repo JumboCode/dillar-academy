@@ -27,12 +27,8 @@ router.put('/:lng/:ns/:key/', async (req, res) => {
     const updated = await Translation.findOneAndUpdate(
       { lng, ns, key },
       { $set: { value: newTranslation } },
-      { new: true }
+      { new: true, upsert: true }
     );
-
-    if (!updated) {
-      return res.status(404).json({ message: 'Translation key not found' });
-    }
 
     res.status(200).json({ message: 'Successfully updated translation', translation: updated });
   } catch (error) {

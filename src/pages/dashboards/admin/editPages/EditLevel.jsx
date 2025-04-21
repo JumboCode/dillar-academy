@@ -127,7 +127,7 @@ const EditLevel = () => {
       } else {
         await updateLevel(level._id, levelData);
         setSuccessMessage("Successfully updated level details");
-        await fetchLevels();
+        await fetchLevels(); //? pressing back button to admin levels page doesn't load new translations, call location.reload instead?
         setTimeout(() => {
           setSuccessMessage("");
         }, 4000);

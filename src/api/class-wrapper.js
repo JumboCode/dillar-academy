@@ -132,9 +132,10 @@ const createLevel = async (levelData) => {
   }
 }
 
-const updateLevel = async (levelId, LevelData) => {
+const updateLevel = async (levelId, levelData) => {
   try {
-    const response = await axios.put(`/api/levels/${levelId}`, LevelData);
+    const response = await axios.put(`/api/levels/${levelId}`, levelData);
+    await transferTranslations();
     return response.data;
   } catch (error) {
     console.error('Error updating level:', error);

@@ -42,7 +42,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
         <h3 className="font-extrabold text-dark-blue-800 mb-1">
           {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
         </h3>
-        <span className="text-sm text-neutral-400">{t('with_name', { name: classObj.instructor })}</span>
+        <p className="text-sm text-neutral-400">{t('with_name', { name: classObj.instructor })}</p>
       </div>
       {/* Schedule */}
       <div className="grid grid-rows-2 w-min items-center gap-x-2 gap-y-1 mb-5">

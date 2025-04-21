@@ -73,6 +73,78 @@ const validateInput = (input, allowedFields) => {
   return filteredInput
 }
 
+const formattedSkillKey = (skill) => `level_skill_${skill.toLowerCase().replace(/ /g, "_")}`;
+
+const deleteLevelTranslations = async (levelData) => {
+  try {
+    await Translation.deleteMany({ key: `level_name_${levelData._id}` });
+    await Translation.deleteMany({ key: `level_desc_${levelData._id}` });
+    for (const skill of levelData.skills) {
+      await Translation.deleteMany({ key: formattedSkillKey(skill) });
+    }
+  } catch (error) {
+    throw new Error("Failed to delete level translations");
+  }
+}
+
+const createLevelTranslations = async (levelData) => {
+  try {
+    // name translation
+    const response = await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+      },
+      body: JSON.stringify({
+        key: `level_name_${levelData._id}`,
+        value: levelData.name,
+        namespace: "levels"
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      console.error("Failed to create translation", data);
+    }
+    // description translation
+    await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+      },
+      body: JSON.stringify({
+        key: `level_desc_${levelData._id}`,
+        value: levelData.description,
+        namespace: "levels"
+      })
+    });
+    // skill translations
+    const existingTranslations = await Translation.find({ lng: "en", ns: "levels" });
+    const existingKeys = new Set(existingTranslations.map(t => t.key));
+    for (const skill of levelData.skills) {
+      const key = formattedSkillKey(skill);
+      // Add skill if translation doesn't already exist
+      if (!existingKeys.has(key)) {
+        await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+          },
+          body: JSON.stringify({
+            key,
+            value: skill,
+            namespace: "levels"
+          })
+        });
+      }
+    }
+  } catch (error) {
+    throw new Error("Failed to create level translations");
+  }
+}
+
 
 //------------------ MONGOOSE SCHEMAS ------------------//
 
@@ -750,7 +822,6 @@ app.put('/api/levels/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    console.log(updates)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
@@ -769,6 +840,14 @@ app.put('/api/levels/:id', async (req, res) => {
       updates,
       { new: true, runValidators: true }
     );
+
+    // Update translations
+    // delete existing translations 
+    await deleteLevelTranslations(existingLevel);
+    // create new translations
+    await createLevelTranslations(updatedLevel);
+    // translations transferred to MongoDB in updateLevel wrapper
+
 
     if (!updatedLevel) {
       return res.status(404).json({ message: 'Level not found' });
@@ -793,6 +872,9 @@ app.delete('/api/levels/:id', async (req, res) => {
     if (!deletedLevel) {
       return res.status(404).json({ message: 'Level not found' });
     }
+
+    // Delete level's translations
+    await deleteLevelTranslations(deletedLevel);
 
     await Level.findByIdAndDelete(id);
 
@@ -826,58 +908,9 @@ app.post('/api/levels', async (req, res) => {
       });
       await newLevel.save();
 
-      // Add level translations
-      // name translation
-      const response = await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
-        },
-        body: JSON.stringify({
-          key: `level_name_${newLevel._id}`,
-          value: name,
-          namespace: "levels"
-        })
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        console.error('Failed to create translation:', data);
-      }
-      // description translation
-      await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
-        },
-        body: JSON.stringify({
-          key: `level_desc_${newLevel._id}`,
-          value: description,
-          namespace: "levels"
-        })
-      });
-      // skill translations
-      const existingTranslations = await Translation.find({ lng: "en", ns: "levels" });
-      const existingKeys = new Set(existingTranslations.map(t => t.key));
-      for (const skill of skills) {
-        const key = `level_skill_${skill.toLowerCase().replace(/ /g, "_")}`;
-        // Add skill if translation doesn't already exist
-        if (!existingKeys.has(key)) {
-          await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
-            },
-            body: JSON.stringify({
-              key,
-              value: skill,
-              namespace: "levels"
-            })
-          });
-        }
-      }
+      // Add level translations to i18nexus
+      await createLevelTranslations(newLevel);
+      // translations transferred to MongoDB in createLevel wrapper
 
       return res.status(201).json({
         message: 'Level created successfully',

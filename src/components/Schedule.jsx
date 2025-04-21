@@ -38,8 +38,6 @@ const Schedule = ({ classes, filters = [] }) => {
                     );
                   case 'ru':
                     return t(`${day}_abbr`).toUpperCase();
-                  case 'ru':
-                    return t(`${day}_abbr`).toUpperCase();
                   case 'ug':
                     return (
                       isMobile
@@ -48,7 +46,7 @@ const Schedule = ({ classes, filters = [] }) => {
                     );
                   case 'zh':
                     return (isMobile ? t(`${day}_abbr`)[1] : t(`${day}_abbr`));
-                  default:
+                  default: // en
                     return (
                       isMobile
                         ? ['sat', 'sun', 'tue', 'thu'].includes(day)
@@ -64,7 +62,7 @@ const Schedule = ({ classes, filters = [] }) => {
       </div>
       <div className="table-row-group">
         <div className="table-row h-24">
-          {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map((day, index, array) => (
+          {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day, index, array) => (
             <div
               key={day}
               className={`table-cell p-[.125rem] sm:p-2 align-top ${index !== array.length - 1 ? 'border-r border-gray-300' : ''}`}
