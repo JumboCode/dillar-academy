@@ -26,7 +26,7 @@ const Level = ({ level, isSimplified, isArrowRight, numLevels }) => {
         style={{ boxShadow: isArrowRight ? `inset -0.5em 0 ${levelColor}` : `inset 0.5em 0 ${levelColor}` }}>
         <div className={`w-full flex flex-col ${isArrowRight ? "sm:flex-row-reverse" : "sm:flex-row"} sm:justify-between sm:items-center`}>
           <h3 className="font-extrabold text-dark-blue-800">
-            {isString ? t(`${level.level}_level`) : t('level', { num: localizeNumber(level.level, i18n.language) })}
+            {isString ? t(`${level.level}_level`) : t('level_num', { num: localizeNumber(level.level, i18n.language) })}
           </h3>
           <p className="text-neutral-600">{level.name}</p>
         </div>
@@ -38,7 +38,7 @@ const Level = ({ level, isSimplified, isArrowRight, numLevels }) => {
       <div className="bg-[url('/images/blue_mountains.png')] bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
       <div className="bg-white px-6 py-8 row-start-2 rounded-b-2xl space-y-1">
         <h3 className='font-extrabold'>
-          {isString ? t(`${level.level}_level`) : t('level', { num: localizeNumber(level.level, i18n.language) })}
+          {isString ? t(`${level.level}_level`) : t('level_num', { num: localizeNumber(level.level, i18n.language) })}
         </h3>
         <p className="text-base sm:text-lg">{level.name}</p>
       </div>

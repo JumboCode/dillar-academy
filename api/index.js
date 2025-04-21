@@ -148,22 +148,6 @@ const Level = mongoose.model("Level", LevelSchema)
 
 //------------------ ENDPOINTS ------------------//
 
-/* TRANSLATION RELATED ENDPOINTS */
-
-// // Delete Translation
-// app.delete('/api/translation/:id', async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       return res.status(400).json({ error: 'Invalid ID' });
-//     }
-//     await Translation.findByIdAndDelete(id);
-//     res.status(204);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error deleting translation' });
-//   }
-// })
-
 
 /* USER RELATED ENDPOINTS */
 

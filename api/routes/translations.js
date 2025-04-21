@@ -60,7 +60,7 @@ router.post('/create', async (req, res) => {
 })
 
 // Move all i18nexus translations to MongoDB
-router.post('/transfer-translations/', async (req, res) => {
+router.post('/transfer-translations', async (req, res) => {
   try {
     const response = await fetch(`https://api.i18nexus.com/project_resources/translations.json?api_key=${process.env.I18NEXUS_API_KEY}`)
     if (!response.ok) {
@@ -79,11 +79,26 @@ router.post('/transfer-translations/', async (req, res) => {
             key,
             value
           });
+
+          // delete translation from i18nexus
+          await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+            },
+            body: JSON.stringify({
+              "id": {
+                "key": key,
+                "namespace": ns,
+              }
+            })
+          });
         }
       }
     }
 
-    await Translation.deleteMany({});
+    // await Translation.deleteMany({});
     await Translation.insertMany(translationsToInsert);
 
     return res.status(200).json({ message: "Successfully inserted translations" })

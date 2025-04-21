@@ -91,7 +91,7 @@ const EditClass = () => {
   const handleEditClass = async (e) => {
     e.preventDefault();
     classData.ageGroup = classData.ageGroup.toLowerCase();
-    const allowedAges = ["all", "children", "adult"]
+    const allowedAges = ["all", "children", "adults"]
     try {
       if (!allowedAges.includes(classData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);

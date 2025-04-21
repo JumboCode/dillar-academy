@@ -52,7 +52,7 @@ const ClassesPage = () => {
       {/* Banner Section */}
       <div className="header-gradient w-full flex flex-col items-center">
         <div className="w-full max-w-[96rem] py-20 lg:py-24 px-4 sm:px-6 lg:px-20">
-          <h3 className="font-light text-dark-blue-700 mb-2">{t('level', { num: localizeNumber(level.level, i18n.language) })}</h3>
+          <h3 className="font-light text-dark-blue-700 mb-2">{t('level_num', { num: localizeNumber(level.level, i18n.language) })}</h3>
           <h1 className='font-extrabold text-dark-blue-800 mb-6'>{level.name}</h1>
           <p className="text-neutral-600 text-base sm:text-lg max-w-2xl mb-8">
             {level.description}
