@@ -80,12 +80,14 @@ const deleteLevelTranslations = async (levelData) => {
     await Translation.deleteMany({ key: `level_name_${levelData._id}` });
     await Translation.deleteMany({ key: `level_desc_${levelData._id}` });
     for (const skill of levelData.skills) {
-      await Translation.deleteMany({ key: formattedSkillKey(skill) });
+      const key = `${formattedSkillKey(skill)}_${levelData._id}`;
+      await Translation.deleteMany({ key });
     }
   } catch (error) {
+    console.error("Failed to delete level translations", error);
     throw new Error("Failed to delete level translations");
   }
-}
+};
 
 const createLevelTranslations = async (levelData) => {
   try {
@@ -120,25 +122,20 @@ const createLevelTranslations = async (levelData) => {
       })
     });
     // skill translations
-    const existingTranslations = await Translation.find({ lng: "en", ns: "levels" });
-    const existingKeys = new Set(existingTranslations.map(t => t.key));
     for (const skill of levelData.skills) {
-      const key = formattedSkillKey(skill);
-      // Add skill if translation doesn't already exist
-      if (!existingKeys.has(key)) {
-        await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
-          },
-          body: JSON.stringify({
-            key,
-            value: skill,
-            namespace: "levels"
-          })
-        });
-      }
+      const key = `${formattedSkillKey(skill)}_${levelData._id}`;
+      await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+        },
+        body: JSON.stringify({
+          key,
+          value: skill,
+          namespace: "levels"
+        })
+      });
     }
   } catch (error) {
     throw new Error("Failed to create level translations");

@@ -123,7 +123,6 @@ const StudentPortal = () => {
           <p className='text-black col-start-1'>{t("age")}</p>
           <p className='text-gray-500 col-start-2'>{user.age ? user.age : "N/A"}</p>
           <p className='text-black col-start-1'>{t("gender")}</p>
-          {/* TODO: translate gender */}
           <p className='text-gray-500 col-start-2'>{user.gender ? toTitleCase(user.gender) : "N/A"}</p>
         </div>
       </div>

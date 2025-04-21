@@ -3,6 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { createLevel } from '@/api/class-wrapper.js';
 import { useAuth } from '@clerk/clerk-react';
+import { useTranslation } from "react-i18next";
 import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import BackButton from "@/components/Button/BackButton";
@@ -15,6 +16,8 @@ const AddLevel = () => {
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
   const [alertMessage, setAlertMessage] = useState("")
+  const [isSaving, setIsSaving] = useState(false);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     if (isLoaded) {
@@ -84,8 +87,10 @@ const AddLevel = () => {
           setAlertMessage("");
         }, 4000);
       } else {
+        setIsSaving(true);
         await createLevel(levelData);
-        setLocation("/admin/levels"); // TODO: when navigating back to admin levels page the translation isn't automatically loaded
+        await i18n.reloadResources();
+        setLocation("/admin/levels");
       }
     } catch (error) {
       console.error("Error adding level:", error);
@@ -179,7 +184,7 @@ const AddLevel = () => {
             </div>
           </div>
           {/* TODO: change text to saving... when in the process of saving level */}
-          <Button label="Save" type="submit" />
+          <Button label={isSaving ? "Saving..." : "Save"} type="submit" isDisabled={isSaving} />
         </form>
       </div>
     </>

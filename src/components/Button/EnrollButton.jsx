@@ -72,7 +72,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
           <div>
             <h3 className='font-extrabold'>{t('registering_for')}</h3>
             <p className='text-base sm:text-lg'>
-              {t('level_num', { num: localizeNumber(classObj.level, i18n.language) })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
+              {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
             </p>
           </div>
           <p className="text-base text-[#86858F]">{t('instructor_name', { name: classObj.instructor })}</p>
@@ -100,7 +100,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
           <div>
             <h3 className='font-extrabold'>{t('congrats_registered')}</h3>
             <p className='text-base sm:text-lg'>
-              {t('level_num', { num: localizeNumber(classObj.level, i18n.language) })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)} ({t('with_name', { name: classObj.instructor })})
+              {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)} ({t('with_name', { name: classObj.instructor })})
             </p>
           </div>
           <p className='text-base text-[#86858F]'>{t('congrats_registered_desc')}</p>
@@ -140,7 +140,7 @@ const UnenrollPopup = ({ classObj, userId, setShowPopup }) => {
       <div className="space-y-1">
         <h3 className='font-extrabold'>{t('unenroll_confirmation')}</h3>
         <p className='text-base sm:text-lg'>
-          {t('level_num', { num: localizeNumber(classObj.level, i18n.language) })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
+          {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
         </p>
       </div>
       <div className='grid grid-cols-2 w-fit gap-x-2'>
