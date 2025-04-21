@@ -6,6 +6,9 @@ const mongoose = require('mongoose');
 const mongoSanitize = require('express-mongo-sanitize');
 const nodemailer = require('nodemailer');
 
+// external schemas
+const Translation = require("./schemas/Translation");
+
 // external routes
 const translationRoutes = require('./routes/translations');
 
@@ -822,6 +825,60 @@ app.post('/api/levels', async (req, res) => {
         skills,
       });
       await newLevel.save();
+
+      // Add level translations
+      // name translation
+      const response = await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+        },
+        body: JSON.stringify({
+          key: `level_name_${newLevel._id}`,
+          value: name,
+          namespace: "levels"
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        console.error('Failed to create translation:', data);
+      }
+      // description translation
+      await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+        },
+        body: JSON.stringify({
+          key: `level_desc_${newLevel._id}`,
+          value: description,
+          namespace: "levels"
+        })
+      });
+      // skill translations
+      const existingTranslations = await Translation.find({ lng: "en", ns: "levels" });
+      const existingKeys = new Set(existingTranslations.map(t => t.key));
+      for (const skill of skills) {
+        const key = `level_skill_${skill.toLowerCase().replace(/ /g, "_")}`;
+        // Add skill if translation doesn't already exist
+        if (!existingKeys.has(key)) {
+          await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+            },
+            body: JSON.stringify({
+              key,
+              value: skill,
+              namespace: "levels"
+            })
+          });
+        }
+      }
+
       return res.status(201).json({
         message: 'Level created successfully',
         level: newLevel

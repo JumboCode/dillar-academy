@@ -89,7 +89,6 @@ const ResetPasswordCode = () => {
               label={t("verify_code")}
               isDisabled={isSubmitting || retryAfter > 0}
             />
-            {retryAfter > 0 && <p className="text-sm text-gray-600 mt-2">{t('too_many_attempts_wait_sec', { sec: retryAfter })}</p>}
           </form>
         </Form>
       </div>

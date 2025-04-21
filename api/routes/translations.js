@@ -60,7 +60,7 @@ router.post('/create', async (req, res) => {
 })
 
 // Move all i18nexus translations to MongoDB
-router.post('/transfer-translations', async (req, res) => {
+router.post('/transfer', async (req, res) => {
   try {
     const response = await fetch(`https://api.i18nexus.com/project_resources/translations.json?api_key=${process.env.I18NEXUS_API_KEY}`)
     if (!response.ok) {

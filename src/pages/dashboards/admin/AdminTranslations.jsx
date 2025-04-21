@@ -29,20 +29,6 @@ const AdminTranslations = () => {
     ug: {},
     zh: {},
   });
-  const [classTranslations, setClassTranslations] = useState({
-    en: {},
-    ru: {},
-    tr: {},
-    ug: {},
-    zh: {},
-  });
-  const [conversationTranslations, setConversationTranslations] = useState({
-    en: {},
-    ru: {},
-    tr: {},
-    ug: {},
-    zh: {},
-  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,23 +79,17 @@ const AdminTranslations = () => {
       </div>
 
       <div className='space-y-6'>
-        <h2 className='font-extrabold'>Edit translations for levels and classes</h2>
+        <h2 className='font-extrabold'>Edit translations for levels</h2>
         <div>
-          <h3 className="font-extrabold mb-6">Levels</h3>
+          {/* <h3 className="font-extrabold mb-6">Levels</h3> */}
           {/* <TranslationTable
 
           /> */}
         </div>
-        <div>
-          <h3 className="font-extrabold mb-6">Classes</h3>
-        </div>
-        <div>
-          <h3 className="font-extrabold mb-6">Conversations</h3>
-        </div>
       </div>
 
       <div>
-        <h2 className='font-extrabold mb-6'>Edit general and student page translation</h2>
+        <h2 className='font-extrabold mb-6'>Edit translations for general and student pages</h2>
         <TranslationTable
           translations={defaultTranslations}
           fetchTranslations={fetchDefaultTranslations}

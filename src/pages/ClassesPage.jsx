@@ -45,7 +45,11 @@ const ClassesPage = () => {
     return new Intl.NumberFormat(locale).format(number);
   }
 
-  if (loading || !level) return;
+  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
+  if (loading || !level || allLevels.length === 0) return;
+
+  const currentLevelIndex = allLevels.findIndex(l => l.level === level.level);
 
   return (
     <div className="w-full h-full flex-1 bg-white flex flex-col items-center">
@@ -53,14 +57,14 @@ const ClassesPage = () => {
       <div className="header-gradient w-full flex flex-col items-center">
         <div className="w-full max-w-[96rem] py-20 lg:py-24 px-4 sm:px-6 lg:px-20">
           <h3 className="font-light text-dark-blue-700 mb-2">{t('level_num', { num: localizeNumber(level.level, i18n.language) })}</h3>
-          <h1 className='font-extrabold text-dark-blue-800 mb-6'>{level.name}</h1>
+          <h1 className='font-extrabold text-dark-blue-800 mb-6'>{t(`level_name_${level._id}`, { ns: "levels" })}</h1>
           <p className="text-neutral-600 text-base sm:text-lg max-w-2xl mb-8">
-            {level.description}
+            {t(`level_desc_${level._id}`, { ns: "levels" })}
           </p>
           <div className="flex gap-4">
             {level.skills.map((skill, index) => (
               <span key={index} className="px-6 py-2.5 bg-white rounded-full text-neutral-500 text-sm">
-                {skill}
+                <p>{toTitleCase(t(`level_skill_${skill.toLowerCase().replace(/ /g, "_")}`, { ns: "levels" }))}</p>
               </span>
             ))}
           </div>
@@ -81,19 +85,25 @@ const ClassesPage = () => {
             ))}
           </div>
           <div className='grid grid-cols-2 w-full gap-x-6'>
-            {levelNum > 1 && <Link href={`/levels/${Number(levelNum) - 1}/classes`} className={"col-start-1"}>
-              <Level
-                level={allLevels.find(l => l.level === parseInt(levelNum) - 1)}
-                numLevels={allLevels.length}
-                isSimplified />
-            </Link>}
-            {levelNum < allLevels.length && <Link href={`/levels/${Number(levelNum) + 1}/classes`} className={"col-start-2"}>
-              <Level
-                level={allLevels.find(l => l.level === parseInt(levelNum) + 1)}
-                numLevels={allLevels.length}
-                isArrowRight
-                isSimplified />
-            </Link>}
+            {currentLevelIndex > 0 && (
+              <Link href={`/levels/${allLevels[currentLevelIndex - 1].level}/classes`} className="col-start-1">
+                <Level
+                  level={allLevels[currentLevelIndex - 1]}
+                  numLevels={allLevels.length}
+                  isSimplified
+                />
+              </Link>
+            )}
+            {currentLevelIndex < allLevels.length - 1 && (
+              <Link href={`/levels/${allLevels[currentLevelIndex + 1].level}/classes`} className="col-start-2">
+                <Level
+                  level={allLevels[currentLevelIndex + 1]}
+                  numLevels={allLevels.length}
+                  isArrowRight
+                  isSimplified
+                />
+              </Link>
+            )}
           </div>
         </div>
       </div>

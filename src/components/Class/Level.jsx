@@ -28,7 +28,7 @@ const Level = ({ level, isSimplified, isArrowRight, numLevels }) => {
           <h3 className="font-extrabold text-dark-blue-800">
             {isString ? t(`${level.level}_level`) : t('level_num', { num: localizeNumber(level.level, i18n.language) })}
           </h3>
-          <p className="text-neutral-600">{level.name}</p>
+          <p className="text-neutral-600">{t(`level_name_${level._id}`, { ns: "levels" })}</p>
         </div>
         {isArrowRight ? <IoChevronForward className="text-2xl text-[#2F2F32]" /> : <IoChevronBack className="text-2xl text-[#2F2F32]" />}
       </div>
@@ -40,7 +40,7 @@ const Level = ({ level, isSimplified, isArrowRight, numLevels }) => {
         <h3 className='font-extrabold'>
           {isString ? t(`${level.level}_level`) : t('level_num', { num: localizeNumber(level.level, i18n.language) })}
         </h3>
-        <p className="text-base sm:text-lg">{level.name}</p>
+        <p className="text-base sm:text-lg">{t(`level_name_${level._id}`, { ns: "levels" })}</p>
       </div>
     </div>
   )
