@@ -5,9 +5,6 @@ import ConversationClass from '../components/Class/ConversationClass';
 import { getConversations, getLevels } from '../api/class-wrapper';
 import { Link } from "wouter"
 import { useTranslation } from "react-i18next";
-import Skeleton from 'react-loading-skeleton'
-// import 'react-loading-skeleton/dist/skeleton.css'
-// import SkeletonText from '@/components/Skeletons/SkeletonText';
 import SkeletonLevel from '@/components/Skeletons/SkeletonLevel';
 
 const LevelsPage = () => {
@@ -31,10 +28,6 @@ const LevelsPage = () => {
     };
     fetchLevels();
   }, []);
-
-  // if (!allowRender) {
-  //   return <div>LevelsPage loading...</div>
-  // }
 
   return (
     <div className="page-format max-w-[96rem] lg:py-24">

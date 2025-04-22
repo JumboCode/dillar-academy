@@ -46,7 +46,7 @@ const ClassesPage = () => {
 
   const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
-  if (loading || !level || allLevels.length === 0) return;
+  if (allowRender || !level || allLevels.length === 0) return <div>Loading classes...</div>;
 
   const currentLevelIndex = allLevels.findIndex(l => l.level === level.level);
 
