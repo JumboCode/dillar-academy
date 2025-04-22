@@ -30,7 +30,8 @@ const EditClass = () => {
     schedule: [
       {
         day: '',
-        time: ''
+        time: '',
+        endTime: ''
       }
     ]
   });
@@ -102,7 +103,7 @@ const EditClass = () => {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredClassData = {
           ...classData,
-          schedule: classData.schedule.filter(time => time.day && time.time),
+          schedule: classData.schedule.filter(time => time.day && time.time && time.endTime),
         };
 
         await updateClass(params.classId, filteredClassData);
@@ -253,14 +254,14 @@ const EditClass = () => {
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
-                          {/* <p className="text-3xl">-</p>
+                          <p className="text-3xl">-</p>
                             <FormInput
                               type="text"
                               name="endTime"
-                              value={classData.time}
-                              onChange={handleInputChange}
+                              value={time.endTime}
+                              onChange={handleTimeInputChange}
                               isRequired={false}
-                            /> */}
+                            />
                         </div>
                       </div>
                     </div>
@@ -287,7 +288,7 @@ const EditClass = () => {
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
-                  { day: '', time: '' }
+                  { day: '', time: '',endTime:'' }
                 ]
               }));
             }} />

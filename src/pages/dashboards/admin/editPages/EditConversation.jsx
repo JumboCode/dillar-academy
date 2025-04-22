@@ -25,7 +25,8 @@ const EditConversation = () => {
     schedule: [
       {
         day: '',
-        time: ''
+        time: '',
+        endTime: ''
       }
     ]
   });
@@ -87,7 +88,7 @@ const EditConversation = () => {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredConversationData = {
           ...conversationData,
-          schedule: conversationData.schedule.filter(time => time.day && time.time),
+          schedule: conversationData.schedule.filter(time => time.day && time.time && time.endTime),
         };
 
         await updateConversation(params.id, filteredConversationData);
@@ -226,14 +227,15 @@ const EditConversation = () => {
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
-                          {/* <p className="text-3xl">-</p>
+                          <p className="text-3xl">-</p>
                             <FormInput
                               type="text"
                               name="endTime"
-                              value={conversationData.time}
-                              onChange={handleInputChange}
+                              placeholder="End Time"
+                              value={time.endTime}
+                              onChange={handleTimeInputChange}
                               isRequired={false}
-                            /> */}
+                            />
                         </div>
                       </div>
                     </div>
@@ -260,7 +262,7 @@ const EditConversation = () => {
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
-                  { day: '', time: '' }
+                  { day: '', time: '', endTime: '' }
                 ]
               }));
             }} />

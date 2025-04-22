@@ -21,7 +21,8 @@ const EditConversation = () => {
     schedule: [
       {
         day: '',
-        time: ''
+        time: '',
+        endTime: ''
       }
     ]
   });
@@ -158,14 +159,14 @@ const EditConversation = () => {
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
-                          {/* <p className="text-3xl">-</p>
+                          <p className="text-3xl">-</p>
                             <FormInput
                               type="text"
                               name="endTime"
-                              value={conversationData.time}
-                              onChange={handleInputChange}
+                              value={time.endTime}
+                              onChange={handleTimeInputChange}
                               isRequired={false}
-                            /> */}
+                            /> 
                         </div>
                       </div>
                     </div>
@@ -192,7 +193,7 @@ const EditConversation = () => {
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
-                  { day: '', time: '' }
+                  { day: '', time: '', endTime:'' }
                 ]
               }));
             }} />

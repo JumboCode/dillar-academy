@@ -23,7 +23,8 @@ const AddClass = () => {
     schedule: [
       {
         day: '',
-        time: ''
+        time: '',
+        endTime: ''
       }
     ]
   });
@@ -58,7 +59,7 @@ const AddClass = () => {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredClassData = {
           ...classData,
-          schedule: classData.schedule.filter(time => time.day && time.time),
+          schedule: classData.schedule.filter(time => time.day && time.time && time.endTime),
         };
         await createClass(filteredClassData);
         history.back();
@@ -165,14 +166,15 @@ const AddClass = () => {
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
-                          {/* <p className="text-3xl">-</p>
+                          <p className="text-3xl">-</p>
                             <FormInput
                               type="text"
                               name="endTime"
-                              value={classData.time}
-                              onChange={handleInputChange}
+                              placeholder="End Time"
+                              value={time.endTime}
+                              onChange={handleTimeInputChange}
                               isRequired={false}
-                            /> */}
+                            />
                         </div>
                       </div>
                     </div>
@@ -199,7 +201,7 @@ const AddClass = () => {
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
-                  { day: '', time: '' }
+                  { day: '', time: '', endTime: '' }
                 ]
               }));
             }} />

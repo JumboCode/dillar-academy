@@ -181,6 +181,7 @@ const Contact = mongoose.model('Contact', ContactSchema);
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
   time: { type: String, required: true },
+  endTime: { type: String, required: true }
 })
 
 // Class Schema
@@ -497,7 +498,9 @@ app.post('/api/conversations', async (req, res) => {
       convo.schedule.length === schedule.length &&
       convo.schedule.every(itemA =>
         schedule.some(itemB =>
-          itemA.day === itemB.day && itemA.time === itemB.time
+          itemA.day === itemB.day && 
+          itemA.time === itemB.time &&
+          itemA.endTime === itemB.endTime
         )
       )
     );
@@ -571,7 +574,9 @@ app.post('/api/classes', async (req, res) => {
       cls.schedule.length === schedule.length &&
       cls.schedule.every(itemA =>
         schedule.some(itemB =>
-          itemA.day === itemB.day && itemA.time === itemB.time
+          itemA.day === itemB.day && 
+          itemA.time === itemB.time && 
+          itemA.endTime === itemB.endTime
         )
       )
     );
@@ -596,8 +601,8 @@ app.post('/api/classes', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Failed to create class:', error);
-    return res.status(500).json({ message: 'Failed to create class' });
+    console.error('Error creating class:', error.name, error.message);
+    return res.status(500).json({ message: error.message });;
   }
 });
 
@@ -618,7 +623,9 @@ app.put('/api/classes/:id', async (req, res) => {
       cls.schedule.length === schedule.length &&
       cls.schedule.every(itemA =>
         schedule.some(itemB =>
-          itemA.day === itemB.day && itemA.time === itemB.time
+          itemA.day === itemB.day && 
+          itemA.time === itemB.time &&
+          itemA.endTime === itemB.endTime
         )
       )
     );
@@ -942,7 +949,7 @@ app.get('/api/students-export', async (req, res) => {
           if (!classInfo) return null;
 
           // Format schedules
-          const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n');
+          const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time} ${s.endTime}`).join('\n');
 
           // Convert EST to Istanbul time (EST + 7 hours)
           const scheduleIstanbul = classInfo.schedule.map(s => {
