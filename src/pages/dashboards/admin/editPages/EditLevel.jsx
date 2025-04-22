@@ -28,7 +28,6 @@ const EditLevel = () => {
   const [successMessage, setSuccessMessage] = useState("")
 
   useEffect(() => {
-    // TODO: if params corresponds to a level number that doesn't exist, it forever displays loading
     if (!params.id || !levelNum) {
       setLocation("/admin/levels");
       return;

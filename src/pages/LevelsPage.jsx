@@ -5,10 +5,15 @@ import ConversationClass from '../components/Class/ConversationClass';
 import { getConversations, getLevels } from '../api/class-wrapper';
 import { Link } from "wouter"
 import { useTranslation } from "react-i18next";
+import Skeleton from 'react-loading-skeleton'
+// import 'react-loading-skeleton/dist/skeleton.css'
+// import SkeletonText from '@/components/Skeletons/SkeletonText';
+import SkeletonLevel from '@/components/Skeletons/SkeletonLevel';
 
 const LevelsPage = () => {
   const [levels, setLevels] = useState([]);
   const [conversations, setConversations] = useState([]);
+  const [allowRender, setAllowRender] = useState(false);
   const { t } = useTranslation();
 
   // styles
@@ -22,13 +27,14 @@ const LevelsPage = () => {
       setLevels(levels);
       const conversations = await getConversations();
       setConversations(conversations);
+      setAllowRender(true);
     };
     fetchLevels();
   }, []);
 
-  if (levels?.length == 0 || conversations?.length == 0) {
-    return <></>
-  }
+  // if (!allowRender) {
+  //   return <div>LevelsPage loading...</div>
+  // }
 
   return (
     <div className="page-format max-w-[96rem] lg:py-24">
@@ -40,7 +46,8 @@ const LevelsPage = () => {
         <h2 className="font-extrabold mb-1">{t("levelspage_reg_class_heading")}</h2>
         <p className={descriptionStyle}>{t("levelspage_reg_class_description")}</p>
         <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 flex flex-col`}>
-          {levels.map((level, levelIndex) => (
+          {!allowRender && <SkeletonLevel count={6} />}
+          {allowRender && levels.map((level, levelIndex) => (
             <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
               <Level level={level} />
             </Link>

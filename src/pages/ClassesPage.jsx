@@ -10,7 +10,7 @@ const ClassesPage = () => {
   const [classes, setClasses] = useState([]);
   const [level, setLevel] = useState();
   const [allLevels, setAllLevels] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [allowRender, setAllowRender] = useState(false);
   const params = useParams();
   const levelNum = decodeURIComponent(params.id);
   const [, setLocation] = useLocation();
@@ -23,13 +23,12 @@ const ClassesPage = () => {
     const classFilter = new URLSearchParams(`level=${levelNum}`);
 
     const fetchData = async () => {
-      setLoading(true);
       const classData = await getClasses(classFilter);
       setClasses(classData);
       const levelData = await getLevels();
       setAllLevels(levelData);
       setLevel(levelData.find(l => l.level === parseInt(levelNum)));
-      setLoading(false);
+      setAllowRender(true);
     };
     fetchData();
   }, [levelNum]);
