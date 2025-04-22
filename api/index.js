@@ -832,6 +832,8 @@ app.put('/api/levels/:id', async (req, res) => {
       })
     }
 
+    const currentLevel = await Level.findOne({ _id: id });
+
     const updatedLevel = await Level.findByIdAndUpdate(
       id,
       updates,
@@ -840,11 +842,10 @@ app.put('/api/levels/:id', async (req, res) => {
 
     // Update translations
     // delete existing translations 
-    await deleteLevelTranslations(existingLevel);
+    await deleteLevelTranslations(currentLevel);
     // create new translations
     await createLevelTranslations(updatedLevel);
     // translations transferred to MongoDB in updateLevel wrapper
-
 
     if (!updatedLevel) {
       return res.status(404).json({ message: 'Level not found' });
