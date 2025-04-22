@@ -1050,6 +1050,12 @@ app.delete('/api/user/:id', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    await Promise.all(
+      deletedUser.enrolledClasses.map(classId =>
+        Class.findByIdAndUpdate(classId, { $pull: { roster: id } })
+          .catch(err => { throw err }))
+    )
+
     // delete user
     await User.findByIdAndDelete(id);
 

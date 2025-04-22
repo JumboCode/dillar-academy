@@ -87,7 +87,7 @@ const EditUser = () => {
     try {
       await updateUser(params.id, userFormData);
       setSuccessMessage("Successfully updated user information")
-      setUserFormData({ firstName: '', lastName: '', email: '', privilege: ''})
+      setUserFormData({ firstName: '', lastName: '', email: '', privilege: '' })
       await fetchData();
       setTimeout(() => {
         setSuccessMessage("");
@@ -122,7 +122,7 @@ const EditUser = () => {
       privilege: userData.privilege
     });
   }
-  
+
   const filteredClasses = classes.filter((cls) => {
     const search = searchInput.toLowerCase().split(" ");
     if (search.length <= 1 && search[0] === '') {
@@ -144,7 +144,7 @@ const EditUser = () => {
   if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
-  
+
 
   return (
     <>
@@ -192,60 +192,35 @@ const EditUser = () => {
               />
             </div>
 
-            <div className="w-full flex flex-col"> 
+            <div className="w-full flex flex-col">
 
-              
+
               <label>Privilege</label>
 
-            <Dropdown
-              label={
-                <div className="flex items-center justify-center gap-x-1">
-                  <span className={`text-center w-full ${userFormData.privilege ? "" : "text-gray-500"}`}>
-                    {userFormData.privilege ? toTitleCase(userFormData.privilege) : "Select Role"}
-                  </span>
-                </div>
-              }
-              buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            >
-              {["student", "instructor"].map((role) => (
-                <button
-                  type="button"
-                  key={role}
-                  className={`
+              <Dropdown
+                label={
+                  <div className="flex items-center justify-center gap-x-1">
+                    <span className={`text-center w-full ${userFormData.privilege ? "" : "text-gray-500"}`}>
+                      {userFormData.privilege ? toTitleCase(userFormData.privilege) : "Select Role"}
+                    </span>
+                  </div>
+                }
+                buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              >
+                {["student", "instructor"].map((role) => (
+                  <button
+                    type="button"
+                    key={role}
+                    className={`
                     block w-full py-3 px-4 text-base sm:text-lg 
                     ${userFormData.privilege === role ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}
                     hover:bg-gray-100`}
-                  onClick={() => setUserFormData({ ...userFormData, privilege: role })}
-                >
-                  {toTitleCase(role)}
-                </button>
-              ))}
-            </Dropdown>
-                        
-              {/* <Dropdown
-              label={
-                <div className="flex items-center justify-center gap-x-1">
-                            <span className={`text-center w-full ${selectedRole ? "" : "text-gray-500"}`}>{selectedRole ? selectedRole : "Select Role"}</span>
-
-                </div>
-              }
-              buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-              {["Instructor", "Student"].map((role) => (
-                <button
-                  type='button'
-                  key={role}
-                  className={`
-                    block w-full py-3 px-4 text-base sm:text-lg 
-                    ${selectedRole === role ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}
-                    hover:bg-gray-100`}
-                  onClick={() => handleUserInputChange(role)}>
-                  {role}
-                </button>
-              ))}
-            </Dropdown> */}
-                {/* <option value="student">Student</option>
-                <option value="instructor">Instructor</option>
-              </select> */}
+                    onClick={() => setUserFormData({ ...userFormData, privilege: role })}
+                  >
+                    {toTitleCase(role)}
+                  </button>
+                ))}
+              </Dropdown>
             </div>
           </div>
           <div className="space-x-2">
@@ -254,11 +229,10 @@ const EditUser = () => {
               label="Reset"
               isOutline={true}
               onClick={handleReset} />
-            <Button
-              label="Delete User"
-              isOutline={true}
-              onClick={handleDeleteUser} />
           </div>
+          <Button
+            label="Delete User"
+            onClick={handleDeleteUser} />
         </form>
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4">
