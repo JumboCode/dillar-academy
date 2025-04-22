@@ -6,11 +6,13 @@ import { updateUser, getUser, deleteUser } from '@/api/user-wrapper.js';
 import { getClassById, getClasses, enrollInClass, unenrollInClass } from '@/api/class-wrapper';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
+import Dropdown from '@/components/Dropdown/Dropdown';
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 import Overlay from '@/components/Overlay';
 import SearchBar from '@/components/SearchBar';
 import Alert from '@/components/Alert';
+
 
 const EditUser = () => {
   const { user } = useContext(UserContext);
@@ -142,6 +144,7 @@ const EditUser = () => {
   if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
+  
 
   return (
     <>
@@ -188,18 +191,61 @@ const EditUser = () => {
                 isRequired={true}
               />
             </div>
+
             <div className="w-full flex flex-col"> 
+
+              
               <label>Privilege</label>
-              <select name="privilege" 
-                      id="privileges" 
-                      className="text-base sm:text-lg w-full py-3 px-4 border
-                              border-gray-400 rounded-sm focus:outline-none focus:ring-2 
-                              focus:ring-blue-300 placeholder-gray-500"
-                      onChange={handleUserInputChange}
-              >
-                <option value="student">Student</option>
+
+            <Dropdown
+              label={
+                <div className="flex items-center justify-center gap-x-1">
+                  <span className={`text-center w-full ${userFormData.privilege ? "" : "text-gray-500"}`}>
+                    {userFormData.privilege ? toTitleCase(userFormData.privilege) : "Select Role"}
+                  </span>
+                </div>
+              }
+              buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            >
+              {["student", "instructor"].map((role) => (
+                <button
+                  type="button"
+                  key={role}
+                  className={`
+                    block w-full py-3 px-4 text-base sm:text-lg 
+                    ${userFormData.privilege === role ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}
+                    hover:bg-gray-100`}
+                  onClick={() => setUserFormData({ ...userFormData, privilege: role })}
+                >
+                  {toTitleCase(role)}
+                </button>
+              ))}
+            </Dropdown>
+                        
+              {/* <Dropdown
+              label={
+                <div className="flex items-center justify-center gap-x-1">
+                            <span className={`text-center w-full ${selectedRole ? "" : "text-gray-500"}`}>{selectedRole ? selectedRole : "Select Role"}</span>
+
+                </div>
+              }
+              buttonClassName="justify-between w-full text-base sm:text-lg py-3 px-4 border border-gray-400 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+              {["Instructor", "Student"].map((role) => (
+                <button
+                  type='button'
+                  key={role}
+                  className={`
+                    block w-full py-3 px-4 text-base sm:text-lg 
+                    ${selectedRole === role ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}
+                    hover:bg-gray-100`}
+                  onClick={() => handleUserInputChange(role)}>
+                  {role}
+                </button>
+              ))}
+            </Dropdown> */}
+                {/* <option value="student">Student</option>
                 <option value="instructor">Instructor</option>
-              </select>
+              </select> */}
             </div>
           </div>
           <div className="space-x-2">
