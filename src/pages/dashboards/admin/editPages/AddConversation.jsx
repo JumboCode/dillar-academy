@@ -45,7 +45,7 @@ const EditConversation = () => {
   const handleCreateConversation = async (e) => {
     e.preventDefault();
     conversationData.ageGroup = conversationData.ageGroup.toLowerCase();
-    const allowedAges = ["all", "children", "adult"]
+    const allowedAges = ["all", "children", "adults"]
     try {
       if (!allowedAges.includes(conversationData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);
@@ -77,7 +77,7 @@ const EditConversation = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label={"All Conversations"} />
         <div className="space-y-2">
           <h1 className="font-extrabold">Add Conversation Class</h1>
@@ -196,7 +196,7 @@ const EditConversation = () => {
                 ]
               }));
             }} />
-          <div className="space-x-2 mt-8">
+          <div className="w-fit grid grid-cols-2 gap-x-2 mt-8">
             <Button
               label="Save" type="submit" />
             <Button

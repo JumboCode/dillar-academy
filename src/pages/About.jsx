@@ -19,14 +19,22 @@ function About() {
             />
             <h1 className="font-extrabold text-3xl sm:text-[2.5rem] text-blue-700">{t("about_heading")}</h1>
           </div>
-          <p>{t("about_body1")}
-            <br /><br />
-            {t("about_body2")}
-          </p>
+          <div className="space-y-6">
+            <p>{t("about_body1")}</p>
+            <p>{t("about_body2")}</p>
+          </div>
         </div>
       </section>
       <section>
-        <h1 className='font-extrabold'>Privacy Commitment</h1>
+        <h1 className='text-center lg:text-left font-extrabold mb-4 sm:mb-7'>{t('privacy_commitment')}</h1>
+        <div className="space-y-6">
+          <p>{t("privacy_body1")}</p>
+          <p>{t("privacy_body2")}</p>
+          <p>{t("privacy_body3")}</p>
+          <p>{t("privacy_body4")}</p>
+          <p>{t("privacy_body5")}</p>
+          <p>{t("privacy_body6")}</p>
+        </div>
       </section>
     </div>
   )

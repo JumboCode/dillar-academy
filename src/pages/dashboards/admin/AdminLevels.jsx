@@ -73,7 +73,7 @@ const AdminLevels = () => {
         )}
         <Link href="/admin/levels/conversations">
           <Level level={{
-            level: "Conversation Classes",
+            level: "conversation",
             name: "",
           }}
             isSimplified

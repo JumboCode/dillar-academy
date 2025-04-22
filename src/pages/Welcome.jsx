@@ -45,7 +45,7 @@ const Welcome = ({ onComplete }) => {
         {/* Login Link */}
         <p className="text-blue-500 hover:underline">
           <Link href="/login" onClick={onComplete}>
-            {t("sign_up_login1")}
+            {t("already_have_account")}
           </Link>
         </p>
       </div>

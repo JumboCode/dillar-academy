@@ -3,10 +3,10 @@ import { useLocation } from "wouter";
 import { useSignIn } from "@clerk/clerk-react";
 import Form from "@/components/Form/Form";
 import FormInput from "@/components/Form/FormInput";
-import FormSubmit from "@/components/Form/FormSubmit";
+import Button from "@/components/Button/Button";
 import { useTranslation } from "react-i18next";
 
-export default function ResetPasswordCode() {
+const ResetPasswordCode = () => {
   const { t } = useTranslation();
   const { isLoaded, signIn } = useSignIn();
   const [, setLocation] = useLocation();
@@ -28,7 +28,7 @@ export default function ResetPasswordCode() {
     if (isSubmitting || retryAfter > 0) return;
     setIsSubmitting(true);
     setError("");
- 
+
     try {
       // Attempt to verify the code with Clerk
       const result = await signIn.attemptFirstFactor({
@@ -40,13 +40,13 @@ export default function ResetPasswordCode() {
         sessionStorage.setItem("reset_password_code", code);
         setLocation("/reset-password");
       } else {
-        setError("Invalid code. Please check your email and try again.");
+        setError('invalid_code_error');
       }
     } catch (err) { // TODO: check that error and retry attempt works
       if (err.response?.status === 429) {
         const retryAfterSecs = parseInt(err.response.headers["retry-after"]) || 30;
         setRetryAfter(retryAfterSecs);
-        setError(`Too many attempts. Please wait ${retryAfterSecs} seconds.`);
+        setError('too_many_attempts_wait_sec');
         const timer = setInterval(() => {
           setRetryAfter((prev) => {
             if (prev <= 1) {
@@ -57,7 +57,7 @@ export default function ResetPasswordCode() {
           });
         }, 1000);
       } else {
-        setError(err.errors?.[0]?.longMessage || "An error occurred. Please try again.");
+        setError(err.errors?.[0]?.longMessage || 'error_occurred');
       }
     } finally {
       setIsSubmitting(false);
@@ -70,27 +70,30 @@ export default function ResetPasswordCode() {
     <main className="header-gradient page-format flex justify-center items-center">
       <div className="w-full max-w-[96rem] flex justify-center">
         <Form width="lg:w-3/5 xl:w-2/5">
-          <h1 className="font-extrabold mb-3">{t("Enter Reset Code")}</h1>
-          <p className="text-base sm:text-lg text-gray-600 mb-5">We've sent a code to your email. Enter it below to verify you're identity.</p>
+          <h1 className="font-extrabold mb-3">{t("enter_reset_code")}</h1>
+          <p className="text-base sm:text-lg text-gray-600 mb-5">{t("enter_reset_code_desc")}</p>
           <form onSubmit={handleSubmit} className="space-y-3">
             <FormInput
               type="text"
               name="code"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder={t("Reset Code")}
+              placeholder={t("reset_code")}
               isRequired={true}
               disabled={isSubmitting || retryAfter > 0}
             />
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            <FormSubmit
-              label={isSubmitting ? t("Verifying") : t("Verify code")}
+            {/* TODO: test translation */}
+            {error && <p className="text-red-500 text-sm mt-2">{t(error, { sec: retryAfter })}</p>}
+            <Button
+              type="submit"
+              label={t("verify_code")}
               isDisabled={isSubmitting || retryAfter > 0}
             />
-            {retryAfter > 0 && <p className="text-sm text-gray-600 mt-2">You can try again in {retryAfter} seconds</p>}
           </form>
         </Form>
       </div>
     </main>
   );
 }
+
+export default ResetPasswordCode;

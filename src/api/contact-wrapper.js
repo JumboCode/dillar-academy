@@ -18,7 +18,7 @@ const postContact = async (body) => {
     return response;
   } catch (error) {
     console.error('Contact endpoint post error:', error);
-    throw error; // Propagate the error to the caller
+    throw error;
   }
 };
 

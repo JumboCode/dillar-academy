@@ -23,6 +23,7 @@ const postLogin = async (body) => {
     return response;
   } catch (error) {
     console.error('Login endpoint post error:', error);
+    throw error;
   }
 };
 
@@ -32,6 +33,7 @@ const getUsers = async () => {
     return response;
   } catch (error) {
     console.error('Error fetching data:', error);
+    throw error;
   }
 };
 
@@ -42,6 +44,7 @@ const getUser = async (query = "") => {
     return response;
   } catch (error) {
     console.error('Error fetching data:', error);
+    throw error;
   }
 };
 
@@ -58,6 +61,7 @@ const resetPassword = async (body) => {
     return data;
   } catch (error) {
     console.error('Reset password endpoint error:', error);
+    throw error;
   }
 };
 

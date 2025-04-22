@@ -9,8 +9,19 @@ import { useUser } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
 import { UserContext } from '@/contexts/UserContext.jsx';
 
+function localizeNumber(number, lang) {
+  let locale = lang;
+
+  // Use Han characters for Chinese
+  if (lang.startsWith('zh')) {
+    locale = 'zh-CN-u-nu-hanidec';
+  }
+
+  return new Intl.NumberFormat(locale).format(number);
+}
+
 const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [confirming, setConfirming] = useState(true);
   const [, setLocation] = useLocation();
   const { user, setUser } = useContext(UserContext);
@@ -24,19 +35,17 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
     }
     setConfirming(false);
   }
-  console.log(user.enrolledClasses)
-  console.log(classObj._id)
 
   if (user.enrolledClasses.includes(classObj._id)) {
     return (
       <Overlay width={'w-[28rem]'}>
         <div>
-          <h3 className='font-extrabold'>Already enrolled in this class</h3>
-          <p className='sm:text-lg'>You are already enrolled in this class. Would you like to unenroll?</p>
+          <h3 className='font-extrabold'>{t('already_enrolled')}</h3>
+          <p className='sm:text-lg'>{t('already_enrolled_desc')}</p>
         </div>
-        <div className="flex gap-x-2">
+        <div className="grid grid-cols-2 w-fit gap-x-2">
           <Button
-            label="Unenroll"
+            label={t("unenroll")}
             onClick={() => {
               setShowPopup(false)
               isEnroll = false;
@@ -48,7 +57,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
             }}
           />
           <Button
-            label={"Cancel"}
+            label={t('cancel')}
             isOutline={true}
             onClick={() => { setShowPopup(false) }} />
         </div>
@@ -61,39 +70,43 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
       {confirming ? <div className='flex flex-col gap-y-5'>
         <div className='flex flex-col gap-y-4'>
           <div>
-            <h3 className='font-extrabold'>You are registering for:</h3>
-            <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}</p>
+            <h3 className='font-extrabold'>{t('registering_for')}</h3>
+            <p className='text-base sm:text-lg'>
+              {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
+            </p>
           </div>
-          <p className="text-base text-[#86858F]">Instructor: {classObj.instructor}</p>
-          <div className="grid grid-rows-2 grid-cols-[min-content] items-center gap-x-2 gap-y-1">
+          <p className="text-base text-[#86858F]">{t('instructor_name', { name: classObj.instructor })}</p>
+          <div className="grid grid-rows-2 w-min items-center gap-x-2 gap-y-1">
             <IoTimeOutline className="text-xl row-start-1" />
             <IoCalendarOutline className="text-xl row-start-2" />
             {classObj.schedule.map((schedule, index) => (
               <React.Fragment key={index}>
-                {index === 1 && <div className="row-span-full w-0 h-full border-[1px]"></div>}
-                <p className="row-start-1">{schedule.time}</p>
-                <p className="row-start-2">{schedule.day}</p>
+                {index === 1 && <div className="row-span-full h-full border-[1px]"></div>}
+                <p className="row-start-1 w-max">{schedule.time}</p>
+                <p className="row-start-2 w-max">{t(`${schedule.day.toLowerCase()}`)}</p>
               </React.Fragment>
             ))}
           </div>
         </div>
-        <div className='flex gap-x-2'>
-          <Button label={"Confirm"} onClick={handleEnrollOrUnenroll} />
+        <div className='grid grid-cols-2 w-fit gap-x-2'>
+          <Button label={t("confirm")} onClick={handleEnrollOrUnenroll} />
           <Button
-            label={"Cancel"}
+            label={t("cancel")}
             isOutline={true}
             onClick={() => { setShowPopup(false) }} />
         </div>
       </div> : <div className='flex flex-col gap-y-5'>
         <div className='flex flex-col gap-y-4'>
           <div>
-            <h3 className='font-extrabold'>Congrats! You are registered for: </h3>
-            <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`} (with {classObj.instructor})</p>
+            <h3 className='font-extrabold'>{t('congrats_registered')}</h3>
+            <p className='text-base sm:text-lg'>
+              {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)} ({t('with_name', { name: classObj.instructor })})
+            </p>
           </div>
-          <p className='text-base text-[#86858F]'>Checkout your class schedule in your profile! Made a mistake? Select “Undo”</p>
+          <p className='text-base text-[#86858F]'>{t('congrats_registered_desc')}</p>
         </div>
-        <div className='flex gap-x-2'>
-          <Button label={"My Schedule"} onClick={() => {
+        <div className='grid grid-cols-2 w-fit gap-x-2'>
+          <Button label={t('my_schedule')} onClick={() => {
             setUser(prev => ({
               ...prev,
               enrolledClasses: [...prev.enrolledClasses, classObj._id]
@@ -101,7 +114,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
             setLocation('/student')
           }} />
           <Button
-            label={"Undo"}
+            label={t('undo')}
             isOutline={true}
             onClick={() => {
               setShowPopup(false)
@@ -115,7 +128,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
 }
 
 const UnenrollPopup = ({ classObj, userId, setShowPopup }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const handleUnenroll = async () => {
     await unenrollInClass(classObj._id, userId);
     setShowPopup(false);
@@ -125,13 +138,15 @@ const UnenrollPopup = ({ classObj, userId, setShowPopup }) => {
   return (
     <Overlay width={'w-[22rem]'}>
       <div className="space-y-1">
-        <h3 className='font-extrabold'>Are you sure you want to unenroll from:</h3>
-        <p className='text-base sm:text-lg'>Level {classObj.level}: {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}</p>
+        <h3 className='font-extrabold'>{t('unenroll_confirmation')}</h3>
+        <p className='text-base sm:text-lg'>
+          {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
+        </p>
       </div>
-      <div className='flex gap-x-2'>
-        <Button label={"Confirm"} onClick={handleUnenroll} />
+      <div className='grid grid-cols-2 w-fit gap-x-2'>
+        <Button label={t('confirm')} onClick={handleUnenroll} />
         <Button
-          label={"Cancel"}
+          label={t('cancel')}
           isOutline={true}
           onClick={() => setShowPopup(false)} />
       </div>
@@ -143,16 +158,17 @@ const SignUpPopup = ({ setShowPopup }) => {
   const { t } = useTranslation();
   const [, setLocation] = useLocation();
 
+  // TODO: issue is button text exceeding boundaries of button in other languages
   return (
     <Overlay width={'w-[24rem]'}>
       <div>
-        <h3 className='font-extrabold'>Create an account first!</h3>
-        <p className='text-base sm:text-lg'>Please sign up for an account with Dillar before registering for classes.</p>
+        <h3 className='font-extrabold'>{t('create_account_first')}</h3>
+        <p className='text-base sm:text-lg'>{t('create_account_first_desc')}</p>
       </div>
-      <div className='flex gap-x-2'>
-        <Button label={"Sign Up"} onClick={() => setLocation("/signup")} />
+      <div className='grid grid-cols-2 w-fit gap-x-2'>
+        <Button label={t('sign_up')} onClick={() => setLocation("/signup")} />
         <Button
-          label={"Cancel"}
+          label={t('cancel')}
           isOutline={true}
           onClick={() => setShowPopup(false)} />
       </div>
@@ -166,15 +182,17 @@ const NotStudentPopup = ({ setShowPopup }) => {
   return (
     <Overlay width={'w-[24rem]'}>
       <div>
-        <h3 className='font-extrabold'>Not a student</h3>
-        <p className='text-base sm:text-lg'>Only students are allowed to enroll in classes. Do you want to sign out and sign in as a student?</p>
+        <h3 className='font-extrabold'>{t('not_student')}</h3>
+        <p className='text-base sm:text-lg'>{t('not_student_desc')}</p>
       </div>
-      <div className='flex gap-x-2'>
+      <div className='grid grid-cols-2 w-fit gap-x-2'>
         <SignOutButton
           redirectUrl='/login'
-          className='transition-colors duration-300 border border-dark-blue-800 text-white bg-dark-blue-800 hover:text-dark-blue-800 hover:bg-white rounded-sm px-4 py-2' />
+          className='transition-colors duration-300 border border-dark-blue-800 text-white bg-dark-blue-800 hover:text-dark-blue-800 hover:bg-white rounded-sm px-4 py-2'>
+          {t('sign_out')}
+        </SignOutButton>
         <Button
-          label={"Cancel"}
+          label={t('cancel')}
           isOutline={true}
           onClick={() => setShowPopup(false)} />
       </div>
@@ -189,11 +207,12 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
   const [showNotStudentPopup, setShowNotStudentPopup] = useState(false);
   const { isSignedIn } = useUser();
   const { user } = useContext(UserContext);
+  const { t } = useTranslation();
 
   return (
     <>
       {isEnroll ? <Button
-        label={"Enroll"}
+        label={t('enroll')}
         isOutline={false}
         onClick={
           isSignedIn
@@ -202,7 +221,7 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
               : () => setShowNotStudentPopup(true)
             : () => setShowSignUpPopup(true)}
       /> : <Button
-        label={"Unenroll"}
+        label={t("unenroll")}
         isOutline={false}
         onClick={() => {
           setShowUnenrollPopup(true)

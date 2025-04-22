@@ -6,6 +6,12 @@ const mongoose = require('mongoose');
 const mongoSanitize = require('express-mongo-sanitize');
 const nodemailer = require('nodemailer');
 
+// external schemas
+const Translation = require("./schemas/Translation");
+
+// external routes
+const translationRoutes = require('./routes/translations');
+
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -35,6 +41,8 @@ mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
 
+app.use('/api/locales', translationRoutes);
+
 app.get('/', (req, res) => {
   res.send('Server is running!')
 });
@@ -63,6 +71,75 @@ const validateInput = (input, allowedFields) => {
   }
 
   return filteredInput
+}
+
+const formattedSkillKey = (skill) => `level_skill_${skill.toLowerCase().replace(/ /g, "_")}`;
+
+const deleteLevelTranslations = async (levelData) => {
+  try {
+    await Translation.deleteMany({ key: `level_name_${levelData._id}` });
+    await Translation.deleteMany({ key: `level_desc_${levelData._id}` });
+    for (const skill of levelData.skills) {
+      const key = `${formattedSkillKey(skill)}_${levelData._id}`;
+      await Translation.deleteMany({ key });
+    }
+  } catch (error) {
+    console.error("Failed to delete level translations", error);
+    throw new Error("Failed to delete level translations");
+  }
+};
+
+const createLevelTranslations = async (levelData) => {
+  try {
+    // name translation
+    const response = await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+      },
+      body: JSON.stringify({
+        key: `level_name_${levelData._id}`,
+        value: levelData.name,
+        namespace: "levels"
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      console.error("Failed to create translation", data);
+    }
+    // description translation
+    await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+      },
+      body: JSON.stringify({
+        key: `level_desc_${levelData._id}`,
+        value: levelData.description,
+        namespace: "levels"
+      })
+    });
+    // skill translations
+    for (const skill of levelData.skills) {
+      const key = `${formattedSkillKey(skill)}_${levelData._id}`;
+      await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
+        },
+        body: JSON.stringify({
+          key,
+          value: skill,
+          namespace: "levels"
+        })
+      });
+    }
+  } catch (error) {
+    throw new Error("Failed to create level translations");
+  }
 }
 
 
@@ -141,127 +218,7 @@ const LevelSchema = new Schema({
 const Level = mongoose.model("Level", LevelSchema)
 
 
-// Translation Schema
-const TranslationSchema = new Schema({
-  key: { type: String, required: true },
-  translations: {
-    en: { type: String, required: true },
-    ru: { type: String, required: true },
-    zh: { type: String, required: true },
-    tr: { type: String, required: true },
-    ug: { type: String, required: true }
-  }
-}, { collection: 'translations' })
-
-const Translation = mongoose.model("Translation", TranslationSchema)
-
-
-
 //------------------ ENDPOINTS ------------------//
-
-/* TRANSLATION RELATED ENDPOINTS */
-
-// Get Translations
-app.get('/api/translations', async (req, res) => {
-  try {
-    const translations = await Translation.find();
-    return res.status(200).json(translations);
-  } catch (error) {
-    res.status(500).json({ message: 'Error getting translations' });
-  }
-})
-
-
-// Edit Translation
-app.put('/api/translation/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const updatedTranslation = await Translation.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true, upsert: true, runValidators: true }
-    );
-    res.status(200).json(updatedTranslation);
-  } catch (error) {
-    res.status(500).json({ message: 'Error editing translation' });
-  }
-})
-
-
-// Delete Translation
-app.delete('/api/translation/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-    await Translation.findByIdAndDelete(id);
-    res.status(204);
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting translation' });
-  }
-})
-
-
-// Move all i18nexus translations to MongoDB
-app.post('/api/transfer-translations/', async (req, res) => {
-  try {
-    const response = await fetch(`https://api.i18nexus.com/project_resources/translations.json?api_key=${process.env.I18NEXUS_API_KEY}`)
-    if (!response.ok) {
-      return res.status(response.status).json({ message: 'Failed to fetch translations' });
-    }
-
-    const translations = await response.json();
-
-    const translationsToInsert = [];
-    for (const lang in translations) {
-      const languageData = translations[lang];
-
-      // Loop through each key in the language's translations
-      for (const key in languageData.default) {
-        const existingTranslation = translationsToInsert.find(t => t.key === key);
-
-        if (existingTranslation) {
-          // If the translation already exists in the array update the language value
-          existingTranslation.translations[lang] = languageData.default[key];
-        } else {
-          // Otherwise create new translation document for this key
-          const newTranslation = {
-            key,
-            translations: {
-              en: languageData.default['en'] || '',
-              ru: languageData.default['ru'] || '',
-              zh: languageData.default['zh'] || '',
-              tr: languageData.default['tr'] || '',
-              ug: languageData.default['ug'] || ''
-            }
-          };
-          newTranslation.translations[lang] = languageData.default[key];
-          translationsToInsert.push(newTranslation);
-        }
-      }
-    }
-
-    // Ensure each translation has all language fields
-    translationsToInsert.forEach(translation => {
-      ['en', 'ru', 'zh', 'tr', 'ug'].forEach(lang => {
-        if (!translation[lang]) {
-          translation[lang] = '';
-        }
-      });
-    });
-
-    await Translation.insertMany(translationsToInsert);
-
-    return res.status(200).json({ message: "Successfully inserted translations" })
-  } catch (error) {
-    res.status(500).json({ message: 'Error transferring translations' })
-  }
-})
 
 
 /* USER RELATED ENDPOINTS */
@@ -862,7 +819,6 @@ app.put('/api/levels/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    console.log(updates)
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
@@ -876,11 +832,20 @@ app.put('/api/levels/:id', async (req, res) => {
       })
     }
 
+    const currentLevel = await Level.findOne({ _id: id });
+
     const updatedLevel = await Level.findByIdAndUpdate(
       id,
       updates,
       { new: true, runValidators: true }
     );
+
+    // Update translations
+    // delete existing translations 
+    await deleteLevelTranslations(currentLevel);
+    // create new translations
+    await createLevelTranslations(updatedLevel);
+    // translations transferred to MongoDB in updateLevel wrapper
 
     if (!updatedLevel) {
       return res.status(404).json({ message: 'Level not found' });
@@ -905,6 +870,9 @@ app.delete('/api/levels/:id', async (req, res) => {
     if (!deletedLevel) {
       return res.status(404).json({ message: 'Level not found' });
     }
+
+    // Delete level's translations
+    await deleteLevelTranslations(deletedLevel);
 
     await Level.findByIdAndDelete(id);
 
@@ -937,6 +905,11 @@ app.post('/api/levels', async (req, res) => {
         skills,
       });
       await newLevel.save();
+
+      // Add level translations to i18nexus
+      await createLevelTranslations(newLevel);
+      // translations transferred to MongoDB in createLevel wrapper
+
       return res.status(201).json({
         message: 'Level created successfully',
         level: newLevel

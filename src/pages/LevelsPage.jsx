@@ -33,12 +33,12 @@ const LevelsPage = () => {
   return (
     <div className="page-format max-w-[96rem] lg:py-24">
       <section className={sectionStyle}>
-        <h1 className='font-extrabold mb-2 text-blue-700'>{t("levelspage_browse_classes")}</h1>
+        <h1 className='font-extrabold mb-2 text-blue-700'>{t("browse_classes")}</h1>
         <p className={descriptionStyle}>{t("levelspage_description")}</p>
       </section>
       <section className={sectionStyle}>
         <h2 className="font-extrabold mb-1">{t("levelspage_reg_class_heading")}</h2>
-        <p className={descriptionStyle}>{t("levelspage_reg_class_descrip")}</p>
+        <p className={descriptionStyle}>{t("levelspage_reg_class_description")}</p>
         <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 flex flex-col`}>
           {levels.map((level, levelIndex) => (
             <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
@@ -49,7 +49,7 @@ const LevelsPage = () => {
       </section>
       <section className={sectionStyle}>
         <h2 className="font-extrabold mb-1">{t("levelspage_supp_class_heading")}</h2>
-        <p className={descriptionStyle}>{t("levelspage_supp_class_descrip")}</p>
+        <p className={descriptionStyle}>{t("levelspage_supp_class_description")}</p>
         <section className='mt-8'>
           <h3 className='font-extrabold'>{t("levelspage_convo_class_heading")}</h3>
           <div className={`${courseDivStyle} lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 flex flex-col`}>

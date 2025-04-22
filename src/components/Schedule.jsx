@@ -2,10 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import Button from '@/components/Button/Button';
+import { useTranslation } from "react-i18next";
 
 const Schedule = ({ classes, filters = [] }) => {
   const { user } = useContext(UserContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -20,16 +22,40 @@ const Schedule = ({ classes, filters = [] }) => {
     <div className="table w-full table-fixed">
       <div className="table-header-group">
         <div className="table-row">
-          {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map((day, index, array) => (
+          {['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map((day, index, array) => (
             <div
               key={day}
               className={`table-cell text-center font-semibold sm:p-2 ${index !== array.length - 1 ? 'border-r border-gray-300' : ''}`}
             >
-              {isMobile
-                ? ['SAT', 'SUN', 'TUE', 'THU'].includes(day)
-                  ? day[0] + day[1].toLowerCase()
-                  : day[0]
-                : day}
+              {/* TODO: check that these abbr are correct as well */}
+              {(() => {
+                switch (i18n.language) {
+                  case 'tr':
+                    return (
+                      isMobile
+                        ? t(`${day}_abbr`)[0]
+                        : t(`${day}_abbr`).toUpperCase()
+                    );
+                  case 'ru':
+                    return t(`${day}_abbr`).toUpperCase();
+                  case 'ug':
+                    return (
+                      isMobile
+                        ? t(`${day}_abbr`)[0]
+                        : t(`${day}_abbr`).toUpperCase()
+                    );
+                  case 'zh':
+                    return (isMobile ? t(`${day}_abbr`)[1] : t(`${day}_abbr`));
+                  default: // en
+                    return (
+                      isMobile
+                        ? ['sat', 'sun', 'tue', 'thu'].includes(day)
+                          ? t(`${day}_abbr`).slice(0, 2)
+                          : t(`${day}_abbr`)[0]
+                        : t(`${day}_abbr`).toUpperCase()
+                    );
+                }
+              })()}
             </div>
           ))}
         </div>
@@ -95,15 +121,33 @@ const Schedule = ({ classes, filters = [] }) => {
 const ScheduleClass = ({ classObj, isMobile }) => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
+  const { t, i18n } = useTranslation();
+
+  function localizeNumber(number, lang) {
+    let locale = lang;
+
+    // Use Han characters for Chinese
+    if (lang.startsWith('zh')) {
+      locale = 'zh-CN-u-nu-hanidec';
+    }
+
+    return new Intl.NumberFormat(locale).format(number);
+  }
+
   return (
     <div className="bg-blue-100 rounded-xs sm:rounded-sm border-[0.5px] border-gray-200 p-1 sm:p-3 mb-1 sm:mb-2">
       <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem]">{classObj.time}</p>
-      <p className="font-extrabold text-[0.75rem] sm:text-[0.875rem] sm:mt-2">Level {classObj.level}</p>
-      <p className="text-gray-800 text-[0.675rem] sm:text-xs sm:mb-3 break-words">{classObj.ageGroup === "all" ? "ALL AGES" : `${classObj.ageGroup.toUpperCase()}'s CLASS`}</p>
+      <p className="font-extrabold text-[0.75rem] sm:text-[0.875rem] sm:mt-2">
+        {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}
+      </p>
+      <p className="text-gray-800 text-[0.675rem] sm:text-xs sm:mb-3 break-words">
+        {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`).toUpperCase() : t(`${classObj.ageGroup}_class`).toUpperCase()}
+      </p>
       {!isMobile && (
         user.privilege === "student" ? (
           <a href={classObj.classroomLink}>
-            <Button label="Join" onClick={null} />
+            {/* button overflowing in different languages */}
+            <Button label={t('join')} onClick={null} />
           </a>
         ) : (
           <Button

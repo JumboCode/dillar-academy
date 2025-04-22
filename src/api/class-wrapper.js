@@ -1,23 +1,27 @@
-import axios from 'axios'
+import axios from 'axios';
+import { transferTranslations } from "@/api/translation-wrapper";
 
 const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
 // query should be a string
 const getClasses = async (query = "") => {
   try {
-    const response = await axios.get(`/api/classes?${query}`)
-    return response.data
+    const response = await axios.get(`/api/classes?${query}`);
+    return response.data;
   } catch (error) {
     console.error('Error fetching courses:', error)
+    throw error;
+
   }
 }
 
 const getConversations = async () => {
   try {
-    const response = await axios.get("/api/conversations/")
-    return response.data
+    const response = await axios.get("/api/conversations/");
+    return response.data;
   } catch (error) {
     console.error('Error fetching conversations:', error)
+    throw error;
   }
 }
 
@@ -81,6 +85,7 @@ const getStudentsClasses = async (studentId) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching student's classes:", error);
+    throw error;
   }
 }
 
@@ -90,6 +95,7 @@ const getClassById = async (classId) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching class from id:", error);
+    throw error;
   }
 }
 
@@ -100,6 +106,7 @@ const getLevels = async (query = "") => {
     return response.data
   } catch (error) {
     console.error('Error fetching levels:', error);
+    throw error;
   }
 }
 
@@ -109,12 +116,15 @@ const getLevelById = async (levelId) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching level from id:", error);
+    throw error;
   }
 }
 
-const createLevel = async (LevelData) => {
+const createLevel = async (levelData) => {
+  levelData.skills = levelData.skills.map(skill => skill.toLowerCase());
   try {
-    const response = await axios.post(`/api/levels/`, LevelData);
+    const response = await axios.post(`/api/levels/`, levelData);
+    await transferTranslations();
     return response.data;
   } catch (error) {
     console.error('Error creating level:', error);
@@ -122,9 +132,10 @@ const createLevel = async (LevelData) => {
   }
 }
 
-const updateLevel = async (levelId, LevelData) => {
+const updateLevel = async (levelId, levelData) => {
   try {
-    const response = await axios.put(`/api/levels/${levelId}`, LevelData);
+    const response = await axios.put(`/api/levels/${levelId}`, levelData);
+    await transferTranslations();
     return response.data;
   } catch (error) {
     console.error('Error updating level:', error);
@@ -148,6 +159,7 @@ const getConversationById = async (conversationId = "") => {
     return response.data;
   } catch (error) {
     console.error("Error fetching conversation from id:", error);
+    throw error;
   }
 }
 

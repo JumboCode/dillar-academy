@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation, useParams, Link } from 'wouter';
+import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
+import { useTranslation } from "react-i18next";
 import { getLevels, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
@@ -14,8 +15,10 @@ const EditLevel = () => {
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const params = useParams();
   const levelNum = params.id
+  const { i18n } = useTranslation();
 
   const [level, setLevel] = useState();
   const [classes, setClasses] = useState();
@@ -25,6 +28,7 @@ const EditLevel = () => {
   const [successMessage, setSuccessMessage] = useState("")
 
   useEffect(() => {
+    // TODO: if params corresponds to a level number that doesn't exist, it forever displays loading
     if (!params.id || !levelNum) {
       setLocation("/admin/levels");
       return;
@@ -119,18 +123,21 @@ const EditLevel = () => {
   const handleEditLevel = async (e) => {
     e.preventDefault();
     try {
-      if (typeof levelData.level !== 'number') {
+      if (!Number(levelData.level)) {
         setAlertMessage(`Error: Level input must be a number`)
         setTimeout(() => {
           setAlertMessage("")
         }, 4000);
       } else {
+        setIsSaving(true);
         await updateLevel(level._id, levelData);
         setSuccessMessage("Successfully updated level details");
-        await fetchLevels();
+        setLocation(`/admin/levels/${levelData.level}`, { replace: true })
         setTimeout(() => {
           setSuccessMessage("");
         }, 4000);
+        await i18n.reloadResources();
+        setIsSaving(false);
       }
     } catch (error) {
       console.error("Error updating level:", error);
@@ -166,7 +173,7 @@ const EditLevel = () => {
   };
 
   if (!allowRender || !level || !classes) {
-    return <div>Loading.....</div>;
+    return <div>Loading...</div>;
   }
 
   if (user.privilege !== "admin") {
@@ -177,7 +184,7 @@ const EditLevel = () => {
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
       {successMessage !== "" && <Alert message={successMessage} isSuccess />}
-      <div className="page-format max-w-[96rem] space-y-8">
+      <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label="All Levels" />
         <div>
           <h1 className="font-extrabold mb-2">Edit Level</h1>
@@ -254,14 +261,14 @@ const EditLevel = () => {
           </div>
           {/* Action buttons */}
           <div className="flex gap-x-2">
-            <Button label="Save" type="submit" />
+            <Button label={isSaving ? "Saving..." : "Save"} type="submit" isDisabled={isSaving} />
             <Button label="Reset" onClick={handleReset} isOutline />
           </div>
         </form>
         <div>
           <div className="flex justify-between">
             <h2>Classes in this Level</h2>
-            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* when clicking add class, should take to edit class with level set in form */}
+            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* TODO: when clicking add class, should take to edit class with level set in form? */}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {classes.map(classObj => (

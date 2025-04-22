@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { postContact } from '@/api/contact-wrapper';
 import Form from "@/components/Form/Form"
 import FormInput from '@/components/Form/FormInput';
-import FormSubmit from '@/components/Form/FormSubmit';
+import Button from '@/components/Button/Button';
 import Alert from "@/components/Alert";
 import { useTranslation } from 'react-i18next';
 
@@ -28,7 +28,7 @@ export default function Contact() {
     e.preventDefault();
     try {
       await postContact(formData);
-      setSuccessMessage("Message submitted successfully!");
+      setSuccessMessage('contact_success_alert');
       setTimeout(() => {
         setSuccessMessage("");
       }, 4000);
@@ -40,7 +40,7 @@ export default function Contact() {
       });
     } catch (err) {
       console.error('Error submitting message:', err);
-      setAlertMessage(`Error: ${error.response.data.message}`);
+      setAlertMessage(`Error: ${err.response.data.message}`); // TODO: translations
       setTimeout(() => {
         setAlertMessage("");
       }, 4000);
@@ -55,7 +55,7 @@ export default function Contact() {
         {/* form box */}
         <div className="max-w-[96rem] w-full flex justify-center">
           <Form width="lg:w-3/5">
-            <h1 className="font-extrabold mb-2">{t("contact_heading")}</h1>
+            <h1 className="font-extrabold mb-2">{t("contact_text")}</h1>
             <p className="text-base sm:text-lg mb-4 text-gray-600 opacity-70">
               {t("contact_form_description")}
             </p >
@@ -66,7 +66,7 @@ export default function Contact() {
               <FormInput
                 type="text"
                 name="name"
-                placeholder={t("contact_name_field")}
+                placeholder={t("name_field")}
                 value={formData.name}
                 onChange={handleChange}
                 isRequired={true}
@@ -74,7 +74,7 @@ export default function Contact() {
               <FormInput
                 type="email"
                 name="email"
-                placeholder={t("contact_email_field")}
+                placeholder={t("email")}
                 value={formData.email}
                 onChange={handleChange}
                 isRequired={true}
@@ -82,7 +82,7 @@ export default function Contact() {
               <FormInput
                 type="text"
                 name="subject"
-                placeholder={t("contact_subject_field")}
+                placeholder={t("subject_field")}
                 value={formData.subject}
                 onChange={handleChange}
                 isRequired={true}
@@ -90,12 +90,15 @@ export default function Contact() {
               <FormInput
                 type="textarea"
                 name="message"
-                placeholder={t("contact_message_field")}
+                placeholder={t("message_field")}
                 value={formData.message}
                 onChange={handleChange}
                 required
               />
-              <FormSubmit label={t("contact_submit_button")} />
+              <Button
+                type="submit"
+                label={t("submit_button")}
+              />
             </form>
           </Form>
         </div>
