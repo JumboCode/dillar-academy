@@ -160,7 +160,7 @@ const TranslationTable = ({ label, translations, fetchTranslations }) => {
         </div>
       </div>
       <Button
-        label={isFullyExpanded ? "Minimize" : "View More"}
+        label={isFullyExpanded ? "Minimize" : "View All"}
         onClick={() => setIsFullyExpanded(!isFullyExpanded)}
         isOutline
       />

@@ -28,6 +28,7 @@ const EditLevel = () => {
   const [successMessage, setSuccessMessage] = useState("")
 
   useEffect(() => {
+    // TODO: if params corresponds to a level number that doesn't exist, it forever displays loading
     if (!params.id || !levelNum) {
       setLocation("/admin/levels");
       return;
@@ -122,7 +123,7 @@ const EditLevel = () => {
   const handleEditLevel = async (e) => {
     e.preventDefault();
     try {
-      if (typeof levelData.level !== 'number') {
+      if (!Number(levelData.level)) {
         setAlertMessage(`Error: Level input must be a number`)
         setTimeout(() => {
           setAlertMessage("")
@@ -131,7 +132,7 @@ const EditLevel = () => {
         setIsSaving(true);
         await updateLevel(level._id, levelData);
         setSuccessMessage("Successfully updated level details");
-        await fetchLevels();
+        setLocation(`/admin/levels/${levelData.level}`, { replace: true })
         setTimeout(() => {
           setSuccessMessage("");
         }, 4000);
