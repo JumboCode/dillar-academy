@@ -3,7 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
-import { getLevels, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
+import { getLevels, updateLevel, deleteLevel, getClasses, updateClass } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
@@ -272,7 +272,24 @@ const EditLevel = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {classes.map(classObj => (
-              <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
+              <div key={classObj._id} className="flex flex-col gap-y-2">
+                <Class classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
+                <Button
+                  label={classObj.enrollmentOpen ? "Close Enrollment" : "Open Enrollment"}
+                  onClick={async () => {
+                    try {
+                      await updateClass(classObj._id, {
+                        enrollmentOpen: !classObj.enrollmentOpen
+                      });
+                      const refreshed = await getClasses(`level=${levelNum}`);
+                      setClasses(refreshed);
+                    } catch (err) {
+                      console.error("Failed to toggle enrollment:", err);
+                    }
+                  }}
+                  isOutline
+                />
+              </div>
             ))}
           </div>
         </div>

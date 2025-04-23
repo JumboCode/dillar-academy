@@ -2,12 +2,13 @@ import React, { useContext, useState } from 'react';
 import Button from '@/components/Button/Button';
 import Overlay from '@/components/Overlay';
 import { SignOutButton } from '@clerk/clerk-react'
-import { enrollInClass, unenrollInClass } from '@/api/class-wrapper';
+import { enrollInClass, unenrollInClass, updateClass } from '@/api/class-wrapper';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import { useLocation } from 'wouter';
 import { useUser } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
 import { UserContext } from '@/contexts/UserContext.jsx';
+import PropTypes from 'prop-types';
 
 function localizeNumber(number, lang) {
   let locale = lang;
@@ -209,24 +210,31 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
   const { user } = useContext(UserContext);
   const { t } = useTranslation();
 
+  const handleEnrollClick = () => {
+    if (!isSignedIn) {
+      setShowSignUpPopup(true);
+    } else if (user.privilege === "student") {
+      setShowEnrollPopup(true);
+    } else {
+      setShowNotStudentPopup(true);
+    }
+  };
+
   return (
     <>
-      {isEnroll ? <Button
-        label={t('enroll')}
-        isOutline={false}
-        onClick={
-          isSignedIn
-            ? user.privilege === "student"
-              ? () => setShowEnrollPopup(true)
-              : () => setShowNotStudentPopup(true)
-            : () => setShowSignUpPopup(true)}
-      /> : <Button
-        label={t("unenroll")}
-        isOutline={false}
-        onClick={() => {
-          setShowUnenrollPopup(true)
-        }}
-      />}
+      {isEnroll ?
+        <Button
+          label={t('enroll')}
+          isOutline={false}
+          onClick={handleEnrollClick}
+          disabled={!classObj.enrollmentOpen}
+        /> : <Button
+          label={t("unenroll")}
+          isOutline={false}
+          onClick={() => {
+            setShowUnenrollPopup(true)
+          }}
+        />}
       {showEnrollPopup && <EnrollPopup
         isEnroll={isEnroll}
         classObj={classObj}
@@ -240,8 +248,44 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
         setShowPopup={setShowSignUpPopup} />}
       {showNotStudentPopup && <NotStudentPopup
         setShowPopup={setShowNotStudentPopup} />}
+      {user.privilege === "admin" && (
+        <Button
+          label={classObj.enrollmentOpen ? t("close_enrollment") : t("open_enrollment")}
+          isOutline={true}
+          onClick={async () => {
+            try {
+              await updateClass(classObj._id, {
+                enrollmentOpen: !classObj.enrollmentOpen
+              });
+              // Trigger re-render: either reload or update local state if lifting state up
+              window.location.reload();
+            } catch (err) {
+              console.error("Failed to update enrollment status:", err);
+            }
+          }}
+          className="ml-2"
+        />
+      )}
+
     </>
   )
 }
+
+EnrollButton.propTypes = {
+  userId: PropTypes.string.isRequired,
+  isEnroll: PropTypes.bool.isRequired,
+  classObj: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    level: PropTypes.number.isRequired,
+    ageGroup: PropTypes.string.isRequired,
+    instructor: PropTypes.string.isRequired,
+    schedule: PropTypes.arrayOf(PropTypes.shape({
+      day: PropTypes.string.isRequired,
+      time: PropTypes.string.isRequired
+    })).isRequired,
+    enrollmentOpen: PropTypes.bool.isRequired
+  }).isRequired
+};
+
 
 export default EnrollButton;

@@ -190,7 +190,8 @@ const ClassSchema = new Schema({
   instructor: { type: String, required: true },
   classroomLink: { type: String, default: "" },
   schedule: { type: [ScheduleSchema], default: [] },
-  roster: { type: [Schema.Types.ObjectId], default: [] }
+  roster: { type: [Schema.Types.ObjectId], default: [] },
+  enrollmentOpen: { type: Boolean, default: true }
 }, { collection: 'classes' })
 
 const Class = mongoose.model("Class", ClassSchema)
