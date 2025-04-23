@@ -27,7 +27,7 @@ const UserItem = ({ userData, classes = [], isShowClass }) => {
       <div className="flex-1 min-w-0 *:truncate *:w-full">
         <p
           title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`}
-          className="text-gray-900 font-semibold">
+          className="text-gray-900 font-semibold truncate max-w-xs">
           {toTitleCase(userData.firstName)} {toTitleCase(userData.lastName)}
         </p>
         <p
