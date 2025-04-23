@@ -7,6 +7,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { getClasses } from '@/api/class-wrapper';
 import UserItem from '@/components/UserItem'
 import SearchBar from '@/components/SearchBar';
+import SkeletonUser from '@/components/Skeletons/SkeletonUser';
 
 const AdminInstructors = () => {
   const { user } = useContext(UserContext);
@@ -50,10 +51,6 @@ const AdminInstructors = () => {
     return matchesName;
   });
 
-  if (!allowRender) {
-    return <div></div>;
-  }
-
   if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
@@ -73,6 +70,7 @@ const AdminInstructors = () => {
         {filteredUsers.map((userData, userIndex) => (
           <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}><UserItem userData={userData} classes={classes} /></Link>
         ))}
+        {!allowRender && <SkeletonUser count={9} />}
       </div>
     </div>
   )

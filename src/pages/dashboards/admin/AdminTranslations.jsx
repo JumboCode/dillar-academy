@@ -7,6 +7,7 @@ import Overlay from '@/components/Overlay';
 import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
+import SkeletonTranslationRow from '@/components/Skeletons/SkeletonTranslationRow';
 import { IoChevronDownOutline, IoCreateOutline } from "react-icons/io5";
 import { getTranslations, editTranslation } from '@/api/translation-wrapper';
 
@@ -63,10 +64,6 @@ const AdminTranslations = () => {
     });
   }
 
-  if (!allowRender) {
-    return <div></div>;
-  }
-
   if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
@@ -79,18 +76,20 @@ const AdminTranslations = () => {
         <TranslationTable
           label={"Edit translations for levels"}
           translations={levelTranslations}
+          allowRender={allowRender}
         />
         <TranslationTable
           label={"Edit translations for general and student pages"}
           translations={defaultTranslations}
           fetchTranslations={fetchNamespaceTranslations}
+          allowRender={allowRender}
         />
       </div>
     </div>
   )
 }
 
-const TranslationTable = ({ label, translations, fetchTranslations }) => {
+const TranslationTable = ({ label, translations, fetchTranslations, allowRender }) => {
   const [searchInput, setSearchInput] = useState('');
   const [isFullyExpanded, setIsFullyExpanded] = useState(false);
 
@@ -156,6 +155,7 @@ const TranslationTable = ({ label, translations, fetchTranslations }) => {
                 ns={"default"}
                 fetchTranslations={fetchTranslations} />
             ))}
+            {!allowRender && <SkeletonTranslationRow count={5} />}
           </div>
         </div>
       </div>

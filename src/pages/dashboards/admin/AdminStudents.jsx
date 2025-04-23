@@ -8,6 +8,7 @@ import Dropdown from '@/components/Dropdown/Dropdown';
 import Button from '@/components/Button/Button';
 import SearchBar from '@/components/SearchBar';
 import UserItem from '@/components/UserItem';
+import SkeletonUser from '@/components/Skeletons/SkeletonUser';
 import { IoPersonOutline } from "react-icons/io5";
 import ExcelExport from 'export-xlsx';
 import { SETTINGS_FOR_EXPORT } from '@/assets/excel_export_settings';
@@ -100,10 +101,6 @@ const AdminStudents = () => {
     return (matchesName || matchesClass) && matchesLevel;
   });
 
-  if (!allowRender) {
-    return <div></div>;
-  }
-
   if (user?.privilege !== "admin") {
     return <div>Unauthorized</div>;
   }
@@ -159,6 +156,7 @@ const AdminStudents = () => {
             <UserItem key={userData._id} userData={userData} classes={classes} isShowClass />
           </Link>
         ))}
+        {!allowRender && <SkeletonUser count={12} />}
       </div>
     </div>
   )

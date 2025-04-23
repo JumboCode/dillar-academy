@@ -6,21 +6,14 @@ const SkeletonUser = ({ count }) => {
   return Array(count)
     .fill(0)
     .map((_, i) => (
-      <div key={i} className="flex py-3 px-4 justify-between items-center shadow-shadow space-x-3 w-full rounded-sm flex-space-between">
-        <div className="flex-1 min-w-0 *:truncate *:w-full">
+      <div key={i} className="flex py-3 px-4 justify-between items-center space-x-3 w-full rounded-sm flex-space-between">
+        <div className="flex flex-col w-full *:truncate *:w-full">
           <p className="font-semibold">
             <Skeleton />
           </p>
-          <p
-            className="flex text-sm">
-            <Skeleton />
+          <p className="text-sm">
+            <Skeleton count={2} width={"50%"} />
           </p>
-          <p
-            className="flex text-sm">
-          </p> {/* TODO: add phone */}
-          <div>
-            <Skeleton />
-          </div>
         </div>
         <div className="flex-shrink-0">
           <LuPencil className="text-lg" />

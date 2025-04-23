@@ -1,6 +1,7 @@
 
 import Level from '@/components/Class/Level';
 import Button from '@/components/Button/Button';
+import SkeletonLevel from '@/components/Skeletons/SkeletonLevel';
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
@@ -34,9 +35,9 @@ const AdminLevels = () => {
     }
   }, [isLoaded, isSignedIn, user]);
 
-  if (!allowRender) {
-    return <div></div>;
-  }
+  // if (!allowRender) {
+  //   return <div></div>;
+  // }
 
   if (user.privilege !== "admin") {
     return <div>Unauthorized</div>;
@@ -60,25 +61,39 @@ const AdminLevels = () => {
       {/* Levels List */}
       <div className="grid md:grid-cols-2 gap-6">
         {levels.length > 0 ? (
-          levels.map((level) => (
-            // change to pass level.level, add function to get level by num?
-            <Link key={level.level} href={`/admin/levels/${level.level}`}>
-              <div className="rounded-lg">
-                <Level level={level} numLevels={levels.length} isSimplified isArrowRight />
-              </div>
-            </Link>
-          ))
+          allowRender ? (
+            <>
+              {levels.map((level) => (
+                <Link key={level.level} href={`/admin/levels/${level.level}`}>
+                  <div className="rounded-lg">
+                    <Level
+                      level={level}
+                      numLevels={levels.length}
+                      isSimplified
+                      isArrowRight
+                    />
+                  </div>
+                </Link>
+              ))}
+              <Link href="/admin/levels/conversations">
+                <div className="rounded-lg">
+                  <Level
+                    level={{
+                      level: "conversation",
+                      name: "",
+                    }}
+                    isSimplified
+                    isArrowRight
+                  />
+                </div>
+              </Link>
+            </>
+          ) : (
+            <SkeletonLevel count={6} isSimplified isArrowRight />
+          )
         ) : (
           <p className="text-gray-500">No levels available.</p>
         )}
-        <Link href="/admin/levels/conversations">
-          <Level level={{
-            level: "conversation",
-            name: "",
-          }}
-            isSimplified
-            isArrowRight />
-        </Link>
       </div>
     </div>
   );

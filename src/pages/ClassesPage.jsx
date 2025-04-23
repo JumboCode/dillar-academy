@@ -46,7 +46,7 @@ const ClassesPage = () => {
 
   const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
-  if (allowRender || !level || allLevels.length === 0) return <div>Loading classes...</div>;
+  if (!level || allLevels.length === 0) return <div>Loading classes...</div>;
 
   const currentLevelIndex = allLevels.findIndex(l => l.level === level.level);
 
@@ -79,9 +79,13 @@ const ClassesPage = () => {
             {t("classespage_open_classes_desc")}
           </p>
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mb-24'>
-            {classes.map((classObj, classIndex) => (
-              <Class key={classIndex} classObj={classObj} />
-            ))}
+            {classes.length > 0 ? (
+              classes.map((classObj, classIndex) => (
+                <Class key={classIndex} classObj={classObj} />
+              ))
+            ) : (
+              <p className="text-gray-500">No classes available</p>
+            )}
           </div>
           <div className='grid grid-cols-2 w-full gap-x-6'>
             {currentLevelIndex > 0 && (
