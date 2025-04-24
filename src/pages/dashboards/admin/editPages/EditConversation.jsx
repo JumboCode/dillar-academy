@@ -10,6 +10,7 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import DeletePopup from "../../../../components/delete";
 
 const EditConversation = () => {
   const { user } = useContext(UserContext);
@@ -19,6 +20,7 @@ const EditConversation = () => {
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
   const [conversationObj, setConversationObj] = useState(null)
+  const [showPopup, setShowPopup] = useState(false);
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
     instructor: '',
@@ -273,8 +275,15 @@ const EditConversation = () => {
               onClick={handleReset} />
           </div>
         </form>
-        <Button label="Delete Conversation" onClick={handleDeleteConversation} />
+        <Button label="Delete Conversation" onClick={() => setShowPopup(true)} />
       </div>
+      {showPopup &&
+      <DeletePopup 
+        itemName = {"Conversation with " + conversationData.instructor}
+        onDelete = {handleDeleteConversation}
+        setShowPopup={setShowPopup}
+      />}
+
     </>
   )
 }

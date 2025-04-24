@@ -12,6 +12,7 @@ import Class from '@/components/Class/Class';
 import Overlay from '@/components/Overlay';
 import SearchBar from '@/components/SearchBar';
 import Alert from '@/components/Alert';
+import DeletePopup from "../../../../components/delete";
 
 
 const EditUser = () => {
@@ -33,6 +34,7 @@ const EditUser = () => {
   });
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     if (isLoaded) {
@@ -230,9 +232,7 @@ const EditUser = () => {
               isOutline={true}
               onClick={handleReset} />
           </div>
-          <Button
-            label="Delete User"
-            onClick={handleDeleteUser} />
+          <Button label="Delete User" onClick={() => setShowPopup(true)} />
         </form>
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4">
@@ -276,7 +276,14 @@ const EditUser = () => {
           </div>
           <Button label={'Close'} onClick={() => setShowOverlay(false)} />
         </Overlay>}
-      </div >
+      </div>
+      {showPopup && 
+      <DeletePopup
+        itemName = {userFormData.firstName}
+        onDelete={handleDeleteUser}
+        setShowPopup={setShowPopup}
+      />}
+
     </>
   )
 }

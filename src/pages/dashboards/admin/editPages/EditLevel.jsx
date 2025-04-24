@@ -9,6 +9,7 @@ import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
+import DeletePopup from "../../../../components/delete";
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -26,6 +27,7 @@ const EditLevel = () => {
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     // TODO: if params corresponds to a level number that doesn't exist, it forever displays loading
@@ -276,8 +278,15 @@ const EditLevel = () => {
             ))}
           </div>
         </div>
-        <Button label="Delete Level" onClick={handleDeleteLevel} />
+              <Button label="Delete Level" onClick={() => {setShowPopup(true)}} />
+        {/* <Button label="Delete Level" onClick={handleDeleteLevel} /> */}
       </div>
+      {showPopup && 
+        <DeletePopup 
+          itemName={'Delete Level ' + levelData.level} 
+          onDelete={handleDeleteLevel} 
+          setShowPopup={setShowPopup}
+      />}
     </>
   );
 };

@@ -11,12 +11,14 @@ import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
 import { getUser } from '@/api/user-wrapper';
+import DeletePopup from "../../../../components/delete";
 
 const EditClass = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
 
@@ -311,8 +313,16 @@ const EditClass = () => {
             ))}
           </div>
         </div>
-        <Button label="Delete class" onClick={handleDeleteClass} />
+        <Button label="Delete class" onClick={() => setShowPopup(true)} />
+
       </div>
+      {showPopup &&
+      <DeletePopup 
+        itemName = {"this class"}
+        onDelete = {handleDeleteClass}
+        setShowPopup={setShowPopup}
+      />}
+
     </>
   )
 }
