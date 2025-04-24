@@ -7,6 +7,7 @@ import Overlay from '@/components/Overlay';
 import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
+import Unauthorized from "@/pages/Unauthorized";
 import SkeletonTranslationRow from '@/components/Skeletons/SkeletonTranslationRow';
 import { IoChevronDownOutline, IoCreateOutline } from "react-icons/io5";
 import { getTranslations, editTranslation } from '@/api/translation-wrapper';
@@ -64,8 +65,8 @@ const AdminTranslations = () => {
     });
   }
 
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (

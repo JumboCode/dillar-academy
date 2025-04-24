@@ -23,18 +23,15 @@ export function ScrollToTop() {
 
 const App = () => {
   const [userData, setUser] = useState(null);
-  const [allowRender, setAllowRender] = useState(false);
   const [isNew, setNew] = useState(false);
 
   const { isLoaded, user, isSignedIn } = useUser();
 
-  // ensure user context is set before page loads
   useEffect(() => {
     const fetchUser = async () => {
       const userFilter = new URLSearchParams(`email=${user.primaryEmailAddress.emailAddress}`);
       const response = await getUser(userFilter);
       setUser(response.data);
-      setAllowRender(true)
     }
 
     if (!isLoaded) {
@@ -50,9 +47,6 @@ const App = () => {
       fetchUser();
     } else if (!isSignedIn) {
       setUser(null);
-      setAllowRender(true);
-    } else {
-      setAllowRender(true);
     }
   }, [isLoaded, isSignedIn, user, userData])
 
@@ -60,10 +54,6 @@ const App = () => {
     localStorage.setItem("visited", "true");
     setNew(false);
   };
-
-  if (!allowRender) {
-    return <div>App Loading...</div>
-  }
 
   return (
     <>

@@ -8,6 +8,9 @@ import { getClasses } from '@/api/class-wrapper';
 import UserItem from '@/components/UserItem'
 import SearchBar from '@/components/SearchBar';
 import SkeletonUser from '@/components/Skeletons/SkeletonUser';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import Unauthorized from "@/pages/Unauthorized";
 
 const AdminInstructors = () => {
   const { user } = useContext(UserContext);
@@ -51,8 +54,8 @@ const AdminInstructors = () => {
     return matchesName;
   });
 
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -62,9 +65,9 @@ const AdminInstructors = () => {
         <p>List of all instructors teaching Dillar Classes</p>
       </div>
       <SearchBar input={searchInput} setInput={setSearchInput} placeholder={"Search for instructor by name"} />
-      <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
+      <div className="text-indigo-900 inline-flex items-center gap-x-2">
         <IoPersonOutline />
-        <p>{filteredUsers.length} instructors</p>
+        <p className="flex">{allowRender ? `${filteredUsers.length} instructor(s)` : <Skeleton width={"6rem"} />}</p>
       </div>
       <div className="grid md:grid-cols-3 gap-x-14">
         {filteredUsers.map((userData, userIndex) => (

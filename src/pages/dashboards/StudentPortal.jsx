@@ -11,6 +11,11 @@ import Overlay from '@/components/Overlay';
 import Schedule from '@/components/Schedule';
 import { IoAdd, IoCreateOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import SkeletonClass from '@/components/Skeletons/SkeletonClass';
+import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
+import Unauthorized from '../Unauthorized';
 
 const StudentPortal = () => {
   const [classes, setClasses] = useState([]);
@@ -92,60 +97,69 @@ const StudentPortal = () => {
     }));
   };
 
-  if (!allowRender) {
-    return;
-  }
-
-  if (user.privilege !== "student") {
-    return <div>Unauthorized</div>
+  if (user && user.privilege !== "student") {
+    return <Unauthorized />
   }
 
   return (
     <div className='page-format max-w-[96rem] lg:py-24 space-y-12'>
       <div>
-        <span className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
-          <h1 title={`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`} className='font-extrabold truncate'>
-            {t("welcome")} {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
-          </h1>
-          <p className='text-blue-500'>{t(`${user.privilege}`)}</p>
-        </span>
-        <button onClick={openEditUser}
-          className="text-gray-500 text-sm sm:text-base flex gap-x-2 items-center mb-4"
-        >
-          <IoCreateOutline className="font-extrabold" />
-          <p>{t("edit_profile")}</p>
-        </button>
+        {allowRender
+          ? <div className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
+            <h1 title={allowRender ? `${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}` : ""} className='font-extrabold truncate'>
+              {`${t("welcome")} ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}!`}
+            </h1>
+            <p className='text-blue-500'>{allowRender ? t(`${user.privilege}`) : ""}</p>
+          </div>
+          : <div className='w-full sm:w-1/2'>
+            <h1><Skeleton /></h1>
+          </div>}
+        <div className="text-gray-500 text-sm sm:text-base mb-4 w-full">
+          {allowRender
+            ? <button onClick={openEditUser} className='flex gap-x-2 items-center'>
+              <IoCreateOutline className="font-extrabold" />
+              <p>{t("edit_profile")}</p>
+            </button>
+            : <div className='w-1/4 sm:w-1/6 lg:w-1/12'>
+              <Skeleton />
+            </div>}
+        </div>
         <div className="grid grid-cols-[max-content_auto] w-fit gap-x-4 gap-y-1">
-          <p className='text-black col-start-1'>{t("email")}</p>
-          <p className='text-gray-500 col-start-2'>{user.email}</p>
-          <p className='text-black col-start-1'>{t("whatsapp")}</p>
-          <p className='text-gray-500 col-start-2'>{user.email}</p>
-          <p className='text-black col-start-1'>{t("age")}</p>
-          <p className='text-gray-500 col-start-2'>{user.age ? user.age : "N/A"}</p>
-          <p className='text-black col-start-1'>{t("gender")}</p>
-          <p className='text-gray-500 col-start-2'>{user.gender ? toTitleCase(user.gender) : "N/A"}</p>
+          {allowRender
+            ? <><p className='text-black col-start-1'>{t("email")}</p>
+              <p className='text-gray-500 col-start-2'>{user.email}</p>
+              <p className='text-black col-start-1'>{t("whatsapp")}</p>
+              <p className='text-gray-500 col-start-2'>{user.email}</p>
+              <p className='text-black col-start-1'>{t("age")}</p>
+              <p className='text-gray-500 col-start-2'>{user.age ? user.age : "N/A"}</p>
+              <p className='text-black col-start-1'>{t("gender")}</p>
+              <p className='text-gray-500 col-start-2'>{user.gender ? toTitleCase(user.gender) : "N/A"}</p></>
+            : <div className='w-40 lg:w-64'>
+              <Skeleton count={4} />
+            </div>}
         </div>
       </div>
 
       <section className='my-12'>
-        <h2 className='font-extrabold mb-6'>{t("your_courses")}</h2>
+        <h2 className='font-extrabold mb-6'>{allowRender ? t("your_courses") : <Skeleton width={"12rem"} />}</h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
           {classes.map((classObj, classIndex) => (
             <Class key={classIndex} classObj={classObj} modes={["unenroll"]} />
           ))}
+          {!allowRender && <SkeletonClass count={3} />}
           <div className="flex justify-center sm:justify-normal items-center w-full">
-            <Button
+            {allowRender && <Button
               label={<IoAdd className="text-2xl font-extrabold" />}
               isRound
               onClick={() => setLocation("/levels")}
-            />
+            />}
           </div>
         </div>
       </section>
 
       <section>
-        <h2 className='font-extrabold my-8'>{t("class_schedule")} </h2>
-        <Schedule classes={classes} />
+        <h2 className='font-extrabold my-8'>{allowRender ? t("class_schedule") : <Skeleton width={"12rem"} />}</h2>
+        {allowRender ? <Schedule privilege={user.privilege} classes={classes} /> : <SkeletonSchedule />}
       </section>
 
       {showEditModal && (

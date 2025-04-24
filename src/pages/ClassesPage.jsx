@@ -1,12 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams, Link } from 'wouter';
 import Class from '../components/Class/Class';
 import Level from '@/components/Class/Level';
+import SkeletonClass from '@/components/Skeletons/SkeletonClass';
 import { getClasses, getLevels } from '../api/class-wrapper';
 import { useTranslation } from "react-i18next";
+import SkeletonLevel from '../components/Skeletons/SkeletonLevel';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const ClassesPage = () => {
   const { t, i18n } = useTranslation();
+  const { user } = useContext(UserContext);
   const [classes, setClasses] = useState([]);
   const [level, setLevel] = useState();
   const [allLevels, setAllLevels] = useState([]);
@@ -30,8 +36,10 @@ const ClassesPage = () => {
       setLevel(levelData.find(l => l.level === parseInt(levelNum)));
       setAllowRender(true);
     };
-    fetchData();
-  }, [levelNum]);
+    if (user) {
+      fetchData();
+    }
+  }, [levelNum, user]);
 
   function localizeNumber(number, lang) {
     let locale = lang;
@@ -46,8 +54,6 @@ const ClassesPage = () => {
 
   const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
-  if (!level || allLevels.length === 0) return <div>Loading classes...</div>;
-
   const currentLevelIndex = allLevels.findIndex(l => l.level === level.level);
 
   return (
@@ -55,15 +61,24 @@ const ClassesPage = () => {
       {/* Banner Section */}
       <div className="header-gradient w-full flex flex-col items-center">
         <div className="w-full max-w-[96rem] py-20 lg:py-24 px-4 sm:px-6 lg:px-20">
-          <h3 className="font-light text-dark-blue-700 mb-2">{t('level_num', { num: localizeNumber(level.level, i18n.language), ns: "levels" })}</h3>
-          <h1 className='font-extrabold text-dark-blue-800 mb-6'>{t(`level_name_${level._id}`, { ns: "levels" })}</h1>
+          <h3 className="font-light text-dark-blue-700 mb-2">
+            {allowRender ? t('level_num', { num: localizeNumber(level.level, i18n.language), ns: "levels" }) : <Skeleton width={"10rem"} />}
+          </h3>
+          <h1 className='font-extrabold text-dark-blue-800 mb-6'>
+            {allowRender ? t(`level_name_${level._id}`, { ns: "levels" }) : <Skeleton width={"24rem"} />}
+          </h1>
           <p className="text-neutral-600 text-base sm:text-lg max-w-2xl mb-8">
-            {t(`level_desc_${level._id}`, { ns: "levels" })}
+            {allowRender ? t(`level_desc_${level._id}`, { ns: "levels" }) : <Skeleton />}
           </p>
           <div className="flex gap-4">
-            {level.skills.map((skill, index) => (
+            {(level?.skills ?? Array(3).fill(0)).map((skill, index) => (
               <span key={index} className="px-6 py-2.5 bg-white rounded-full text-neutral-500 text-sm">
-                <p>{toTitleCase(t(`level_skill_${skill.toLowerCase().replace(/ /g, "_")}_${level._id}`, { ns: "levels" }))}</p>
+                <p>
+                  {allowRender
+                    ? toTitleCase(t(`level_skill_${skill.toLowerCase().replace(/ /g, "_")}_${level._id}`, { ns: "levels" }))
+                    : <Skeleton width={"3rem"} />
+                  }
+                </p>
               </span>
             ))}
           </div>
@@ -78,14 +93,16 @@ const ClassesPage = () => {
           <p className="text-base sm:text-lg text-neutral-600 mb-8">
             {t("classespage_open_classes_desc")}
           </p>
-          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mb-24'>
-            {classes.length > 0 ? (
-              classes.map((classObj, classIndex) => (
-                <Class key={classIndex} classObj={classObj} />
-              ))
-            ) : (
-              <p className="text-gray-500">No classes available</p>
-            )}
+          <div className='grid grid-cols-1 lg:grid-cols-3 auto-rows-fr gap-6 mb-24'>
+            {allowRender
+              ? classes.length > 0 ? (
+                classes.map((classObj, classIndex) => (
+                  <Class key={classIndex} classObj={classObj} />
+                ))
+              ) : (
+                <p className="text-gray-500">No classes available</p>
+              )
+              : <SkeletonClass count={3} />}
           </div>
           <div className='grid grid-cols-2 w-full gap-x-6'>
             {currentLevelIndex > 0 && (
@@ -106,6 +123,12 @@ const ClassesPage = () => {
                   isSimplified
                 />
               </Link>
+            )}
+            {!allowRender && (
+              <>
+                <SkeletonLevel isSimplified />
+                <SkeletonLevel isSimplified isArrowRight />
+              </>
             )}
           </div>
         </div>

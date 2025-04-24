@@ -4,11 +4,14 @@ import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getUsers, getStudentsForExport } from '@/api/user-wrapper.js';
 import { getClasses, getStudentsClasses, getClassById } from '@/api/class-wrapper';
+import Unauthorized from "@/pages/Unauthorized";
 import Dropdown from '@/components/Dropdown/Dropdown';
 import Button from '@/components/Button/Button';
 import SearchBar from '@/components/SearchBar';
 import UserItem from '@/components/UserItem';
 import SkeletonUser from '@/components/Skeletons/SkeletonUser';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { IoPersonOutline } from "react-icons/io5";
 import ExcelExport from 'export-xlsx';
 import { SETTINGS_FOR_EXPORT } from '@/assets/excel_export_settings';
@@ -101,8 +104,8 @@ const AdminStudents = () => {
     return (matchesName || matchesClass) && matchesLevel;
   });
 
-  if (user?.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -148,7 +151,7 @@ const AdminStudents = () => {
       </div>
       <div className="text-indigo-900 inline-flex items-center gap-x-2">
         <IoPersonOutline />
-        <p>{filteredUsers.length} student(s)</p>
+        <p className="flex">{allowRender ? `${filteredUsers.length} student(s)` : <Skeleton width={"6rem"} />}</p>
       </div>
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-14">
         {filteredUsers.map((userData) => (

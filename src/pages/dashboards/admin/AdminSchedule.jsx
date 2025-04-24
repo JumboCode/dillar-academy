@@ -2,9 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import Dropdown from '../../../components/Dropdown/Dropdown';
 import Schedule from '@/components/Schedule';
+import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
 import { getClasses } from '@/api/class-wrapper';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
+import Unauthorized from "@/pages/Unauthorized";
 
 const AdminSchedule = () => {
   const { user } = useContext(UserContext);
@@ -22,9 +24,11 @@ const AdminSchedule = () => {
         setLocation("/login");
       } else {
         const fetchData = async () => {
-          const response = await getClasses();
-          setClasses(response);
-          setAllowRender(true);
+          if (user) {
+            const response = await getClasses();
+            setClasses(response);
+            setAllowRender(true);
+          }
         };
         fetchData();
       }
@@ -38,12 +42,8 @@ const AdminSchedule = () => {
         : [...currFilters, level])
   }
 
-  if (!allowRender) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -70,7 +70,7 @@ const AdminSchedule = () => {
           ))}
         </Dropdown>
       </div>
-      <Schedule classes={classes} filters={currFilters} />
+      {allowRender ? <Schedule privilege={user.privilege} classes={classes} filters={currFilters} /> : <SkeletonSchedule />}
     </div>
   )
 }

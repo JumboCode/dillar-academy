@@ -7,6 +7,9 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getLevels } from '@/api/class-wrapper';
+import Unauthorized from "@/pages/Unauthorized";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const AdminLevels = () => {
   const { user } = useContext(UserContext);
@@ -17,12 +20,10 @@ const AdminLevels = () => {
 
   useEffect(() => {
     const fetchLevels = async () => {
-      try {
+      if (user) {
         const levels = await getLevels();
         setLevels(levels);
         setAllowRender(true);
-      } catch (error) {
-        console.error("Error fetching levels:", error);
       }
     };
 
@@ -35,12 +36,8 @@ const AdminLevels = () => {
     }
   }, [isLoaded, isSignedIn, user]);
 
-  // if (!allowRender) {
-  //   return <div></div>;
-  // }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -60,39 +57,35 @@ const AdminLevels = () => {
 
       {/* Levels List */}
       <div className="grid md:grid-cols-2 gap-6">
-        {levels.length > 0 ? (
-          allowRender ? (
-            <>
-              {levels.map((level) => (
-                <Link key={level.level} href={`/admin/levels/${level.level}`}>
-                  <div className="rounded-lg">
-                    <Level
-                      level={level}
-                      numLevels={levels.length}
-                      isSimplified
-                      isArrowRight
-                    />
-                  </div>
-                </Link>
-              ))}
-              <Link href="/admin/levels/conversations">
+        {allowRender ? (
+          <>
+            {levels.map((level) => (
+              <Link key={level.level} href={`/admin/levels/${level.level}`}>
                 <div className="rounded-lg">
                   <Level
-                    level={{
-                      level: "conversation",
-                      name: "",
-                    }}
+                    level={level}
+                    numLevels={levels.length}
                     isSimplified
                     isArrowRight
                   />
                 </div>
               </Link>
-            </>
-          ) : (
-            <SkeletonLevel count={6} isSimplified isArrowRight />
-          )
+            ))}
+            <Link href="/admin/levels/conversations">
+              <div className="rounded-lg">
+                <Level
+                  level={{
+                    level: "conversation",
+                    name: "",
+                  }}
+                  isSimplified
+                  isArrowRight
+                />
+              </div>
+            </Link>
+          </>
         ) : (
-          <p className="text-gray-500">No levels available.</p>
+          <SkeletonLevel count={6} isSimplified isArrowRight />
         )}
       </div>
     </div>

@@ -9,6 +9,7 @@ import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
+import Unauthorized from "@/pages/Unauthorized";
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -20,8 +21,8 @@ const EditLevel = () => {
   const levelNum = params.id
   const { i18n } = useTranslation();
 
-  const [level, setLevel] = useState();
-  const [classes, setClasses] = useState();
+  const [level, setLevel] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
   const [alertMessage, setAlertMessage] = useState("")
@@ -58,14 +59,12 @@ const EditLevel = () => {
   }, [level]);
 
   const fetchLevels = async () => {
-    try {
+    if (user) {
       const levelRes = await getLevels(`level=${levelNum}`);
       setLevel(levelRes[0]);
       const classRes = await getClasses(`level=${levelNum}`);
       setClasses(classRes);
       setAllowRender(true);
-    } catch (error) {
-      console.error("Error fetching levels:", error);
     }
   };
 
@@ -171,12 +170,8 @@ const EditLevel = () => {
     setSkillsInput(skills.join(', '));
   };
 
-  if (!allowRender || !level || !classes) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (

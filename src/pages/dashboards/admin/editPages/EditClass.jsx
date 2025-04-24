@@ -11,6 +11,7 @@ import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
 import { getUser } from '@/api/user-wrapper';
+import Unauthorized from "@/pages/Unauthorized";
 
 const EditClass = () => {
   const { user } = useContext(UserContext);
@@ -50,7 +51,7 @@ const EditClass = () => {
   }, [isLoaded, isSignedIn, user]);
 
   const fetchClass = async () => {
-    try {
+    if (user) {
       const data = await getClasses();
       setClasses(data);
       const classObj = data.find(c => c._id === params.classId);
@@ -75,8 +76,6 @@ const EditClass = () => {
       );
       setStudents(students);
       setAllowRender(true);
-    } catch (error) {
-      console.error('Error fetching classes:', error);
     }
   };
 
@@ -149,12 +148,8 @@ const EditClass = () => {
     }
   }
 
-  if (!allowRender || !classObj) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (

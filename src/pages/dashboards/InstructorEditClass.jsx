@@ -9,6 +9,8 @@ import { updateClass } from '@/api/class-wrapper.js';
 import { getUser } from '@/api/user-wrapper.js';
 import BackButton from "@/components/Button/BackButton";
 import UserItem from "@/components/UserItem";
+import SkeletonUser from "@/components/Skeletons/SkeletonUser";
+import Unauthorized from "@/pages/Unauthorized";
 
 const InstructorEditClass = () => {
   const { user } = useContext(UserContext);
@@ -68,16 +70,11 @@ const InstructorEditClass = () => {
     }
   }
 
-  if (!allowRender || !classObj) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "instructor") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "instructor") {
+    return <Unauthorized />;
   }
 
   return (
-
     <div className="page-format max-w-[96rem] space-y-10">
       <BackButton label={"Dashboard"} href={"/instructor"} />
       <div>
@@ -110,6 +107,7 @@ const InstructorEditClass = () => {
           {students.map((student) => (
             <UserItem key={student._id} userData={student} />
           ))}
+          {!allowRender && <SkeletonUser count={3} />}
         </div>
       </div>
     </div>

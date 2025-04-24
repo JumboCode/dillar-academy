@@ -38,7 +38,7 @@ const LevelsPage = () => {
       <section className={sectionStyle}>
         <h2 className="font-extrabold mb-1">{t("levelspage_reg_class_heading")}</h2>
         <p className={descriptionStyle}>{t("levelspage_reg_class_description")}</p>
-        <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 flex flex-col`}>
+        <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 auto-rows-fr flex flex-col`}>
           {!allowRender && <SkeletonLevel count={6} />}
           {allowRender && levels.map((level, levelIndex) => (
             <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
@@ -52,7 +52,8 @@ const LevelsPage = () => {
         <p className={descriptionStyle}>{t("levelspage_supp_class_description")}</p>
         <section className='mt-8'>
           <h3 className='font-extrabold'>{t("levelspage_convo_class_heading")}</h3>
-          <div className={`${courseDivStyle} lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 flex flex-col`}>
+          <div className={`${courseDivStyle} lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 auto-rows-fr flex flex-col`}>
+            {!allowRender && <SkeletonLevel count={4} />}
             {conversations.map((conversation, conversationIndex) => (
               <ConversationClass key={conversationIndex} conversation={conversation} />
             ))}

@@ -11,6 +11,10 @@ import Class from '@/components/Class/Class';
 import Overlay from '@/components/Overlay';
 import SearchBar from '@/components/SearchBar';
 import Alert from '@/components/Alert';
+import Unauthorized from "@/pages/Unauthorized";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import SkeletonClass from '@/components/Skeletons/SkeletonClass';
 
 const EditUser = () => {
   const { user } = useContext(UserContext);
@@ -119,12 +123,12 @@ const EditUser = () => {
     return matchesClass;
   });
 
-  if (!allowRender || !userData) {
-    return <div></div>;
-  }
+  // if (!allowRender || !userData) {
+  //   return <div></div>;
+  // }
 
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -134,8 +138,12 @@ const EditUser = () => {
       <div className={`page-format max-w-[96rem] space-y-10`}>
         <BackButton label="Back" />
         <span className="flex items-baseline gap-x-5 mb-1">
-          <h1 title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`} className="font-extrabold truncate">{toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}</h1>
-          <p className="text-blue-500">{toTitleCase(userData.privilege)}</p>
+          {allowRender ? <>
+            <h1 title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`} className="font-extrabold truncate">
+              {toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}
+            </h1>
+            <p className="text-blue-500">{toTitleCase(userData.privilege)}</p>
+          </> : <h1 className="w-full sm:w-1/2"><Skeleton /></h1>}
         </span>
         <form onSubmit={handleEditUser} className="space-y-12">
           <div className="flex w-full gap-x-6">
@@ -183,18 +191,20 @@ const EditUser = () => {
         </form>
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4">
-            <h2 className="font-extrabold">{toTitleCase(userData.firstName)}'s Classes</h2>
-            {userData.privilege === "student" && <div className="flex items-center">
+            <h2 className="font-extrabold">{allowRender ? `${toTitleCase(userData.firstName)}'s Classes` : <Skeleton className="w-48" />}</h2>
+            {allowRender && userData.privilege === "student" && <div className="flex items-center">
               <Button
                 label={"Edit User's Classes"}
                 onClick={() => setShowOverlay(true)}
               />
-            </div>}
+            </div>
+            }
           </div>
           <div className="grid grid-cols-3 gap-6">
             {userClasses.map((classObj) => (
               <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="/admin/class" />
             ))}
+            {!allowRender && <SkeletonClass count={3} />}
           </div>
         </div>
         {showOverlay && <Overlay width={'w-1/2'}>

@@ -9,8 +9,9 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { createConversation } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import Unauthorized from "@/pages/Unauthorized";
 
-const EditConversation = () => {
+const AddConversation = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
@@ -70,8 +71,8 @@ const EditConversation = () => {
     }
   }
 
-  if (user?.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -210,4 +211,4 @@ const EditConversation = () => {
   )
 }
 
-export default EditConversation;
+export default AddConversation;

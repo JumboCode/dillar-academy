@@ -7,6 +7,8 @@ import ConversationClass from '@/components/Class/ConversationClass';
 import Button from '@/components/Button/Button';
 import { getConversations } from '@/api/class-wrapper';
 import BackButton from "@/components/Button/BackButton";
+import Unauthorized from "@/pages/Unauthorized";
+import SkeletonLevel from '@/components/Skeletons/SkeletonLevel';
 
 const AdminConversations = () => {
   const { user } = useContext(UserContext);
@@ -35,12 +37,8 @@ const AdminConversations = () => {
     }
   };
 
-  if (!allowRender) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -59,6 +57,7 @@ const AdminConversations = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {!allowRender && <SkeletonLevel count={3} />}
         {conversationClasses.map((conversation) => (
           <ConversationClass
             key={conversation._id}
