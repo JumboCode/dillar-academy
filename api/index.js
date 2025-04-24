@@ -699,6 +699,14 @@ app.put('/api/users/:id/enroll', async (req, res) => {
       return res.status(400).json({ message: 'Already enrolled in this class' });
     }
 
+    const classToEnroll = await Class.findById(classId);
+    if (!classToEnroll) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+    if (!classToEnroll.enrollmentOpen) {
+      return res.status(403).json({ message: 'Enrollment is currently closed for this class.' });
+    }
+
     // add class id to user's classes
     await User.findByIdAndUpdate(
       id,

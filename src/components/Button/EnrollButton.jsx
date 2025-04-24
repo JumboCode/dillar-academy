@@ -214,7 +214,11 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
     if (!isSignedIn) {
       setShowSignUpPopup(true);
     } else if (user.privilege === "student") {
-      setShowEnrollPopup(true);
+      if (!classObj.enrollmentOpen) {
+        alert("Enrollment for this class is currently closed.");
+      } else {
+        setShowEnrollPopup(true);
+      }      
     } else {
       setShowNotStudentPopup(true);
     }
