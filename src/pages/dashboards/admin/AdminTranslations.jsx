@@ -9,6 +9,7 @@ import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonTranslationRow from '@/components/Skeletons/SkeletonTranslationRow';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import { IoChevronDownOutline, IoCreateOutline } from "react-icons/io5";
 import { getTranslations, editTranslation } from '@/api/translation-wrapper';
 
@@ -93,6 +94,7 @@ const AdminTranslations = () => {
 const TranslationTable = ({ label, translations, fetchTranslations, allowRender }) => {
   const [searchInput, setSearchInput] = useState('');
   const [isFullyExpanded, setIsFullyExpanded] = useState(false);
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   const filterTranslations = (translations, filter) => {
     const filterInsensitive = filter.toLowerCase();
@@ -148,15 +150,16 @@ const TranslationTable = ({ label, translations, fetchTranslations, allowRender 
             <h4 className='font-extrabold text-base sm:text-xl'>Translation</h4>
           </div>
           <div>
-            {Object.keys(filteredTranslations.en).map(id => (
-              <TableRow
-                key={id}
-                id={id}
-                translations={filteredTranslations}
-                ns={"default"}
-                fetchTranslations={fetchTranslations} />
-            ))}
-            {!allowRender && <SkeletonTranslationRow count={5} />}
+            {allowRender
+              ? Object.keys(filteredTranslations.en).map(id => (
+                <TableRow
+                  key={id}
+                  id={id}
+                  translations={filteredTranslations}
+                  ns={"default"}
+                  fetchTranslations={fetchTranslations} />
+              ))
+              : showSkeleton && <SkeletonTranslationRow count={5} />}
           </div>
         </div>
       </div>

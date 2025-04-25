@@ -8,15 +8,15 @@ import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getLevels } from '@/api/class-wrapper';
 import Unauthorized from "@/pages/Unauthorized";
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
 const AdminLevels = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
-  const [allowRender, setAllowRender] = useState(false);
   const [levels, setLevels] = useState([]);
+  const [allowRender, setAllowRender] = useState(false);
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     const fetchLevels = async () => {
@@ -84,7 +84,7 @@ const AdminLevels = () => {
               </div>
             </Link>
           </>
-        ) : (
+        ) : showSkeleton && (
           <SkeletonLevel count={6} isSimplified isArrowRight />
         )}
       </div>

@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import Dropdown from '../../../components/Dropdown/Dropdown';
+import { useAuth } from '@clerk/clerk-react';
+import { useLocation } from 'wouter';
+import { getClasses } from '@/api/class-wrapper';
+import Dropdown from '@/components/Dropdown/Dropdown';
 import Schedule from '@/components/Schedule';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
-import { getClasses } from '@/api/class-wrapper';
-import { useLocation } from 'wouter';
-import { useAuth } from '@clerk/clerk-react';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import Unauthorized from "@/pages/Unauthorized";
 
 const AdminSchedule = () => {
@@ -15,6 +16,7 @@ const AdminSchedule = () => {
   const [classes, setClasses] = useState([]);
   const [currFilters, setCurrFilters] = useState([]);
   const [allowRender, setAllowRender] = useState(false);
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   const level = [1, 2, 3, 4, 5];
 
@@ -70,7 +72,7 @@ const AdminSchedule = () => {
           ))}
         </Dropdown>
       </div>
-      {allowRender ? <Schedule privilege={user.privilege} classes={classes} filters={currFilters} /> : <SkeletonSchedule />}
+      {allowRender ? <Schedule privilege={user.privilege} classes={classes} filters={currFilters} /> : showSkeleton && < SkeletonSchedule />}
     </div>
   )
 }

@@ -13,6 +13,7 @@ import Schedule from '@/components/Schedule';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import Unauthorized from '../Unauthorized';
 
 const InstructorView = () => {
@@ -30,11 +31,12 @@ const InstructorView = () => {
     gender: '',
   });
   const { t } = useTranslation();
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const instructorClasses = await getClasses(`instructor=${toTitleCase(user.firstName)}`); // TODO: will it always be first name or possibly last name? or both?
+        let instructorClasses = await getClasses(`instructor=${toTitleCase(user.firstName)}`); // TODO: should use first and last name
         setClasses(instructorClasses);
         setAllowRender(true);
       }
@@ -103,7 +105,7 @@ const InstructorView = () => {
             </h1>
             <p className='text-blue-500'>{allowRender ? t(`${user.privilege}`) : ""}</p>
           </div>
-          : <div className='w-full sm:w-1/2'>
+          : showSkeleton && <div className='w-full sm:w-1/2'>
             <h1><Skeleton /></h1>
           </div>}
         <div className="text-gray-500 text-sm sm:text-base mb-4 w-full">
@@ -112,7 +114,7 @@ const InstructorView = () => {
               <IoCreateOutline className="font-extrabold" />
               <p>{t("edit_profile")}</p>
             </button>
-            : <div className='w-1/4 sm:w-1/6 lg:w-1/12'>
+            : showSkeleton && <div className='w-1/4 sm:w-1/6 lg:w-1/12'>
               <Skeleton />
             </div>}
         </div>
@@ -126,15 +128,15 @@ const InstructorView = () => {
               <p className='text-gray-500 col-start-2'>{user.age ? user.age : "N/A"}</p>
               <p className='text-black col-start-1'>{t("gender")}</p>
               <p className='text-gray-500 col-start-2'>{user.gender ? toTitleCase(user.gender) : "N/A"}</p></>
-            : <div className='w-40 lg:w-64'>
+            : showSkeleton && <div className='w-40 lg:w-64'>
               <Skeleton count={4} />
             </div>}
         </div>
       </div>
 
       <section>
-        <h2 className='font-extrabold my-8'>{allowRender ? t("class_schedule") : <Skeleton width={"12rem"} />}</h2>
-        {allowRender ? <Schedule privilege={user.privilege} classes={classes} /> : <SkeletonSchedule />}
+        <h2 className='font-extrabold my-8'>{allowRender ? t("class_schedule") : showSkeleton && <Skeleton width={"12rem"} />}</h2>
+        {allowRender ? <Schedule privilege={user.privilege} classes={classes} /> : showSkeleton && <SkeletonSchedule />}
       </section>
 
       {showEditModal && <Overlay width={'w-1/2'}>

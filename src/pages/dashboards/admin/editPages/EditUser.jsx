@@ -15,6 +15,7 @@ import Unauthorized from "@/pages/Unauthorized";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import SkeletonClass from '@/components/Skeletons/SkeletonClass';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
 const EditUser = () => {
   const { user } = useContext(UserContext);
@@ -34,6 +35,7 @@ const EditUser = () => {
   });
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (isLoaded) {
@@ -123,10 +125,6 @@ const EditUser = () => {
     return matchesClass;
   });
 
-  // if (!allowRender || !userData) {
-  //   return <div></div>;
-  // }
-
   if (user && user.privilege !== "admin") {
     return <Unauthorized />;
   }
@@ -143,7 +141,7 @@ const EditUser = () => {
               {toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}
             </h1>
             <p className="text-blue-500">{toTitleCase(userData.privilege)}</p>
-          </> : <h1 className="w-full sm:w-1/2"><Skeleton /></h1>}
+          </> : showSkeleton && <h1 className="w-full sm:w-1/2"><Skeleton /></h1>}
         </span>
         <form onSubmit={handleEditUser} className="space-y-12">
           <div className="flex w-full gap-x-6">
@@ -191,7 +189,9 @@ const EditUser = () => {
         </form>
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4">
-            <h2 className="font-extrabold">{allowRender ? `${toTitleCase(userData.firstName)}'s Classes` : <Skeleton className="w-48" />}</h2>
+            <h2 className="font-extrabold">
+              {allowRender ? `${toTitleCase(userData.firstName)}'s Classes` : showSkeleton && <Skeleton className="w-48" />}
+            </h2>
             {allowRender && userData.privilege === "student" && <div className="flex items-center">
               <Button
                 label={"Edit User's Classes"}
@@ -201,10 +201,11 @@ const EditUser = () => {
             }
           </div>
           <div className="grid grid-cols-3 gap-6">
-            {userClasses.map((classObj) => (
-              <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="/admin/class" />
-            ))}
-            {!allowRender && <SkeletonClass count={3} />}
+            {allowRender
+              ? userClasses.map((classObj) => (
+                <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="/admin/class" />
+              ))
+              : showSkeleton && <SkeletonClass count={3} />}
           </div>
         </div>
         {showOverlay && <Overlay width={'w-1/2'}>

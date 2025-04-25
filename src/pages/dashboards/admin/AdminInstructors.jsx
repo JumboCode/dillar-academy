@@ -10,6 +10,7 @@ import SearchBar from '@/components/SearchBar';
 import SkeletonUser from '@/components/Skeletons/SkeletonUser';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import Unauthorized from "@/pages/Unauthorized";
 
 const AdminInstructors = () => {
@@ -20,6 +21,7 @@ const AdminInstructors = () => {
   const [classes, setClasses] = useState([]);
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState('');
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (isLoaded) {
@@ -67,13 +69,14 @@ const AdminInstructors = () => {
       <SearchBar input={searchInput} setInput={setSearchInput} placeholder={"Search for instructor by name"} />
       <div className="text-indigo-900 inline-flex items-center gap-x-2">
         <IoPersonOutline />
-        <p className="flex">{allowRender ? `${filteredUsers.length} instructor(s)` : <Skeleton width={"6rem"} />}</p>
+        <p className="flex">{allowRender ? `${filteredUsers.length} instructor(s)` : showSkeleton && <Skeleton width={"6rem"} />}</p>
       </div>
       <div className="grid md:grid-cols-3 gap-x-14">
-        {filteredUsers.map((userData, userIndex) => (
-          <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}><UserItem userData={userData} classes={classes} /></Link>
-        ))}
-        {!allowRender && <SkeletonUser count={9} />}
+        {allowRender
+          ? filteredUsers.map((userData, userIndex) => (
+            <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}><UserItem userData={userData} classes={classes} /></Link>
+          ))
+          : showSkeleton && <SkeletonUser count={9} />}
       </div>
     </div>
   )

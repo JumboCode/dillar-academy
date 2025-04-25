@@ -9,6 +9,7 @@ import { getConversations } from '@/api/class-wrapper';
 import BackButton from "@/components/Button/BackButton";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonLevel from '@/components/Skeletons/SkeletonLevel';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
 const AdminConversations = () => {
   const { user } = useContext(UserContext);
@@ -16,6 +17,7 @@ const AdminConversations = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
   const [conversationClasses, setConversationClasses] = useState([]);
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (isLoaded) {
@@ -56,16 +58,17 @@ const AdminConversations = () => {
             onClick={() => setLocation("/admin/levels/conversations/new")} />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {!allowRender && <SkeletonLevel count={3} />}
-        {conversationClasses.map((conversation) => (
-          <ConversationClass
-            key={conversation._id}
-            conversation={conversation}
-            modes={["edit"]}
-            editURL="/admin/levels/conversations"
-          />
-        ))}
+      <div className="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {allowRender
+          ? conversationClasses.map((conversation) => (
+            <ConversationClass
+              key={conversation._id}
+              conversation={conversation}
+              modes={["edit"]}
+              editURL="/admin/levels/conversations"
+            />
+          ))
+          : showSkeleton && <SkeletonLevel count={3} />}
       </div>
     </div>
   );

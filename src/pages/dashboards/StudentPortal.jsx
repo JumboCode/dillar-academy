@@ -15,6 +15,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import SkeletonClass from '@/components/Skeletons/SkeletonClass';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import Unauthorized from '../Unauthorized';
 
 const StudentPortal = () => {
@@ -32,6 +33,7 @@ const StudentPortal = () => {
     gender: '',
   });
   const { t } = useTranslation();
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,7 +114,7 @@ const StudentPortal = () => {
             <p className='text-blue-500'>{allowRender ? t(`${user.privilege}`) : ""}</p>
           </div>
           : <div className='w-full sm:w-1/2'>
-            <h1><Skeleton /></h1>
+            <h1>{showSkeleton && <Skeleton />}</h1>
           </div>}
         <div className="text-gray-500 text-sm sm:text-base mb-4 w-full">
           {allowRender
@@ -120,7 +122,7 @@ const StudentPortal = () => {
               <IoCreateOutline className="font-extrabold" />
               <p>{t("edit_profile")}</p>
             </button>
-            : <div className='w-1/4 sm:w-1/6 lg:w-1/12'>
+            : showSkeleton && <div className='w-1/4 sm:w-1/6 lg:w-1/12'>
               <Skeleton />
             </div>}
         </div>
@@ -134,19 +136,20 @@ const StudentPortal = () => {
               <p className='text-gray-500 col-start-2'>{user.age ? user.age : "N/A"}</p>
               <p className='text-black col-start-1'>{t("gender")}</p>
               <p className='text-gray-500 col-start-2'>{user.gender ? toTitleCase(user.gender) : "N/A"}</p></>
-            : <div className='w-40 lg:w-64'>
+            : showSkeleton && <div className='w-40 lg:w-64'>
               <Skeleton count={4} />
             </div>}
         </div>
       </div>
 
       <section className='my-12'>
-        <h2 className='font-extrabold mb-6'>{allowRender ? t("your_courses") : <Skeleton width={"12rem"} />}</h2>
+        <h2 className='font-extrabold mb-6'>{allowRender ? t("your_courses") : showSkeleton && <Skeleton width={"12rem"} />}</h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
-          {classes.map((classObj, classIndex) => (
-            <Class key={classIndex} classObj={classObj} modes={["unenroll"]} />
-          ))}
-          {!allowRender && <SkeletonClass count={3} />}
+          {allowRender
+            ? classes.map((classObj, classIndex) => (
+              <Class key={classIndex} classObj={classObj} modes={["unenroll"]} />
+            ))
+            : showSkeleton && <SkeletonClass count={3} />}
           <div className="flex justify-center sm:justify-normal items-center w-full">
             {allowRender && <Button
               label={<IoAdd className="text-2xl font-extrabold" />}
@@ -158,8 +161,8 @@ const StudentPortal = () => {
       </section>
 
       <section>
-        <h2 className='font-extrabold my-8'>{allowRender ? t("class_schedule") : <Skeleton width={"12rem"} />}</h2>
-        {allowRender ? <Schedule privilege={user.privilege} classes={classes} /> : <SkeletonSchedule />}
+        <h2 className='font-extrabold my-8'>{allowRender ? t("class_schedule") : showSkeleton && <Skeleton width={"12rem"} />}</h2>
+        {allowRender ? <Schedule privilege={user.privilege} classes={classes} /> : showSkeleton && <SkeletonSchedule />}
       </section>
 
       {showEditModal && (
