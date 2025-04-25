@@ -10,6 +10,7 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import Unauthorized from "@/pages/Unauthorized";
 
 const EditConversation = () => {
   const { user } = useContext(UserContext);
@@ -134,12 +135,8 @@ const EditConversation = () => {
     }
   }
 
-  if (!allowRender || !conversationObj) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -165,6 +162,7 @@ const EditConversation = () => {
                 isRequired={true}
               />
             </div>
+            
             <div className="w-full space-y-3">
               <label className="mx-1">Instructor</label>
               <FormInput

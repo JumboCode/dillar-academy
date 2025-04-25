@@ -263,7 +263,6 @@ app.post('/api/login', async (req, res) => {
     const user = await User.findOne({ email });
     if (user) {
       if (user.password === password) {
-        console.log('Login successful for user:', email);
         res.status(200).json(user);
       } else {
         console.log('Login failed: Incorrect password.');
@@ -841,6 +840,8 @@ app.put('/api/levels/:id', async (req, res) => {
       })
     }
 
+    const currentLevel = await Level.findOne({ _id: id });
+
     const updatedLevel = await Level.findByIdAndUpdate(
       id,
       updates,
@@ -849,11 +850,10 @@ app.put('/api/levels/:id', async (req, res) => {
 
     // Update translations
     // delete existing translations 
-    await deleteLevelTranslations(existingLevel);
+    await deleteLevelTranslations(currentLevel);
     // create new translations
     await createLevelTranslations(updatedLevel);
     // translations transferred to MongoDB in updateLevel wrapper
-
 
     if (!updatedLevel) {
       return res.status(404).json({ message: 'Level not found' });
@@ -1023,5 +1023,34 @@ app.get('/api/students-export', async (req, res) => {
   } catch (err) {
     console.error('Error exporting students:', err);
     res.status(500).json({ message: 'Error exporting students' });
+  }
+});
+
+// Delete User
+app.delete('/api/user/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedUser = await User.findOne({ _id: id });
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await Promise.all(
+      deletedUser.enrolledClasses.map(classId =>
+        Class.findByIdAndUpdate(classId, { $pull: { roster: id } })
+          .catch(err => { throw err }))
+    )
+
+    // delete user
+    await User.findByIdAndDelete(id);
+
+    res.status(204).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Failed to delete user class:', error);
+    res.status(500).json({ message: 'Failed to delete user class' });
   }
 });

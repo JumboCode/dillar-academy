@@ -94,6 +94,17 @@ const getStudentsForExport = async () => {
   }
 };
 
+const deleteUser = async (userId) => {
+  try {
+    const response = await axios.delete(`/api/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
+}
+
+
 export {
   postUser,
   postLogin,
@@ -101,5 +112,6 @@ export {
   getUser,
   resetPassword,
   updateUser,
-  getStudentsForExport
+  getStudentsForExport,
+  deleteUser
 };

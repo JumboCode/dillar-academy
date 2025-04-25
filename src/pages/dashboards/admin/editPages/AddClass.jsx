@@ -9,6 +9,7 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { createClass } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import Unauthorized from "@/pages/Unauthorized";
 
 const AddClass = () => {
   const { user } = useContext(UserContext);
@@ -73,8 +74,8 @@ const AddClass = () => {
     }
   }
 
-  if (user?.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   // TODO: implement age group check

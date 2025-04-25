@@ -5,11 +5,16 @@ import { useAuth } from '@clerk/clerk-react'
 import { updateUser } from '@/api/user-wrapper';
 import { getClasses } from '@/api/class-wrapper'
 import { IoCreateOutline } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import Overlay from '@/components/Overlay';
 import Schedule from '@/components/Schedule';
-
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
+import Unauthorized from '../Unauthorized';
 
 const InstructorView = () => {
   const [classes, setClasses] = useState([])
@@ -25,11 +30,13 @@ const InstructorView = () => {
     age: '',
     gender: '',
   });
+  const { t } = useTranslation();
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const instructorClasses = await getClasses(`instructor=${toTitleCase(user.firstName)}`); // TODO: will it always be first name or possibly last name? or both?
+        let instructorClasses = await getClasses(`instructor=${toTitleCase(user.firstName)}`); // TODO: should use first and last name
         setClasses(instructorClasses);
         setAllowRender(true);
       }
@@ -84,51 +91,52 @@ const InstructorView = () => {
     }));
   };
 
-  if (!allowRender) {
-    return;
-  }
-
-  if (user?.privilege !== "instructor") {
-    return <div>Unauthorized</div>
+  if (user && user.privilege !== "instructor") {
+    return <Unauthorized />
   }
 
   return (
     <div className="page-format max-w-[96rem] lg:py-24 space-y-12">
       <div>
-        <span className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
-          <h1 title={`Name: ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`} className='font-extrabold truncate'>
-            <span className='block sm:inline'>
-              Welcome&nbsp;
-            </span>
-            <span className='block sm:inline'>
-              {`${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}`}!
-            </span>
-          </h1>
-          <p className='text-blue-500'>{toTitleCase(user.privilege)}</p>
-        </span>
-        <button onClick={openEditUser}
-          className="text-gray-500 text-sm sm:text-base flex gap-x-2 items-center mb-4"
-        >
-          <IoCreateOutline className="font-extrabold" />
-          <span>Edit Profile</span>
-        </button>
-        <div className="grid grid-cols-[min-content_auto] w-fit gap-x-4 gap-y-1">
-          <p className='text-black col-start-1'>Email</p>
-          <p className='text-gray-500 col-start-2'>{user.email}</p>
-          <p className='text-black col-start-1'>WhatsApp</p>
-          <p className='text-gray-500 col-start-2'>{user.email}</p>
-          <p className='text-black col-start-1'>Age</p>
-          <p className='text-gray-500 col-start-2'>{user.age ? user.age : "N/A"}</p>
-          <p className='text-black col-start-1'>Gender</p>
-          <p className='text-gray-500 col-start-2'>{user.gender ? toTitleCase(user.gender) : "N/A"}</p>
+        {allowRender
+          ? <div className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
+            <h1 title={allowRender ? `${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}` : ""} className='font-extrabold truncate'>
+              {`${t("welcome")} ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}!`}
+            </h1>
+            <p className='text-blue-500'>{allowRender ? t(`${user.privilege}`) : ""}</p>
+          </div>
+          : showSkeleton && <div className='w-full sm:w-1/2'>
+            <h1><Skeleton /></h1>
+          </div>}
+        <div className="text-gray-500 text-sm sm:text-base mb-4 w-full">
+          {allowRender
+            ? <button onClick={openEditUser} className='flex gap-x-2 items-center'>
+              <IoCreateOutline className="font-extrabold" />
+              <p>{t("edit_profile")}</p>
+            </button>
+            : showSkeleton && <div className='w-1/4 sm:w-1/6 lg:w-1/12'>
+              <Skeleton />
+            </div>}
+        </div>
+        <div className="grid grid-cols-[max-content_auto] w-fit gap-x-4 gap-y-1">
+          {allowRender
+            ? <><p className='text-black col-start-1'>{t("email")}</p>
+              <p className='text-gray-500 col-start-2'>{user.email}</p>
+              <p className='text-black col-start-1'>{t("whatsapp")}</p>
+              <p className='text-gray-500 col-start-2'>{user.email}</p>
+              <p className='text-black col-start-1'>{t("age")}</p>
+              <p className='text-gray-500 col-start-2'>{user.age ? user.age : "N/A"}</p>
+              <p className='text-black col-start-1'>{t("gender")}</p>
+              <p className='text-gray-500 col-start-2'>{user.gender ? toTitleCase(user.gender) : "N/A"}</p></>
+            : showSkeleton && <div className='w-40 lg:w-64'>
+              <Skeleton count={4} />
+            </div>}
         </div>
       </div>
 
       <section>
-        <h2 className='font-extrabold my-8'>
-          Class Schedule
-        </h2>
-        <Schedule classes={classes} />
+        <h2 className='font-extrabold my-8'>{allowRender ? t("class_schedule") : showSkeleton && <Skeleton width={"12rem"} />}</h2>
+        {allowRender ? <Schedule privilege={user.privilege} classes={classes} /> : showSkeleton && <SkeletonSchedule />}
       </section>
 
       {showEditModal && <Overlay width={'w-1/2'}>
