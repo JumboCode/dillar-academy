@@ -9,6 +9,9 @@ import { updateClass } from '@/api/class-wrapper.js';
 import { getUser } from '@/api/user-wrapper.js';
 import BackButton from "@/components/Button/BackButton";
 import UserItem from "@/components/UserItem";
+import SkeletonUser from "@/components/Skeletons/SkeletonUser";
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
+import Unauthorized from "@/pages/Unauthorized";
 
 const InstructorEditClass = () => {
   const { user } = useContext(UserContext);
@@ -17,9 +20,9 @@ const InstructorEditClass = () => {
   const [allowRender, setAllowRender] = useState(false);
 
   const params = useParams();
-  const [classObj, setClassObj] = useState(null);
   const [classroomLink, setClassroomLink] = useState('');
   const [students, setStudents] = useState([]);
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (!params.id) {
@@ -37,7 +40,6 @@ const InstructorEditClass = () => {
   const fetchClass = async () => {
     try {
       const data = await getClassById(params.id);
-      setClassObj(data);
       setClassroomLink(data.classroomLink || '');
       const students = await Promise.all(
         data.roster.map(async (studentId) => {
@@ -68,16 +70,11 @@ const InstructorEditClass = () => {
     }
   }
 
-  if (!allowRender || !classObj) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "instructor") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "instructor") {
+    return <Unauthorized />;
   }
 
   return (
-
     <div className="page-format max-w-[96rem] space-y-10">
       <BackButton label={"Dashboard"} href={"/instructor"} />
       <div>
@@ -107,9 +104,11 @@ const InstructorEditClass = () => {
       <div>
         <h2 className="font-extrabold mb-2">Enrolled Students</h2>
         <div className="grid md:grid-cols-3 gap-x-14">
-          {students.map((student) => (
-            <UserItem key={student._id} userData={student} />
-          ))}
+          {allowRender
+            ? students.map((student) => (
+              <UserItem key={student._id} userData={student} />
+            ))
+            : showSkeleton && <SkeletonUser count={3} />}
         </div>
       </div>
     </div>

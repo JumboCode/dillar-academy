@@ -7,6 +7,9 @@ import Overlay from '@/components/Overlay';
 import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
+import Unauthorized from "@/pages/Unauthorized";
+import SkeletonTranslationRow from '@/components/Skeletons/SkeletonTranslationRow';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import { IoChevronDownOutline, IoCreateOutline } from "react-icons/io5";
 import { getTranslations, editTranslation } from '@/api/translation-wrapper';
 
@@ -63,12 +66,8 @@ const AdminTranslations = () => {
     });
   }
 
-  if (!allowRender) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -79,20 +78,23 @@ const AdminTranslations = () => {
         <TranslationTable
           label={"Edit translations for levels"}
           translations={levelTranslations}
+          allowRender={allowRender}
         />
         <TranslationTable
           label={"Edit translations for general and student pages"}
           translations={defaultTranslations}
           fetchTranslations={fetchNamespaceTranslations}
+          allowRender={allowRender}
         />
       </div>
     </div>
   )
 }
 
-const TranslationTable = ({ label, translations, fetchTranslations }) => {
+const TranslationTable = ({ label, translations, fetchTranslations, allowRender }) => {
   const [searchInput, setSearchInput] = useState('');
   const [isFullyExpanded, setIsFullyExpanded] = useState(false);
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   const filterTranslations = (translations, filter) => {
     const filterInsensitive = filter.toLowerCase();
@@ -148,14 +150,16 @@ const TranslationTable = ({ label, translations, fetchTranslations }) => {
             <h4 className='font-extrabold text-base sm:text-xl'>Translation</h4>
           </div>
           <div>
-            {Object.keys(filteredTranslations.en).map(id => (
-              <TableRow
-                key={id}
-                id={id}
-                translations={filteredTranslations}
-                ns={"default"}
-                fetchTranslations={fetchTranslations} />
-            ))}
+            {allowRender
+              ? Object.keys(filteredTranslations.en).map(id => (
+                <TableRow
+                  key={id}
+                  id={id}
+                  translations={filteredTranslations}
+                  ns={"default"}
+                  fetchTranslations={fetchTranslations} />
+              ))
+              : showSkeleton && <SkeletonTranslationRow count={5} />}
           </div>
         </div>
       </div>

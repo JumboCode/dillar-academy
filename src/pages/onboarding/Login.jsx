@@ -23,9 +23,9 @@ export default function Login() {
 
   useEffect(() => {
     if (isSignedIn && user) {
-      if (user?.privilege === "admin") {
+      if (user.privilege === "admin") {
         setLocation("/admin/levels");
-      } else if (user?.privilege === "instructor") {
+      } else if (user.privilege === "instructor") {
         setLocation("/instructor")
       } else {
         setLocation("/student")

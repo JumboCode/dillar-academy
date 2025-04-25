@@ -11,6 +11,9 @@ import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
 import { getUser } from '@/api/user-wrapper';
+import Unauthorized from "@/pages/Unauthorized";
+import SkeletonUser from "@/components/Skeletons/SkeletonUser";
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
 const EditClass = () => {
   const { user } = useContext(UserContext);
@@ -35,6 +38,7 @@ const EditClass = () => {
     ]
   });
   const [students, setStudents] = useState([]);
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (!params.classId) {
@@ -50,7 +54,7 @@ const EditClass = () => {
   }, [isLoaded, isSignedIn, user]);
 
   const fetchClass = async () => {
-    try {
+    if (user) {
       const data = await getClasses();
       setClasses(data);
       const classObj = data.find(c => c._id === params.classId);
@@ -75,8 +79,6 @@ const EditClass = () => {
       );
       setStudents(students);
       setAllowRender(true);
-    } catch (error) {
-      console.error('Error fetching classes:', error);
     }
   };
 
@@ -149,12 +151,8 @@ const EditClass = () => {
     }
   }
 
-  if (!allowRender || !classObj) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -306,9 +304,12 @@ const EditClass = () => {
             <p>{students.length} enrolled</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {students.map(student => (
-              <Link key={student._id} href={`/admin/user/${encodeURIComponent(student._id)}`}><UserItem userData={student} classes={classes} /></Link>
-            ))}
+            {allowRender
+              ? (students.map(student => (
+                <Link key={student._id} href={`/admin/user/${encodeURIComponent(student._id)}`}><UserItem userData={student} classes={classes} /></Link>
+              ))
+              )
+              : showSkeleton && <SkeletonUser count={3} />}
           </div>
         </div>
         <Button label="Delete class" onClick={handleDeleteClass} />

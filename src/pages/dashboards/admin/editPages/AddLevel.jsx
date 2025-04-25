@@ -8,6 +8,7 @@ import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import BackButton from "@/components/Button/BackButton";
 import Alert from "@/components/Alert";
+import Unauthorized from "@/pages/Unauthorized";
 
 const AddLevel = () => {
   const { user } = useContext(UserContext);
@@ -101,8 +102,8 @@ const AddLevel = () => {
     }
   };
 
-  if (user?.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (

@@ -1,11 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from '@/contexts/UserContext.jsx';
+import { useEffect, useState } from "react";
 import { useLocation, Link } from 'wouter';
 import Button from '@/components/Button/Button';
 import { useTranslation } from "react-i18next";
 
-const Schedule = ({ classes, filters = [] }) => {
-  const { user } = useContext(UserContext);
+const Schedule = ({ privilege, classes, filters = [] }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
   const { t, i18n } = useTranslation();
 
@@ -84,7 +82,7 @@ const Schedule = ({ classes, filters = [] }) => {
                   const classElement = <ScheduleClass key={index} classObj={classObj} isMobile={isMobile} />;
 
                   if (isMobile) {
-                    switch (user.privilege) {
+                    switch (privilege) {
                       case "admin":
                         return (
                           <Link key={index} to={`/admin/class/${classObj._id}`}>
@@ -118,8 +116,7 @@ const Schedule = ({ classes, filters = [] }) => {
   )
 }
 
-const ScheduleClass = ({ classObj, isMobile }) => {
-  const { user } = useContext(UserContext);
+const ScheduleClass = ({ privilege, classObj, isMobile }) => {
   const [, setLocation] = useLocation();
   const { t, i18n } = useTranslation();
 
@@ -144,7 +141,7 @@ const ScheduleClass = ({ classObj, isMobile }) => {
         {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`).toUpperCase() : t(`${classObj.ageGroup}_class`).toUpperCase()}
       </p>
       {!isMobile && (
-        user.privilege === "student" ? (
+        privilege === "student" ? (
           <a href={classObj.classroomLink}>
             {/* button overflowing in different languages */}
             <Button label={t('join')} onClick={null} />
@@ -153,7 +150,7 @@ const ScheduleClass = ({ classObj, isMobile }) => {
           <Button
             label="Edit"
             onClick={() => {
-              const basePath = user.privilege === "admin"
+              const basePath = privilege === "admin"
                 ? `/admin/class/${classObj._id}`
                 : `/instructor/class/${classObj._id}`;
               setLocation(basePath);
