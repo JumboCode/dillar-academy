@@ -85,7 +85,7 @@ const AddConversation = () => {
           <h1 className="font-extrabold">Add Conversation Class</h1>
           <p className="font-light text-base sm:text-lg">Fill out new conversation class data</p>
         </div>
-        <form onSubmit={handleCreateConversation} className="w-2/3">
+        <form onSubmit={handleCreateConversation} className="w-full lg:w-2/3">
           <div className="flex justify-start space-x-10 w-full mb-6">
             <div className="w-full space-y-3">
               <label className="mx-1">Age Group</label>

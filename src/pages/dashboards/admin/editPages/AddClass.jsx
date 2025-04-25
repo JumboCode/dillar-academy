@@ -88,7 +88,7 @@ const AddClass = () => {
           <h1 className="font-extrabold">Add Class</h1>
           <p className="font-light text-base sm:text-lg">Fill out new class data</p>
         </div>
-        <form onSubmit={handleAddClass} className="w-2/3">
+        <form onSubmit={handleAddClass} className="w-full lg:w-2/3">
           <div className="flex justify-start space-x-10 mb-6">
             <div className="space-y-3">
               <label className="mx-1">Level</label>

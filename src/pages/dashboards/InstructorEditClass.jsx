@@ -83,8 +83,8 @@ const InstructorEditClass = () => {
       </div>
 
       <form onSubmit={handleEditClass}>
-        <div className="flex justify-start space-x-10 w-2/3 mb-6">
-          <div className="w-2/3 space-y-3">
+        <div className="flex justify-start space-x-10 w-full lg:w-2/3 mb-6">
+          <div className="w-full space-y-3">
             <label className="mx-1">Google Classroom Link</label>
             <FormInput
               type="text"

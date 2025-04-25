@@ -160,6 +160,7 @@ const StudentPortal = () => {
         </div>
       </section>
 
+      {/* TODO: add supp classes */}
       <section>
         <h2 className='font-extrabold my-8'>{allowRender ? t("class_schedule") : showSkeleton && <Skeleton width={"12rem"} />}</h2>
         {allowRender ? <Schedule privilege={user.privilege} classes={classes} /> : showSkeleton && <SkeletonSchedule />}

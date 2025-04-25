@@ -199,6 +199,7 @@ const Class = mongoose.model("Class", ClassSchema)
 
 // Conversation Schema
 const ConversationSchema = new Schema({
+  level: { type: String, required: true, default: "conversation" },
   instructor: { type: String, required: true },
   ageGroup: { type: String, required: true },
   schedule: { type: [ScheduleSchema], default: [] },

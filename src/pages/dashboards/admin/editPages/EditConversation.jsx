@@ -149,7 +149,7 @@ const EditConversation = () => {
           <h1 className="font-extrabold">Edit Conversation Class</h1>
           <h3 className="font-light">Edit conversation class and student information</h3>
         </div>
-        <form onSubmit={handleEditConversation} className="w-2/3">
+        <form onSubmit={handleEditConversation} className="w-full lg:w-2/3">
           <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
             <div className="w-full space-y-3">
               <label className="mx-1">Age Group</label>
@@ -162,7 +162,7 @@ const EditConversation = () => {
                 isRequired={true}
               />
             </div>
-            
+
             <div className="w-full space-y-3">
               <label className="mx-1">Instructor</label>
               <FormInput

@@ -115,7 +115,7 @@ const AddLevel = () => {
           <h1 className="font-extrabold mb-2">Add Level</h1>
           <p className="sm:text-lg">Add level information and view all the classes in this level.</p>
         </div>
-        <form onSubmit={handleAddLevel} className="space-y-6 w-2/3">
+        <form onSubmit={handleAddLevel} className="space-y-6 w-full lg:w-2/3">
           {/* Level and Name fields */}
           <div className="flex flex-col lg:flex-row gap-x-6">
             <div className="space-y-2">

@@ -79,7 +79,7 @@ const Schedule = ({ privilege, classes, filters = [] }) => {
                 .filter(schedule => filters.length === 0 || filters.includes(schedule.level))
                 .sort((a, b) => new Date(`1970/01/01 ${a.startTime}`) - new Date(`1970/01/01 ${b.startTime}`)) // Sort by time
                 .map((classObj, index) => {
-                  const classElement = <ScheduleClass key={index} classObj={classObj} isMobile={isMobile} />;
+                  const classElement = <ScheduleClass key={index} classObj={classObj} isMobile={isMobile} privilege={privilege} />;
 
                   if (isMobile) {
                     switch (privilege) {
@@ -131,22 +131,38 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
     return new Intl.NumberFormat(locale).format(number);
   }
 
+  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+
   return (
     <div className="bg-blue-100 rounded-xs sm:rounded-sm border-[0.5px] border-gray-200 p-1 sm:p-3 mb-1 sm:mb-2">
       <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem] text-balance">{classObj.startTime}-{classObj.endTime}</p>
-      <p className="font-extrabold text-[0.75rem] sm:text-[0.875rem] sm:mt-2">
-        {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}
+      <p
+        title={t('level_num', {
+          num: typeof classObj.level === "string"
+            ? toTitleCase(classObj.level)
+            : localizeNumber(classObj.level, i18n.language),
+          ns: "levels"
+        })}
+        className="font-extrabold text-[0.75rem] sm:text-[0.875rem] sm:mt-2 truncate"
+      >
+        {t('level_num', {
+          num: typeof classObj.level === "string"
+            ? toTitleCase(classObj.level)
+            : localizeNumber(classObj.level, i18n.language),
+          ns: "levels"
+        })}
       </p>
       <p className="text-gray-800 text-[0.675rem] sm:text-xs sm:mb-3 break-words">
         {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`).toUpperCase() : t(`${classObj.ageGroup}_class`).toUpperCase()}
       </p>
       {!isMobile && (
+        // TODO: links for supp classes?
         privilege === "student" ? (
           <a href={classObj.classroomLink}>
             {/* button overflowing in different languages */}
             <Button label={t('join')} onClick={null} />
           </a>
-        ) : (
+        ) : typeof classObj.level === "number" && (
           <Button
             label="Edit"
             onClick={() => {

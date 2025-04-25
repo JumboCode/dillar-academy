@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useAuth } from '@clerk/clerk-react';
 import { useLocation } from 'wouter';
-import { getClasses } from '@/api/class-wrapper';
+import { getClasses, getConversations } from '@/api/class-wrapper';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import Schedule from '@/components/Schedule';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
@@ -18,7 +18,7 @@ const AdminSchedule = () => {
   const [allowRender, setAllowRender] = useState(false);
   const showSkeleton = useDelayedSkeleton(!allowRender);
 
-  const level = [1, 2, 3, 4, 5];
+  const levels = [...new Set(classes.map(obj => obj.level))];
 
   useEffect(() => {
     if (isLoaded) {
@@ -27,11 +27,13 @@ const AdminSchedule = () => {
       } else {
         const fetchData = async () => {
           if (user) {
-            const response = await getClasses();
-            setClasses(response);
+            const classRes = await getClasses();
+            const conversationRes = await getConversations();
+            setClasses([...classRes, ...conversationRes]);
             setAllowRender(true);
           }
         };
+
         fetchData();
       }
     }
@@ -43,6 +45,8 @@ const AdminSchedule = () => {
         ? prevFilters.filter(filter => filter !== level)
         : [...currFilters, level])
   }
+
+  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   if (user && user.privilege !== "admin") {
     return <Unauthorized />;
@@ -60,14 +64,14 @@ const AdminSchedule = () => {
           }
           buttonClassName="w-fit text-black border border-gray-300 px-5 py-3 gap-1 rounded-sm bg-white"
         >
-          {level.map((level, index) => (
+          {levels.map((level, index) => (
             <button
               key={index}
               className={`text-left px-4 py-2 text-black ${currFilters.includes(level) ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}
               hover:bg-gray-50`}
               onClick={() => handleAddFilter(level)}
             >
-              Level {level}
+              {typeof level === "string" ? toTitleCase(level) : `Level ${level}`}
             </button>
           ))}
         </Dropdown>

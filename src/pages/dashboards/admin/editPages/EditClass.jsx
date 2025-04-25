@@ -166,7 +166,7 @@ const EditClass = () => {
           <h1 className="font-extrabold mb-2">Edit Class</h1>
           <h3 className="font-light">Edit class and student information</h3>
         </div>
-        <form onSubmit={handleEditClass} className="w-2/3">
+        <form onSubmit={handleEditClass} className="w-full lg:w-2/3">
           <div className="grid grid-cols-3 gap-x-10 w-full mb-6">
             <div className="w-full space-y-3">
               <label className="mx-1">Level</label>
