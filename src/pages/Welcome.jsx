@@ -9,7 +9,6 @@ const Welcome = ({ onComplete }) => {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    console.log("in useEffect")
     const handleLanguageChange = () => {
       onComplete();
     };

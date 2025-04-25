@@ -11,6 +11,7 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import Unauthorized from "@/pages/Unauthorized";
 
 const EditConversation = () => {
   const { user } = useContext(UserContext);
@@ -26,7 +27,8 @@ const EditConversation = () => {
     schedule: [
       {
         day: '',
-        time: ''
+        startTime: '',
+        endTime: ''
       }
     ]
   });
@@ -88,7 +90,7 @@ const EditConversation = () => {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredConversationData = {
           ...conversationData,
-          schedule: conversationData.schedule.filter(time => time.day && time.time),
+          schedule: conversationData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
 
         await updateConversation(params.id, filteredConversationData);
@@ -134,12 +136,8 @@ const EditConversation = () => {
     }
   }
 
-  if (!allowRender || !conversationObj) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -152,7 +150,7 @@ const EditConversation = () => {
           <h1 className="font-extrabold">Edit Conversation Class</h1>
           <h3 className="font-light">Edit conversation class and student information</h3>
         </div>
-        <form onSubmit={handleEditConversation} className="w-2/3">
+        <form onSubmit={handleEditConversation} className="w-full lg:w-2/3">
           <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
             <div className="w-full space-y-3">
               <label className="mx-1">Age Group</label>
@@ -222,20 +220,21 @@ const EditConversation = () => {
                         <div className="flex space-x-4 items-center">
                           <FormInput
                             type="text"
-                            name="time"
+                            name="startTime"
                             placeholder="Start Time"
-                            value={time.time}
+                            value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
-                          {/* <p className="text-3xl">-</p>
-                            <FormInput
-                              type="text"
-                              name="endTime"
-                              value={conversationData.time}
-                              onChange={handleInputChange}
-                              isRequired={false}
-                            /> */}
+                          <p className="text-3xl">-</p>
+                          <FormInput
+                            type="text"
+                            name="endTime"
+                            placeholder="End Time"
+                            value={time.endTime}
+                            onChange={handleTimeInputChange}
+                            isRequired={false}
+                          />
                         </div>
                       </div>
                     </div>
@@ -262,7 +261,7 @@ const EditConversation = () => {
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
-                  { day: '', time: '' }
+                  { day: '', startTime: '', endTime: '' }
                 ]
               }));
             }} />

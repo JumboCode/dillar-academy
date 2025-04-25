@@ -28,7 +28,13 @@ export default function SignUp() {
 
   useEffect(() => {
     if (isSignedIn && user) {
-      setLocation(`/${user?.privilege}`);
+      if (user.privilege === "admin") {
+        setLocation("/admin/levels");
+      } else if (user.privilege === "instructor") {
+        setLocation("/instructor")
+      } else {
+        setLocation("/student")
+      }
     }
   }, [isSignedIn, user])
 

@@ -12,6 +12,9 @@ import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
 import { getUser } from '@/api/user-wrapper';
+import Unauthorized from "@/pages/Unauthorized";
+import SkeletonUser from "@/components/Skeletons/SkeletonUser";
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
 const EditClass = () => {
   const { user } = useContext(UserContext);
@@ -31,11 +34,13 @@ const EditClass = () => {
     schedule: [
       {
         day: '',
-        time: ''
+        startTime: '',
+        endTime: ''
       }
     ]
   });
   const [students, setStudents] = useState([]);
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (!params.classId) {
@@ -51,7 +56,7 @@ const EditClass = () => {
   }, [isLoaded, isSignedIn, user]);
 
   const fetchClass = async () => {
-    try {
+    if (user) {
       const data = await getClasses();
       setClasses(data);
       const classObj = data.find(c => c._id === params.classId);
@@ -76,8 +81,6 @@ const EditClass = () => {
       );
       setStudents(students);
       setAllowRender(true);
-    } catch (error) {
-      console.error('Error fetching classes:', error);
     }
   };
 
@@ -103,7 +106,7 @@ const EditClass = () => {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredClassData = {
           ...classData,
-          schedule: classData.schedule.filter(time => time.day && time.time),
+          schedule: classData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
 
         await updateClass(params.classId, filteredClassData);
@@ -150,12 +153,8 @@ const EditClass = () => {
     }
   }
 
-  if (!allowRender || !classObj) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -168,7 +167,7 @@ const EditClass = () => {
           <h1 className="font-extrabold mb-2">Edit Class</h1>
           <h3 className="font-light">Edit class and student information</h3>
         </div>
-        <form onSubmit={handleEditClass} className="w-2/3">
+        <form onSubmit={handleEditClass} className="w-full lg:w-2/3">
           <div className="grid grid-cols-3 gap-x-10 w-full mb-6">
             <div className="w-full space-y-3">
               <label className="mx-1">Level</label>
@@ -248,20 +247,21 @@ const EditClass = () => {
                         <div className="flex space-x-4 items-center">
                           <FormInput
                             type="text"
-                            name="time"
+                            name="startTime"
                             placeholder="Start Time"
-                            value={time.time}
+                            value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
-                          {/* <p className="text-3xl">-</p>
-                            <FormInput
-                              type="text"
-                              name="endTime"
-                              value={classData.time}
-                              onChange={handleInputChange}
-                              isRequired={false}
-                            /> */}
+                          <p className="text-3xl">-</p>
+                          <FormInput
+                            type="text"
+                            name="endTime"
+                            placeholder="End Time"
+                            value={time.endTime}
+                            onChange={handleTimeInputChange}
+                            isRequired={false}
+                          />
                         </div>
                       </div>
                     </div>
@@ -288,7 +288,7 @@ const EditClass = () => {
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
-                  { day: '', time: '' }
+                  { day: '', startTime: '', endTime: '' }
                 ]
               }));
             }} />
@@ -307,9 +307,12 @@ const EditClass = () => {
             <p>{students.length} enrolled</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {students.map(student => (
-              <Link key={student._id} href={`/admin/user/${encodeURIComponent(student._id)}`}><UserItem userData={student} classes={classes} /></Link>
-            ))}
+            {allowRender
+              ? (students.map(student => (
+                <Link key={student._id} href={`/admin/user/${encodeURIComponent(student._id)}`}><UserItem userData={student} classes={classes} /></Link>
+              ))
+              )
+              : showSkeleton && <SkeletonUser count={3} />}
           </div>
         </div>
         <DeleteButton item="class" onDelete={handleDeleteClass} />
