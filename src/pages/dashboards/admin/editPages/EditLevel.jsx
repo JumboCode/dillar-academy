@@ -10,6 +10,8 @@ import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
 import Unauthorized from "@/pages/Unauthorized";
+import SkeletonClass from "@/components/Skeletons/SkeletonClass";
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -27,6 +29,7 @@ const EditLevel = () => {
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (!params.id || !levelNum) {
@@ -262,12 +265,18 @@ const EditLevel = () => {
         <div>
           <div className="flex justify-between">
             <h2>Classes in this Level</h2>
-            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* TODO: when clicking add class, should take to edit class with level set in form? */}
+            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {classes.map(classObj => (
-              <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
-            ))}
+            {allowRender
+              ? classes.length > 0 ? (
+                classes.map((classObj) => (
+                  <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
+                ))
+              ) : (
+                <p className="text-gray-500">{t("no_classes_available")}</p>
+              )
+              : showSkeleton && <SkeletonClass count={3} />}
           </div>
         </div>
         <Button label="Delete Level" onClick={handleDeleteLevel} />
