@@ -37,14 +37,9 @@ const EditUser = () => {
     email: '',
     privilege: ''
   });
-<<<<<<< HEAD
   const [alertMessage, setAlertMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-=======
-  const [alertMessage, setAlertMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
   const showSkeleton = useDelayedSkeleton(!allowRender);
->>>>>>> main
 
   useEffect(() => {
     if (isLoaded) {
