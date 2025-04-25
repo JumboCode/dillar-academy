@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { getConversationById } from "@/api/class-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
+import DeleteButton from "@/components/Button/DeleteButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
@@ -17,9 +18,9 @@ const EditConversation = () => {
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
-  const [conversationObj, setConversationObj] = useState(null)
+  const [alertMessage, setAlertMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [conversationObj, setConversationObj] = useState(null);
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
     instructor: '',
@@ -272,7 +273,7 @@ const EditConversation = () => {
               onClick={handleReset} />
           </div>
         </form>
-        <Button label="Delete Conversation" onClick={handleDeleteConversation} />
+        <DeleteButton item="conversation class" onDelete={handleDeleteConversation} />
       </div>
     </>
   )

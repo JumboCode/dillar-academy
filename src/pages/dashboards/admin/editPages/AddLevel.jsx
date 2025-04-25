@@ -94,6 +94,7 @@ const AddLevel = () => {
         setLocation("/admin/levels");
       }
     } catch (error) {
+      setIsSaving(false)
       console.error("Error adding level:", error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {

@@ -4,6 +4,7 @@ import { useLocation, useParams, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
+import DeleteButton from "@/components/Button/DeleteButton";
 import BackButton from "@/components/Button/BackButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import UserItem from "@/components/UserItem";
@@ -314,7 +315,7 @@ const EditClass = () => {
               : showSkeleton && <SkeletonUser count={3} />}
           </div>
         </div>
-        <Button label="Delete class" onClick={handleDeleteClass} />
+        <DeleteButton item="class" onDelete={handleDeleteClass} />
       </div>
     </>
   )
