@@ -12,7 +12,7 @@ const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
         <h3 className='font-extrabold'>{t('talk_to_name', { name: conversation.instructor })}</h3>
         <p className="text-sm">{t(`for_${conversation.ageGroup}`)}</p>
         {conversation.schedule.map((schedule, index) => (
-          <p key={index} className="text-black opacity-50 w-fit">{t(`${schedule.day.toLowerCase()}`)} {schedule.time}</p>
+          <p key={index} className="text-black opacity-50 w-fit">{t(`${schedule.day.toLowerCase()}`)} {schedule.startTime}</p>
         ))}
       </div>
       <div className='flex gap-3 mb-4 ml-5'>

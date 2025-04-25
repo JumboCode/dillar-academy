@@ -82,7 +82,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
             {classObj.schedule.map((schedule, index) => (
               <React.Fragment key={index}>
                 {index === 1 && <div className="row-span-full h-full border-[1px]"></div>}
-                <p className="row-start-1 w-max">{schedule.time}</p>
+                <p className="row-start-1 w-max">{schedule.startTime}</p>
                 <p className="row-start-2 w-max">{t(`${schedule.day.toLowerCase()}`)}</p>
               </React.Fragment>
             ))}

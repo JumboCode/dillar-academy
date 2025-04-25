@@ -21,7 +21,7 @@ const EditLevel = () => {
   const [isSaving, setIsSaving] = useState(false);
   const params = useParams();
   const levelNum = params.id
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [level, setLevel] = useState([]);
   const [classes, setClasses] = useState([]);
@@ -187,7 +187,7 @@ const EditLevel = () => {
           <h1 className="font-extrabold mb-2">Edit Level</h1>
           <p className="sm:text-lg">Edit Level information and view all the classes in this level.</p>
         </div>
-        <form onSubmit={handleEditLevel} className="space-y-6 w-2/3">
+        <form onSubmit={handleEditLevel} className="space-y-6 w-full lg:w-2/3">
           {/* Level and Name fields */}
           <div className="flex flex-col lg:flex-row gap-x-6 w-full">
             <div className="space-y-2">
