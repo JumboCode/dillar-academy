@@ -79,7 +79,7 @@ const Schedule = ({ classes, filters = [] }) => {
                   })))
                 .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
                 .filter(schedule => filters.length === 0 || filters.includes(schedule.level))
-                .sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`)) // Sort by time
+                .sort((a, b) => new Date(`1970/01/01 ${a.startTime}`) - new Date(`1970/01/01 ${b.startTime}`)) // Sort by time
                 .map((classObj, index) => {
                   const classElement = <ScheduleClass key={index} classObj={classObj} isMobile={isMobile} />;
 
@@ -136,7 +136,7 @@ const ScheduleClass = ({ classObj, isMobile }) => {
 
   return (
     <div className="bg-blue-100 rounded-xs sm:rounded-sm border-[0.5px] border-gray-200 p-1 sm:p-3 mb-1 sm:mb-2">
-      <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem]">{classObj.time}</p>
+      <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem] text-balance">{classObj.startTime}-{classObj.endTime}</p>
       <p className="font-extrabold text-[0.75rem] sm:text-[0.875rem] sm:mt-2">
         {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}
       </p>

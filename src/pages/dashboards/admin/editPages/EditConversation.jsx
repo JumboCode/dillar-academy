@@ -25,7 +25,7 @@ const EditConversation = () => {
     schedule: [
       {
         day: '',
-        time: '',
+        startTime: '',
         endTime: ''
       }
     ]
@@ -88,7 +88,7 @@ const EditConversation = () => {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredConversationData = {
           ...conversationData,
-          schedule: conversationData.schedule.filter(time => time.day && time.time && time.endTime),
+          schedule: conversationData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
 
         await updateConversation(params.id, filteredConversationData);
@@ -221,21 +221,21 @@ const EditConversation = () => {
                         <div className="flex space-x-4 items-center">
                           <FormInput
                             type="text"
-                            name="time"
+                            name="startTime"
                             placeholder="Start Time"
-                            value={time.time}
+                            value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
                           <p className="text-3xl">-</p>
-                            <FormInput
-                              type="text"
-                              name="endTime"
-                              placeholder="End Time"
-                              value={time.endTime}
-                              onChange={handleTimeInputChange}
-                              isRequired={false}
-                            />
+                          <FormInput
+                            type="text"
+                            name="endTime"
+                            placeholder="End Time"
+                            value={time.endTime}
+                            onChange={handleTimeInputChange}
+                            isRequired={false}
+                          />
                         </div>
                       </div>
                     </div>
@@ -262,7 +262,7 @@ const EditConversation = () => {
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
-                  { day: '', time: '', endTime: '' }
+                  { day: '', startTime: '', endTime: '' }
                 ]
               }));
             }} />
