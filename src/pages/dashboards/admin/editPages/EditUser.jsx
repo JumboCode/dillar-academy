@@ -12,8 +12,7 @@ import Class from '@/components/Class/Class';
 import Overlay from '@/components/Overlay';
 import SearchBar from '@/components/SearchBar';
 import Alert from '@/components/Alert';
-import DeletePopup from "../../../../components/delete";
-
+import DeleteButton from "@/components/Button/DeleteButton";
 
 const EditUser = () => {
   const { user } = useContext(UserContext);
@@ -32,9 +31,8 @@ const EditUser = () => {
     email: '',
     privilege: ''
   });
-  const [alertMessage, setAlertMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
-  const [showPopup, setShowPopup] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     if (isLoaded) {
@@ -195,10 +193,7 @@ const EditUser = () => {
             </div>
 
             <div className="w-full flex flex-col">
-
-
               <label>Privilege</label>
-
               <Dropdown
                 label={
                   <div className="flex items-center justify-center gap-x-1">
@@ -232,7 +227,7 @@ const EditUser = () => {
               isOutline={true}
               onClick={handleReset} />
           </div>
-          <Button label="Delete User" onClick={() => setShowPopup(true)} />
+          <DeleteButton item="user" onDelete={handleDeleteUser} />
         </form>
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4">
@@ -250,6 +245,7 @@ const EditUser = () => {
             ))}
           </div>
         </div>
+
         {showOverlay && <Overlay width={'w-1/2'}>
           <h3>Search for class</h3>
           <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for class by level, age, instructor" />
@@ -277,13 +273,6 @@ const EditUser = () => {
           <Button label={'Close'} onClick={() => setShowOverlay(false)} />
         </Overlay>}
       </div>
-      {showPopup && 
-      <DeletePopup
-        itemName = {userFormData.firstName}
-        onDelete={handleDeleteUser}
-        setShowPopup={setShowPopup}
-      />}
-
     </>
   )
 }

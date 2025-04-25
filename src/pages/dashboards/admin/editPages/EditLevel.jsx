@@ -5,11 +5,11 @@ import { useAuth } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
 import { getLevels, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
+import DeleteButton from "@/components/Button/DeleteButton";
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
-import DeletePopup from "../../../../components/delete";
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -25,9 +25,8 @@ const EditLevel = () => {
   const [classes, setClasses] = useState();
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
-  const [alertMessage, setAlertMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
-  const [showPopup, setShowPopup] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     // TODO: if params corresponds to a level number that doesn't exist, it forever displays loading
@@ -142,6 +141,7 @@ const EditLevel = () => {
         setIsSaving(false);
       }
     } catch (error) {
+      setIsSaving(false);
       console.error("Error updating level:", error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
@@ -268,7 +268,7 @@ const EditLevel = () => {
           </div>
         </form>
         <div>
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-4">
             <h2>Classes in this Level</h2>
             <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* TODO: when clicking add class, should take to edit class with level set in form? */}
           </div>
@@ -278,15 +278,8 @@ const EditLevel = () => {
             ))}
           </div>
         </div>
-              <Button label="Delete Level" onClick={() => {setShowPopup(true)}} />
-        {/* <Button label="Delete Level" onClick={handleDeleteLevel} /> */}
+        <DeleteButton item={`level`} onDelete={handleDeleteLevel} />
       </div>
-      {showPopup && 
-        <DeletePopup 
-          itemName={'Delete Level ' + levelData.level} 
-          onDelete={handleDeleteLevel} 
-          setShowPopup={setShowPopup}
-      />}
     </>
   );
 };

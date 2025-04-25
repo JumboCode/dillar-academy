@@ -4,6 +4,7 @@ import { useLocation, useParams, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
+import DeleteButton from "@/components/Button/DeleteButton";
 import BackButton from "@/components/Button/BackButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import UserItem from "@/components/UserItem";
@@ -11,14 +12,12 @@ import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
 import { getUser } from '@/api/user-wrapper';
-import DeletePopup from "../../../../components/delete";
 
 const EditClass = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
 
@@ -313,16 +312,8 @@ const EditClass = () => {
             ))}
           </div>
         </div>
-        <Button label="Delete class" onClick={() => setShowPopup(true)} />
-
+        <DeleteButton item="class" onDelete={handleDeleteClass} />
       </div>
-      {showPopup &&
-      <DeletePopup 
-        itemName = {"this class"}
-        onDelete = {handleDeleteClass}
-        setShowPopup={setShowPopup}
-      />}
-
     </>
   )
 }

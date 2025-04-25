@@ -5,22 +5,21 @@ import { useAuth } from '@clerk/clerk-react';
 import { getConversationById } from "@/api/class-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
+import DeleteButton from "@/components/Button/DeleteButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
-import DeletePopup from "../../../../components/delete";
 
 const EditConversation = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
-  const [conversationObj, setConversationObj] = useState(null)
-  const [showPopup, setShowPopup] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [conversationObj, setConversationObj] = useState(null);
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
     instructor: '',
@@ -166,7 +165,7 @@ const EditConversation = () => {
                 isRequired={true}
               />
             </div>
-            
+
             <div className="w-full space-y-3">
               <label className="mx-1">Instructor</label>
               <FormInput
@@ -275,15 +274,8 @@ const EditConversation = () => {
               onClick={handleReset} />
           </div>
         </form>
-        <Button label="Delete Conversation" onClick={() => setShowPopup(true)} />
+        <DeleteButton item="conversation class" onDelete={handleDeleteConversation} />
       </div>
-      {showPopup &&
-      <DeletePopup 
-        itemName = {"Conversation with " + conversationData.instructor}
-        onDelete = {handleDeleteConversation}
-        setShowPopup={setShowPopup}
-      />}
-
     </>
   )
 }
