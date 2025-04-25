@@ -41,17 +41,19 @@ const ResetPassword = () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
     setError("");
-
+  
     try {
       const result = await signIn.resetPassword({ password });
+  
       if (result.status === "complete") {
         // Sign the user out using the clerk instance.
         await clerk.signOut();
-        // Update the password in MongoDB via your Express endpoint.
+  
+        // Update MongoDB
         const email = sessionStorage.getItem("reset_password_email");
         const response = await updateMongoPassword({ email, password });
+  
         if (response.success) {
-          // Clean up session storage and redirect to the login page.
           sessionStorage.removeItem("reset_password_code");
           sessionStorage.removeItem("reset_password_email");
           setLocation("/login");
@@ -64,11 +66,17 @@ const ResetPassword = () => {
       }
     } catch (err) {
       console.error("Reset password error:", err);
-      setError(err.errors?.[0]?.longMessage || 'reset_password_error_alert'); // TODO: or lhs translation
+      const clerkMessage = err.errors?.[0]?.message || '';
+      if (clerkMessage.toLowerCase().includes("previous password")) {
+        setError("new_password_same_as_old_error");
+      } else {
+        setError(clerkMessage || 'reset_password_error_alert');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
   if (!isLoaded) return null;
 
