@@ -1,9 +1,7 @@
-import { useState, useEffect, useContext } from "react";
-import { UserContext } from '@/contexts/UserContext.jsx';
+import { useState, useEffect } from "react";
 import { LuPencil } from "react-icons/lu";
 
-const UserItem = ({ userData, classes = [], isShowClass }) => {
-  const { user } = useContext(UserContext);
+const UserItem = ({ userData, classes = [], privilege, isShowClass }) => {
   const [highestClass, setHighestClass] = useState(undefined);
 
   useEffect(() => {
@@ -52,11 +50,11 @@ const UserItem = ({ userData, classes = [], isShowClass }) => {
         </div>
       </div>
       <div className="flex-shrink-0 hidden group-hover:block">
-        {user.privilege === "admin" &&
+        {privilege === "admin" &&
           <LuPencil className="text-lg" />
         }
       </div>
-    </div>
+    </div >
   );
 };
 

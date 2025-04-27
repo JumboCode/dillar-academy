@@ -51,7 +51,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
         {classObj.schedule.map((schedule, index) => (
           <React.Fragment key={index}>
             {index === 1 && <div className="row-span-full h-full border-[1px]"></div>}
-            <p className="row-start-1 w-max">{schedule.time}</p>
+            <p className="row-start-1 w-max">{schedule.startTime}</p>
             <p className="row-start-2 w-max">{t(`${schedule.day.toLowerCase()}`)}</p>
           </React.Fragment>
         ))}
@@ -59,7 +59,6 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
       <div className='flex gap-3'>
         {modes.includes("enroll") &&
           <EnrollButton
-            userId={user?._id}
             classObj={classObj}
             isEnroll={true}
           />
@@ -68,7 +67,6 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
         {modes.includes("delete") && <Button label="Delete" onClick={handleDelete} />}
         {modes.includes("unenroll") &&
           <EnrollButton
-            userId={user?._id}
             classObj={classObj}
             isEnroll={false}
           />

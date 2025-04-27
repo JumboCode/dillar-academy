@@ -7,6 +7,11 @@ import { IoPersonOutline } from "react-icons/io5";
 import { getClasses } from '@/api/class-wrapper';
 import UserItem from '@/components/UserItem'
 import SearchBar from '@/components/SearchBar';
+import SkeletonUser from '@/components/Skeletons/SkeletonUser';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
+import Unauthorized from "@/pages/Unauthorized";
 
 const AdminInstructors = () => {
   const { user } = useContext(UserContext);
@@ -16,6 +21,7 @@ const AdminInstructors = () => {
   const [classes, setClasses] = useState([]);
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState('');
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (isLoaded) {
@@ -50,12 +56,8 @@ const AdminInstructors = () => {
     return matchesName;
   });
 
-  if (!allowRender) {
-    return <div></div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -65,14 +67,18 @@ const AdminInstructors = () => {
         <p>List of all instructors teaching Dillar Classes</p>
       </div>
       <SearchBar input={searchInput} setInput={setSearchInput} placeholder={"Search for instructor by name"} />
-      <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
+      <div className="text-indigo-900 inline-flex items-center gap-x-2">
         <IoPersonOutline />
-        <p>{filteredUsers.length} instructors</p>
+        <p className="flex">{allowRender ? `${filteredUsers.length} instructor(s)` : showSkeleton && <Skeleton width={"6rem"} />}</p>
       </div>
-      <div className="grid md:grid-cols-3 gap-x-14">
-        {filteredUsers.map((userData, userIndex) => (
-          <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}><UserItem userData={userData} classes={classes} /></Link>
-        ))}
+      <div className="grid md:grid-cols-3 gap-x-1 gap-y-3">
+        {allowRender
+          ? filteredUsers.map((userData, userIndex) => (
+            <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}>
+              <UserItem userData={userData} privilege="admin" classes={classes} />
+            </Link>
+          ))
+          : showSkeleton && <SkeletonUser count={9} />}
       </div>
     </div>
   )

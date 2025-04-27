@@ -44,12 +44,15 @@ const ResetPassword = () => {
 
     try {
       const result = await signIn.resetPassword({ password });
+
       if (result.status === "complete") {
         // Sign the user out using the clerk instance.
         await clerk.signOut();
-        // Update the password in MongoDB via your Express endpoint.
+
+        // Update MongoDB
         const email = sessionStorage.getItem("reset_password_email");
         const response = await updateMongoPassword({ email, password });
+
         if (response.success) {
           // Clean up session storage and redirect to the login page.
           sessionStorage.removeItem("reset_password_code");
@@ -69,6 +72,7 @@ const ResetPassword = () => {
       setIsSubmitting(false);
     }
   };
+
 
   if (!isLoaded) return null;
 

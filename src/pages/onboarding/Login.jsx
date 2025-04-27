@@ -23,9 +23,9 @@ export default function Login() {
 
   useEffect(() => {
     if (isSignedIn && user) {
-      if (user?.privilege === "admin") {
+      if (user.privilege === "admin") {
         setLocation("/admin/levels");
-      } else if (user?.privilege === "instructor") {
+      } else if (user.privilege === "instructor") {
         setLocation("/instructor")
       } else {
         setLocation("/student")
@@ -101,7 +101,9 @@ export default function Login() {
                 onChange={handleChange}
                 placeholder={t("password")}
                 isRequired={true} />
-              <Link href="/forgot-password" className="text-sm flex justify-end text-black opacity-50">{t("forgot_password")}</Link>
+              <span className="w-full flex justify-end">
+                <Link href="/forgot-password" className="text-sm text-black opacity-50">{t("forgot_password")}</Link>
+              </span>
               <Button
                 type="submit"
                 label={t("login")}
