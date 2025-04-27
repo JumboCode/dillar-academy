@@ -30,7 +30,8 @@ const ConversationSchema = new Schema({
     instructor: { type: String, required: true },
     ageGroup: { type: String, required: true },
     schedule: { type: [ScheduleSchema], default: [] },
-    roster: { type: [Schema.Types.ObjectId], default: [] }
+    roster: { type: [Schema.Types.ObjectId], default: [] },
+    isEnrollmentOpen: { type: Boolean, default: true }
 }, { collection: 'conversations' });
 
 const Conversation = mongoose.model("Conversation", ConversationSchema);
