@@ -4,7 +4,6 @@ import { LuPencil } from "react-icons/lu";
 
 const UserItem = ({ userData, classes = [], isShowClass }) => {
   const { user } = useContext(UserContext);
-  const [isHovering, setIsHovering] = useState(false);
   const [highestClass, setHighestClass] = useState(undefined);
 
   useEffect(() => {
@@ -20,10 +19,7 @@ const UserItem = ({ userData, classes = [], isShowClass }) => {
   const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   return (
-    <div
-      onMouseOver={() => setIsHovering(true)}
-      onMouseOut={() => setIsHovering(false)}
-      className="flex py-3 px-4 justify-between items-center hover:bg-sky-100 space-x-3 w-full rounded-sm flex-space-between">
+    <div className="group flex py-3 px-4 justify-between items-center hover:bg-sky-100 space-x-3 w-full rounded-sm flex-space-between">
       <div className="flex-1 min-w-0 *:truncate *:w-full">
         <p
           title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`}
@@ -55,8 +51,8 @@ const UserItem = ({ userData, classes = [], isShowClass }) => {
           )}
         </div>
       </div>
-      <div className="flex-shrink-0">
-        {isHovering && user.privilege === "admin" &&
+      <div className="flex-shrink-0 hidden group-hover:block">
+        {user.privilege === "admin" &&
           <LuPencil className="text-lg" />
         }
       </div>
