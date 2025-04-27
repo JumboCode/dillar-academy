@@ -15,7 +15,7 @@ import Level from "./schemas/Level.js";
 import { Class, Conversation } from './schemas/Classes.js';
 
 // external routes
-import translationRoutes from './routes/translations.js';
+import translationRoutes from './routes/translation-routes.js';
 
 const app = express()
 app.use(cors())
@@ -358,23 +358,25 @@ app.put('/api/conversations/:id', async (req, res) => {
     }
 
     const existingConversations = await Conversation.find({ ageGroup: updates.ageGroup, instructor: updates.instructor });
-    const matchingSchedules = existingConversations.filter(convo =>
-      convo.schedule.length === updates.schedule.length &&
-      convo.schedule.every(itemA =>
-        updates.schedule.some(itemB =>
-          itemA.day === itemB.day &&
-          itemA.startTime === itemB.startTime &&
-          itemA.endTime === itemB.endTime
+    if (existingConversations.length !== 0) {
+      const matchingSchedules = existingConversations.filter(convo =>
+        convo.schedule.length === updates.schedule.length &&
+        convo.schedule.every(itemA =>
+          updates.schedule.some(itemB =>
+            itemA.day === itemB.day &&
+            itemA.startTime === itemB.startTime &&
+            itemA.endTime === itemB.endTime
+          )
         )
-      )
-    );
-    const duplicate = matchingSchedules.find(convo => convo._id.toString() !== id.toString());
+      );
+      const duplicate = matchingSchedules.find(convo => convo._id.toString() !== id.toString());
 
-    if (duplicate) {
-      return res.status(409).json({
-        message: 'Conversation class already exists',
-        class: duplicate
-      });
+      if (duplicate) {
+        return res.status(409).json({
+          message: 'Conversation class already exists',
+          class: duplicate
+        });
+      }
     }
 
     const updatedConversation = await Conversation.findByIdAndUpdate(
@@ -406,6 +408,14 @@ app.delete('/api/conversations/:id', async (req, res) => {
     if (!deletedConversation) {
       return res.status(404).json({ message: 'Conversation not found' });
     }
+
+    // remove class from student's enrolled classes
+    await Promise.all(
+      deletedConversation.roster.map(studentId =>
+        User.findByIdAndUpdate(studentId, { $pull: { enrolledClasses: id } })
+          .catch(err => console.error(`Failed to update student ${studentId}:`, err)) // TODO: throw error?
+      )
+    );
 
     // delete conversation
     await Conversation.findByIdAndDelete(id);
@@ -587,8 +597,6 @@ app.put('/api/classes/:id', async (req, res) => {
   }
 });
 
-
-//instead of Class, use level
 // Delete Class
 app.delete('/api/classes/:id', async (req, res) => {
   try {
@@ -637,11 +645,14 @@ app.put('/api/users/:id/enroll', async (req, res) => {
       return res.status(400).json({ message: 'Already enrolled in this class' });
     }
 
-    const classToEnroll = await Class.findById(classId);
-    if (!classToEnroll) {
-      return res.status(404).json({ message: 'Class not found' });
+    let cls = await Class.findById(classId);
+    if (!cls) {
+      cls = await Conversation.findById(classId);
     }
-    if (!classToEnroll.isEnrollmentOpen) {
+    if (!cls) {
+      return res.status(404).json({ message: 'Class or Conversation not found' });
+    }
+    if (!cls.isEnrollmentOpen) {
       return res.status(403).json({ message: 'Enrollment is currently closed for this class.' });
     }
 
@@ -651,8 +662,9 @@ app.put('/api/users/:id/enroll', async (req, res) => {
       { $addToSet: { enrolledClasses: classId } }
     )
 
+    const model = typeof cls.level === "number" ? Class : Conversation;
     // add student id to class's roster
-    await Class.findByIdAndUpdate(
+    await model.findByIdAndUpdate(
       classId,
       { $addToSet: { roster: id } }
     )
@@ -680,14 +692,23 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
       return res.status(400).json({ message: 'Not enrolled in this class' });
     }
 
+    let cls = await Class.findById(classId);
+    if (!cls) {
+      cls = await Conversation.findById(classId);
+    }
+    if (!cls) {
+      return res.status(404).json({ message: 'Class or Conversation not found' });
+    }
+
     // remove class id from user's classes
     await User.findByIdAndUpdate(
       id,
       { $pull: { enrolledClasses: classId } },
     )
 
+    const model = typeof cls.level === "number" ? Class : Conversation;
     // remove student id from class's roster
-    await Class.findByIdAndUpdate(
+    await model.findByIdAndUpdate(
       classId,
       { $pull: { roster: id } },
     )
@@ -978,11 +999,22 @@ app.delete('/api/user/:id', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    // remove student from enrolled classes' roster
     await Promise.all(
-      deletedUser.enrolledClasses.map(classId =>
-        Class.findByIdAndUpdate(classId, { $pull: { roster: id } })
-          .catch(err => { throw err }))
-    )
+      deletedUser.enrolledClasses.map(async (classId) => {
+        try {
+          const classDoc = await Class.findById(classId);
+
+          if (classDoc) {
+            await Class.findByIdAndUpdate(classId, { $pull: { roster: id } });
+          } else {
+            await Conversation.findByIdAndUpdate(classId, { $pull: { roster: id } });
+          }
+        } catch (err) {
+          throw err;
+        }
+      })
+    );
 
     // delete user
     await clerkClient.users.deleteUser(deletedUser.clerkId);

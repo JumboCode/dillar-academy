@@ -1,8 +1,9 @@
 import EditButton from '@/components/Button/EditButton';
+import EnrollButton from '@/components/Button/EnrollButton'
 import { useTranslation } from "react-i18next";
 
-// possible modes: edit or none
-const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
+// possible modes: enroll, unenroll, or edit
+const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) => {
   const { t } = useTranslation();
 
   return (
@@ -17,6 +18,18 @@ const ConversationClass = ({ conversation, modes = [], editURL = "" }) => {
       </div>
       <div className='flex gap-3 mb-4 ml-5'>
         {modes.includes("edit") && <EditButton classId={conversation._id} editURL={editURL} />}
+        {modes.includes("enroll") &&
+          <EnrollButton
+            classObj={conversation}
+            isEnroll={true}
+          />
+        }
+        {modes.includes("unenroll") &&
+          <EnrollButton
+            classObj={conversation}
+            isEnroll={false}
+          />
+        }
       </div>
     </div>
   )

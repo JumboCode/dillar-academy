@@ -1,18 +1,14 @@
 
-import React, { useContext } from 'react'
+import React from 'react'
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import EnrollButton from '@/components/Button/EnrollButton'
-import Button from '@/components/Button/Button'
 import EditButton from '@/components/Button/EditButton'
-import { UserContext } from "../../contexts/UserContext";
 import { useTranslation } from "react-i18next";
 
-// possible modes: enroll, unenroll, edit, delete
+// possible modes: enroll, unenroll, edit
 // editURL used for edit page URL to navigate to
-// handleDelete is function used for deleting class
-const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null, isSimplified }) => {
+const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => {
   const { t, i18n } = useTranslation();
-  const { user, } = useContext(UserContext);
 
   function localizeNumber(number, lang) {
     let locale = lang;
@@ -64,7 +60,6 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
           />
         }
         {modes.includes("edit") && <EditButton classId={classObj._id} editURL={editURL} />}
-        {modes.includes("delete") && <Button label="Delete" onClick={handleDelete} />}
         {modes.includes("unenroll") &&
           <EnrollButton
             classObj={classObj}
