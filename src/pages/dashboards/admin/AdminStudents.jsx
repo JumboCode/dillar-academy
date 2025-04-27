@@ -111,7 +111,7 @@ const AdminStudents = () => {
   return (
     <div className="page-format max-w-[96rem] space-y-10">
       <div className="flex flex-col items-start md:flex-row md:items-center md:justify-between">
-        <div>
+        <div className="mb-6 md:m-0">
           <h1 className="font-extrabold mb-2">Students</h1>
           <p>List of all students enrolled in Dillar Classes</p>
         </div>
