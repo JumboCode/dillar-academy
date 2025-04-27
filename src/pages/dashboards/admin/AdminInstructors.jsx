@@ -71,10 +71,12 @@ const AdminInstructors = () => {
         <IoPersonOutline />
         <p className="flex">{allowRender ? `${filteredUsers.length} instructor(s)` : showSkeleton && <Skeleton width={"6rem"} />}</p>
       </div>
-      <div className="grid md:grid-cols-3 gap-x-14">
+      <div className="grid md:grid-cols-3 gap-x-1 gap-y-3">
         {allowRender
           ? filteredUsers.map((userData, userIndex) => (
-            <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}><UserItem userData={userData} classes={classes} /></Link>
+            <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}>
+              <UserItem userData={userData} privilege="admin" classes={classes} />
+            </Link>
           ))
           : showSkeleton && <SkeletonUser count={9} />}
       </div>

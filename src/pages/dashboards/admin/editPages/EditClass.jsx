@@ -324,10 +324,16 @@ const EditClass = () => {
             <IoPersonOutline />
             <p>{students.length} enrolled</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-14 gap-y-3">
             {allowRender
               ? (students.map(student => (
-                <Link key={student._id} href={`/admin/user/${encodeURIComponent(student._id)}`}><UserItem userData={student} classes={classes} /></Link>
+                <Link key={student._id} href={`/admin/user/${encodeURIComponent(student._id)}`}>
+                  <UserItem
+                    userData={student}
+                    privilege="admin"
+                    classes={classes}
+                  />
+                </Link>
               ))
               )
               : showSkeleton && <SkeletonUser count={3} />}

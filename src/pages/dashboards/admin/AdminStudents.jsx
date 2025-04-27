@@ -112,8 +112,8 @@ const AdminStudents = () => {
 
   return (
     <div className="page-format max-w-[96rem] space-y-10">
-      <div className="flex justify-between items-center">
-        <div>
+      <div className="flex flex-col items-start md:flex-row md:items-center md:justify-between">
+        <div className="mb-6 md:m-0">
           <h1 className="font-extrabold mb-2">Students</h1>
           <p>List of all students enrolled in Dillar Classes</p>
         </div>
@@ -155,11 +155,11 @@ const AdminStudents = () => {
         <IoPersonOutline />
         <p className="flex">{allowRender ? `${filteredUsers.length} student(s)` : showSkeleton && <Skeleton width={"6rem"} />}</p>
       </div>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-14">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-x-14 gap-y-3">
         {allowRender
           ? filteredUsers.map((userData) => (
             <Link key={userData._id} to={`/admin/user/${encodeURIComponent(userData._id)}`}>
-              <UserItem key={userData._id} userData={userData} classes={classes} isShowClass />
+              <UserItem key={userData._id} privilege="admin" userData={userData} classes={classes} isShowClass />
             </Link>
           ))
           : showSkeleton && <SkeletonUser count={12} />}
