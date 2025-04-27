@@ -180,7 +180,8 @@ const Contact = mongoose.model('Contact', ContactSchema);
 // timezone is automatically UTC
 const ScheduleSchema = new Schema({
   day: { type: String, required: true },
-  time: { type: String, required: true },
+  startTime: { type: String, required: true },
+  endTime: { type: String, required: true }
 })
 
 // Class Schema
@@ -199,6 +200,7 @@ const Class = mongoose.model("Class", ClassSchema)
 
 // Conversation Schema
 const ConversationSchema = new Schema({
+  level: { type: String, required: true, default: "conversation" },
   instructor: { type: String, required: true },
   ageGroup: { type: String, required: true },
   schedule: { type: [ScheduleSchema], default: [] },
@@ -263,7 +265,6 @@ app.post('/api/login', async (req, res) => {
     const user = await User.findOne({ email });
     if (user) {
       if (user.password === password) {
-        console.log('Login successful for user:', email);
         res.status(200).json(user);
       } else {
         console.log('Login failed: Incorrect password.');
@@ -434,7 +435,9 @@ app.put('/api/conversations/:id', async (req, res) => {
       convo.schedule.length === updates.schedule.length &&
       convo.schedule.every(itemA =>
         updates.schedule.some(itemB =>
-          itemA.day === itemB.day && itemA.time === itemB.time
+          itemA.day === itemB.day &&
+          itemA.startTime === itemB.startTime &&
+          itemA.endTime === itemB.endTime
         )
       )
     );
@@ -498,7 +501,9 @@ app.post('/api/conversations', async (req, res) => {
       convo.schedule.length === schedule.length &&
       convo.schedule.every(itemA =>
         schedule.some(itemB =>
-          itemA.day === itemB.day && itemA.time === itemB.time
+          itemA.day === itemB.day &&
+          itemA.startTime === itemB.startTime &&
+          itemA.endTime === itemB.endTime
         )
       )
     );
@@ -572,7 +577,9 @@ app.post('/api/classes', async (req, res) => {
       cls.schedule.length === schedule.length &&
       cls.schedule.every(itemA =>
         schedule.some(itemB =>
-          itemA.day === itemB.day && itemA.time === itemB.time
+          itemA.day === itemB.day &&
+          itemA.startTime === itemB.startTime &&
+          itemA.endTime === itemB.endTime
         )
       )
     );
@@ -619,7 +626,9 @@ app.put('/api/classes/:id', async (req, res) => {
       cls.schedule.length === schedule.length &&
       cls.schedule.every(itemA =>
         schedule.some(itemB =>
-          itemA.day === itemB.day && itemA.time === itemB.time
+          itemA.day === itemB.day &&
+          itemA.startTime === itemB.startTime &&
+          itemA.endTime === itemB.endTime
         )
       )
     );
@@ -952,24 +961,32 @@ app.get('/api/students-export', async (req, res) => {
           if (!classInfo) return null;
 
           // Format schedules
-          const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.time}`).join('\n');
+          const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.startTime}-${s.endTime}`).join('\n');
 
           // Convert EST to Istanbul time (EST + 7 hours)
           const scheduleIstanbul = classInfo.schedule.map(s => {
             // Parse the time string (e.g., "10:00am")
-            const [hourStr, minuteStr] = s.time.split(':');
-            const [hour, minute] = [parseInt(hourStr), parseInt(minuteStr || 0)];
+            const [startHourStr, startMinuteStr] = s.startTime.split(':');
+            const [startHour, startMinute] = [parseInt(startHourStr), parseInt(startMinuteStr || 0)];
+            const [endHourStr, endMinuteStr] = s.endTime.split(':');
+            const [endHour, endMinute] = [parseInt(endHourStr), parseInt(endMinuteStr || 0)];
 
             // Create date objects for conversion
-            const estTime = new Date();
-            estTime.setHours(hour, minute);
+            const estStartTime = new Date();
+            const estEndTime = new Date();
+            estStartTime.setHours(startHour, startMinute);
+            estEndTime.setHours(endHour, endMinute);
 
             // Istanbul is EST + 7 hours
-            const istTime = new Date(estTime.getTime() + (7 * 60 * 60 * 1000));
-            const istHours = istTime.getHours();
-            const istMinutes = istTime.getMinutes();
+            // TODO: fix for DST
+            const istStartTime = new Date(estStartTime.getTime() + (7 * 60 * 60 * 1000));
+            const istStartHours = istStartTime.getHours();
+            const istStartMinutes = istStartTime.getMinutes();
+            const istEndTime = new Date(estEndTime.getTime() + (7 * 60 * 60 * 1000));
+            const istEndHours = istEndTime.getHours();
+            const istEndMinutes = istEndTime.getMinutes();
 
-            return `${s.day} ${istHours}:${istMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}`;
+            return `${s.day} ${istStartHours}:${istStartMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}-${istEndHours}:${istEndMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}`;
           }).join('\n');
 
           return {

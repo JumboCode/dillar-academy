@@ -3,8 +3,8 @@ import axios from 'axios';
 const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
 const postUser = async (body) => {
-  userData.firstName = toTitleCase(userData.firstName);
-  userData.lastName = toTitleCase(userData.lastName);
+  body.firstName = toTitleCase(body.firstName);
+  body.lastName = toTitleCase(body.lastName);
   try {
     const response = await axios.post("/api/sign-up", body);
     return response;

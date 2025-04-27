@@ -5,10 +5,14 @@ import { useAuth } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
 import { getLevels, updateLevel, deleteLevel, getClasses, updateClass } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
+import DeleteButton from "@/components/Button/DeleteButton";
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
 import Alert from '@/components/Alert';
+import Unauthorized from "@/pages/Unauthorized";
+import SkeletonClass from "@/components/Skeletons/SkeletonClass";
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -18,17 +22,17 @@ const EditLevel = () => {
   const [isSaving, setIsSaving] = useState(false);
   const params = useParams();
   const levelNum = params.id
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const [level, setLevel] = useState();
-  const [classes, setClasses] = useState();
+  const [level, setLevel] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
-    // TODO: if params corresponds to a level number that doesn't exist, it forever displays loading
     if (!params.id || !levelNum) {
       setLocation("/admin/levels");
       return;
@@ -59,14 +63,12 @@ const EditLevel = () => {
   }, [level]);
 
   const fetchLevels = async () => {
-    try {
+    if (user) {
       const levelRes = await getLevels(`level=${levelNum}`);
       setLevel(levelRes[0]);
       const classRes = await getClasses(`level=${levelNum}`);
       setClasses(classRes);
       setAllowRender(true);
-    } catch (error) {
-      console.error("Error fetching levels:", error);
     }
   };
 
@@ -140,6 +142,7 @@ const EditLevel = () => {
         setIsSaving(false);
       }
     } catch (error) {
+      setIsSaving(false);
       console.error("Error updating level:", error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
@@ -172,12 +175,8 @@ const EditLevel = () => {
     setSkillsInput(skills.join(', '));
   };
 
-  if (!allowRender || !level || !classes) {
-    return <div>Loading...</div>;
-  }
-
-  if (user.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   return (
@@ -190,7 +189,7 @@ const EditLevel = () => {
           <h1 className="font-extrabold mb-2">Edit Level</h1>
           <p className="sm:text-lg">Edit Level information and view all the classes in this level.</p>
         </div>
-        <form onSubmit={handleEditLevel} className="space-y-6 w-2/3">
+        <form onSubmit={handleEditLevel} className="space-y-6 w-full lg:w-2/3">
           {/* Level and Name fields */}
           <div className="flex flex-col lg:flex-row gap-x-6 w-full">
             <div className="space-y-2">
@@ -266,34 +265,23 @@ const EditLevel = () => {
           </div>
         </form>
         <div>
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-4">
             <h2>Classes in this Level</h2>
-            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline /> {/* TODO: when clicking add class, should take to edit class with level set in form? */}
+            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {classes.map(classObj => (
-              <div key={classObj._id} className="flex flex-col gap-y-2">
-                <Class classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
-                <Button
-                  label={classObj.enrollmentOpen ? "Close Enrollment" : "Open Enrollment"}
-                  onClick={async () => {
-                    try {
-                      await updateClass(classObj._id, {
-                        enrollmentOpen: !classObj.enrollmentOpen
-                      });
-                      const refreshed = await getClasses(`level=${levelNum}`);
-                      setClasses(refreshed);
-                    } catch (err) {
-                      console.error("Failed to toggle enrollment:", err);
-                    }
-                  }}
-                  isOutline
-                />
-              </div>
-            ))}
+            {allowRender
+              ? classes.length > 0 ? (
+                classes.map((classObj) => (
+                  <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
+                ))
+              ) : (
+                <p className="text-gray-500">{t("no_classes_available")}</p>
+              )
+              : showSkeleton && <SkeletonClass count={3} />}
           </div>
         </div>
-        <Button label="Delete Level" onClick={handleDeleteLevel} />
+        <DeleteButton item={`level`} onDelete={handleDeleteLevel} />
       </div>
     </>
   );

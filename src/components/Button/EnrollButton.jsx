@@ -83,7 +83,7 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
             {classObj.schedule.map((schedule, index) => (
               <React.Fragment key={index}>
                 {index === 1 && <div className="row-span-full h-full border-[1px]"></div>}
-                <p className="row-start-1 w-max">{schedule.time}</p>
+                <p className="row-start-1 w-max">{schedule.startTime}</p>
                 <p className="row-start-2 w-max">{t(`${schedule.day.toLowerCase()}`)}</p>
               </React.Fragment>
             ))}
@@ -201,7 +201,7 @@ const NotStudentPopup = ({ setShowPopup }) => {
   )
 }
 
-const EnrollButton = ({ userId, classObj, isEnroll }) => {
+const EnrollButton = ({ classObj, isEnroll }) => {
   const [showEnrollPopup, setShowEnrollPopup] = useState(false);
   const [showUnenrollPopup, setShowUnenrollPopup] = useState(false);
   const [showSignUpPopup, setShowSignUpPopup] = useState(false);
@@ -210,86 +210,37 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
   const { user } = useContext(UserContext);
   const { t } = useTranslation();
 
-  const handleEnrollClick = () => {
-    if (!isSignedIn) {
-      setShowSignUpPopup(true);
-    } else if (user.privilege === "student") {
-      if (!classObj.enrollmentOpen) {
-        alert("Enrollment for this class is currently closed.");
-      } else {
-        setShowEnrollPopup(true);
-      }      
-    } else {
-      setShowNotStudentPopup(true);
-    }
-  };
-
   return (
     <>
-      {isEnroll ?
-        <Button
-          label={t('enroll')}
-          isOutline={false}
-          onClick={handleEnrollClick}
-          disabled={!classObj.enrollmentOpen}
-        /> : <Button
-          label={t("unenroll")}
-          isOutline={false}
-          onClick={() => {
-            setShowUnenrollPopup(true)
-          }}
-        />}
+      {isEnroll ? <Button
+        label={t('enroll')}
+        onClick={
+          isSignedIn
+            ? user.privilege === "student"
+              ? () => setShowEnrollPopup(true)
+              : () => setShowNotStudentPopup(true)
+            : () => setShowSignUpPopup(true)}
+      /> : <Button
+        label={t("unenroll")}
+        onClick={() => {
+          setShowUnenrollPopup(true)
+        }}
+      />}
       {showEnrollPopup && <EnrollPopup
         isEnroll={isEnroll}
         classObj={classObj}
-        userId={userId}
+        userId={user._id}
         setShowPopup={setShowEnrollPopup} />}
       {showUnenrollPopup && <UnenrollPopup
         classObj={classObj}
-        userId={userId}
+        userId={user._id}
         setShowPopup={setShowUnenrollPopup} />}
       {showSignUpPopup && <SignUpPopup
         setShowPopup={setShowSignUpPopup} />}
       {showNotStudentPopup && <NotStudentPopup
         setShowPopup={setShowNotStudentPopup} />}
-      {user.privilege === "admin" && (
-        <Button
-          label={classObj.enrollmentOpen ? t("close_enrollment") : t("open_enrollment")}
-          isOutline={true}
-          onClick={async () => {
-            try {
-              await updateClass(classObj._id, {
-                enrollmentOpen: !classObj.enrollmentOpen
-              });
-              // Trigger re-render: either reload or update local state if lifting state up
-              window.location.reload();
-            } catch (err) {
-              console.error("Failed to update enrollment status:", err);
-            }
-          }}
-          className="ml-2"
-        />
-      )}
-
     </>
   )
 }
-
-EnrollButton.propTypes = {
-  userId: PropTypes.string.isRequired,
-  isEnroll: PropTypes.bool.isRequired,
-  classObj: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    level: PropTypes.number.isRequired,
-    ageGroup: PropTypes.string.isRequired,
-    instructor: PropTypes.string.isRequired,
-    schedule: PropTypes.arrayOf(PropTypes.shape({
-      day: PropTypes.string.isRequired,
-      time: PropTypes.string.isRequired
-    })).isRequired,
-    enrollmentOpen: PropTypes.bool.isRequired
-  }).isRequired
-};
-
 
 export default EnrollButton;

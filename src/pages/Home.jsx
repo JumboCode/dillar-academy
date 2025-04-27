@@ -14,11 +14,13 @@ const Home = () => {
     schedule: [
       {
         day: "Saturday",
-        time: "10:00 AM PST"
+        startTime: "10:00 AM EST",
+        endTime: "11:00 AM EST"
       },
       {
         day: "Sunday",
-        time: "10:00 AM CST"
+        startTime: "10:00 AM EST",
+        endTime: "11:00 AM EST"
       }
     ]
   };
@@ -28,11 +30,13 @@ const Home = () => {
     schedule: [
       {
         day: "Saturday",
-        time: "11:00 AM PST"
+        startTime: "12:00 PM EST",
+        endTime: "1:00 PM EST"
       },
       {
         day: "Sunday",
-        time: "11:00 AM CST"
+        startTime: "5:00 PM EST",
+        endTime: "6:00 PM EST"
       }
     ]
   };
@@ -125,7 +129,7 @@ const Home = () => {
 const HomeClass = ({ classObj }) => {
   const day1 = classObj.schedule[0].day.toString();
   const subDay1 = day1.substr(0, 3);
-  const time = classObj.schedule[0].time.toString();
+  const time = classObj.schedule[0].startTime.toString();
   const day2 = classObj.schedule[1].day.toString();
   const subDay2 = day2.substr(0, 3);
   const { t } = useTranslation();

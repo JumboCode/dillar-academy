@@ -9,6 +9,7 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { createClass } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import Unauthorized from "@/pages/Unauthorized";
 
 const AddClass = () => {
   const { user } = useContext(UserContext);
@@ -23,7 +24,8 @@ const AddClass = () => {
     schedule: [
       {
         day: '',
-        time: ''
+        startTime: '',
+        endTime: ''
       }
     ]
   });
@@ -58,7 +60,7 @@ const AddClass = () => {
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredClassData = {
           ...classData,
-          schedule: classData.schedule.filter(time => time.day && time.time),
+          schedule: classData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
         await createClass(filteredClassData);
         history.back();
@@ -72,8 +74,8 @@ const AddClass = () => {
     }
   }
 
-  if (user?.privilege !== "admin") {
-    return <div>Unauthorized</div>;
+  if (user && user.privilege !== "admin") {
+    return <Unauthorized />;
   }
 
   // TODO: implement age group check
@@ -86,7 +88,7 @@ const AddClass = () => {
           <h1 className="font-extrabold">Add Class</h1>
           <p className="font-light text-base sm:text-lg">Fill out new class data</p>
         </div>
-        <form onSubmit={handleAddClass} className="w-2/3">
+        <form onSubmit={handleAddClass} className="w-full lg:w-2/3">
           <div className="flex justify-start space-x-10 mb-6">
             <div className="space-y-3">
               <label className="mx-1">Level</label>
@@ -159,20 +161,21 @@ const AddClass = () => {
                         <div className="flex space-x-4 items-center">
                           <FormInput
                             type="text"
-                            name="time"
+                            name="startTime"
                             placeholder="Start Time"
-                            value={time.time}
+                            value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
-                          {/* <p className="text-3xl">-</p>
-                            <FormInput
-                              type="text"
-                              name="endTime"
-                              value={classData.time}
-                              onChange={handleInputChange}
-                              isRequired={false}
-                            /> */}
+                          <p className="text-3xl">-</p>
+                          <FormInput
+                            type="text"
+                            name="endTime"
+                            placeholder="End Time"
+                            value={time.endTime}
+                            onChange={handleTimeInputChange}
+                            isRequired={false}
+                          />
                         </div>
                       </div>
                     </div>
@@ -199,7 +202,7 @@ const AddClass = () => {
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
-                  { day: '', time: '' }
+                  { day: '', startTime: '', endTime: '' }
                 ]
               }));
             }} />
