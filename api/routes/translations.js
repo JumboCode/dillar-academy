@@ -1,6 +1,7 @@
-const express = require("express");
+import express from "express";
+import Translation from "../schemas/Translation.js";
+
 const router = express.Router();
-const Translation = require("../schemas/Translation");
 
 // Get Translation
 router.get('/:lng/:ns', async (req, res) => {
@@ -103,4 +104,4 @@ router.post('/transfer', async (req, res) => {
   }
 })
 
-module.exports = router;
+export default router;

@@ -1,21 +1,28 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const mongo = require('mongodb');
-const mongoose = require('mongoose');
-const mongoSanitize = require('express-mongo-sanitize');
-const nodemailer = require('nodemailer');
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import mongo from "mongodb";
+import mongoose from "mongoose";
+import mongoSanitize from "express-mongo-sanitize";
+import nodemailer from "nodemailer";
+import { clerkClient } from "@clerk/express";
 
 // external schemas
-const Translation = require("./schemas/Translation");
+import Translation from "./schemas/Translation.js";
+import User from "./schemas/User.js";
+import Contact from "./schemas/Contact.js";
+import Level from "./schemas/Level.js";
+import { Class, Conversation } from './schemas/Classes.js';
 
 // external routes
-const translationRoutes = require('./routes/translations');
+import translationRoutes from './routes/translations.js';
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(mongoSanitize())
+
+app.use('/api/locales', translationRoutes);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
@@ -40,8 +47,6 @@ mongoose.connect(process.env.MONGODB_URI)
 mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
-
-app.use('/api/locales', translationRoutes);
 
 app.get('/', (req, res) => {
   res.send('Server is running!')
@@ -141,84 +146,6 @@ const createLevelTranslations = async (levelData) => {
     throw new Error("Failed to create level translations");
   }
 }
-
-
-//------------------ MONGOOSE SCHEMAS ------------------//
-
-const Schema = mongoose.Schema
-
-// User Schema
-const UserSchema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  gender: { type: String },
-  age: { type: Number },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  privilege: { type: String, default: "student", enum: ["admin", "instructor", "student"] },
-  clerkId: { type: String, required: true },
-  creationDate: { type: Date, default: Date.now },
-  enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
-}, { collection: 'users' })
-
-const User = mongoose.model("User", UserSchema)
-
-
-// Contact Schema
-const ContactSchema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  subject: { type: String, required: true },
-  message: { type: String, required: true },
-  creationDate: { type: Date, default: Date.now },
-}, { collection: 'contacts' })
-
-const Contact = mongoose.model('Contact', ContactSchema);
-
-
-// Schedule Schema
-// timezone is automatically UTC
-const ScheduleSchema = new Schema({
-  day: { type: String, required: true },
-  startTime: { type: String, required: true },
-  endTime: { type: String, required: true }
-})
-
-// Class Schema
-const ClassSchema = new Schema({
-  level: { type: Number, required: true },
-  ageGroup: { type: String, required: true },
-  instructor: { type: String, required: true },
-  classroomLink: { type: String, default: "" },
-  schedule: { type: [ScheduleSchema], default: [] },
-  roster: { type: [Schema.Types.ObjectId], default: [] },
-  isEnrollmentOpen: { type: Boolean, default: true }
-}, { collection: 'classes' })
-
-const Class = mongoose.model("Class", ClassSchema)
-
-
-// Conversation Schema
-const ConversationSchema = new Schema({
-  level: { type: String, required: true, default: "conversation" },
-  instructor: { type: String, required: true },
-  ageGroup: { type: String, required: true },
-  schedule: { type: [ScheduleSchema], default: [] },
-  roster: { type: [Schema.Types.ObjectId], default: [] }
-}, { collection: 'conversations' })
-
-const Conversation = mongoose.model("Conversation", ConversationSchema)
-
-
-// Level Schema
-const LevelSchema = new Schema({
-  level: { type: Number, required: true, unique: true },
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  skills: { type: [String], default: [] }
-}, { collection: 'levels' })
-
-const Level = mongoose.model("Level", LevelSchema)
 
 
 //------------------ ENDPOINTS ------------------//
@@ -1058,11 +985,12 @@ app.delete('/api/user/:id', async (req, res) => {
     )
 
     // delete user
+    await clerkClient.users.deleteUser(deletedUser.clerkId);
     await User.findByIdAndDelete(id);
 
     res.status(204).json({ message: 'User deleted successfully' });
   } catch (error) {
-    console.error('Failed to delete user class:', error);
-    res.status(500).json({ message: 'Failed to delete user class' });
+    console.error('Failed to delete user:', error);
+    res.status(500).json({ message: 'Failed to delete user' });
   }
 });

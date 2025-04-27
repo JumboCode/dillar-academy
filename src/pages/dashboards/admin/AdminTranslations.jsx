@@ -173,6 +173,8 @@ const TranslationTable = ({ label, translations, fetchTranslations, allowRender 
 }
 
 const TableRow = ({ id, translations, ns, fetchTranslations }) => {
+  const [alertMessage, setAlertMessage] = useState("");
+
   const supportedLngs = {
     English: "en",
     Russian: "ru",
@@ -212,16 +214,18 @@ const TableRow = ({ id, translations, ns, fetchTranslations }) => {
 
   const handleEditTranslation = async (e) => {
     e.preventDefault();
-    console.log(formData);
-
-    try {
-      await editTranslation(formData.lng, ns, formData.key, formData.translation);
-      resetForm();
-      await fetchTranslations(ns);
-      setShowEditOverlay(false);
-    } catch (error) {
-      console.error("handleEditTranslation failed:", error);
-    }
+    setAlertMessage("Editing translations disabled for demo");
+    setTimeout(() => {
+      setAlertMessage("")
+    }, 4000);
+    // try {
+    //   await editTranslation(formData.lng, ns, formData.key, formData.translation);
+    //   resetForm();
+    //   await fetchTranslations(ns);
+    //   setShowEditOverlay(false);
+    // } catch (error) {
+    //   console.error("handleEditTranslation failed:", error);
+    // }
   }
 
   return (
@@ -253,11 +257,11 @@ const TableRow = ({ id, translations, ns, fetchTranslations }) => {
             </button>
           </div>
           {/* <div
-            className={`
-          col-span-2 overflow-hidden transition-[max-height] duration-300 ease-in-out
-          ${isExpanded ? 'max-h-[1000px]' : 'max-h-0'}
-        `}
-          > */}
+              className={`
+            col-span-2 overflow-hidden transition-[max-height] duration-300 ease-in-out
+            ${isExpanded ? 'max-h-[1000px]' : 'max-h-0'}
+          `}
+            > */}
           {/* <div className="grid grid-cols-[1fr_2fr]"> */}
           {isExpanded && Object.keys(supportedLngs).slice(1).map(lng => (
             <React.Fragment key={supportedLngs[lng]}>
@@ -285,10 +289,9 @@ const TableRow = ({ id, translations, ns, fetchTranslations }) => {
             </React.Fragment>
           ))}
           {/* </div>
-          </div> */}
+            </div> */}
         </div>
       </div>
-
       {showEditOverlay && <Overlay width='w-1/2'>
         <form onSubmit={handleEditTranslation} className='space-y-6'>
           <h4 className='font-extrabold text-base sm:text-lg'>Language: {Object.keys(supportedLngs).find(lng => supportedLngs[lng] === formData.lng)}</h4>
@@ -314,6 +317,7 @@ const TableRow = ({ id, translations, ns, fetchTranslations }) => {
             />
             <Button label="Save" type="submit" />
           </div>
+          {alertMessage !== "" && <p className='text-red-500'>{alertMessage}</p>}
         </form>
       </Overlay>}
     </div>
