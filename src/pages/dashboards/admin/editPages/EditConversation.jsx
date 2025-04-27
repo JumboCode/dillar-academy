@@ -20,6 +20,7 @@ const EditConversation = () => {
   const [allowRender, setAllowRender] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const [conversationObj, setConversationObj] = useState(null);
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
@@ -87,6 +88,7 @@ const EditConversation = () => {
           setAlertMessage("")
         }, 4000);
       } else {
+        setIsSaving(true);
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredConversationData = {
           ...conversationData,
@@ -99,6 +101,7 @@ const EditConversation = () => {
         setTimeout(() => {
           setSuccessMessage("");
         }, 4000);
+        setIsSaving(false);
       }
     } catch (error) {
       console.error('Error updating conversation:', error);
@@ -123,18 +126,12 @@ const EditConversation = () => {
   }
 
   const handleReset = () => {
-    setConversationData({
+    setConversationData(prev => ({
       ageGroup: conversationObj.ageGroup,
       instructor: conversationObj.instructor,
-      schedule: conversationData.schedule
-    });
-    if (conversationObj.schedule.length !== 0) {
-      setConversationData(prev => ({
-        ...prev,
-        schedule: conversationObj.schedule
-      }))
-    }
-  }
+      schedule: conversationObj.schedule.length !== 0 ? conversationObj.schedule : prev.schedule
+    }));
+  };
 
   if (user && user.privilege !== "admin") {
     return <Unauthorized />;
@@ -266,7 +263,7 @@ const EditConversation = () => {
               }));
             }} />
           <div className="space-x-2 mt-8">
-            <Button label="Save" type="submit" />
+            <Button label={isSaving ? "Saving..." : "Save"} type="submit" isDisabled={isSaving} />
             <Button
               label="Reset"
               isOutline={true}

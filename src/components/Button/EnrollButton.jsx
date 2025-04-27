@@ -2,13 +2,12 @@ import React, { useContext, useState } from 'react';
 import Button from '@/components/Button/Button';
 import Overlay from '@/components/Overlay';
 import { SignOutButton } from '@clerk/clerk-react'
-import { enrollInClass, unenrollInClass, updateClass } from '@/api/class-wrapper';
+import { enrollInClass, unenrollInClass } from '@/api/class-wrapper';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import { useLocation } from 'wouter';
 import { useUser } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import PropTypes from 'prop-types';
 
 function localizeNumber(number, lang) {
   let locale = lang;
@@ -213,13 +212,14 @@ const EnrollButton = ({ classObj, isEnroll }) => {
   return (
     <>
       {isEnroll ? <Button
-        label={t('enroll')}
+        label={classObj.isEnrollmentOpen ? t('enroll') : t('enrollment_closed')}
         onClick={
           isSignedIn
             ? user.privilege === "student"
               ? () => setShowEnrollPopup(true)
               : () => setShowNotStudentPopup(true)
             : () => setShowSignUpPopup(true)}
+        isDisabled={!classObj.isEnrollmentOpen}
       /> : <Button
         label={t("unenroll")}
         onClick={() => {

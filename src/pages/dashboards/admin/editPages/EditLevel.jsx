@@ -3,7 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
-import { getLevels, updateLevel, deleteLevel, getClasses, updateClass } from '@/api/class-wrapper.js';
+import { getLevels, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
 import DeleteButton from "@/components/Button/DeleteButton";
 import BackButton from "@/components/Button/BackButton";
@@ -65,6 +65,9 @@ const EditLevel = () => {
   const fetchLevels = async () => {
     if (user) {
       const levelRes = await getLevels(`level=${levelNum}`);
+      if (levelRes.length === 0) {
+        setLocation("/admin/levels");
+      }
       setLevel(levelRes[0]);
       const classRes = await getClasses(`level=${levelNum}`);
       setClasses(classRes);
