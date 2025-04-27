@@ -9,6 +9,10 @@ import { clerkClient } from "@clerk/express";
 
 // external schemas
 import Translation from "./schemas/Translation.js";
+import User from "./schemas/User.js";
+import Contact from "./schemas/Contact.js";
+import Level from "./schemas/Level.js";
+import { Class, Conversation } from './schemas/Classes.js';
 
 // external routes
 import translationRoutes from './routes/translations.js';
@@ -142,84 +146,6 @@ const createLevelTranslations = async (levelData) => {
     throw new Error("Failed to create level translations");
   }
 }
-
-
-//------------------ MONGOOSE SCHEMAS ------------------//
-
-const Schema = mongoose.Schema
-
-// User Schema
-const UserSchema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  gender: { type: String },
-  age: { type: Number },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  privilege: { type: String, default: "student", enum: ["admin", "instructor", "student"] },
-  clerkId: { type: String, required: true },
-  creationDate: { type: Date, default: Date.now },
-  enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
-}, { collection: 'users' })
-
-const User = mongoose.model("User", UserSchema)
-
-
-// Contact Schema
-const ContactSchema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  subject: { type: String, required: true },
-  message: { type: String, required: true },
-  creationDate: { type: Date, default: Date.now },
-}, { collection: 'contacts' })
-
-const Contact = mongoose.model('Contact', ContactSchema);
-
-
-// Schedule Schema
-// timezone is automatically UTC
-const ScheduleSchema = new Schema({
-  day: { type: String, required: true },
-  startTime: { type: String, required: true },
-  endTime: { type: String, required: true }
-})
-
-// Class Schema
-const ClassSchema = new Schema({
-  level: { type: Number, required: true },
-  ageGroup: { type: String, required: true },
-  instructor: { type: String, required: true },
-  classroomLink: { type: String, default: "" },
-  schedule: { type: [ScheduleSchema], default: [] },
-  roster: { type: [Schema.Types.ObjectId], default: [] },
-  isEnrollmentOpen: { type: Boolean, default: true }
-}, { collection: 'classes' })
-
-const Class = mongoose.model("Class", ClassSchema)
-
-
-// Conversation Schema
-const ConversationSchema = new Schema({
-  level: { type: String, required: true, default: "conversation" },
-  instructor: { type: String, required: true },
-  ageGroup: { type: String, required: true },
-  schedule: { type: [ScheduleSchema], default: [] },
-  roster: { type: [Schema.Types.ObjectId], default: [] }
-}, { collection: 'conversations' })
-
-const Conversation = mongoose.model("Conversation", ConversationSchema)
-
-
-// Level Schema
-const LevelSchema = new Schema({
-  level: { type: Number, required: true, unique: true },
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  skills: { type: [String], default: [] }
-}, { collection: 'levels' })
-
-const Level = mongoose.model("Level", LevelSchema)
 
 
 //------------------ ENDPOINTS ------------------//
