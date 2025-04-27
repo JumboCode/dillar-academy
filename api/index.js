@@ -1,21 +1,24 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const mongo = require('mongodb');
-const mongoose = require('mongoose');
-const mongoSanitize = require('express-mongo-sanitize');
-const nodemailer = require('nodemailer');
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import mongo from "mongodb";
+import mongoose from "mongoose";
+import mongoSanitize from "express-mongo-sanitize";
+import nodemailer from "nodemailer";
+import { clerkClient } from "@clerk/express";
 
 // external schemas
-const Translation = require("./schemas/Translation");
+import Translation from "./schemas/Translation.js";
 
 // external routes
-const translationRoutes = require('./routes/translations');
+import translationRoutes from './routes/translations.js';
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(mongoSanitize())
+
+app.use('/api/locales', translationRoutes);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
@@ -40,8 +43,6 @@ mongoose.connect(process.env.MONGODB_URI)
 mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
-
-app.use('/api/locales', translationRoutes);
 
 app.get('/', (req, res) => {
   res.send('Server is running!')
@@ -1058,11 +1059,12 @@ app.delete('/api/user/:id', async (req, res) => {
     )
 
     // delete user
+    await clerkClient.users.deleteUser(deletedUser.clerkId);
     await User.findByIdAndDelete(id);
 
     res.status(204).json({ message: 'User deleted successfully' });
   } catch (error) {
-    console.error('Failed to delete user class:', error);
-    res.status(500).json({ message: 'Failed to delete user class' });
+    console.error('Failed to delete user:', error);
+    res.status(500).json({ message: 'Failed to delete user' });
   }
 });
