@@ -23,6 +23,7 @@ const EditClass = () => {
   const [allowRender, setAllowRender] = useState(false);
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const [isSaving, setIsSaving] = useState(false);
 
   const params = useParams();
   const [classes, setClasses] = useState(null);
@@ -91,7 +92,6 @@ const EditClass = () => {
     });
   };
 
-  // TODO: confirmation if creation successful
   const handleEditClass = async (e) => {
     e.preventDefault();
     classData.ageGroup = classData.ageGroup.toLowerCase();
@@ -103,6 +103,7 @@ const EditClass = () => {
           setAlertMessage("");
         }, 4000);
       } else {
+        setIsSaving(true);
         // Filter out any time objects that are empty (i.e., missing a day or time)
         const filteredClassData = {
           ...classData,
@@ -115,10 +116,26 @@ const EditClass = () => {
         setTimeout(() => {
           setSuccessMessage("");
         }, 4000);
+        setIsSaving(false);
       }
     } catch (error) {
       console.error('Error updating class:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("");
+      }, 4000);
+    }
+  }
+
+  const handleOpenOrCloseEnrollment = async () => {
+    try {
+      await updateClass(classObj._id, {
+        isEnrollmentOpen: !classObj.isEnrollmentOpen
+      });
+      await fetchClass();
+    } catch (error) {
+      console.error('Error changing enrollment status:', error);
+      setAlertMessage(`Error changing enrollment status`);
       setTimeout(() => {
         setAlertMessage("");
       }, 4000);
@@ -138,20 +155,14 @@ const EditClass = () => {
     }
   }
 
-  const handleReset = async () => {
-    setClassData({
+  const handleReset = () => {
+    setClassData(prev => ({
       level: classObj.level,
       ageGroup: classObj.ageGroup,
       instructor: classObj.instructor,
-      schedule: classData.schedule
-    });
-    if (classObj.schedule.length !== 0) {
-      setClassData(prev => ({
-        ...prev,
-        schedule: classObj.schedule
-      }))
-    }
-  }
+      schedule: classObj.schedule.length !== 0 ? classObj.schedule : prev.schedule
+    }));
+  };
 
   if (user && user.privilege !== "admin") {
     return <Unauthorized />;
@@ -293,7 +304,7 @@ const EditClass = () => {
               }));
             }} />
           <div className="space-x-2 mt-8">
-            <Button label="Save" type="submit" />
+            <Button label={isSaving ? "Saving..." : "Save"} type="submit" isDisabled={isSaving} />
             <Button
               label="Reset"
               isOutline={true}
@@ -301,7 +312,14 @@ const EditClass = () => {
           </div>
         </form>
         <div>
-          <h3 className="mb-2">List of Students</h3>
+          <div className="flex items-center gap-8 mb-2">
+            <h2>List of Students</h2>
+            {allowRender && <Button
+              label={classObj.isEnrollmentOpen ? "Close Enrollment" : "Open Enrollment"}
+              isOutline={!classObj.isEnrollmentOpen}
+              onClick={handleOpenOrCloseEnrollment}
+            />}
+          </div>
           <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
             <IoPersonOutline />
             <p>{students.length} enrolled</p>

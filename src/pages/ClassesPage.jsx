@@ -38,9 +38,7 @@ const ClassesPage = () => {
       setLevel(levelData.find(l => l.level === parseInt(levelNum)));
       setAllowRender(true);
     };
-    if (user) {
-      fetchData();
-    }
+    fetchData();
   }, [levelNum, user]);
 
   function localizeNumber(number, lang) {
@@ -100,7 +98,7 @@ const ClassesPage = () => {
           <p className="text-base sm:text-lg text-neutral-600 mb-8">
             {allowRender ? t("classespage_open_classes_desc") : showSkeleton && <Skeleton />}
           </p>
-          <div className='grid grid-cols-1 lg:grid-cols-3 auto-rows-fr gap-6 mb-24'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr gap-6 mb-24'>
             {allowRender
               ? classes.length > 0 ? (
                 classes.map((classObj, classIndex) => (

@@ -200,7 +200,7 @@ const NotStudentPopup = ({ setShowPopup }) => {
   )
 }
 
-const EnrollButton = ({ userId, classObj, isEnroll }) => {
+const EnrollButton = ({ classObj, isEnroll }) => {
   const [showEnrollPopup, setShowEnrollPopup] = useState(false);
   const [showUnenrollPopup, setShowUnenrollPopup] = useState(false);
   const [showSignUpPopup, setShowSignUpPopup] = useState(false);
@@ -212,17 +212,16 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
   return (
     <>
       {isEnroll ? <Button
-        label={t('enroll')}
-        isOutline={false}
+        label={classObj.isEnrollmentOpen ? t('enroll') : t('enrollment_closed')}
         onClick={
           isSignedIn
             ? user.privilege === "student"
               ? () => setShowEnrollPopup(true)
               : () => setShowNotStudentPopup(true)
             : () => setShowSignUpPopup(true)}
+        isDisabled={!classObj.isEnrollmentOpen}
       /> : <Button
         label={t("unenroll")}
-        isOutline={false}
         onClick={() => {
           setShowUnenrollPopup(true)
         }}
@@ -230,11 +229,11 @@ const EnrollButton = ({ userId, classObj, isEnroll }) => {
       {showEnrollPopup && <EnrollPopup
         isEnroll={isEnroll}
         classObj={classObj}
-        userId={userId}
+        userId={user._id}
         setShowPopup={setShowEnrollPopup} />}
       {showUnenrollPopup && <UnenrollPopup
         classObj={classObj}
-        userId={userId}
+        userId={user._id}
         setShowPopup={setShowUnenrollPopup} />}
       {showSignUpPopup && <SignUpPopup
         setShowPopup={setShowSignUpPopup} />}

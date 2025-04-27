@@ -191,7 +191,8 @@ const ClassSchema = new Schema({
   instructor: { type: String, required: true },
   classroomLink: { type: String, default: "" },
   schedule: { type: [ScheduleSchema], default: [] },
-  roster: { type: [Schema.Types.ObjectId], default: [] }
+  roster: { type: [Schema.Types.ObjectId], default: [] },
+  isEnrollmentOpen: { type: Boolean, default: true }
 }, { collection: 'classes' })
 
 const Class = mongoose.model("Class", ClassSchema)
@@ -621,23 +622,25 @@ app.put('/api/classes/:id', async (req, res) => {
     }
 
     const existingClasses = await Class.find({ level: level, ageGroup: ageGroup, instructor: instructor });
-    const matchingSchedules = existingClasses.filter(cls =>
-      cls.schedule.length === schedule.length &&
-      cls.schedule.every(itemA =>
-        schedule.some(itemB =>
-          itemA.day === itemB.day &&
-          itemA.startTime === itemB.startTime &&
-          itemA.endTime === itemB.endTime
+    if (existingClasses.length !== 0) {
+      const matchingSchedules = existingClasses.filter(cls =>
+        cls.schedule.length === schedule.length &&
+        cls.schedule.every(itemA =>
+          schedule.some(itemB =>
+            itemA.day === itemB.day &&
+            itemA.startTime === itemB.startTime &&
+            itemA.endTime === itemB.endTime
+          )
         )
-      )
-    );
-    const duplicate = matchingSchedules.find(cls => cls._id.toString() !== id.toString());
+      );
+      const duplicate = matchingSchedules.find(cls => cls._id.toString() !== id.toString());
 
-    if (duplicate) {
-      return res.status(409).json({
-        message: 'Class already exists',
-        class: duplicate
-      });
+      if (duplicate) {
+        return res.status(409).json({
+          message: 'Class already exists',
+          class: duplicate
+        });
+      }
     }
 
     const updatedClass = await Class.findByIdAndUpdate(
@@ -705,6 +708,14 @@ app.put('/api/users/:id/enroll', async (req, res) => {
     const user = await User.findById(id);
     if (user.enrolledClasses.includes(classId)) {
       return res.status(400).json({ message: 'Already enrolled in this class' });
+    }
+
+    const classToEnroll = await Class.findById(classId);
+    if (!classToEnroll) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+    if (!classToEnroll.isEnrollmentOpen) {
+      return res.status(403).json({ message: 'Enrollment is currently closed for this class.' });
     }
 
     // add class id to user's classes

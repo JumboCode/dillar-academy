@@ -14,6 +14,7 @@ const ResetPasswordCode = () => {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [retryAfter, setRetryAfter] = useState(0);
+  const [resendMessage, setResendMessage] = useState("");
 
   // Ensure the email is stored; if not, redirect back
   useEffect(() => {
@@ -22,6 +23,25 @@ const ResetPasswordCode = () => {
       setLocation("/forgot-password");
     }
   }, [setLocation]);
+
+  const handleResendCode = async () => {
+    const email = sessionStorage.getItem("reset_password_email");
+    if (!email) return;
+
+    try {
+      await signIn.create({
+        strategy: "reset_password_email_code",
+        identifier: email,
+      });
+      setResendMessage("reset_code_resent_success");
+      setTimeout(() => {
+        setResendMessage("");
+      }, 4000);
+    } catch (err) {
+      console.error("Resend error:", err);
+      setResendMessage("reset_code_resent_failed");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,13 +102,24 @@ const ResetPasswordCode = () => {
               isRequired={true}
               disabled={isSubmitting || retryAfter > 0}
             />
-            {/* TODO: test translation */}
             {error && <p className="text-red-500 text-sm mt-2">{t(error, { sec: retryAfter })}</p>}
-            <Button
-              type="submit"
-              label={t("verify_code")}
-              isDisabled={isSubmitting || retryAfter > 0}
-            />
+            <div className="space-x-2">
+              <Button
+                type="submit"
+                label={t("verify_code")}
+                isDisabled={isSubmitting || retryAfter > 0}
+              />
+              <Button
+                type="button"
+                label={t("resend_code")}
+                onClick={handleResendCode}
+                isDisabled={isSubmitting || retryAfter > 0}
+                isOutline={true}
+              />
+            </div>
+            {resendMessage && (
+              <p className="text-green-600 text-sm text-center mt-2">{t(resendMessage)}</p>
+            )}
           </form>
         </Form>
       </div>

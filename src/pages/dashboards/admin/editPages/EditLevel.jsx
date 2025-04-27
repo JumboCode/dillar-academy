@@ -65,6 +65,9 @@ const EditLevel = () => {
   const fetchLevels = async () => {
     if (user) {
       const levelRes = await getLevels(`level=${levelNum}`);
+      if (levelRes.length === 0) {
+        setLocation("/admin/levels");
+      }
       setLevel(levelRes[0]);
       const classRes = await getClasses(`level=${levelNum}`);
       setClasses(classRes);

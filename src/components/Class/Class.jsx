@@ -59,7 +59,6 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
       <div className='flex gap-3'>
         {modes.includes("enroll") &&
           <EnrollButton
-            userId={user?._id}
             classObj={classObj}
             isEnroll={true}
           />
@@ -68,7 +67,6 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", handleDelete = null
         {modes.includes("delete") && <Button label="Delete" onClick={handleDelete} />}
         {modes.includes("unenroll") &&
           <EnrollButton
-            userId={user?._id}
             classObj={classObj}
             isEnroll={false}
           />

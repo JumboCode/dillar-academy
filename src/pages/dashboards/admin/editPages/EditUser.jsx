@@ -39,6 +39,7 @@ const EditUser = () => {
   });
   const [alertMessage, setAlertMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
@@ -92,6 +93,7 @@ const EditUser = () => {
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
+      setIsSaving(true);
       await updateUser(params.id, userFormData);
       setSuccessMessage("Successfully updated user information")
       setUserFormData({ firstName: '', lastName: '', email: '', privilege: '' })
@@ -99,6 +101,7 @@ const EditUser = () => {
       setTimeout(() => {
         setSuccessMessage("");
       }, 4000);
+      setIsSaving(false);
     } catch (error) {
       console.error('Error updating user:', error);
       setAlertMessage(`Error: ${error.response.data.message}`)
@@ -228,7 +231,7 @@ const EditUser = () => {
             </div>
           </div>
           <div className="space-x-2">
-            <Button label="Save" type="submit" />
+            <Button label={isSaving ? "Saving..." : "Save"} type="submit" isDisabled={isSaving} />
             <Button
               label="Reset"
               isOutline={true}
@@ -237,8 +240,8 @@ const EditUser = () => {
           <DeleteButton item="user" onDelete={handleDeleteUser} />
         </form>
         <div>
-          <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-4">
-            <h2 className="font-extrabold">
+          <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-8">
+            <h2>
               {allowRender ? `${toTitleCase(userData.firstName)}'s Classes` : showSkeleton && <Skeleton className="w-48" />}
             </h2>
             {allowRender && userData.privilege === "student" && <div className="flex items-center">
