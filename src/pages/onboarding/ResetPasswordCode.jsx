@@ -33,10 +33,13 @@ const ResetPasswordCode = () => {
         strategy: "reset_password_email_code",
         identifier: email,
       });
-      setResendMessage("reset_code_resent_success", "Resent Code Success");
+      setResendMessage("reset_code_resent_success");
+      setTimeout(() => {
+        setResendMessage("");
+      }, 4000);
     } catch (err) {
       console.error("Resend error:", err);
-      setResendMessage("reset_code_resent_failed", "Resent Code Failed");
+      setResendMessage("reset_code_resent_failed");
     }
   };
 
@@ -100,7 +103,7 @@ const ResetPasswordCode = () => {
               disabled={isSubmitting || retryAfter > 0}
             />
             {error && <p className="text-red-500 text-sm mt-2">{t(error, { sec: retryAfter })}</p>}
-            <div className="flex flex-col space-y-3">
+            <div className="space-x-2">
               <Button
                 type="submit"
                 label={t("verify_code")}
@@ -108,7 +111,7 @@ const ResetPasswordCode = () => {
               />
               <Button
                 type="button"
-                label={t("resend_code", "Resend Code")}
+                label={t("resend_code")}
                 onClick={handleResendCode}
                 isDisabled={isSubmitting || retryAfter > 0}
                 isOutline={true}
