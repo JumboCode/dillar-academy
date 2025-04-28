@@ -15,6 +15,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import Unauthorized from '../Unauthorized';
+import { toTitleCase } from '@/utils/formatters';
 
 const InstructorView = () => {
   const [classes, setClasses] = useState([])
@@ -50,8 +51,6 @@ const InstructorView = () => {
       }
     }
   }, [isLoaded, isSignedIn, user]);
-
-  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   const handleEditUser = async (e) => {
     e.preventDefault();
@@ -100,7 +99,9 @@ const InstructorView = () => {
       <div>
         {allowRender
           ? <div className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
-            <h1 title={allowRender ? `${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}` : ""} className='font-extrabold truncate'>
+            <h1
+              title={allowRender ? `Name: ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}` : ""}
+              className='font-extrabold w-4/5 break-words'>
               {`${t("welcome")} ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}!`}
             </h1>
             <p className='text-blue-500'>{allowRender ? t(`${user.privilege}`) : ""}</p>

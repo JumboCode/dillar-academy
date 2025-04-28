@@ -33,6 +33,11 @@ const AdminTranslations = () => {
     zh: {},
   });
 
+  const nsSetters = {
+    default: setDefaultTranslations,
+    levels: setLevelTranslations
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       const defaultTranslations = await fetchNamespaceTranslations("default");
@@ -73,17 +78,29 @@ const AdminTranslations = () => {
   return (
     <div className="page-format max-w-[96rem] space-y-10">
       <h1 className="font-extrabold">Edit Translations</h1>
-
+      <div className='flex'>
+        <p className='text-gray-400'>
+          Note: the {'{{...}}'} in translations represent where values are plugged in (ie. by replacing {'{{num}}'} with 1 in Level {'{{num}}'} we get L
+          evel 1.)
+          &nbsp;
+          <span className='text-red-400'>It's best to leave the brackets alone or some text may not display properly!</span>
+        </p>
+      </div>
       <div className='space-y-16'>
         <TranslationTable
           label={"Edit translations for levels"}
           translations={levelTranslations}
+          ns="levels"
+          fetchTranslations={fetchNamespaceTranslations}
+          setters={nsSetters}
           allowRender={allowRender}
         />
         <TranslationTable
           label={"Edit translations for general and student pages"}
           translations={defaultTranslations}
+          ns="default"
           fetchTranslations={fetchNamespaceTranslations}
+          setters={nsSetters}
           allowRender={allowRender}
         />
       </div>
@@ -91,7 +108,7 @@ const AdminTranslations = () => {
   )
 }
 
-const TranslationTable = ({ label, translations, fetchTranslations, allowRender }) => {
+const TranslationTable = ({ label, translations, ns, fetchTranslations, setters, allowRender }) => {
   const [searchInput, setSearchInput] = useState('');
   const [isFullyExpanded, setIsFullyExpanded] = useState(false);
   const showSkeleton = useDelayedSkeleton(!allowRender);
@@ -156,8 +173,9 @@ const TranslationTable = ({ label, translations, fetchTranslations, allowRender 
                   key={id}
                   id={id}
                   translations={filteredTranslations}
-                  ns={"default"}
-                  fetchTranslations={fetchTranslations} />
+                  ns={ns}
+                  fetchTranslations={fetchTranslations}
+                  setters={setters} />
               ))
               : showSkeleton && <SkeletonTranslationRow count={5} />}
           </div>
@@ -172,8 +190,8 @@ const TranslationTable = ({ label, translations, fetchTranslations, allowRender 
   )
 }
 
-const TableRow = ({ id, translations, ns, fetchTranslations }) => {
-  const [alertMessage, setAlertMessage] = useState("");
+const TableRow = ({ id, translations, ns, fetchTranslations, setters }) => {
+  // const [alertMessage, setAlertMessage] = useState("");
 
   const supportedLngs = {
     English: "en",
@@ -214,18 +232,18 @@ const TableRow = ({ id, translations, ns, fetchTranslations }) => {
 
   const handleEditTranslation = async (e) => {
     e.preventDefault();
-    setAlertMessage("Editing translations disabled for demo");
-    setTimeout(() => {
-      setAlertMessage("")
-    }, 4000);
-    // try {
-    //   await editTranslation(formData.lng, ns, formData.key, formData.translation);
-    //   resetForm();
-    //   await fetchTranslations(ns);
-    //   setShowEditOverlay(false);
-    // } catch (error) {
-    //   console.error("handleEditTranslation failed:", error);
-    // }
+    try {
+      console.log(formData)
+      console.log(ns)
+      await editTranslation(formData.lng, ns, formData.key, formData.translation);
+      const updatedTranslations = await fetchTranslations(ns);
+      const setTranslations = setters[ns];
+      setTranslations(updatedTranslations);
+      setShowEditOverlay(false);
+      resetForm();
+    } catch (error) {
+      console.error("handleEditTranslation failed:", error);
+    }
   }
 
   return (
@@ -317,7 +335,7 @@ const TableRow = ({ id, translations, ns, fetchTranslations }) => {
             />
             <Button label="Save" type="submit" />
           </div>
-          {alertMessage !== "" && <p className='text-red-500'>{alertMessage}</p>}
+          {/* {alertMessage !== "" && <p className='text-red-500'>{alertMessage}</p>} */}
         </form>
       </Overlay>}
     </div>

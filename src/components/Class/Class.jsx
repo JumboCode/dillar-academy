@@ -4,22 +4,12 @@ import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import EnrollButton from '@/components/Button/EnrollButton'
 import EditButton from '@/components/Button/EditButton'
 import { useTranslation } from "react-i18next";
+import { localizeNumber } from "@/utils/formatters";
 
 // possible modes: enroll, unenroll, edit
 // editURL used for edit page URL to navigate to
 const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => {
   const { t, i18n } = useTranslation();
-
-  function localizeNumber(number, lang) {
-    let locale = lang;
-
-    // Use Han characters for Chinese
-    if (lang.startsWith('zh')) {
-      locale = 'zh-CN-u-nu-hanidec';
-    }
-
-    return new Intl.NumberFormat(locale).format(number);
-  }
 
   return isSimplified ? (
     <div className='shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-2xl py-8 px-7 flex gap-x-3 items-center justify-between'>

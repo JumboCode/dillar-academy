@@ -1,23 +1,13 @@
 import { IoChevronForward, IoChevronBack } from "react-icons/io5";
 import { interpolateHsl } from 'd3-interpolate';
 import { useTranslation } from "react-i18next";
+import { localizeNumber } from "@/utils/formatters";
 
 const Level = ({ level, isSimplified, isArrowRight, numLevels }) => {
   const hslInterpolator = interpolateHsl("#F7FBFD", "#1C5773");
   const isString = typeof level.level === "string";
   const levelColor = isString ? "#594BD2" : hslInterpolator(level.level / numLevels);
   const { t, i18n } = useTranslation();
-
-  function localizeNumber(number, lang) {
-    let locale = lang;
-
-    // Use Han characters for Chinese
-    if (lang.startsWith('zh')) {
-      locale = 'zh-CN-u-nu-hanidec';
-    }
-
-    return new Intl.NumberFormat(locale).format(number);
-  }
 
   return isSimplified ? (
     <div className="h-full shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-2xl">

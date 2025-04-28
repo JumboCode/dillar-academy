@@ -95,7 +95,6 @@ router.post('/transfer', async (req, res) => {
       }
     }
 
-    // await Translation.deleteMany({});
     await Translation.insertMany(translationsToInsert);
 
     return res.status(200).json({ message: "Successfully inserted translations" })

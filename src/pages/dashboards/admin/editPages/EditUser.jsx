@@ -18,7 +18,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import SkeletonClass from '@/components/Skeletons/SkeletonClass';
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
-
+import { toTitleCase } from '@/utils/formatters';
 
 const EditUser = () => {
   const { user } = useContext(UserContext);
@@ -52,8 +52,6 @@ const EditUser = () => {
     }
 
   }, [isLoaded, isSignedIn, user]);
-
-  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   const fetchData = async () => {
     try {

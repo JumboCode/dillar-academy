@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Button from '@/components/Button/Button';
 import Overlay from '@/components/Overlay';
+import { toTitleCase } from '@/utils/formatters';
 
 const DeleteButton = ({ item, onDelete }) => {
   const [showPopup, setShowPopup] = useState(false);
@@ -13,7 +14,7 @@ const DeleteButton = ({ item, onDelete }) => {
   return (
     <>
       <Button
-        label={`Delete ${item}`}
+        label={`Delete ${toTitleCase(item)}`}
         onClick={() => setShowPopup(true)}
       />
 

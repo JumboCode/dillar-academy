@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { transferTranslations } from "@/api/translation-wrapper";
-
-const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+import { toTitleCase } from '@/utils/formatters';
 
 // query should be a string
 const getClasses = async (query = "") => {

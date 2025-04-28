@@ -22,6 +22,7 @@
     "i18next-browser-languagedetector": "^8.0.0",
     "i18next-http-backend": "^2.6.2",
     "nodemailer": "^6.9.16",
+    "number-to-chinese-words": "^1.0.20",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

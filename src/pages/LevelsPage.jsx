@@ -46,11 +46,13 @@ const LevelsPage = () => {
         <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 auto-rows-fr`}>
           {allowRender
             ? levels.length > 0
-              ? (levels.map((level, levelIndex) => (
-                <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
-                  <Level level={level} />
-                </Link>
-              ))
+              ? (levels
+                .sort((l1, l2) => l1.level - l2.level)
+                .map((level, levelIndex) => (
+                  <Link key={levelIndex} href={`/levels/${encodeURIComponent(level.level)}/classes`}>
+                    <Level level={level} />
+                  </Link>
+                ))
               ) : (
                 <p className="text-gray-500">{t("no_levels_available")}</p>
               )

@@ -18,7 +18,7 @@ const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) =
       </div>
       <div className='flex gap-3 mb-4 ml-5'>
         {modes.includes("edit") && <EditButton classId={conversation._id} editURL={editURL} />}
-        {modes.includes("enroll") &&
+        {/* {modes.includes("enroll") &&
           <EnrollButton
             classObj={conversation}
             isEnroll={true}
@@ -29,7 +29,7 @@ const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) =
             classObj={conversation}
             isEnroll={false}
           />
-        }
+        } */}
       </div>
     </div>
   )

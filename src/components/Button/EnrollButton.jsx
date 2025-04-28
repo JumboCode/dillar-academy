@@ -8,17 +8,7 @@ import { useLocation } from 'wouter';
 import { useUser } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
 import { UserContext } from '@/contexts/UserContext.jsx';
-
-function localizeNumber(number, lang) {
-  let locale = lang;
-
-  // Use Han characters for Chinese
-  if (lang.startsWith('zh')) {
-    locale = 'zh-CN-u-nu-hanidec';
-  }
-
-  return new Intl.NumberFormat(locale).format(number);
-}
+import { localizeNumber } from "@/utils/formatters";
 
 const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
   const { t, i18n } = useTranslation();
