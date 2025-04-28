@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+import { toTitleCase } from '@/utils/formatters';
 
 const postUser = async (body) => {
   body.firstName = toTitleCase(body.firstName);

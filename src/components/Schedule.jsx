@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, Link } from 'wouter';
 import Button from '@/components/Button/Button';
+import EditButton from '@/components/Button/EditButton';
 import { useTranslation } from "react-i18next";
+import { localizeNumber, toTitleCase } from "@/utils/formatters";
 
 const Schedule = ({ privilege, classes, filters = [] }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
@@ -120,22 +122,9 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
   const [, setLocation] = useLocation();
   const { t, i18n } = useTranslation();
 
-  function localizeNumber(number, lang) {
-    let locale = lang;
-
-    // Use Han characters for Chinese
-    if (lang.startsWith('zh')) {
-      locale = 'zh-CN-u-nu-hanidec';
-    }
-
-    return new Intl.NumberFormat(locale).format(number);
-  }
-
-  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
-
   return (
     <div className="bg-blue-100 rounded-xs sm:rounded-sm border-[0.5px] border-gray-200 p-1 sm:p-3 mb-1 sm:mb-2">
-      <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem] text-balance">{classObj.startTime}-{classObj.endTime}</p>
+      <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem] text-balance">{classObj.startTime || "N/A"}-{classObj.endTime || "N/A"}</p>
       <p
         title={t('level_num', {
           num: typeof classObj.level === "string"
@@ -156,23 +145,35 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
         {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`).toUpperCase() : t(`${classObj.ageGroup}_class`).toUpperCase()}
       </p>
       {!isMobile && (
-        // TODO: links for supp classes?
         privilege === "student" ? (
           <a href={classObj.classroomLink}>
             {/* button overflowing in different languages */}
-            <Button label={t('join')} onClick={null} />
+            <Button label={t('join')} onClick={null} isDisabled={classObj.classroomLink === ""} />
           </a>
-        ) : typeof classObj.level === "number" && (
-          <Button
-            label="Edit"
-            onClick={() => {
-              const basePath = privilege === "admin"
-                ? `/admin/class/${classObj._id}`
-                : `/instructor/class/${classObj._id}`;
-              setLocation(basePath);
-            }}
-          />
-        )
+        ) : <EditButton
+          classId={classObj._id}
+          editURL={
+            privilege === "admin" ? (() => {
+              switch (true) {
+                case typeof classObj.level === "number":
+                  return `/admin/class`;
+                case classObj.level === "conversation":
+                  return `/admin/levels/conversations`;
+                case classObj.level === "ielts":
+                  return `/admin/levels/ielts`; // TODO:
+              }
+            })() : (() => {
+              switch (true) {
+                case typeof classObj.level === "number":
+                  return `/instructor/class`;
+                case classObj.level === "conversation":
+                  return `/instructor/conversation`; // TODO:
+                case classObj.level === "ielts":
+                  return `/instructor/ielts`; // TODO:
+              }
+            })
+          }
+        />
       )}
     </div>
   )

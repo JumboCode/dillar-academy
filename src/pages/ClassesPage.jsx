@@ -10,6 +10,7 @@ import SkeletonLevel from '../components/Skeletons/SkeletonLevel';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
+import { localizeNumber, toTitleCase } from "@/utils/formatters";
 
 const ClassesPage = () => {
   const { t, i18n } = useTranslation();
@@ -33,26 +34,15 @@ const ClassesPage = () => {
     const fetchData = async () => {
       const classData = await getClasses(classFilter);
       setClasses(classData);
-      const levelData = await getLevels();
+      let levelData = await getLevels();
+      levelData = levelData.sort((l1, l2) => l1.level - l2.level);
+      setAllLevels(levelData);
       setAllLevels(levelData);
       setLevel(levelData.find(l => l.level === parseInt(levelNum)));
       setAllowRender(true);
     };
     fetchData();
   }, [levelNum, user]);
-
-  function localizeNumber(number, lang) {
-    let locale = lang;
-
-    // Use Han characters for Chinese
-    if (lang.startsWith('zh')) {
-      locale = 'zh-CN-u-nu-hanidec';
-    }
-
-    return new Intl.NumberFormat(locale).format(number);
-  }
-
-  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   const currentLevelIndex = allLevels.findIndex(l => l.level === level.level);
 

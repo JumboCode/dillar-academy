@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { LuPencil } from "react-icons/lu";
+import { toTitleCase } from '@/utils/formatters';
 
 const UserItem = ({ userData, classes = [], privilege, isShowClass }) => {
   const [highestClass, setHighestClass] = useState(undefined);
@@ -13,8 +14,6 @@ const UserItem = ({ userData, classes = [], privilege, isShowClass }) => {
       : null;
     setHighestClass(maxClass);
   }, [classes, userData]);
-
-  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   return (
     <div className="group flex py-3 px-4 justify-between items-center hover:bg-[#ECF7FE] space-x-3 w-full rounded-sm flex-space-between">

@@ -3,12 +3,13 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
-import { getLevels, updateLevel, deleteLevel, getClasses } from '@/api/class-wrapper.js';
+import { getLevels, updateLevel, deleteLevel, getClasses, deleteClass } from '@/api/class-wrapper.js';
 import Button from '@/components/Button/Button';
 import DeleteButton from "@/components/Button/DeleteButton";
 import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
+import Overlay from '@/components/Overlay';
 import Alert from '@/components/Alert';
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonClass from "@/components/Skeletons/SkeletonClass";
@@ -30,6 +31,7 @@ const EditLevel = () => {
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
   const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
@@ -154,9 +156,16 @@ const EditLevel = () => {
     }
   };
 
-  const handleDeleteLevel = async () => {
+  const handleDeleteLevel = async (shouldDeleteClasses = false) => {
     try {
+      console.log(classes.length)
       await deleteLevel(level._id);
+      if (shouldDeleteClasses) {
+        console.log("deleteClass")
+        await Promise.all(
+          classes.map(cls => deleteClass(cls._id))
+        );
+      }
       setLocation("/admin/levels");
     } catch (error) {
       console.error("Error deleting level:", error);
@@ -284,7 +293,33 @@ const EditLevel = () => {
               : showSkeleton && <SkeletonClass count={3} />}
           </div>
         </div>
-        <DeleteButton item={`level`} onDelete={handleDeleteLevel} />
+        <DeleteButton item={`level`} onDelete={() => classes.length !== 0 ? setShowDeletePopup(true) : handleDeleteLevel()} />
+
+        {showDeletePopup && <Overlay width={"w-fit"}>
+          <div className="mb-1">
+            <h3 className="font-extrabold">Delete Level's Classes?</h3>
+            <p className='text-base sm:text-lg'>
+              This level has {classes.length} classes. Do you want to delete them as well?
+            </p>
+          </div>
+          <div className="grid grid-cols-3 w-fit gap-x-2">
+            <Button
+              label="Delete Classes"
+              onClick={() => {
+                handleDeleteLevel(true);
+              }}
+            />
+            <Button
+              label="Keep Classes"
+              isOutline
+              onClick={handleDeleteLevel}
+            />
+            <Button
+              label="Abort Delete"
+              onClick={() => setShowDeletePopup(false)}
+            />
+          </div>
+        </Overlay>}
       </div>
     </>
   );

@@ -59,18 +59,20 @@ const AdminLevels = () => {
       <div className="grid md:grid-cols-2 gap-6">
         {allowRender ? (
           <>
-            {levels.map((level) => (
-              <Link key={level.level} href={`/admin/levels/${level.level}`}>
-                <div className="rounded-lg">
-                  <Level
-                    level={level}
-                    numLevels={levels.length}
-                    isSimplified
-                    isArrowRight
-                  />
-                </div>
-              </Link>
-            ))}
+            {levels
+              .sort((l1, l2) => l1.level - l2.level)
+              .map((level) => (
+                <Link key={level.level} href={`/admin/levels/${level.level}`}>
+                  <div className="rounded-lg">
+                    <Level
+                      level={level}
+                      numLevels={levels.length}
+                      isSimplified
+                      isArrowRight
+                    />
+                  </div>
+                </Link>
+              ))}
             <Link href="/admin/levels/conversations">
               <div className="rounded-lg">
                 <Level

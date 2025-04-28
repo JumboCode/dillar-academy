@@ -8,6 +8,7 @@ import Schedule from '@/components/Schedule';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import Unauthorized from "@/pages/Unauthorized";
+import { toTitleCase } from '@/utils/formatters';
 
 const AdminSchedule = () => {
   const { user } = useContext(UserContext);
@@ -45,8 +46,6 @@ const AdminSchedule = () => {
         ? prevFilters.filter(filter => filter !== level)
         : [...currFilters, level])
   }
-
-  const toTitleCase = (text) => text.charAt(0).toUpperCase() + text.slice(1);
 
   if (user && user.privilege !== "admin") {
     return <Unauthorized />;
