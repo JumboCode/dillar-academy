@@ -171,7 +171,7 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
                 case classObj.level === "ielts":
                   return `/instructor/ielts`; // TODO:
               }
-            })
+            })()
           }
         />
       )}

@@ -37,8 +37,12 @@ const ClassesPage = () => {
       let levelData = await getLevels();
       levelData = levelData.sort((l1, l2) => l1.level - l2.level);
       setAllLevels(levelData);
-      setAllLevels(levelData);
-      setLevel(levelData.find(l => l.level === parseInt(levelNum)));
+      const currLevel = levelData.find(l => l.level === parseInt(levelNum));
+      if (!currLevel) {
+        setLocation("/levels");
+        return;
+      }
+      setLevel(currLevel);
       setAllowRender(true);
     };
     fetchData();
