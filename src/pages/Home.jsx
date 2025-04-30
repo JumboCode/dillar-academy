@@ -43,11 +43,13 @@ const Home = () => {
 
   const level1 = {
     level: 1,
-    name: "Alphabet and Phonetics"
+    name: "Alphabet and Phonetics",
+    _id: "home_example_level1"
   }
   const level4 = {
     level: 4,
-    name: "Higher Level Writing"
+    name: "Higher Level Writing",
+    _id: "home_example_level2"
   }
 
   return (
