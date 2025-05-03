@@ -11,6 +11,7 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import { convertTime } from "@/utils/time-utils";
 import Unauthorized from "@/pages/Unauthorized";
 
 const EditConversation = () => {
@@ -89,10 +90,26 @@ const EditConversation = () => {
         }, 4000);
       } else {
         setIsSaving(true);
-        // Filter out any time objects that are empty (i.e., missing a day or time)
+
+        const convertedSchedule = conversationData.schedule
+          // Filter out any time objects that are empty (i.e., missing a day or time)
+          .filter(time => time.day && time.startTime && time.endTime)
+          .map(({ day, startTime, endTime }) => {
+            const startUTC = convertTime(day, startTime, 'America/New_York', 'Etc/UTC');
+            const endUTC = convertTime(day, endTime, 'America/New_York', 'Etc/UTC');
+            console.log(startTime, "to", startUTC)
+            console.log(endTime, "to", endUTC)
+
+            return {
+              day: startUTC.day,
+              startTime: startUTC.time,
+              endTime: endUTC.time
+            };
+          });
+
         const filteredConversationData = {
           ...conversationData,
-          schedule: conversationData.schedule.filter(time => time.day && time.startTime && time.endTime),
+          schedule: convertedSchedule
         };
 
         await updateConversation(params.id, filteredConversationData);
@@ -104,6 +121,7 @@ const EditConversation = () => {
         setIsSaving(false);
       }
     } catch (error) {
+      setIsSaving(false);
       console.error('Error updating conversation:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
@@ -219,7 +237,9 @@ const EditConversation = () => {
                             type="text"
                             name="startTime"
                             placeholder="Start Time"
-                            value={time.startTime}
+                            value={time.startTime
+                              ? convertTime(time.day, time.startTime, "Etc/UTC", "America/New_York").time
+                              : ""}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
@@ -228,7 +248,9 @@ const EditConversation = () => {
                             type="text"
                             name="endTime"
                             placeholder="End Time"
-                            value={time.endTime}
+                            value={time.endTime
+                              ? convertTime(time.day, time.endTime, "Etc/UTC", "America/New_York").time
+                              : ""}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
@@ -247,6 +269,9 @@ const EditConversation = () => {
                   </div>
                 )
               })}
+            </div>
+            <div className="w-full grid grid-cols-2">
+              <p className="italic text-blue-500 col-start-2">Enter times in EST and 24 hour format</p>
             </div>
           </div>
           <Button

@@ -115,6 +115,7 @@ const EditUser = () => {
         }, 4000);
       }
     } catch (error) {
+      setIsSaving(false);
       console.error('Error updating user:', error);
       setAlertMessage(`Error: ${error.response.data.message}`)
       setTimeout(() => {

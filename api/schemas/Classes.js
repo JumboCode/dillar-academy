@@ -8,7 +8,7 @@ const ScheduleSchema = new Schema({
     day: { type: String, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
-    timezone: { type: String, required: true, default: "America/New_York" } // store in IANA timezone format
+    timezone: { type: String, required: true, default: "Etc/UTC" } // store in IANA timezone format
 });
 
 // Class Schema

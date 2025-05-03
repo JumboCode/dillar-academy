@@ -12,6 +12,7 @@ import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
 import { getUser } from '@/api/user-wrapper';
+import { convertTime } from "@/utils/time-utils";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
@@ -104,10 +105,24 @@ const EditClass = () => {
         }, 4000);
       } else {
         setIsSaving(true);
-        // Filter out any time objects that are empty (i.e., missing a day or time)
+
+        const convertedSchedule = classData.schedule
+          // Filter out any time objects that are empty (i.e., missing a day or time)
+          .filter(time => time.day && time.startTime && time.endTime)
+          .map(({ day, startTime, endTime }) => {
+            const startUTC = convertTime(day, startTime, 'America/New_York', 'Etc/UTC');
+            const endUTC = convertTime(day, endTime, 'America/New_York', 'Etc/UTC');
+
+            return {
+              day: startUTC.day,
+              startTime: startUTC.time,
+              endTime: endUTC.time
+            };
+          });
+
         const filteredClassData = {
           ...classData,
-          schedule: classData.schedule.filter(time => time.day && time.startTime && time.endTime),
+          schedule: convertedSchedule
         };
 
         await updateClass(params.classId, filteredClassData);
@@ -119,6 +134,7 @@ const EditClass = () => {
         setIsSaving(false);
       }
     } catch (error) {
+      setIsSaving(false);
       console.error('Error updating class:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
@@ -260,7 +276,9 @@ const EditClass = () => {
                             type="text"
                             name="startTime"
                             placeholder="Start Time"
-                            value={time.startTime}
+                            value={time.startTime
+                              ? convertTime(time.day, time.startTime, "Etc/UTC", "America/New_York").time
+                              : ""}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
@@ -269,7 +287,9 @@ const EditClass = () => {
                             type="text"
                             name="endTime"
                             placeholder="End Time"
-                            value={time.endTime}
+                            value={time.endTime
+                              ? convertTime(time.day, time.endTime, "Etc/UTC", "America/New_York").time
+                              : ""}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
