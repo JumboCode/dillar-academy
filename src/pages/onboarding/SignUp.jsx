@@ -95,7 +95,7 @@ export default function SignUp() {
           >
             <h1 className="font-extrabold">{t("sign_up")}</h1>
             <p className="text-base sm:text-lg mt-3 mb-5 text-gray-500">{t("already_have_account")}
-              <Link className="ml-2 font-extrabold text-blue-500" href="/login">{t("login")}</Link>
+              <Link className="ml-2 font-extrabold text-blue-400" href="/login">{t("login")}</Link>
             </p>
             {/* Form Values and the Borders */}
             <form method="POST" onSubmit={handleSubmit} className="space-y-3">

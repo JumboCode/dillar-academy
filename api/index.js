@@ -293,10 +293,6 @@ app.get("/api/levels", async (req, res) => {
     const allowedFields = ['level'];
     const filters = validateInput(req.query, allowedFields);
 
-    if (Object.keys(filters).length === 0) {
-      res.status(404).send('Error: could not get classes', err)
-    }
-
     const data = await Level.find(filters);
     res.json(data);
   } catch (err) {
@@ -928,7 +924,7 @@ app.get('/api/students-export', async (req, res) => {
             level: classInfo.level,
             ageGroup: classInfo.ageGroup,
             instructor: classInfo.instructor,
-            classroomLink: classInfo.classroomLink,
+            link: classInfo.link,
             scheduleEST,
             scheduleIstanbul
           };
@@ -945,7 +941,7 @@ app.get('/api/students-export', async (req, res) => {
           level: '',
           ageGroup: '',
           instructor: '',
-          classroomLink: '',
+          link: '',
           scheduleEST: '',
           scheduleIstanbul: ''
         });

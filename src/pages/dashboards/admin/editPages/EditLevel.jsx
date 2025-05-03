@@ -279,13 +279,13 @@ const EditLevel = () => {
         <div>
           <div className="flex justify-between mb-4">
             <h2>Classes in this Level</h2>
-            <Button label="+ Add Class" onClick={() => setLocation("/admin/class/new")} isOutline />
+            <Button label="+ Add Class" onClick={() => setLocation("/admin/levels/class/new")} isOutline />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {allowRender
               ? classes.length > 0 ? (
                 classes.map((classObj) => (
-                  <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/class`} />
+                  <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL={`/admin/levels/class`} />
                 ))
               ) : (
                 <p className="text-gray-500">{t("no_classes_available")}</p>

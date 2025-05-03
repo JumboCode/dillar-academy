@@ -20,7 +20,7 @@ const InstructorEditClass = () => {
   const [allowRender, setAllowRender] = useState(false);
 
   const params = useParams();
-  const [classroomLink, setClassroomLink] = useState('');
+  const [link, setLink] = useState('');
   const [students, setStudents] = useState([]);
   const showSkeleton = useDelayedSkeleton(!allowRender);
 
@@ -40,7 +40,7 @@ const InstructorEditClass = () => {
   const fetchClass = async () => {
     try {
       const data = await getClassById(params.id);
-      setClassroomLink(data.classroomLink || '');
+      setLink(data.link || '');
       const students = await Promise.all(
         data.roster.map(async (studentId) => {
           const studentRes = await getUser(`_id=${studentId}`);
@@ -55,14 +55,13 @@ const InstructorEditClass = () => {
   };
 
   const handleInputChange = (e) => {
-    setClassroomLink(e.target.value);
-    console.log(classroomLink)
+    setLink(e.target.value);
   };
 
   const handleEditClass = async (e) => {
     e.preventDefault();
     try {
-      await updateClass(params.id, { classroomLink });
+      await updateClass(params.id, { link });
       await fetchClass();
       setLocation("/instructor")
     } catch (error) {
@@ -88,9 +87,9 @@ const InstructorEditClass = () => {
             <label className="mx-1">Google Classroom Link</label>
             <FormInput
               type="text"
-              name="classroomLink"
+              name="link"
               placeholder="Google Classroom Link"
-              value={classroomLink}
+              value={link}
               onChange={handleInputChange}
               isRequired={true}
             />

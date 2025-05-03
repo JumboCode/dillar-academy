@@ -14,7 +14,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
   return isSimplified ? (
     <div className='shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-2xl py-8 px-7 flex gap-x-3 items-center justify-between'>
       <div className='flex items-center gap-x-6'>
-        <h3 className='text-dark-blue-800 font-extrabold'>{t('level_num', { num: localizeNumber(classObj.level, i18n.language) })}</h3>
+        <h3 className='text-dark-blue-800 font-extrabold'>{t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}</h3>
         <p className='text-neutral-600'>
           {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
         </p>

@@ -277,7 +277,7 @@ const EditUser = () => {
           <div className="grid grid-cols-3 gap-6">
             {allowRender
               ? userClasses.map((classObj) => (
-                <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="/admin/class" />
+                <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="/admin/levels/class" />
               ))
               : showSkeleton && <SkeletonClass count={3} />}
           </div>
