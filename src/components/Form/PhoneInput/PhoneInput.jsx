@@ -9,7 +9,6 @@ const PhoneInput = ({ name, value, setValue }) => {
 
   return (
     <ReactPhoneInput
-      placeholder={t('enter_phone_number')}
       value={value || '+'}
       onChange={(phone) =>
         setValue({ target: { name, value: phone || '' } })

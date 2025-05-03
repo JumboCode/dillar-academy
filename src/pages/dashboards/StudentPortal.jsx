@@ -68,7 +68,7 @@ const StudentPortal = () => {
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
-      if (isPossiblePhoneNumber(editFormData.whatsapp)) {
+      if (isPossiblePhoneNumber(editFormData.whatsapp) || editFormData.whatsapp === "") {
         await updateUser(user._id, editFormData);
         setUser(prev => ({
           ...prev,
@@ -80,7 +80,6 @@ const StudentPortal = () => {
           gender: editFormData.gender
         }))
         setShowEditModal(false);
-        setEditFormData({ firstName: '', lastName: '', email: '', whatsapp: '', age: '', gender: '' });
       } else {
         setAlertMessage(`Error: Phone number is invalid`); // TODO: translations
         setTimeout(() => {
