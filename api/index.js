@@ -156,7 +156,7 @@ const createLevelTranslations = async (levelData) => {
 // Sign up
 app.post('/api/sign-up', async (req, res) => {
   try {
-    const { firstName, lastName, email, password, clerkId } = req.body;
+    const { firstName, lastName, email, whatsapp, password, clerkId } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -170,6 +170,7 @@ app.post('/api/sign-up', async (req, res) => {
       firstName,
       lastName,
       email,
+      whatsapp,
       password,
       clerkId
     });
@@ -276,10 +277,6 @@ app.get('/api/classes', async (req, res) => {
   try {
     const allowedFields = ['level', 'instructor', 'ageGroup'];
     const filters = validateInput(req.query, allowedFields);
-
-    if (Object.keys(filters).length === 0) {
-      res.status(404).send('Error: could not get classes', err)
-    }
 
     //apply the filters directly to the database query
     const data = await Class.find(filters);

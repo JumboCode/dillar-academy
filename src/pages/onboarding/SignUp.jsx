@@ -3,12 +3,14 @@ import { Link, useLocation } from 'wouter'
 import { postUser } from "@/api/user-wrapper";
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
+import PhoneInput from "@/components/Form/PhoneInput/PhoneInput";
 import Button from "@/components/Button/Button";
 import PasswordReqs from "@/components/PasswordReqs";
 import Alert from "@/components/Alert";
 import { useSignUp, useAuth } from '@clerk/clerk-react'
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useTranslation } from "react-i18next";
+import { isPossiblePhoneNumber } from 'react-phone-number-input';
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -20,6 +22,7 @@ export default function SignUp() {
     firstName: '',
     lastName: '',
     email: '',
+    whatsapp: '',
     password: '',
     retypedPassword: '',
   })
@@ -41,7 +44,10 @@ export default function SignUp() {
   if (!isLoaded) return;
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -118,6 +124,11 @@ export default function SignUp() {
                 value={formData.email}
                 placeholder={t("email")}
                 onChange={handleChange}
+              />
+              <PhoneInput
+                name="whatsapp"
+                value={formData.whatsapp}
+                setValue={handleChange}
               />
               <FormInput
                 isRequired={true}
