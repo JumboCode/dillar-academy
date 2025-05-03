@@ -4,7 +4,8 @@ import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { updateUser, getUser, deleteUser } from '@/api/user-wrapper.js';
 import { getClassById, getClasses, enrollInClass, unenrollInClass } from '@/api/class-wrapper';
-import FormInput from '@/components/Form/FormInput'
+import FormInput from '@/components/Form/FormInput';
+import PhoneInput from '@/components/Form/PhoneInput/PhoneInput';
 import Button from '@/components/Button/Button';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import BackButton from "@/components/Button/BackButton";
@@ -19,6 +20,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import SkeletonClass from '@/components/Skeletons/SkeletonClass';
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import { toTitleCase } from '@/utils/formatters';
+import { isPossiblePhoneNumber } from 'react-phone-number-input';
 
 const EditUser = () => {
   const { user } = useContext(UserContext);
@@ -35,6 +37,7 @@ const EditUser = () => {
     firstName: '',
     lastName: '',
     email: '',
+    whatsapp: '',
     privilege: ''
   });
   const [alertMessage, setAlertMessage] = useState("");
@@ -63,6 +66,7 @@ const EditUser = () => {
         firstName: userData.data.firstName,
         lastName: userData.data.lastName,
         email: userData.data.email,
+        whatsapp: userData.data.whatsapp || '',
         privilege: userData.data.privilege
       });
       let userClasses;
@@ -85,21 +89,31 @@ const EditUser = () => {
   }
 
   const handleUserInputChange = (e) => {
-    setUserFormData({ ...userFormData, [e.target.name]: e.target.value });
+    setUserFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleEditUser = async (e) => {
     e.preventDefault();
     try {
-      setIsSaving(true);
-      await updateUser(params.id, userFormData);
-      setSuccessMessage("Successfully updated user information")
-      setUserFormData({ firstName: '', lastName: '', email: '', privilege: '' })
-      await fetchData();
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 4000);
-      setIsSaving(false);
+      if (isPossiblePhoneNumber(userFormData.whatsapp) || userFormData.whatsapp === "") {
+        setIsSaving(true);
+        await updateUser(params.id, userFormData);
+        setSuccessMessage("Successfully updated user information")
+        setUserFormData({ firstName: '', lastName: '', email: '', whatsapp: '', privilege: '' })
+        await fetchData();
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 4000);
+        setIsSaving(false);
+      } else {
+        setAlertMessage(`Error: Phone number is invalid`);
+        setTimeout(() => {
+          setAlertMessage("");
+        }, 4000);
+      }
     } catch (error) {
       console.error('Error updating user:', error);
       setAlertMessage(`Error: ${error.response.data.message}`)
@@ -127,6 +141,7 @@ const EditUser = () => {
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
+      whatsapp: userData.whatsapp || '',
       privilege: userData.privilege
     });
   }
@@ -164,29 +179,31 @@ const EditUser = () => {
             <p className="text-blue-500">{toTitleCase(userData.privilege)}</p>
           </> : showSkeleton && <h1 className="w-full sm:w-1/2"><Skeleton /></h1>}
         </span>
-        <form onSubmit={handleEditUser} className="space-y-12">
-          <div className="flex w-full gap-x-6">
-            <div className="w-full">
-              <label>First Name</label>
-              <FormInput
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={userFormData.firstName}
-                onChange={handleUserInputChange}
-                isRequired={true}
-              />
-            </div>
-            <div className="w-full">
-              <label>Last Name</label>
-              <FormInput
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={userFormData.lastName}
-                onChange={handleUserInputChange}
-                isRequired={true}
-              />
+        <form onSubmit={handleEditUser} className="w-full lg:w-2/3 space-y-12">
+          <div className="flex flex-col gap-y-6 py-3 px-2">
+            <div className="sm:flex gap-y-6 sm:gap-y-0 sm:gap-x-6">
+              <div className="w-full">
+                <label>First Name</label>
+                <FormInput
+                  type="text"
+                  name="firstName"
+                  placeholder="First Name"
+                  value={userFormData.firstName}
+                  onChange={handleUserInputChange}
+                  isRequired={true}
+                />
+              </div>
+              <div className="w-full">
+                <label>Last Name</label>
+                <FormInput
+                  type="text"
+                  name="lastName"
+                  placeholder="Last Name"
+                  value={userFormData.lastName}
+                  onChange={handleUserInputChange}
+                  isRequired={true}
+                />
+              </div>
             </div>
             <div className="w-full">
               <label>Email</label>
@@ -199,7 +216,14 @@ const EditUser = () => {
                 isRequired={true}
               />
             </div>
-
+            <div className="w-full">
+              <label>WhatsApp</label>
+              <PhoneInput
+                name="whatsapp"
+                value={userFormData.whatsapp}
+                setValue={handleUserInputChange}
+              />
+            </div>
             <div className="w-full flex flex-col">
               <label>Privilege</label>
               <Dropdown

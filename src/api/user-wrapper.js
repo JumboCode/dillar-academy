@@ -12,20 +12,6 @@ const postUser = async (body) => {
   }
 };
 
-const postLogin = async (body) => {
-  try {
-    const response = await axios.post('/api/login', body, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response;
-  } catch (error) {
-    console.error('Login endpoint post error:', error);
-    throw error;
-  }
-};
-
 const getUsers = async () => {
   try {
     const response = await axios.get('/api/users');
@@ -36,7 +22,7 @@ const getUsers = async () => {
   }
 };
 
-// get user by id or email
+// get user by id or email or whatsapp
 const getUser = async (query = "") => {
   try {
     const response = await axios.get(`/api/user?${query}`);
@@ -106,7 +92,6 @@ const deleteUser = async (userId) => {
 
 export {
   postUser,
-  postLogin,
   getUsers,
   getUser,
   resetPassword,

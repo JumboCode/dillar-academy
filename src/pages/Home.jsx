@@ -159,7 +159,7 @@ const HomeClass = ({ classObj }) => {
       <div
         className={`bg-gradient-to-r from-dark-blue-100 via-blue-100 to-turquoise-200 py-2 px-4 rounded-sm text-neutral-400 font-extrabold transition-colors duration-300 w-fit`}
       >
-        Enroll
+        {t('enroll')}
       </div>
     </div>
   )
