@@ -37,7 +37,7 @@ const EditUser = () => {
     firstName: '',
     lastName: '',
     email: '',
-    whatsapp: '+',
+    whatsapp: '',
     privilege: ''
   });
   const [alertMessage, setAlertMessage] = useState("");
@@ -97,14 +97,12 @@ const EditUser = () => {
 
   const handleEditUser = async (e) => {
     e.preventDefault();
-    console.log(userFormData.whatsapp)
-    console.log(userFormData.whatsapp === "")
     try {
       if (isPossiblePhoneNumber(userFormData.whatsapp) || userFormData.whatsapp === "") {
         setIsSaving(true);
         await updateUser(params.id, userFormData);
         setSuccessMessage("Successfully updated user information")
-        setUserFormData({ firstName: '', lastName: '', email: '', whatsapp: '+', privilege: '' })
+        setUserFormData({ firstName: '', lastName: '', email: '', whatsapp: '', privilege: '' })
         await fetchData();
         setTimeout(() => {
           setSuccessMessage("");

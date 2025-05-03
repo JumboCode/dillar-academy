@@ -183,31 +183,6 @@ app.post('/api/sign-up', async (req, res) => {
   }
 })
 
-
-// Login
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-    if (user) {
-      if (user.password === password) {
-        res.status(200).json(user);
-      } else {
-        console.log('Login failed: Incorrect password.');
-        res.status(401).send('Invalid password.');
-      }
-    } else {
-      console.log('Login failed: User not found');
-      res.status(401).send('Invalid email.');
-    }
-  } catch (error) {
-    console.error('Failed to login:', error);
-    res.status(500).send({ message: 'Failed to login' });
-  }
-})
-
-
 // Get Users
 app.get('/api/users', async (req, res) => {
   try {
@@ -221,8 +196,12 @@ app.get('/api/users', async (req, res) => {
 
 // Get User
 app.get('/api/user', async (req, res) => {
-  const allowedFields = ['email', '_id']
+  const allowedFields = ['_id', 'email', 'whatsapp']
   const filters = validateInput(req.query, allowedFields)
+
+  if (Object.keys(filters).length === 0) {
+    res.status(404).send('Error: user not found', err);
+  }
 
   try {
     const user = await User.findOne(filters);
@@ -298,6 +277,10 @@ app.get('/api/classes', async (req, res) => {
     const allowedFields = ['level', 'instructor', 'ageGroup'];
     const filters = validateInput(req.query, allowedFields);
 
+    if (Object.keys(filters).length === 0) {
+      res.status(404).send('Error: could not get classes', err)
+    }
+
     //apply the filters directly to the database query
     const data = await Class.find(filters);
     res.json(data);
@@ -312,6 +295,11 @@ app.get("/api/levels", async (req, res) => {
   try {
     const allowedFields = ['level'];
     const filters = validateInput(req.query, allowedFields);
+
+    if (Object.keys(filters).length === 0) {
+      res.status(404).send('Error: could not get classes', err)
+    }
+
     const data = await Level.find(filters);
     res.json(data);
   } catch (err) {

@@ -1,10 +1,8 @@
 import 'react-phone-number-input/style.css';
 import './style.css';
-import ReactPhoneInput from 'react-phone-number-input'
-import { useTranslation } from 'react-i18next'
+import ReactPhoneInput from 'react-phone-number-input';
 
 const PhoneInput = ({ name, value, setValue }) => {
-  const { t } = useTranslation();
   const styles = "text-base sm:text-lg w-full py-3 px-4 border border-gray-400 rounded-sm placeholder-gray-500";
 
   return (

@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { postLogin } from "../../api/user-wrapper";
+import { getUser } from "@/api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from '@/components/Form/FormInput';
+import PhoneInput from "@/components/Form/PhoneInput/PhoneInput";
 import Button from "@/components/Button/Button";
 import Alert from "@/components/Alert";
 import { useSignIn, useAuth } from "@clerk/clerk-react";
@@ -15,8 +16,10 @@ export default function Login() {
   const { isSignedIn } = useAuth();
   const { user, setUser } = useContext(UserContext);
   const { t } = useTranslation();
+  const [isUseEmail, setIsUseEmail] = useState(true);
   const [formData, setFormData] = useState({
     email: '',
+    whatsapp: '',
     password: '',
   })
   const [alertMessage, setAlertMessage] = useState("")
@@ -34,7 +37,10 @@ export default function Login() {
   }, [isSignedIn, user])
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -42,7 +48,15 @@ export default function Login() {
     if (!isLoaded) return;
 
     try {
-      const { email, password } = formData;
+      let { email, whatsapp, password } = formData;
+
+      if (!isUseEmail) {
+        const userFilter = new URLSearchParams({ whatsapp });
+        const userRes = await getUser(userFilter);
+        console.log(userRes)
+        email = userRes.data.email;
+      }
+
       const userLogin = await signIn.create({
         identifier: email,
         password: password
@@ -50,11 +64,8 @@ export default function Login() {
 
       if (userLogin.status === "complete") {
         await setActive({ session: userLogin.createdSessionId });
-        const response = await postLogin(formData);
-        if (response.status === 200) {
-          setUser(response.data)
-        }
-        const dashboardURL = response.data.privilege === "admin" ? "/admin/levels" : `/${response.data.privilege}`;
+        setUser(userRes.data)
+        const dashboardURL = userRes.data.privilege === "admin" ? "/admin/levels" : `/${userRes.data.privilege}`;
 
         setLocation(dashboardURL);
       } else {
@@ -65,7 +76,7 @@ export default function Login() {
         }, 4000)
       }
     } catch (error) {
-      setAlertMessage(`Error: ${error.response.data.message}`); // TODO: translation
+      setAlertMessage(`Error: ${error?.response?.data?.message ?? "Failed to login"}`); // TODO: translation
       setTimeout(() => {
         setAlertMessage("");
       }, 4000)
@@ -87,13 +98,19 @@ export default function Login() {
               onSubmit={handleSubmit}
               className="space-y-3"
             >
-              <FormInput
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder={t("email")}
-                isRequired={true} />
+              {isUseEmail
+                ? <FormInput
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t("email")}
+                  isRequired={true} />
+                : <PhoneInput
+                  name="whatsapp"
+                  value={formData.whatsapp}
+                  setValue={handleChange} />
+              }
               <FormInput
                 type="password"
                 name="password"
@@ -104,10 +121,17 @@ export default function Login() {
               <span className="w-full flex justify-end">
                 <Link href="/forgot-password" className="text-sm text-black opacity-50">{t("forgot_password")}</Link>
               </span>
-              <Button
-                type="submit"
-                label={t("login")}
-              />
+              <div className="flex gap-x-2">
+                <Button
+                  type="submit"
+                  label={t("login")}
+                />
+                <Button
+                  label={isUseEmail ? t("use_whatsapp") : t("use_email")}
+                  isOutline
+                  onClick={() => setIsUseEmail(!isUseEmail)}
+                />
+              </div>
             </form >
           </Form >
         </div>

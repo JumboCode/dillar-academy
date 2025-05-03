@@ -31,7 +31,7 @@ const InstructorView = () => {
     firstName: '',
     lastName: '',
     email: '',
-    whatsapp: '+',
+    whatsapp: '',
     age: '',
     gender: '',
   });
@@ -116,7 +116,7 @@ const InstructorView = () => {
             ? <div className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
               <h1
                 title={allowRender ? `Name: ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}` : ""}
-                className='font-extrabold w-4/5 break-words'>
+                className='font-extrabold w-fit max-w-[80%] break-words'>
                 {`${t("welcome")} ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}!`}
               </h1>
               <p className='text-blue-500'>{allowRender ? t(`${user.privilege}`) : ""}</p>
