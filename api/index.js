@@ -10,7 +10,7 @@ import { validateInput } from "./utils/validate-utils.js";
 
 // external schemas
 import User from "./schemas/User.js";
-import { Class, Conversation } from './schemas/Classes.js';
+import Class from './schemas/Class.js';
 
 // external routes
 import translationRoutes from './routes/translation-routes.js';

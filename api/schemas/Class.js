@@ -31,17 +31,4 @@ const ClassSchema = new Schema({
 
 const Class = mongoose.model("Class", ClassSchema);
 
-
-// Conversation Schema
-const ConversationSchema = new Schema({
-  level: { type: String, required: true, default: "conversation" },
-  ageGroup: { type: String, required: true },
-  instructor: { type: String, required: true },
-  schedule: { type: [ScheduleSchema], default: [] },
-  roster: { type: [Schema.Types.ObjectId], default: [] },
-  isEnrollmentOpen: { type: Boolean, default: true }
-}, { collection: 'conversations' });
-
-const Conversation = mongoose.model("Conversation", ConversationSchema);
-
-export { Class, Conversation };
+export default Class;

@@ -2,8 +2,8 @@ import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import User from "../schemas/User.js";
+import Class from "../schemas/Class.js";
 import { clerkClient } from "@clerk/express";
-import { Class } from "../schemas/Classes.js";
 import { validateInput } from "../utils/validate-utils.js";
 
 const router = express.Router();
