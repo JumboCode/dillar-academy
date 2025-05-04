@@ -4,18 +4,19 @@ import cors from "cors";
 import mongo from "mongodb";
 import mongoose from "mongoose";
 import mongoSanitize from "express-mongo-sanitize";
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
 import { clerkClient } from "@clerk/express";
 
 // external schemas
 import Translation from "./schemas/Translation.js";
 import User from "./schemas/User.js";
-import Contact from "./schemas/Contact.js";
+// import Contact from "./schemas/Contact.js";
 import Level from "./schemas/Level.js";
 import { Class, Conversation } from './schemas/Classes.js';
 
 // external routes
 import translationRoutes from './routes/translation-routes.js';
+import emailRoutes from './routes/email-routes.js';
 
 const app = express()
 app.use(cors())
@@ -23,6 +24,7 @@ app.use(express.json())
 app.use(mongoSanitize())
 
 app.use('/api/locales', translationRoutes);
+app.use('/api/', emailRoutes);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
@@ -216,58 +218,58 @@ app.get('/api/user', async (req, res) => {
 /* CONTACT RELATED ENDPOINTS */
 
 // Post Contact
-app.post('/api/contact', async (req, res) => {
-  const { name, email, subject, message } = req.body
+// app.post('/api/contact', async (req, res) => {
+//   const { name, email, subject, message } = req.body
 
-  try {
-    const newContact = new Contact({
-      name,
-      email,
-      subject,
-      message
-    });
-    await newContact.save();
+//   try {
+//     const newContact = new Contact({
+//       name,
+//       email,
+//       subject,
+//       message
+//     });
+//     await newContact.save();
 
-    // Nodemailer setup
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.ADMIN_EMAIL,
-        pass: process.env.ADMIN_PASSWORD,
-      },
-    });
+//     // Nodemailer setup
+//     const transporter = nodemailer.createTransport({
+//       service: 'gmail',
+//       auth: {
+//         user: process.env.ADMIN_EMAIL,
+//         pass: process.env.ADMIN_PASSWORD,
+//       },
+//     });
 
-    transporter.verify((error, success) => {
-      if (error) {
-        console.error('Error initializing transporter:', error);
-      } else {
-        console.log('Transporter is ready to send emails', success);
-      }
-    });
+//     transporter.verify((error, success) => {
+//       if (error) {
+//         console.error('Error initializing transporter:', error);
+//       } else {
+//         console.log('Transporter is ready to send emails', success);
+//       }
+//     });
 
 
-    const mailOptions = {
-      from: email,
-      to: process.env.ADMIN_EMAIL,
-      subject: `Contact Form: ${subject}`,
-      html: `
-        <p><strong>From:</strong> ${name} (${email})</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-      `
-    };
+//     const mailOptions = {
+//       from: email,
+//       to: process.env.ADMIN_EMAIL,
+//       subject: `Contact Form: ${subject}`,
+//       html: `
+//         <p><strong>From:</strong> ${name} (${email})</p>
+//         <p><strong>Subject:</strong> ${subject}</p>
+//         <p><strong>Message:</strong></p>
+//         <p>${message}</p>
+//       `
+//     };
 
-    // Send email
-    await transporter.sendMail(mailOptions);
+//     // Send email
+//     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({ message: 'Inquiry and email submitted successfully' });
-  }
-  catch (err) {
-    console.error('Error submitting inquiry:', err);
-    res.status(500).json({ message: 'Error submitting inquiry', error: err.message });
-  }
-});
+//     res.status(201).json({ message: 'Inquiry and email submitted successfully' });
+//   }
+//   catch (err) {
+//     console.error('Error submitting inquiry:', err);
+//     res.status(500).json({ message: 'Error submitting inquiry', error: err.message });
+//   }
+// });
 
 
 /* CLASS RELATED ENDPOINTS */
