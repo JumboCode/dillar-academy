@@ -91,7 +91,7 @@ const unenrollInClass = async (classId, userId) => {
 
 const getClassById = async (classId) => {
   try {
-    const response = await axios.get(`/api/class/${classId}`);
+    const response = await axios.get(`/api/classes/${classId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching class from id:", error);

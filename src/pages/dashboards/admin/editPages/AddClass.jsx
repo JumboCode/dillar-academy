@@ -10,6 +10,7 @@ import Alert from '@/components/Alert';
 import { createClass } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
+import { convertIfNumber } from "@/utils/formatters";
 
 const AddClass = () => {
   const { user } = useContext(UserContext);
@@ -49,7 +50,8 @@ const AddClass = () => {
   const handleAddClass = async (e) => {
     e.preventDefault();
     classData.ageGroup = classData.ageGroup.toLowerCase();
-    const allowedAges = ["all", "children", "adult"]
+    classData.level = convertIfNumber(classData.level);
+    const allowedAges = ["all", "children", "adults"]
     try {
       if (!allowedAges.includes(classData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);

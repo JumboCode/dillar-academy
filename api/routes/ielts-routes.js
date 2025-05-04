@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import Class from '../schemas/Class.js';
-import { validateInput } from "../utils/validate-utils.js";
 
 const router = express.Router();
 
