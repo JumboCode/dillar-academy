@@ -3,7 +3,7 @@ import { useLocation, Link } from 'wouter';
 import Button from '@/components/Button/Button';
 import EditButton from '@/components/Button/EditButton';
 import { useTranslation } from "react-i18next";
-import { localizeNumber, toTitleCase } from "@/utils/formatters";
+import { localizeNumber, toTitleCase, ensureHttps } from "@/utils/formatters";
 
 const Schedule = ({ privilege, classes, filters = [] }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
@@ -146,7 +146,7 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
       </p>
       {!isMobile && (
         privilege === "student" ? (
-          <a href={classObj.link}>
+          <a href={ensureHttps(classObj.link)}>
             {/* button overflowing in different languages */}
             <Button label={t('join')} onClick={null} isDisabled={classObj.link === ""} />
           </a>
