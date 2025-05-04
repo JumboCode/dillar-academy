@@ -1,6 +1,9 @@
 import "dotenv/config";
 import express from "express";
+import mongoose from "mongoose";
 import User from "../schemas/User.js";
+import { clerkClient } from "@clerk/express";
+import { Class } from "../schemas/Classes.js";
 import { validateInput } from "../utils/validate-utils.js";
 
 const router = express.Router();
@@ -63,5 +66,46 @@ router.get('/user', async (req, res) => {
     res.status(500).send(err);
   }
 })
+
+// Delete User
+router.delete('/user/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const deletedUser = await User.findOne({ _id: id });
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // remove student from enrolled classes' roster
+    await Promise.all(
+      deletedUser.enrolledClasses.map(async (classId) => {
+        try {
+          const classDoc = await Class.findById(classId);
+
+          if (classDoc) {
+            await Class.findByIdAndUpdate(classId, { $pull: { roster: id } });
+          } else {
+            await Conversation.findByIdAndUpdate(classId, { $pull: { roster: id } });
+          }
+        } catch (err) {
+          throw err;
+        }
+      })
+    );
+
+    // delete user
+    await clerkClient.users.deleteUser(deletedUser.clerkId);
+    await User.findByIdAndDelete(id);
+
+    res.status(204).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Failed to delete user:', error);
+    res.status(500).json({ message: 'Failed to delete user' });
+  }
+});
 
 export default router;
