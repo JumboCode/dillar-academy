@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { transferTranslations } from "@/api/translation-wrapper";
 import { toTitleCase } from '@/utils/formatters';
 
 // query should be a string
@@ -25,12 +24,12 @@ const getClasses = async (query = "") => {
   }
 }
 
-const getConversations = async () => {
+const getClassById = async (classId) => {
   try {
-    const response = await axios.get("/api/conversations/");
+    const response = await axios.get(`/api/classes/${classId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching conversations:', error)
+    console.error("Error fetching class from id:", error);
     throw error;
   }
 }
@@ -89,72 +88,13 @@ const unenrollInClass = async (classId, userId) => {
   }
 }
 
-const getClassById = async (classId) => {
-  try {
-    const response = await axios.get(`/api/classes/${classId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching class from id:", error);
-    throw error;
-  }
-}
-
-const getConversationById = async (conversationId) => {
-  try {
-    const response = await axios.get(`/api/conversations/${conversationId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching conversation from id:", error);
-    throw error;
-  }
-}
-
-const updateConversation = async (conversationId, conversationData) => {
-  if (Object.hasOwn(conversationData, "instructor")) {
-    conversationData.instructor = toTitleCase(conversationData.instructor);
-  }
-  try {
-    const response = await axios.put(`/api/conversations/${conversationId}`, conversationData);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating conversation:', error);
-    throw error;
-  }
-}
-
-const deleteConversation = async (conversationId) => {
-  try {
-    const response = await axios.delete(`/api/conversations/${conversationId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error deleting conversation:', error);
-    throw error;
-  }
-}
-
-const createConversation = async (conversationData) => {
-  conversationData.instructor = toTitleCase(conversationData.instructor);
-  try {
-    const response = await axios.post('/api/conversations', conversationData);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating conversation:', error);
-    throw error;
-  }
-}
-
 export {
   getAllClasses,
   getClasses,
+  getClassById,
   createClass,
   updateClass,
   deleteClass,
   enrollInClass,
-  unenrollInClass,
-  getClassById,
-  getConversations,
-  getConversationById,
-  updateConversation,
-  deleteConversation,
-  createConversation
+  unenrollInClass
 }

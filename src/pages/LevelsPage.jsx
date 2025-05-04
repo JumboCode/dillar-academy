@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from "wouter"
 import { useTranslation } from "react-i18next";
 import { getLevels } from '@/api/level-wrapper';
-import { getConversations } from '@/api/class-wrapper';
+import { getConversations } from '@/api/conversation-wrapper';
 import { getIelts } from '@/api/ielts-wrapper';
 import Level from '@/components/Class/Level'
 import SupplementaryClass from '@/components/Class/SupplementaryClass';
