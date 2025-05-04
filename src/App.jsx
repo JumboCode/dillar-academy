@@ -6,7 +6,7 @@ import Footer from './components/Footer.jsx';
 import PageRoutes from '@/components/PageRoutes'
 import "./i18n.js";
 import { useUser } from '@clerk/clerk-react'
-import { getUser } from './api/user-wrapper.js';
+import { getUser } from '@/wrappers/user-wrapper.js';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { SkeletonTheme } from 'react-loading-skeleton';

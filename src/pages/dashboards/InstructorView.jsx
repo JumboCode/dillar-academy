@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
-import { updateUser } from '@/wrapper/user-wrapper';
-import { getClasses } from '@/wrapper/class-wrapper'
+import { updateUser } from '@/wrappers/user-wrapper';
+import { getClasses } from '@/wrappers/class-wrapper'
 import { IoCreateOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import Button from '@/components/Button/Button';

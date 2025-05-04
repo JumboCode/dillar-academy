@@ -2,9 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getUsers } from '@/wrapper/user-wrapper.js'
+import { getUsers } from '@/wrappers/user-wrapper.js'
 import { IoPersonOutline } from "react-icons/io5";
-import { getClasses } from '@/wrapper/class-wrapper';
+import { getClasses } from '@/wrappers/class-wrapper';
 import UserItem from '@/components/UserItem'
 import SearchBar from '@/components/SearchBar';
 import SkeletonUser from '@/components/Skeletons/SkeletonUser';

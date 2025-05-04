@@ -7,7 +7,7 @@ import Button from '@/components/Button/Button';
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
-import { createClass } from '@/wrapper/class-wrapper.js';
+import { createClass } from '@/wrappers/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
 import { convertIfNumber } from "@/utils/formatters";

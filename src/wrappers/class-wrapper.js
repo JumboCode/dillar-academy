@@ -15,7 +15,7 @@ const getAllClasses = async (query = "") => {
 // query should be a string
 const getClasses = async (query = "") => {
   try {
-    const response = await axios.get(`/api/classes?${query}`);
+    const response = await axios.get(`/api/classes/classes?${query}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching courses:', error)
@@ -26,7 +26,7 @@ const getClasses = async (query = "") => {
 
 const getClassById = async (classId) => {
   try {
-    const response = await axios.get(`/api/classes/${classId}`);
+    const response = await axios.get(`/api/classes/classes/${classId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching class from id:", error);
@@ -37,7 +37,7 @@ const getClassById = async (classId) => {
 const createClass = async (classData) => {
   classData.instructor = toTitleCase(classData.instructor);
   try {
-    const response = await axios.post('/api/classes', classData);
+    const response = await axios.post('/api/classes/classes', classData);
     return response.data;
   } catch (error) {
     console.error('Error creating/updating class:', error);
@@ -50,7 +50,7 @@ const updateClass = async (classId, classData) => {
     classData.instructor = toTitleCase(classData.instructor);
   }
   try {
-    const response = await axios.put(`/api/classes/${classId}`, classData);
+    const response = await axios.put(`/api/classes/classes/${classId}`, classData);
     return response.data;
   } catch (error) {
     console.error('Error updating class:', error);
@@ -60,7 +60,7 @@ const updateClass = async (classId, classData) => {
 
 const deleteClass = async (classId) => {
   try {
-    const response = await axios.delete(`/api/classes/${classId}`);
+    const response = await axios.delete(`/api/classes/classes/${classId}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting class:', error);

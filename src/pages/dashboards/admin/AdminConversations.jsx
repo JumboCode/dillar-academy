@@ -5,7 +5,7 @@ import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import SupplementaryClass from '@/components/Class/SupplementaryClass';
 import Button from '@/components/Button/Button';
-import { getConversations } from '@/wrapper/conversation-wrapper';
+import { getConversations } from '@/wrappers/conversation-wrapper';
 import BackButton from "@/components/Button/BackButton";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonLevel from '@/components/Skeletons/SkeletonLevel';

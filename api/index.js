@@ -18,8 +18,6 @@ import emailRoutes from './routes/email-routes.js';
 import userRoutes from './routes/user-routes.js';
 import levelRoutes from './routes/level-routes.js';
 import classRoutes from './routes/class-routes.js';
-import conversationRoutes from './routes/conversation-routes.js';
-import ieltsRoutes from './routes/ielts-routes.js';
 
 const app = express();
 app.use(cors());
@@ -31,8 +29,6 @@ app.use('/api', emailRoutes);
 app.use('/api', userRoutes);
 app.use('/api/levels', levelRoutes);
 app.use('/api/classes', classRoutes);
-app.use('/api/conversations', conversationRoutes);
-app.use('/api/ielts', ieltsRoutes);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)

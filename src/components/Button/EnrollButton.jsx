@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import Button from '@/components/Button/Button';
 import Overlay from '@/components/Overlay';
 import { SignOutButton } from '@clerk/clerk-react'
-import { enrollInClass, unenrollInClass } from '@/wrapper/class-wrapper';
+import { enrollInClass, unenrollInClass } from '@/wrappers/class-wrapper';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import { useLocation } from 'wouter';
 import { useUser } from '@clerk/clerk-react';

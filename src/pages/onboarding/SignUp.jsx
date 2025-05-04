@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Link, useLocation } from 'wouter'
-import { postUser } from "@/wrapper/user-wrapper";
+import { postUser } from "@/wrappers/user-wrapper";
 import Form from "@/components/Form/Form"
 import FormInput from "@/components/Form/FormInput";
 import PhoneInput from "@/components/Form/PhoneInput/PhoneInput";

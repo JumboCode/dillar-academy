@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from "wouter"
 import { useTranslation } from "react-i18next";
-import { getLevels } from '@/wrapper/level-wrapper';
-import { getConversations } from '@/wrapper/conversation-wrapper';
-import { getIelts } from '@/wrapper/ielts-wrapper';
+import { getLevels } from '@/wrappers/level-wrapper';
+import { getConversations } from '@/wrappers/conversation-wrapper';
+import { getIelts } from '@/wrappers/ielts-wrapper';
 import Level from '@/components/Class/Level'
 import SupplementaryClass from '@/components/Class/SupplementaryClass';
 import Skeleton from 'react-loading-skeleton';

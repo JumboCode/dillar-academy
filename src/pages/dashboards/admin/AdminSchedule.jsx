@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useAuth } from '@clerk/clerk-react';
 import { useLocation } from 'wouter';
-import { getAllClasses } from '@/wrapper/class-wrapper';
+import { getAllClasses } from '@/wrappers/class-wrapper';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import Schedule from '@/components/Schedule';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';

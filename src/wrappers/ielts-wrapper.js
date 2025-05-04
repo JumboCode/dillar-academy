@@ -3,7 +3,7 @@ import { toTitleCase } from '@/utils/formatters';
 
 const getIelts = async () => {
   try {
-    const response = await axios.get('/api/ielts');
+    const response = await axios.get('/api/classes/ielts');
     return response.data;
   } catch (error) {
     throw error;
@@ -12,7 +12,7 @@ const getIelts = async () => {
 
 const getIeltsById = async (ieltsId) => {
   try {
-    const response = await axios.get(`/api/ielts/${ieltsId}`);
+    const response = await axios.get(`/api/classes/ielts/${ieltsId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching IELTS from id:", error);
@@ -23,7 +23,7 @@ const getIeltsById = async (ieltsId) => {
 const createIelts = async (ielts) => {
   ielts.instructor = toTitleCase(ielts.instructor);
   try {
-    const response = await axios.post('/api/ielts', ielts);
+    const response = await axios.post('/api/classes/ielts', ielts);
     return response.data;
   } catch (error) {
     console.error('Error creating IELTS class:', error);
@@ -36,7 +36,7 @@ const updateIelts = async (ieltsId, ielts) => {
     ielts.instructor = toTitleCase(ielts.instructor);
   }
   try {
-    const response = await axios.put(`/api/ielts/${ieltsId}`, ielts);
+    const response = await axios.put(`/api/classes/ielts/${ieltsId}`, ielts);
     return response.data;
   } catch (error) {
     console.error('Error updating IELTS class:', error);
@@ -46,7 +46,7 @@ const updateIelts = async (ieltsId, ielts) => {
 
 const deleteIelts = async (ieltsId) => {
   try {
-    const response = await axios.delete(`/api/ielts/${ieltsId}`);
+    const response = await axios.delete(`/api/classes/ielts/${ieltsId}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting IELTS class:', error);
