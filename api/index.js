@@ -267,10 +267,7 @@ app.put('/api/users/:id/enroll', async (req, res) => {
 
     let cls = await Class.findById(classId);
     if (!cls) {
-      cls = await Conversation.findById(classId);
-    }
-    if (!cls) {
-      return res.status(404).json({ message: 'Class or Conversation not found' });
+      return res.status(404).json({ message: 'Class not found' });
     }
     if (!cls.isEnrollmentOpen) {
       return res.status(403).json({ message: 'Enrollment is currently closed for this class.' });
@@ -282,19 +279,18 @@ app.put('/api/users/:id/enroll', async (req, res) => {
       { $addToSet: { enrolledClasses: classId } }
     )
 
-    const model = typeof cls.level === "number" ? Class : Conversation;
     // add student id to class's roster
-    await model.findByIdAndUpdate(
+    await Class.findByIdAndUpdate(
       classId,
       { $addToSet: { roster: id } }
     )
+
     res.status(201).json({ message: 'Enrolled successfully!' })
   } catch (err) {
     console.error('Error enrolling into class:', err);
     res.status(500).json({ message: 'Error enrolling into class' })
   }
 })
-
 
 // Unenroll in a class
 app.put('/api/users/:id/unenroll', async (req, res) => {
@@ -312,51 +308,23 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
       return res.status(400).json({ message: 'Not enrolled in this class' });
     }
 
-    let cls = await Class.findById(classId);
-    if (!cls) {
-      cls = await Conversation.findById(classId);
-    }
-    if (!cls) {
-      return res.status(404).json({ message: 'Class or Conversation not found' });
-    }
-
     // remove class id from user's classes
     await User.findByIdAndUpdate(
       id,
       { $pull: { enrolledClasses: classId } },
     )
 
-    const model = typeof cls.level === "number" ? Class : Conversation;
     // remove student id from class's roster
-    await model.findByIdAndUpdate(
+    await Class.findByIdAndUpdate(
       classId,
       { $pull: { roster: id } },
     )
-    res.status(201).json({ message: 'Unenrolled successfully!' })
+
+    res.status(201).json({ message: 'Successfully unenrolled' })
   } catch (err) {
-    console.error('Error unenrolling into class:', err);
     res.status(500).json({ message: 'Error unenrolling into class' })
   }
 })
-
-// TODO: get rid of
-// Forgot Password
-app.put('/api/users/reset-password', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  try {
-    if (user) {
-      // Update the password (make sure to hash it if needed)
-      await User.findOneAndUpdate({ email }, { password }, { returnDocument: 'after' });
-      res.status(200).json({ success: true, message: "Password updated successfully." });
-    } else {
-      res.status(401).json({ success: false, message: "Invalid email." });
-    }
-  } catch (err) {
-    console.error('Error resetting password', err);
-    res.status(500).json({ success: false, message: "Server error resetting password." });
-  }
-});
 
 // Get Students Export Data
 app.get('/api/students-export', async (req, res) => {

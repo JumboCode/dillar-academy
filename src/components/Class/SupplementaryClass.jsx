@@ -78,18 +78,18 @@ const SupplementaryClass = ({ cls, modes = ["enroll"], editURL = "" }) => {
       </div>
       <div className='flex gap-3 mb-4 ml-5'>
         {modes.includes("edit") && <EditButton classId={cls._id} editURL={editURL} />}
-        {/* {modes.includes("enroll") &&
+        {modes.includes("enroll") &&
           <EnrollButton
-            cls={cls}
+            classObj={cls}
             isEnroll={true}
           />
         }
         {modes.includes("unenroll") &&
           <EnrollButton
-            cls={cls}
+            classObj={cls}
             isEnroll={false}
           />
-        } */}
+        }
       </div>
     </div>
   )
