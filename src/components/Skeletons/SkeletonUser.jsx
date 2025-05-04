@@ -7,7 +7,7 @@ const SkeletonUser = ({ count }) => {
     .fill(0)
     .map((_, i) => (
       <div key={i} className="flex py-3 px-4 justify-between items-center space-x-3 w-full rounded-sm flex-space-between">
-        <div className="flex flex-col w-full *:truncate *:w-full">
+        <div className="flex flex-col w-full *:w-full">
           <p className="font-semibold">
             <Skeleton />
           </p>

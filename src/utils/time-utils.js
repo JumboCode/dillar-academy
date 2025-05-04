@@ -9,12 +9,12 @@ import { DateTime } from "luxon";
  * @returns {string} time in 24-hour format in target time zone.
  */
 export const convertTime = (day, time24h, fromZone, toZone) => {
-  const dt = DateTime.fromFormat(`${day} ${time24h}`, 'cccc HH:mm', {
+  const dt = DateTime.fromFormat(`${day} ${time24h}`, 'cccc H:mm', {
     zone: fromZone,
   }).setZone(toZone)
 
   return {
-    time: dt.toFormat('HH:mm'),
+    time: dt.toFormat('H:mm'),
     day: dt.toFormat('cccc')
   }
 }
@@ -25,5 +25,5 @@ export const convertTime = (day, time24h, fromZone, toZone) => {
  * @returns {string} time in 12-hour format
  */
 export const to12HourFormat = (time24h) => {
-  return DateTime.fromFormat(time24h, 'HH:mm').toFormat('hh:mm a');
+  return DateTime.fromFormat(time24h, 'H:mm').toFormat('h:mm a');
 }

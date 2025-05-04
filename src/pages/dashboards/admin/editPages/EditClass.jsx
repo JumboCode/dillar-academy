@@ -106,31 +106,24 @@ const EditClass = () => {
       } else {
         setIsSaving(true);
 
-        const convertedSchedule = classData.schedule
-          // Filter out any time objects that are empty (i.e., missing a day or time)
-          .filter(time => time.day && time.startTime && time.endTime)
-          .map(({ day, startTime, endTime }) => {
-            const startUTC = convertTime(day, startTime, 'America/New_York', 'Etc/UTC');
-            const endUTC = convertTime(day, endTime, 'America/New_York', 'Etc/UTC');
-
-            return {
-              day: startUTC.day,
-              startTime: startUTC.time,
-              endTime: endUTC.time
-            };
-          });
-
         const filteredClassData = {
           ...classData,
-          schedule: convertedSchedule
+          schedule: classData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
 
-        await updateClass(params.classId, filteredClassData);
-        setSuccessMessage("Successfully updated class details");
-        await fetchClass();
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 4000);
+        if (filteredClassData.schedule.length === 0) {
+          setAlertMessage(`Must add class time(s)`);
+          setTimeout(() => {
+            setAlertMessage("");
+          }, 4000);
+        } else {
+          await updateClass(params.classId, filteredClassData);
+          setSuccessMessage("Successfully updated class details");
+          await fetchClass();
+          setTimeout(() => {
+            setSuccessMessage("");
+          }, 4000);
+        }
         setIsSaving(false);
       }
     } catch (error) {
@@ -275,10 +268,8 @@ const EditClass = () => {
                           <FormInput
                             type="text"
                             name="startTime"
-                            placeholder="Start Time"
-                            value={time.startTime
-                              ? convertTime(time.day, time.startTime, "Etc/UTC", "America/New_York").time
-                              : ""}
+                            placeholder="Start Time (24h UTC)"
+                            value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
@@ -286,10 +277,8 @@ const EditClass = () => {
                           <FormInput
                             type="text"
                             name="endTime"
-                            placeholder="End Time"
-                            value={time.endTime
-                              ? convertTime(time.day, time.endTime, "Etc/UTC", "America/New_York").time
-                              : ""}
+                            placeholder="End Time (24h UTC)"
+                            value={time.endTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
@@ -310,7 +299,7 @@ const EditClass = () => {
               })}
             </div>
             <div className="w-full grid grid-cols-2">
-              <p className="italic text-blue-500 col-start-2">Enter times in EST and 24 hour format</p>
+              <p className="italic text-blue-500 col-start-2">Enter times in UTC and 24 hour format</p>
             </div>
           </div>
           <Button

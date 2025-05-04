@@ -91,34 +91,25 @@ const EditConversation = () => {
       } else {
         setIsSaving(true);
 
-        const convertedSchedule = conversationData.schedule
-          // Filter out any time objects that are empty (i.e., missing a day or time)
-          .filter(time => time.day && time.startTime && time.endTime)
-          .map(({ day, startTime, endTime }) => {
-            const startUTC = convertTime(day, startTime, 'America/New_York', 'Etc/UTC');
-            const endUTC = convertTime(day, endTime, 'America/New_York', 'Etc/UTC');
-            console.log(startTime, "to", startUTC)
-            console.log(endTime, "to", endUTC)
-
-            return {
-              day: startUTC.day,
-              startTime: startUTC.time,
-              endTime: endUTC.time
-            };
-          });
-
         const filteredConversationData = {
           ...conversationData,
-          schedule: convertedSchedule
+          schedule: conversationData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
 
-        await updateConversation(params.id, filteredConversationData);
-        setSuccessMessage("Successfully updated conversation class details");
-        await fetchConversation();
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 4000);
-        setIsSaving(false);
+        if (filteredConversationData.schedule.length === 0) {
+          setAlertMessage(`Must add conversation class time(s)`);
+          setTimeout(() => {
+            setAlertMessage("");
+          }, 4000);
+        } else {
+          await updateConversation(params.id, filteredConversationData);
+          setSuccessMessage("Successfully updated conversation class details");
+          await fetchConversation();
+          setTimeout(() => {
+            setSuccessMessage("");
+          }, 4000);
+          setIsSaving(false);
+        }
       }
     } catch (error) {
       setIsSaving(false);
@@ -236,10 +227,8 @@ const EditConversation = () => {
                           <FormInput
                             type="text"
                             name="startTime"
-                            placeholder="Start Time"
-                            value={time.startTime
-                              ? convertTime(time.day, time.startTime, "Etc/UTC", "America/New_York").time
-                              : ""}
+                            placeholder="Start Time (24h UTC)"
+                            value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
@@ -247,10 +236,8 @@ const EditConversation = () => {
                           <FormInput
                             type="text"
                             name="endTime"
-                            placeholder="End Time"
-                            value={time.endTime
-                              ? convertTime(time.day, time.endTime, "Etc/UTC", "America/New_York").time
-                              : ""}
+                            placeholder="End Time (24h UTC)"
+                            value={time.endTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
                           />
@@ -271,7 +258,7 @@ const EditConversation = () => {
               })}
             </div>
             <div className="w-full grid grid-cols-2">
-              <p className="italic text-blue-500 col-start-2">Enter times in EST and 24 hour format</p>
+              <p className="italic text-blue-500 col-start-2">Enter times in UTC and 24 hour format</p>
             </div>
           </div>
           <Button

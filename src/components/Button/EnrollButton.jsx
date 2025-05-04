@@ -205,7 +205,7 @@ const EnrollButton = ({ classObj, isEnroll }) => {
         label={classObj.isEnrollmentOpen ? t('enroll') : t('enrollment_closed')}
         onClick={
           isSignedIn
-            ? user.privilege === "student"
+            ? user?.privilege === "student"
               ? () => setShowEnrollPopup(true)
               : () => setShowNotStudentPopup(true)
             : () => setShowSignUpPopup(true)}
