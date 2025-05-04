@@ -33,6 +33,7 @@ const EditClass = () => {
     level: '',
     ageGroup: '',
     instructor: '',
+    link: '',
     schedule: [
       {
         day: '',
@@ -67,6 +68,7 @@ const EditClass = () => {
         level: classObj.level,
         ageGroup: classObj.ageGroup,
         instructor: classObj.instructor,
+        link: classObj.link,
         schedule: classData.schedule
       });
       if (classObj.schedule.length !== 0) {
@@ -169,6 +171,7 @@ const EditClass = () => {
       level: classObj.level,
       ageGroup: classObj.ageGroup,
       instructor: classObj.instructor,
+      link: classObj.link,
       schedule: classObj.schedule.length !== 0 ? classObj.schedule : prev.schedule
     }));
   };
@@ -222,6 +225,17 @@ const EditClass = () => {
                 isRequired={true}
               />
             </div>
+          </div>
+          <div className="w-full mb-6">
+            <label className="mx-1">Class Link</label>
+            <FormInput
+              type="text"
+              name="link"
+              placeholder="Enter class link"
+              value={classData.link}
+              onChange={handleInputChange}
+              isRequired={true}
+            />
           </div>
           <div className="w-full space-y-3 mb-6">
             <div className="flex w-full gap-x-4">
