@@ -59,7 +59,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
       </div>
 
       {/* Schedule */}
-      <div ref={scheduleRef} className="grid grid-rows-[auto_auto] auto-cols-min max-w-full overflow-scroll items-center gap-x-4 gap-y-3 mb-5">
+      <div ref={scheduleRef} className="grid grid-rows-[auto_auto] auto-cols-min max-w-full overflow-scroll items-center gap-x-4 gap-y-3 mb-1 pb-4">
         <IoTimeOutline className="text-xl row-start-1" />
         <IoCalendarOutline className="text-xl row-start-2" />
 

@@ -29,10 +29,10 @@ const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) =
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden shadow-shadow hover:shadow-shadow-hover transition-shadow grid grid-rows-[2fr_3fr]">
       <div className="bg-[url('/images/blue_mountains.png')] bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
-      <div className="bg-white px-6 py-5 row-start-2 space-y-1">
+      <div className="bg-white px-6 py-5 row-start-2 space-y-1 overflow-scroll">
         <h3 className='font-extrabold'>{t('talk_to_name', { name: conversation.instructor })}</h3>
         <p className="text-sm">{t(`for_${conversation.ageGroup}`)}</p>
-        <div ref={scheduleRef} className="grid grid-rows-[auto_auto] auto-cols-min max-w-full overflow-scroll items-center gap-x-4 gap-y-3 mb-5">
+        <div ref={scheduleRef} className="grid grid-rows-[auto_auto] auto-cols-min overflow-scroll items-center gap-x-4 gap-y-3 mb-1 pb-4">
           <IoTimeOutline className="text-xl row-start-1" />
           <IoCalendarOutline className="text-xl row-start-2" />
 
