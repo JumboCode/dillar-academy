@@ -12,6 +12,7 @@ import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/api/class-wrapper';
 import { getUser } from '@/api/user-wrapper';
+import { convertTime } from "@/utils/time-utils";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
@@ -104,21 +105,29 @@ const EditClass = () => {
         }, 4000);
       } else {
         setIsSaving(true);
-        // Filter out any time objects that are empty (i.e., missing a day or time)
+
         const filteredClassData = {
           ...classData,
           schedule: classData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
 
-        await updateClass(params.classId, filteredClassData);
-        setSuccessMessage("Successfully updated class details");
-        await fetchClass();
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 4000);
+        if (filteredClassData.schedule.length === 0) {
+          setAlertMessage(`Must add class time(s)`);
+          setTimeout(() => {
+            setAlertMessage("");
+          }, 4000);
+        } else {
+          await updateClass(params.classId, filteredClassData);
+          setSuccessMessage("Successfully updated class details");
+          await fetchClass();
+          setTimeout(() => {
+            setSuccessMessage("");
+          }, 4000);
+        }
         setIsSaving(false);
       }
     } catch (error) {
+      setIsSaving(false);
       console.error('Error updating class:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
@@ -259,7 +268,7 @@ const EditClass = () => {
                           <FormInput
                             type="text"
                             name="startTime"
-                            placeholder="Start Time"
+                            placeholder="Start Time (24h UTC)"
                             value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
@@ -268,7 +277,7 @@ const EditClass = () => {
                           <FormInput
                             type="text"
                             name="endTime"
-                            placeholder="End Time"
+                            placeholder="End Time (24h UTC)"
                             value={time.endTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
@@ -288,6 +297,9 @@ const EditClass = () => {
                   </div>
                 )
               })}
+            </div>
+            <div className="w-full grid grid-cols-2">
+              <p className="italic text-blue-500 col-start-2">Enter times in UTC and 24 hour format</p>
             </div>
           </div>
           <Button

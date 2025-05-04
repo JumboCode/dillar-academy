@@ -41,8 +41,8 @@ export const SETTINGS_FOR_EXPORT = {
               key: 'instructor',
             },
             {
-              name: 'Google Classroom Link',
-              key: 'classroomLink',
+              name: 'Link',
+              key: 'link',
             },
             {
               name: 'Schedule (EST)',

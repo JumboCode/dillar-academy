@@ -11,6 +11,7 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import { convertTime } from "@/utils/time-utils";
 import Unauthorized from "@/pages/Unauthorized";
 
 const EditConversation = () => {
@@ -89,21 +90,29 @@ const EditConversation = () => {
         }, 4000);
       } else {
         setIsSaving(true);
-        // Filter out any time objects that are empty (i.e., missing a day or time)
+
         const filteredConversationData = {
           ...conversationData,
           schedule: conversationData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
 
-        await updateConversation(params.id, filteredConversationData);
-        setSuccessMessage("Successfully updated conversation class details");
-        await fetchConversation();
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 4000);
-        setIsSaving(false);
+        if (filteredConversationData.schedule.length === 0) {
+          setAlertMessage(`Must add conversation class time(s)`);
+          setTimeout(() => {
+            setAlertMessage("");
+          }, 4000);
+        } else {
+          await updateConversation(params.id, filteredConversationData);
+          setSuccessMessage("Successfully updated conversation class details");
+          await fetchConversation();
+          setTimeout(() => {
+            setSuccessMessage("");
+          }, 4000);
+          setIsSaving(false);
+        }
       }
     } catch (error) {
+      setIsSaving(false);
       console.error('Error updating conversation:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
@@ -218,7 +227,7 @@ const EditConversation = () => {
                           <FormInput
                             type="text"
                             name="startTime"
-                            placeholder="Start Time"
+                            placeholder="Start Time (24h UTC)"
                             value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
@@ -227,7 +236,7 @@ const EditConversation = () => {
                           <FormInput
                             type="text"
                             name="endTime"
-                            placeholder="End Time"
+                            placeholder="End Time (24h UTC)"
                             value={time.endTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
@@ -247,6 +256,9 @@ const EditConversation = () => {
                   </div>
                 )
               })}
+            </div>
+            <div className="w-full grid grid-cols-2">
+              <p className="italic text-blue-500 col-start-2">Enter times in UTC and 24 hour format</p>
             </div>
           </div>
           <Button

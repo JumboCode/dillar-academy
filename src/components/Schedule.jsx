@@ -75,7 +75,7 @@ const Schedule = ({ privilege, classes, filters = [] }) => {
                     level: classObj.level,
                     ageGroup: classObj.ageGroup,
                     instructor: classObj.instructor,
-                    classroomLink: classObj.classroomLink
+                    link: classObj.link
                   })))
                 .filter(schedule => schedule.day.slice(0, 3).toUpperCase() === day)
                 .filter(schedule => filters.length === 0 || filters.includes(schedule.level))
@@ -87,7 +87,7 @@ const Schedule = ({ privilege, classes, filters = [] }) => {
                     switch (privilege) {
                       case "admin":
                         return (
-                          <Link key={index} to={`/admin/class/${classObj._id}`}>
+                          <Link key={index} to={`/admin/levels/class/${classObj._id}`}>
                             {classElement}
                           </Link>
                         );
@@ -99,7 +99,7 @@ const Schedule = ({ privilege, classes, filters = [] }) => {
                         );
                       case "student":
                         return (
-                          <a key={index} href={classObj.classroomLink}>
+                          <a key={index} href={classObj.link}>
                             {classElement}
                           </a>
                         );
@@ -146,9 +146,9 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
       </p>
       {!isMobile && (
         privilege === "student" ? (
-          <a href={classObj.classroomLink}>
+          <a href={classObj.link}>
             {/* button overflowing in different languages */}
-            <Button label={t('join')} onClick={null} isDisabled={classObj.classroomLink === ""} />
+            <Button label={t('join')} onClick={null} isDisabled={classObj.link === ""} />
           </a>
         ) : <EditButton
           classId={classObj._id}
@@ -156,7 +156,7 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
             privilege === "admin" ? (() => {
               switch (true) {
                 case typeof classObj.level === "number":
-                  return `/admin/class`;
+                  return `/admin/levels/class`;
                 case classObj.level === "conversation":
                   return `/admin/levels/conversations`;
                 case classObj.level === "ielts":
