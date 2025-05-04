@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import { getClassById } from '@/api/class-wrapper';
-import { getStudentsClasses } from '@/api/user-wrapper';
-import { updateUser } from '@/api/user-wrapper';
+import { getClassById } from '@/wrappers/class-wrapper';
+import { getStudentsClasses } from '@/wrappers/user-wrapper';
+import { updateUser } from '@/wrappers/user-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'

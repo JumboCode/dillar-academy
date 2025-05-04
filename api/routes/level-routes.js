@@ -1,8 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import Level from "../schemas/Level.js";
-import { validateInput } from "../utils/validate-utils.js";
-import { deleteLevelTranslations, createLevelTranslations } from "../utils/translation-utils.js";
+import { validateInput } from "../../src/utils/backend/validate-utils.js";
+import { deleteLevelTranslations, createLevelTranslations } from "../../src/utils/backend/translation-utils.js";
 
 const router = express.Router();
 
@@ -14,23 +14,6 @@ router.get("/", async (req, res) => {
 
     const data = await Level.find(filters);
     res.json(data);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
-// Get level by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const data = await Level.findOne({ _id: id });
-    res.json(data)
-
   } catch (err) {
     res.status(500).send(err);
   }

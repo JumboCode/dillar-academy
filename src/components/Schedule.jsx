@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, Link } from 'wouter';
+import { Link } from 'wouter';
 import Button from '@/components/Button/Button';
 import EditButton from '@/components/Button/EditButton';
 import { useTranslation } from "react-i18next";
@@ -119,7 +119,6 @@ const Schedule = ({ privilege, classes, filters = [] }) => {
 }
 
 const ScheduleClass = ({ privilege, classObj, isMobile }) => {
-  const [, setLocation] = useLocation();
   const { t, i18n } = useTranslation();
 
   return (
@@ -127,18 +126,20 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
       <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem] text-balance">{classObj.startTime || "N/A"}-{classObj.endTime || "N/A"}</p>
       <p
         title={t('level_num', {
-          num: typeof classObj.level === "string"
-            ? toTitleCase(classObj.level)
-            : localizeNumber(classObj.level, i18n.language),
-          ns: "levels"
+          num: typeof classObj.level === 'number'
+            ? localizeNumber(classObj.level, i18n.language)
+            : classObj.level === "ielts"
+              ? "IELTS" : toTitleCase(classObj.level),
+          ns: 'levels'
         })}
         className="font-extrabold text-[0.75rem] sm:text-[0.875rem] sm:mt-2 truncate"
       >
         {t('level_num', {
-          num: typeof classObj.level === "string"
-            ? toTitleCase(classObj.level)
-            : localizeNumber(classObj.level, i18n.language),
-          ns: "levels"
+          num: typeof classObj.level === 'number'
+            ? localizeNumber(classObj.level, i18n.language)
+            : classObj.level === "ielts"
+              ? "IELTS" : toTitleCase(classObj.level),
+          ns: 'levels'
         })}
       </p>
       <p className="text-gray-800 text-[0.675rem] sm:text-xs sm:mb-3 break-words">
@@ -160,16 +161,16 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
                 case classObj.level === "conversation":
                   return `/admin/levels/conversations`;
                 case classObj.level === "ielts":
-                  return `/admin/levels/ielts`; // TODO:
+                  return `/admin/levels/ielts`;
               }
             })() : (() => {
               switch (true) {
                 case typeof classObj.level === "number":
                   return `/instructor/class`;
                 case classObj.level === "conversation":
-                  return `/instructor/conversation`; // TODO:
+                  return `/instructor/conversation`;
                 case classObj.level === "ielts":
-                  return `/instructor/ielts`; // TODO:
+                  return `/instructor/ielts`;
               }
             })()
           }

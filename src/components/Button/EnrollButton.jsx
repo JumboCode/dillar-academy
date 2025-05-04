@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react';
 import Button from '@/components/Button/Button';
 import Overlay from '@/components/Overlay';
 import { SignOutButton } from '@clerk/clerk-react'
-import { enrollInClass, unenrollInClass } from '@/api/class-wrapper';
+import { enrollInClass, unenrollInClass } from '@/wrappers/class-wrapper';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import { useLocation } from 'wouter';
 import { useUser } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { localizeNumber } from "@/utils/formatters";
+import { localizeNumber, toTitleCase } from "@/utils/formatters";
 
 const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
   const { t, i18n } = useTranslation();
@@ -62,7 +62,13 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
           <div>
             <h3 className='font-extrabold'>{t('registering_for')}</h3>
             <p className='text-base sm:text-lg'>
-              {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
+              {t('level_num', {
+                num: typeof classObj.level === 'number'
+                  ? localizeNumber(classObj.level, i18n.language)
+                  : classObj.level === "ielts"
+                    ? "IELTS" : toTitleCase(classObj.level),
+                ns: 'levels'
+              })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
             </p>
           </div>
           <p className="text-base text-[#86858F]">{t('instructor_name', { name: classObj.instructor })}</p>
@@ -90,7 +96,13 @@ const EnrollPopup = ({ isEnroll, classObj, userId, setShowPopup }) => {
           <div>
             <h3 className='font-extrabold'>{t('congrats_registered')}</h3>
             <p className='text-base sm:text-lg'>
-              {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)} ({t('with_name', { name: classObj.instructor })})
+              {t('level_num', {
+                num: typeof classObj.level === 'number'
+                  ? localizeNumber(classObj.level, i18n.language)
+                  : classObj.level === "ielts"
+                    ? "IELTS" : toTitleCase(classObj.level),
+                ns: 'levels'
+              })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)} ({t('with_name', { name: classObj.instructor })})
             </p>
           </div>
           <p className='text-base text-[#86858F]'>{t('congrats_registered_desc')}</p>
@@ -130,7 +142,13 @@ const UnenrollPopup = ({ classObj, userId, setShowPopup }) => {
       <div className="space-y-1">
         <h3 className='font-extrabold'>{t('unenroll_confirmation')}</h3>
         <p className='text-base sm:text-lg'>
-          {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
+          {t('level_num', {
+            num: typeof classObj.level === 'number'
+              ? localizeNumber(classObj.level, i18n.language)
+              : classObj.level === "ielts"
+                ? "IELTS" : toTitleCase(classObj.level),
+            ns: 'levels'
+          })}: {classObj.ageGroup === "all" ? t(`for_${classObj.ageGroup}`) : t(`${classObj.ageGroup}_class`)}
         </p>
       </div>
       <div className='grid grid-cols-2 w-fit gap-x-2'>

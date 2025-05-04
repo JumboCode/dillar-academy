@@ -5,18 +5,18 @@ import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import SupplementaryClass from '@/components/Class/SupplementaryClass';
 import Button from '@/components/Button/Button';
-import { getConversations } from '@/wrappers/conversation-wrapper';
+import { getIelts } from '@/wrappers/ielts-wrapper';
 import BackButton from "@/components/Button/BackButton";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonLevel from '@/components/Skeletons/SkeletonLevel';
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
-const AdminConversations = () => {
+const AdminIelts = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-  const [conversationClasses, setConversationClasses] = useState([]);
+  const [ieltsClasses, setIeltsClasses] = useState([]);
   const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
@@ -24,18 +24,18 @@ const AdminConversations = () => {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        fetchConversations();
+        fetchIelts();
       }
     }
   }, [isLoaded, isSignedIn, user]);
 
-  const fetchConversations = async () => {
+  const fetchIelts = async () => {
     try {
-      const data = await getConversations();
-      setConversationClasses(data);
+      const data = await getIelts();
+      setIeltsClasses(data);
       setAllowRender(true);
     } catch (error) {
-      console.error("Failed to fetch conversation classes", error);
+      console.error("Failed to fetch IELTS classes", error);
     }
   };
 
@@ -48,24 +48,24 @@ const AdminConversations = () => {
       <BackButton label={"All Levels"} />
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="font-extrabold mb-2">All Conversation Classes</h1>
-          <p>Browse, edit and delete conversation classes.</p>
+          <h1 className="font-extrabold mb-2">All IELTS Classes</h1>
+          <p>Browse, edit and delete IELTS classes.</p>
         </div>
         <div>
           <Button
-            label="+ Add Conversation Class"
+            label="+ Add IELTS Class"
             isOutline
-            onClick={() => setLocation("/admin/levels/conversations/new")} />
+            onClick={() => setLocation("/admin/levels/ielts/new")} />
         </div>
       </div>
       <div className="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {allowRender
-          ? conversationClasses.map((conversation) => (
+          ? ieltsClasses.map((ielts) => (
             <SupplementaryClass
-              key={conversation._id}
-              cls={conversation}
+              key={ielts._id}
+              cls={ielts}
               modes={["edit"]}
-              editURL="/admin/levels/conversations"
+              editURL="/admin/levels/ielts"
             />
           ))
           : showSkeleton && <SkeletonLevel count={3} />}
@@ -74,4 +74,4 @@ const AdminConversations = () => {
   );
 };
 
-export default AdminConversations;
+export default AdminIelts;

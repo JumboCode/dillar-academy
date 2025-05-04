@@ -7,7 +7,7 @@ import Button from '@/components/Button/Button';
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
-import { createConversation } from '@/api/class-wrapper.js';
+import { createConversation } from '@/wrappers/conversation-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
 
@@ -184,6 +184,9 @@ const AddConversation = () => {
                   </div>
                 )
               })}
+            </div>
+            <div className="w-full grid grid-cols-2">
+              <p className="italic text-blue-500 col-start-2">Enter times in UTC and 24 hour format</p>
             </div>
           </div>
           <Button

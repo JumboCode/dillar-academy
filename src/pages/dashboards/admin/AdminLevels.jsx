@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getLevels } from '@/api/class-wrapper';
+import { getLevels } from '@/wrappers/level-wrapper';
 import Unauthorized from "@/pages/Unauthorized";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
@@ -78,6 +78,18 @@ const AdminLevels = () => {
                 <Level
                   level={{
                     level: "conversation",
+                    name: "",
+                  }}
+                  isSimplified
+                  isArrowRight
+                />
+              </div>
+            </Link>
+            <Link href="/admin/levels/ielts">
+              <div className="rounded-lg">
+                <Level
+                  level={{
+                    level: "ielts",
                     name: "",
                   }}
                   isSimplified

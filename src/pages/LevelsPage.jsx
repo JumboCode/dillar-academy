@@ -2,9 +2,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from "wouter"
 import { useTranslation } from "react-i18next";
-import { getConversations, getLevels } from '../api/class-wrapper';
+import { getLevels } from '@/wrappers/level-wrapper';
+import { getConversations } from '@/wrappers/conversation-wrapper';
+import { getIelts } from '@/wrappers/ielts-wrapper';
 import Level from '@/components/Class/Level'
-import ConversationClass from '../components/Class/ConversationClass';
+import SupplementaryClass from '@/components/Class/SupplementaryClass';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import SkeletonLevel from '@/components/Skeletons/SkeletonLevel';
@@ -29,6 +31,8 @@ const LevelsPage = () => {
       setLevels(levels);
       const conversations = await getConversations();
       setConversations(conversations);
+      const ielts = await getIelts();
+      setIelts(ielts);
       setAllowRender(true);
     };
     fetchLevels();
@@ -68,7 +72,7 @@ const LevelsPage = () => {
             {allowRender
               ? conversations.length > 0
                 ? (conversations.map((conversation, conversationIndex) => (
-                  <ConversationClass key={conversationIndex} conversation={conversation} />
+                  <SupplementaryClass key={conversationIndex} cls={conversation} />
                 ))
                 ) : (
                   <p className="text-gray-500">{t("no_conversations_available")}</p>
@@ -82,7 +86,7 @@ const LevelsPage = () => {
             {allowRender
               ? ielts.length > 0
                 ? (ielts.map((cls, ieltsIndex) => (
-                  <></>
+                  <SupplementaryClass key={ieltsIndex} cls={cls} />
                 ))
                 ) : (
                   <p className="text-gray-500">{t("no_ielts_available")}</p>

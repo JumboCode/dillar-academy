@@ -1,31 +1,24 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation, useParams } from 'wouter';
+import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
-import DeleteButton from "@/components/Button/DeleteButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
-import { getConversationById } from "@/wrappers/conversation-wrapper";
-import { updateConversation, deleteConversation } from '@/wrappers/conversation-wrapper.js';
+import { createIelts } from '@/wrappers/ielts-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
 
-const EditConversation = () => {
+const AddIelts = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
-  const [allowRender, setAllowRender] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [conversationObj, setConversationObj] = useState(null);
-  const [conversationData, setConversationData] = useState({
+  const [alertMessage, setAlertMessage] = useState("")
+  const [ieltsData, setIeltsData] = useState({
     ageGroup: '',
     instructor: '',
-    link: '',
     schedule: [
       {
         day: '',
@@ -34,114 +27,50 @@ const EditConversation = () => {
       }
     ]
   });
-  const params = useParams();
 
   useEffect(() => {
-    if (!params.id) {
-      setLocation(`/admin/levels/conversations`);
-    }
     if (isLoaded) {
       if (!isSignedIn) {
         setLocation("/login");
-      } else {
-        fetchConversation()
       }
     }
 
   }, [isLoaded, isSignedIn, user]);
 
-  const fetchConversation = async () => {
-    try {
-      const data = await getConversationById(params.id);
-      setConversationObj(data);
-      setConversationData({
-        ageGroup: data.ageGroup,
-        instructor: data.instructor,
-        link: data.link,
-        schedule: conversationData.schedule
-      });
-      if (data.schedule.length !== 0) {
-        setConversationData(prev => ({
-          ...prev,
-          schedule: data.schedule
-        }))
-      }
-      setAllowRender(true);
-    } catch (error) {
-      console.error('Error fetching conversations:', error);
-    }
-  };
-
   const handleInputChange = (e) => {
-    setConversationData({
-      ...conversationData,
+    setIeltsData({
+      ...ieltsData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleEditConversation = async (e) => {
+  const handleCreateIelts = async (e) => {
     e.preventDefault();
-    conversationData.ageGroup = conversationData.ageGroup.toLowerCase();
+    ieltsData.ageGroup = ieltsData.ageGroup.toLowerCase();
     const allowedAges = ["all", "children", "adults"]
     try {
-      if (!allowedAges.includes(conversationData.ageGroup)) {
+      if (!allowedAges.includes(ieltsData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);
         setTimeout(() => {
           setAlertMessage("")
         }, 4000);
       } else {
-        setIsSaving(true);
-
-        const filteredConversationData = {
-          ...conversationData,
-          schedule: conversationData.schedule.filter(time => time.day && time.startTime && time.endTime),
+        // Filter out any time objects that are empty (i.e., missing a day or time)
+        const filteredIeltsData = {
+          ...ieltsData,
+          schedule: ieltsData.schedule.filter(time => time.day && time.startTime),
         };
-
-        if (filteredConversationData.schedule.length === 0) {
-          setAlertMessage(`Must add conversation class time(s)`);
-          setTimeout(() => {
-            setAlertMessage("");
-          }, 4000);
-        } else {
-          await updateConversation(params.id, filteredConversationData);
-          setSuccessMessage("Successfully updated conversation class details");
-          await fetchConversation();
-          setTimeout(() => {
-            setSuccessMessage("");
-          }, 4000);
-          setIsSaving(false);
-        }
+        await createIelts(filteredIeltsData);
+        history.back();
       }
     } catch (error) {
-      setIsSaving(false);
-      console.error('Error updating conversation:', error);
+      console.error('Error creating IELTS class:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
-      setTimeout(() => {
-        setAlertMessage("");
-      }, 4000);
-    }
-  }
-
-  const handleDeleteConversation = async () => {
-    try {
-      await deleteConversation(params.id);
-      history.back();
-    } catch (error) {
-      console.error('Error deleting conversation:', error);
-      setAlertMessage(`Error: ${error.response.data.message}`)
       setTimeout(() => {
         setAlertMessage("")
       }, 4000);
     }
   }
-
-  const handleReset = () => {
-    setConversationData(prev => ({
-      ageGroup: conversationObj.ageGroup,
-      instructor: conversationObj.instructor,
-      schedule: conversationObj.schedule.length !== 0 ? conversationObj.schedule : prev.schedule
-    }));
-  };
 
   if (user && user.privilege !== "admin") {
     return <Unauthorized />;
@@ -150,49 +79,36 @@ const EditConversation = () => {
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
-      {successMessage !== "" && <Alert message={successMessage} isSuccess />}
       <div className="page-format max-w-[96rem] space-y-10">
-        <BackButton label="All Conversations" />
+        <BackButton label={"All IELTS"} />
         <div className="space-y-2">
-          <h1 className="font-extrabold">Edit Conversation Class</h1>
-          <h3 className="font-light">Edit conversation class and student information</h3>
+          <h1 className="font-extrabold">Add IELTS Class</h1>
+          <p className="font-light text-base sm:text-lg">Fill out new IELTS class data</p>
         </div>
-        <form onSubmit={handleEditConversation} className="w-full lg:w-2/3">
-          <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
+        <form onSubmit={handleCreateIelts} className="w-full lg:w-2/3">
+          <div className="flex justify-start space-x-10 w-full mb-6">
             <div className="w-full space-y-3">
               <label className="mx-1">Age Group</label>
               <FormInput
                 type="text"
                 name="ageGroup"
                 placeholder="Age Group"
-                value={conversationData.ageGroup}
+                value={ieltsData.ageGroup}
                 onChange={handleInputChange}
                 isRequired={true}
               />
             </div>
-
             <div className="w-full space-y-3">
               <label className="mx-1">Instructor</label>
               <FormInput
                 type="text"
                 name="instructor"
                 placeholder="Instructor"
-                value={conversationData.instructor}
+                value={ieltsData.instructor}
                 onChange={handleInputChange}
                 isRequired={true}
               />
             </div>
-          </div>
-          <div className="w-full mb-6">
-            <label className="mx-1">Class Link</label>
-            <FormInput
-              type="text"
-              name="link"
-              placeholder="Enter class link"
-              value={conversationData.link}
-              onChange={handleInputChange}
-              isRequired={true}
-            />
           </div>
           <div className="w-full space-y-3 mb-6">
             <div className="flex w-full gap-x-4">
@@ -207,25 +123,25 @@ const EditConversation = () => {
               </div>
             </div>
             <div className="space-y-4">
-              {conversationData.schedule.map((time, index) => {
+              {ieltsData.schedule.map((time, index) => {
                 const handleTimeInputChange = (e) => {
-                  const updatedTimeArray = [...conversationData.schedule];
+                  const updatedTimeArray = [...ieltsData.schedule];
                   updatedTimeArray[index] = {
                     ...updatedTimeArray[index],
                     [e.target.name]: e.target.value,
                   };
-                  setConversationData({
-                    ...conversationData,
+                  setIeltsData({
+                    ...ieltsData,
                     schedule: updatedTimeArray,
                   });
                 };
                 const handleSelectedDay = (day) => {
-                  const updatedTimes = [...conversationData.schedule];
+                  const updatedTimes = [...ieltsData.schedule];
                   updatedTimes[index] = {
                     ...updatedTimes[index],
                     day,
                   };
-                  setConversationData(prev => ({
+                  setIeltsData(prev => ({
                     ...prev,
                     schedule: updatedTimes,
                   }));
@@ -239,7 +155,7 @@ const EditConversation = () => {
                           <FormInput
                             type="text"
                             name="startTime"
-                            placeholder="Start Time (24h UTC)"
+                            placeholder="Start Time"
                             value={time.startTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
@@ -248,7 +164,7 @@ const EditConversation = () => {
                           <FormInput
                             type="text"
                             name="endTime"
-                            placeholder="End Time (24h UTC)"
+                            placeholder="End Time"
                             value={time.endTime}
                             onChange={handleTimeInputChange}
                             isRequired={false}
@@ -260,7 +176,7 @@ const EditConversation = () => {
                       label={<IoTrashBinOutline />}
                       isOutline
                       onClick={() => {
-                        setConversationData(prevData => ({
+                        setIeltsData(prevData => ({
                           ...prevData,
                           schedule: prevData.schedule.filter((_, i) => i !== index)
                         }));
@@ -278,7 +194,7 @@ const EditConversation = () => {
             label={<div className="flex items-center gap-x-2">Add time<IoAdd /></div>}
             isOutline
             onClick={() => {
-              setConversationData(prevData => ({
+              setIeltsData(prevData => ({
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
@@ -286,18 +202,18 @@ const EditConversation = () => {
                 ]
               }));
             }} />
-          <div className="space-x-2 mt-8">
-            <Button label={isSaving ? "Saving..." : "Save"} type="submit" isDisabled={isSaving} />
+          <div className="w-fit grid grid-cols-2 gap-x-2 mt-8">
             <Button
-              label="Reset"
+              label="Save" type="submit" />
+            <Button
+              label="Cancel"
               isOutline={true}
-              onClick={handleReset} />
+              onClick={() => setLocation("/admin/levels/ielts")} />
           </div>
         </form>
-        <DeleteButton item="conversation class" onDelete={handleDeleteConversation} />
       </div>
     </>
   )
 }
 
-export default EditConversation;
+export default AddIelts;

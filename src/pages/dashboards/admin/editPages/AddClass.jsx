@@ -7,9 +7,10 @@ import Button from '@/components/Button/Button';
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
-import { createClass } from '@/api/class-wrapper.js';
+import { createClass } from '@/wrappers/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
+import { convertIfNumber } from "@/utils/formatters";
 
 const AddClass = () => {
   const { user } = useContext(UserContext);
@@ -49,7 +50,8 @@ const AddClass = () => {
   const handleAddClass = async (e) => {
     e.preventDefault();
     classData.ageGroup = classData.ageGroup.toLowerCase();
-    const allowedAges = ["all", "children", "adult"]
+    classData.level = convertIfNumber(classData.level);
+    const allowedAges = ["all", "children", "adults"]
     try {
       if (!allowedAges.includes(classData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);
@@ -191,6 +193,9 @@ const AddClass = () => {
                   </div>
                 )
               })}
+            </div>
+            <div className="w-full grid grid-cols-2">
+              <p className="italic text-blue-500 col-start-2">Enter times in UTC and 24 hour format</p>
             </div>
           </div>
           <Button

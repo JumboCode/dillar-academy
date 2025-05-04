@@ -2,18 +2,18 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
+import { getIeltsById } from "@/wrappers/ielts-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import DeleteButton from "@/components/Button/DeleteButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
-import { getConversationById } from "@/wrappers/conversation-wrapper";
-import { updateConversation, deleteConversation } from '@/wrappers/conversation-wrapper.js';
+import { updateIelts, deleteIelts } from '@/wrappers/ielts-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
 
-const EditConversation = () => {
+const EditIelts = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
@@ -21,8 +21,8 @@ const EditConversation = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [conversationObj, setConversationObj] = useState(null);
-  const [conversationData, setConversationData] = useState({
+  const [ieltsObj, setIeltsObj] = useState(null);
+  const [ieltsData, setIeltsData] = useState({
     ageGroup: '',
     instructor: '',
     link: '',
@@ -38,53 +38,53 @@ const EditConversation = () => {
 
   useEffect(() => {
     if (!params.id) {
-      setLocation(`/admin/levels/conversations`);
+      setLocation(`/admin/levels/ielts`);
     }
     if (isLoaded) {
       if (!isSignedIn) {
         setLocation("/login");
       } else {
-        fetchConversation()
+        fetchIelts()
       }
     }
 
   }, [isLoaded, isSignedIn, user]);
 
-  const fetchConversation = async () => {
+  const fetchIelts = async () => {
     try {
-      const data = await getConversationById(params.id);
-      setConversationObj(data);
-      setConversationData({
+      const data = await getIeltsById(params.id);
+      setIeltsObj(data);
+      setIeltsData({
         ageGroup: data.ageGroup,
         instructor: data.instructor,
         link: data.link,
-        schedule: conversationData.schedule
+        schedule: ieltsData.schedule
       });
       if (data.schedule.length !== 0) {
-        setConversationData(prev => ({
+        setIeltsData(prev => ({
           ...prev,
           schedule: data.schedule
         }))
       }
       setAllowRender(true);
     } catch (error) {
-      console.error('Error fetching conversations:', error);
+      console.error('Error fetching IELTS class:', error);
     }
   };
 
   const handleInputChange = (e) => {
-    setConversationData({
-      ...conversationData,
+    setIeltsData({
+      ...ieltsData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleEditConversation = async (e) => {
+  const handleEditIelts = async (e) => {
     e.preventDefault();
-    conversationData.ageGroup = conversationData.ageGroup.toLowerCase();
+    ieltsData.ageGroup = ieltsData.ageGroup.toLowerCase();
     const allowedAges = ["all", "children", "adults"]
     try {
-      if (!allowedAges.includes(conversationData.ageGroup)) {
+      if (!allowedAges.includes(ieltsData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);
         setTimeout(() => {
           setAlertMessage("")
@@ -92,20 +92,20 @@ const EditConversation = () => {
       } else {
         setIsSaving(true);
 
-        const filteredConversationData = {
-          ...conversationData,
-          schedule: conversationData.schedule.filter(time => time.day && time.startTime && time.endTime),
+        const filteredIeltsData = {
+          ...ieltsData,
+          schedule: ieltsData.schedule.filter(time => time.day && time.startTime && time.endTime),
         };
 
-        if (filteredConversationData.schedule.length === 0) {
-          setAlertMessage(`Must add conversation class time(s)`);
+        if (filteredIeltsData.schedule.length === 0) {
+          setAlertMessage(`Must add IELTS class time(s)`);
           setTimeout(() => {
             setAlertMessage("");
           }, 4000);
         } else {
-          await updateConversation(params.id, filteredConversationData);
-          setSuccessMessage("Successfully updated conversation class details");
-          await fetchConversation();
+          await updateIelts(params.id, filteredIeltsData);
+          setSuccessMessage("Successfully updated IELTS class details");
+          await fetchIelts();
           setTimeout(() => {
             setSuccessMessage("");
           }, 4000);
@@ -114,7 +114,7 @@ const EditConversation = () => {
       }
     } catch (error) {
       setIsSaving(false);
-      console.error('Error updating conversation:', error);
+      console.error('Error updating IELTS class:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
         setAlertMessage("");
@@ -122,12 +122,12 @@ const EditConversation = () => {
     }
   }
 
-  const handleDeleteConversation = async () => {
+  const handleDeleteIelts = async () => {
     try {
-      await deleteConversation(params.id);
+      await deleteIelts(params.id);
       history.back();
     } catch (error) {
-      console.error('Error deleting conversation:', error);
+      console.error('Error deleting IELTS class:', error);
       setAlertMessage(`Error: ${error.response.data.message}`)
       setTimeout(() => {
         setAlertMessage("")
@@ -136,10 +136,10 @@ const EditConversation = () => {
   }
 
   const handleReset = () => {
-    setConversationData(prev => ({
-      ageGroup: conversationObj.ageGroup,
-      instructor: conversationObj.instructor,
-      schedule: conversationObj.schedule.length !== 0 ? conversationObj.schedule : prev.schedule
+    setIeltsData(prev => ({
+      ageGroup: ieltsObj.ageGroup,
+      instructor: ieltsObj.instructor,
+      schedule: ieltsObj.schedule.length !== 0 ? ieltsObj.schedule : prev.schedule
     }));
   };
 
@@ -152,12 +152,12 @@ const EditConversation = () => {
       {alertMessage !== "" && <Alert message={alertMessage} />}
       {successMessage !== "" && <Alert message={successMessage} isSuccess />}
       <div className="page-format max-w-[96rem] space-y-10">
-        <BackButton label="All Conversations" />
+        <BackButton label="All IELTS classes" />
         <div className="space-y-2">
-          <h1 className="font-extrabold">Edit Conversation Class</h1>
-          <h3 className="font-light">Edit conversation class and student information</h3>
+          <h1 className="font-extrabold">Edit IELTS Class</h1>
+          <h3 className="font-light">Edit IELTS class and student information</h3>
         </div>
-        <form onSubmit={handleEditConversation} className="w-full lg:w-2/3">
+        <form onSubmit={handleEditIelts} className="w-full lg:w-2/3">
           <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
             <div className="w-full space-y-3">
               <label className="mx-1">Age Group</label>
@@ -165,7 +165,7 @@ const EditConversation = () => {
                 type="text"
                 name="ageGroup"
                 placeholder="Age Group"
-                value={conversationData.ageGroup}
+                value={ieltsData.ageGroup}
                 onChange={handleInputChange}
                 isRequired={true}
               />
@@ -177,7 +177,7 @@ const EditConversation = () => {
                 type="text"
                 name="instructor"
                 placeholder="Instructor"
-                value={conversationData.instructor}
+                value={ieltsData.instructor}
                 onChange={handleInputChange}
                 isRequired={true}
               />
@@ -189,9 +189,8 @@ const EditConversation = () => {
               type="text"
               name="link"
               placeholder="Enter class link"
-              value={conversationData.link}
+              value={ieltsData.link}
               onChange={handleInputChange}
-              isRequired={true}
             />
           </div>
           <div className="w-full space-y-3 mb-6">
@@ -207,25 +206,25 @@ const EditConversation = () => {
               </div>
             </div>
             <div className="space-y-4">
-              {conversationData.schedule.map((time, index) => {
+              {ieltsData.schedule.map((time, index) => {
                 const handleTimeInputChange = (e) => {
-                  const updatedTimeArray = [...conversationData.schedule];
+                  const updatedTimeArray = [...ieltsData.schedule];
                   updatedTimeArray[index] = {
                     ...updatedTimeArray[index],
                     [e.target.name]: e.target.value,
                   };
-                  setConversationData({
-                    ...conversationData,
+                  setIeltsData({
+                    ...ieltsData,
                     schedule: updatedTimeArray,
                   });
                 };
                 const handleSelectedDay = (day) => {
-                  const updatedTimes = [...conversationData.schedule];
+                  const updatedTimes = [...ieltsData.schedule];
                   updatedTimes[index] = {
                     ...updatedTimes[index],
                     day,
                   };
-                  setConversationData(prev => ({
+                  setIeltsData(prev => ({
                     ...prev,
                     schedule: updatedTimes,
                   }));
@@ -260,7 +259,7 @@ const EditConversation = () => {
                       label={<IoTrashBinOutline />}
                       isOutline
                       onClick={() => {
-                        setConversationData(prevData => ({
+                        setIeltsData(prevData => ({
                           ...prevData,
                           schedule: prevData.schedule.filter((_, i) => i !== index)
                         }));
@@ -278,7 +277,7 @@ const EditConversation = () => {
             label={<div className="flex items-center gap-x-2">Add time<IoAdd /></div>}
             isOutline
             onClick={() => {
-              setConversationData(prevData => ({
+              setIeltsData(prevData => ({
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
@@ -294,10 +293,10 @@ const EditConversation = () => {
               onClick={handleReset} />
           </div>
         </form>
-        <DeleteButton item="conversation class" onDelete={handleDeleteConversation} />
+        <DeleteButton item="IELTS class" onDelete={handleDeleteIelts} />
       </div>
     </>
   )
 }
 
-export default EditConversation;
+export default EditIelts;

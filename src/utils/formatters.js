@@ -14,3 +14,8 @@ export const ensureHttps = (url) => {
     ? url
     : `https://${url}`;
 };
+
+export const convertIfNumber = (str) => {
+    const trimmed = str.trim();
+    return !isNaN(trimmed) && trimmed !== '' ? Number(trimmed) : str;
+};

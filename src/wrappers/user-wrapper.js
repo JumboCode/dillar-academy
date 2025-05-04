@@ -43,23 +43,6 @@ const getStudentsClasses = async (studentId) => {
   }
 }
 
-const resetPassword = async (body) => {
-  try {
-    const response = await fetch("/api/users/reset-password", {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Reset password endpoint error:', error);
-    throw error;
-  }
-};
-
 const updateUser = async (userId, userData) => {
   try {
     if (Object.hasOwn(userData, "firstName")) {
@@ -105,7 +88,6 @@ export {
   getUsers,
   getUser,
   getStudentsClasses,
-  resetPassword,
   updateUser,
   getStudentsForExport,
   deleteUser
