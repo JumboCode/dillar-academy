@@ -1,8 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import Level from "../schemas/Level.js";
-import { validateInput } from "../utils/validate-utils.js";
-import { deleteLevelTranslations, createLevelTranslations } from "../utils/translation-utils.js";
+import { validateInput } from "../../src/utils/backend/validate-utils.js";
+import { deleteLevelTranslations, createLevelTranslations } from "../../src/utils/backend/translation-utils.js";
 
 const router = express.Router();
 

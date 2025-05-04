@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import mongoSanitize from "express-mongo-sanitize";
 
 // util functions
-import { validateInput } from "./utils/validate-utils.js";
+import { validateInput } from "../src/utils/backend/validate-utils.js";
 
 // external schemas
 import User from "./schemas/User.js";

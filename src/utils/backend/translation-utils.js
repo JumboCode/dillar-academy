@@ -1,4 +1,4 @@
-import Translation from "../schemas/Translation.js";
+import Translation from "../../../api/schemas/Translation.js";
 
 const formattedSkillKey = (skill) => `level_skill_${skill.toLowerCase().replace(/ /g, "_")}`;
 

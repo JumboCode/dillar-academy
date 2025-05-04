@@ -8,8 +8,8 @@ import DeleteButton from "@/components/Button/DeleteButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
-import { getConversationById } from "@/api/conversation-wrapper";
-import { updateConversation, deleteConversation } from '@/api/conversation-wrapper.js';
+import { getConversationById } from "@/wrapper/conversation-wrapper";
+import { updateConversation, deleteConversation } from '@/wrapper/conversation-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
 

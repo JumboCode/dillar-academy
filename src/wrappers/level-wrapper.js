@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { transferTranslations } from "@/api/translation-wrapper";
+import { transferTranslations } from "@/wrapper/translation-wrapper";
 import { toTitleCase } from '@/utils/formatters';
 
 // query should be a string

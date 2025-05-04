@@ -11,7 +11,7 @@ import Unauthorized from "@/pages/Unauthorized";
 import SkeletonTranslationRow from '@/components/Skeletons/SkeletonTranslationRow';
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import { IoChevronDownOutline, IoCreateOutline } from "react-icons/io5";
-import { getTranslations, editTranslation } from '@/api/translation-wrapper';
+import { getTranslations, editTranslation } from '@/wrapper/translation-wrapper';
 
 const AdminTranslations = () => {
   const { user } = useContext(UserContext);

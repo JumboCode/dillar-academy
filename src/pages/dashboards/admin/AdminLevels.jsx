@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getLevels } from '@/api/level-wrapper';
+import { getLevels } from '@/wrapper/level-wrapper';
 import Unauthorized from "@/pages/Unauthorized";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 

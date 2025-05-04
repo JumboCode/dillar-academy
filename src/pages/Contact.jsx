@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { postContact } from '@/api/contact-wrapper';
+import { postContact } from '@/wrapper/contact-wrapper';
 import Form from "@/components/Form/Form"
 import FormInput from '@/components/Form/FormInput';
 import Button from '@/components/Button/Button';
