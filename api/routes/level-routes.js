@@ -19,23 +19,6 @@ router.get("/", async (req, res) => {
   }
 })
 
-// Get level by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const data = await Level.findOne({ _id: id });
-    res.json(data)
-
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
 // Create Level 
 router.post('/', async (req, res) => {
   try {

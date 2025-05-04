@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
-import { createLevel } from '@/api/class-wrapper.js';
+import { createLevel } from '@/api/level-wrapper.js';
 import { useAuth } from '@clerk/clerk-react';
 import { useTranslation } from "react-i18next";
 import Button from '@/components/Button/Button';
