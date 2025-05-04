@@ -110,7 +110,7 @@ const InstructorView = () => {
   return (
     <>
       {alertMessage && <Alert message={alertMessage} />}
-      <div className="page-format max-w-[96rem] lg:py-24 space-y-12">
+      <div className="page-format max-w-[96rem] space-y-12">
         <div>
           {allowRender
             ? <div className='flex flex-col sm:flex-row sm:items-end flex-wrap gap-x-5 mb-1'>

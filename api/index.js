@@ -18,10 +18,10 @@ import emailRoutes from './routes/email-routes.js';
 import userRoutes from './routes/user-routes.js';
 import levelRoutes from './routes/level-routes.js';
 
-const app = express()
-app.use(cors())
-app.use(express.json())
-app.use(mongoSanitize())
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(mongoSanitize());
 
 app.use('/api/locales', translationRoutes);
 app.use('/api', emailRoutes);

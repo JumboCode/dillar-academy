@@ -6,7 +6,7 @@ function About() {
   const { t } = useTranslation();
 
   return (
-    <div className="page-format max-w-[96rem] flex flex-col py-20 lg:py-24 gap-20">
+    <div className="page-format max-w-[96rem] flex flex-col gap-20">
       <section className='flex flex-col lg:flex-row-reverse lg:justify-between items-center'>
         <div className="flex items-center justify-center lg:w-1/3">
           <img src={stepping_stones_landscape} alt="stepping_stones_landscape" className="rounded-3xl shadow-xl lg:aspect-square object-cover" title="stepping_stones_landscape"></img>
