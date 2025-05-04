@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import ConversationClass from '@/components/Class/ConversationClass';
+import SupplementaryClass from '@/components/Class/SupplementaryClass';
 import Button from '@/components/Button/Button';
 import { getConversations } from '@/api/class-wrapper';
 import BackButton from "@/components/Button/BackButton";
@@ -61,9 +61,9 @@ const AdminConversations = () => {
       <div className="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {allowRender
           ? conversationClasses.map((conversation) => (
-            <ConversationClass
+            <SupplementaryClass
               key={conversation._id}
-              conversation={conversation}
+              cls={conversation}
               modes={["edit"]}
               editURL="/admin/levels/conversations"
             />

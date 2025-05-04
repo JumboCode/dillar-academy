@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import ConversationClass from '@/components/Class/ConversationClass';
+import SupplementaryClass from '@/components/Class/SupplementaryClass';
 import Button from '@/components/Button/Button';
 import { getIelts } from '@/api/ielts-wrapper';
 import BackButton from "@/components/Button/BackButton";
@@ -61,9 +61,9 @@ const AdminIelts = () => {
       <div className="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {allowRender
           ? ieltsClasses.map((ielts) => (
-            <ConversationClass
+            <SupplementaryClass
               key={ielts._id}
-              conversation={ielts}
+              cls={ielts}
               modes={["edit"]}
               editURL="/admin/levels/ielts"
             />

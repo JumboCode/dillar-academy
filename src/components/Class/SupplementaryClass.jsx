@@ -6,7 +6,7 @@ import { convertTime, to12HourFormat } from '@/utils/time-utils';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 
 // possible modes: enroll, unenroll, or edit
-const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) => {
+const SupplementaryClass = ({ cls, modes = ["enroll"], editURL = "" }) => {
   const { t } = useTranslation();
   const [showScrollHint, setShowScrollHint] = useState(false);
   const scheduleRef = useRef(null);
@@ -30,13 +30,13 @@ const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) =
     <div className="w-full h-full rounded-2xl overflow-hidden shadow-shadow hover:shadow-shadow-hover transition-shadow grid grid-rows-[2fr_3fr]">
       <div className="bg-[url('/images/blue_mountains.png')] bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
       <div className="bg-white px-6 py-5 row-start-2 space-y-1 overflow-scroll">
-        <h3 className='font-extrabold'>{t('talk_to_name', { name: conversation.instructor })}</h3>
-        <p className="text-sm">{t(`for_${conversation.ageGroup}`)}</p>
+        <h3 className='font-extrabold'>{t('talk_to_name', { name: cls.instructor })}</h3>
+        <p className="text-sm">{t(`for_${cls.ageGroup}`)}</p>
         <div ref={scheduleRef} className="grid grid-rows-[auto_auto] auto-cols-min overflow-scroll items-center gap-x-4 gap-y-3 mb-1 pb-4">
           <IoTimeOutline className="text-xl row-start-1" />
           <IoCalendarOutline className="text-xl row-start-2" />
 
-          {conversation.schedule.map((schedule, index) => {
+          {cls.schedule.map((schedule, index) => {
             const convertedStartTimeEST = schedule?.startTime
               ? convertTime(schedule.day, schedule.startTime, "Etc/UTC", "America/New_York")
               : { time: '' };
@@ -67,7 +67,7 @@ const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) =
                 </p>
 
                 {/* Divider */}
-                {index !== conversation.schedule.length - 1 && <div className="row-span-full h-full border-[1px]"></div>}
+                {index !== cls.schedule.length - 1 && <div className="row-span-full h-full border-[1px]"></div>}
               </React.Fragment>
             )
           })}
@@ -77,16 +77,16 @@ const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) =
         )}
       </div>
       <div className='flex gap-3 mb-4 ml-5'>
-        {modes.includes("edit") && <EditButton classId={conversation._id} editURL={editURL} />}
+        {modes.includes("edit") && <EditButton classId={cls._id} editURL={editURL} />}
         {/* {modes.includes("enroll") &&
           <EnrollButton
-            conversation={conversation}
+            cls={cls}
             isEnroll={true}
           />
         }
         {modes.includes("unenroll") &&
           <EnrollButton
-            conversation={conversation}
+            cls={cls}
             isEnroll={false}
           />
         } */}
@@ -95,4 +95,4 @@ const ConversationClass = ({ conversation, modes = ["enroll"], editURL = "" }) =
   )
 }
 
-export default ConversationClass;
+export default SupplementaryClass;

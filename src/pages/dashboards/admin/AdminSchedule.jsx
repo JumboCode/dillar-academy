@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useAuth } from '@clerk/clerk-react';
 import { useLocation } from 'wouter';
-import { getClasses, getConversations } from '@/api/class-wrapper';
+import { getAllClasses } from '@/api/class-wrapper';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import Schedule from '@/components/Schedule';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
@@ -28,9 +28,8 @@ const AdminSchedule = () => {
       } else {
         const fetchData = async () => {
           if (user) {
-            const classRes = await getClasses();
-            const conversationRes = await getConversations();
-            setClasses([...classRes, ...conversationRes]);
+            const classRes = await getAllClasses();
+            setClasses(classRes);
             setAllowRender(true);
           }
         };

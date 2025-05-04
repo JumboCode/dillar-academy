@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, Link } from 'wouter';
+import { Link } from 'wouter';
 import Button from '@/components/Button/Button';
 import EditButton from '@/components/Button/EditButton';
 import { useTranslation } from "react-i18next";
@@ -119,7 +119,6 @@ const Schedule = ({ privilege, classes, filters = [] }) => {
 }
 
 const ScheduleClass = ({ privilege, classObj, isMobile }) => {
-  const [, setLocation] = useLocation();
   const { t, i18n } = useTranslation();
 
   return (
@@ -160,16 +159,16 @@ const ScheduleClass = ({ privilege, classObj, isMobile }) => {
                 case classObj.level === "conversation":
                   return `/admin/levels/conversations`;
                 case classObj.level === "ielts":
-                  return `/admin/levels/ielts`; // TODO:
+                  return `/admin/levels/ielts`;
               }
             })() : (() => {
               switch (true) {
                 case typeof classObj.level === "number":
                   return `/instructor/class`;
                 case classObj.level === "conversation":
-                  return `/instructor/conversation`; // TODO:
+                  return `/instructor/conversation`;
                 case classObj.level === "ielts":
-                  return `/instructor/ielts`; // TODO:
+                  return `/instructor/ielts`;
               }
             })()
           }
