@@ -29,9 +29,12 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
   }, []);
 
   return isSimplified ? (
-    <div className='shadow-shadow hover:shadow-shadow-hover transition-shadow rounded-2xl py-8 px-7 flex gap-x-3 items-center justify-between'>
-      <div className='flex items-center gap-x-6'>
-        <h3 className='text-dark-blue-800 font-extrabold'>
+    <div className={`${!classObj.isEnrollmentOpen ? "bg-neutral-200 cursor-not-allowed" : "hover:shadow-shadow-hover transition-shadow"} shadow-shadow rounded-2xl py-8 px-7 flex gap-x-3 items-center justify-between relative`}>
+      {!classObj.isEnrollmentOpen && <p className='font-extrabold italic text-neutral-700 absolute bottom-2 left-0 right-0 mx-auto w-full'>
+        Enrollment Closed
+      </p>}
+      <div className={`flex items-center gap-x-6`}>
+        <h3 className={`font-extrabold ${classObj.isEnrollmentOpen ? "text-dark-blue-800" : "text-neutral-500"}`}>
           {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}
         </h3>
         <p className='text-neutral-600'>
@@ -40,7 +43,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
             : t(`${classObj.ageGroup}_class`)}
         </p>
       </div>
-      <p className='sm:text-lg'>
+      <p className={`sm:text-lg ${classObj.isEnrollmentOpen ? "text-black" : "text-neutral-500"}`}>
         {t('taught_by_name', { name: classObj.instructor })}
       </p>
     </div>

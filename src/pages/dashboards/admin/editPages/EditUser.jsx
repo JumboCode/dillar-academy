@@ -284,29 +284,32 @@ const EditUser = () => {
           </div>
         </div>
 
-        {showOverlay && <Overlay width={'w-1/2'}>
+        {showOverlay && <Overlay width={'w-[96%] sm:w-4/5 lg:w-1/2'}>
           <h3>Search for class</h3>
           <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for class by level, age, instructor" />
           <div className="h-[50vh] overflow-y-auto mt-4 flex flex-col gap-y-3">
-            {filteredClasses.map(classObj => {
-              const isEnrolled = userData.enrolledClasses.includes(classObj._id);
-              return (
-                <button
-                  key={classObj._id}
-                  className={`${isEnrolled && 'border-2 border-blue-300 rounded-lg *:bg-blue-100'}`}
-                  onClick={() => {
-                    if (isEnrolled) {
-                      unenrollInClass(classObj._id, userData._id);
-                    } else {
-                      enrollInClass(classObj._id, userData._id);
-                    }
-                    fetchData();
-                  }}
-                >
-                  <Class classObj={classObj} isSimplified />
-                </button>
-              )
-            })}
+            {filteredClasses
+              .sort((l1, l2) => l1.level - l2.level)
+              .map(classObj => {
+                const isEnrolled = userData.enrolledClasses.includes(classObj._id);
+                return (
+                  <button
+                    key={classObj._id}
+                    className={`${isEnrolled && 'border-2 border-blue-300 rounded-lg *:bg-blue-100'}`}
+                    disabled={!classObj.isEnrollmentOpen}
+                    onClick={async () => {
+                      if (isEnrolled) {
+                        await unenrollInClass(classObj._id, userData._id);
+                      } else {
+                        await enrollInClass(classObj._id, userData._id);
+                      }
+                      await fetchData();
+                    }}
+                  >
+                    <Class classObj={classObj} isSimplified />
+                  </button>
+                )
+              })}
           </div>
           <Button label={'Close'} onClick={() => setShowOverlay(false)} />
         </Overlay>}
