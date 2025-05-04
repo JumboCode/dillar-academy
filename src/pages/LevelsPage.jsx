@@ -20,8 +20,8 @@ const LevelsPage = () => {
 
   // styles
   const descriptionStyle = "font-light text-base sm:text-lg"
-  const sectionStyle = "mb-8 sm:mb-12"
-  const courseDivStyle = "mt-8 sm:grid gap-8"
+  const sectionStyle = "mb-8 sm:mb-16"
+  const courseDivStyle = "mt-8 grid gap-8"
 
   useEffect(() => {
     const fetchLevels = async () => {
@@ -35,15 +35,15 @@ const LevelsPage = () => {
   }, []);
 
   return (
-    <div className="page-format max-w-[96rem] lg:py-24">
-      <section className={sectionStyle}>
+    <div className="page-format max-w-[96rem]">
+      <section className="mb-6 sm:mb-12">
         <h1 className='font-extrabold mb-2 text-blue-700'>{allowRender ? t("browse_classes") : showSkeleton && <Skeleton width={"32%"} />}</h1>
         <p className={descriptionStyle}>{allowRender ? t("levelspage_description") : showSkeleton && <Skeleton />}</p>
       </section>
       <section className={sectionStyle}>
         <h2 className="font-extrabold mb-1">{allowRender ? t("levelspage_reg_class_heading") : showSkeleton && <Skeleton width={"32%"} />}</h2>
         <p className={descriptionStyle}>{allowRender ? t("levelspage_reg_class_description") : showSkeleton && <Skeleton />}</p>
-        <div className={`${courseDivStyle} lg:grid-cols-3 md:grid-cols-2 auto-rows-fr`}>
+        <div className={`${courseDivStyle} md:grid-cols-2 lg:grid-cols-3 auto-rows-fr`}>
           {allowRender
             ? levels.length > 0
               ? (levels
@@ -59,10 +59,10 @@ const LevelsPage = () => {
             : showSkeleton && <SkeletonLevel count={6} />}
         </div>
       </section>
-      <section className={sectionStyle}>
+      <section>
         <h2 className="font-extrabold mb-1">{allowRender ? t("levelspage_supp_class_heading") : showSkeleton && <Skeleton width={"32%"} />}</h2>
         <p className={descriptionStyle}>{allowRender ? t("levelspage_supp_class_description") : showSkeleton && <Skeleton />}</p>
-        <section className='mt-8'>
+        <section className='mt-10'>
           <h3 className='font-extrabold'>{allowRender ? t("levelspage_convo_class_heading") : showSkeleton && <Skeleton width={"32%"} />}</h3>
           <div className={`${courseDivStyle} lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 auto-rows-fr`}>
             {allowRender
@@ -76,7 +76,7 @@ const LevelsPage = () => {
               : showSkeleton && <SkeletonLevel count={4} />}
           </div>
         </section>
-        <section className='mt-8'>
+        <section className='mt-16'>
           <h3 className='font-extrabold'>{allowRender ? t("levelspage_ietl_class_heading") : showSkeleton && <Skeleton width={"32%"} />}</h3>
           <div className={`${courseDivStyle} lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 auto-rows-fr`}>
             {allowRender

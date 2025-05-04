@@ -33,6 +33,16 @@ const getUser = async (query = "") => {
   }
 };
 
+const getStudentsClasses = async (studentId) => {
+  try {
+    const response = await axios.get(`/api/students-classes/${studentId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching student's classes:", error);
+    throw error;
+  }
+}
+
 const resetPassword = async (body) => {
   try {
     const response = await fetch("/api/users/reset-password", {
@@ -94,6 +104,7 @@ export {
   postUser,
   getUsers,
   getUser,
+  getStudentsClasses,
   resetPassword,
   updateUser,
   getStudentsForExport,

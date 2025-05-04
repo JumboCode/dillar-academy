@@ -40,6 +40,8 @@
     @apply w-full h-full flex-1 py-10 px-4;
     @apply sm:px-6;
     @apply lg:px-20;
+    @apply py-20;
+    @apply lg:py-24;
   }
 
   .header-gradient {

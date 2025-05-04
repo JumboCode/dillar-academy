@@ -9,7 +9,6 @@ const UserSchema = new Schema({
     age: { type: Number },
     email: { type: String, required: true, unique: true },
     whatsapp: { type: String, unique: true },
-    password: { type: String, required: true },
     privilege: { type: String, default: "student", enum: ["admin", "instructor", "student"] },
     clerkId: { type: String, required: true },
     creationDate: { type: Date, default: Date.now },

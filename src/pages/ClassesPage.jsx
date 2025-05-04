@@ -85,7 +85,7 @@ const ClassesPage = () => {
       {/* Content Section */}
       <div className="w-full flex flex-col items-center">
         {/* Open Classes */}
-        <div className='w-full max-w-[96rem] px-4 sm:px-6 lg:px-20 py-12 lg:py-24'>
+        <div className='w-full max-w-[96rem] px-4 sm:px-6 lg:px-24 py-20 lg:py-24'>
           <h2 className="font-extrabold text-dark-blue-800 mb-4">
             {allowRender ? t("classespage_open_classes") : showSkeleton && <Skeleton width={"16rem"} />}
           </h2>

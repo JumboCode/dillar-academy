@@ -4,25 +4,29 @@ import cors from "cors";
 import mongo from "mongodb";
 import mongoose from "mongoose";
 import mongoSanitize from "express-mongo-sanitize";
-import nodemailer from "nodemailer";
-import { clerkClient } from "@clerk/express";
+
+// util functions
+import { validateInput } from "./utils/validate-utils.js";
 
 // external schemas
-import Translation from "./schemas/Translation.js";
 import User from "./schemas/User.js";
-import Contact from "./schemas/Contact.js";
-import Level from "./schemas/Level.js";
 import { Class, Conversation } from './schemas/Classes.js';
 
 // external routes
 import translationRoutes from './routes/translation-routes.js';
+import emailRoutes from './routes/email-routes.js';
+import userRoutes from './routes/user-routes.js';
+import levelRoutes from './routes/level-routes.js';
 
-const app = express()
-app.use(cors())
-app.use(express.json())
-app.use(mongoSanitize())
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(mongoSanitize());
 
 app.use('/api/locales', translationRoutes);
+app.use('/api', emailRoutes);
+app.use('/api', userRoutes);
+app.use('/api/levels', levelRoutes);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
@@ -53,221 +57,7 @@ app.get('/', (req, res) => {
 });
 
 
-
-//------------------ HELPER FUNCTIONS ------------------//
-
-/*
-purpose: check that the input key is allowed
-argument types:
-  inputs: object
-  allowedFields: array
-return type:
-  array containing fields that are in allowedFields
-
-example of using to get filters for classes: validateInput(req.query, classFields)
-*/
-const validateInput = (input, allowedFields) => {
-  const filteredInput = {}
-
-  for (const key in input) {
-    if (allowedFields.includes(key)) {
-      filteredInput[key] = input[key]
-    }
-  }
-
-  return filteredInput
-}
-
-const formattedSkillKey = (skill) => `level_skill_${skill.toLowerCase().replace(/ /g, "_")}`;
-
-const deleteLevelTranslations = async (levelData) => {
-  try {
-    await Translation.deleteMany({ key: `level_name_${levelData._id}` });
-    await Translation.deleteMany({ key: `level_desc_${levelData._id}` });
-    for (const skill of levelData.skills) {
-      const key = `${formattedSkillKey(skill)}_${levelData._id}`;
-      await Translation.deleteMany({ key });
-    }
-  } catch (error) {
-    console.error("Failed to delete level translations", error);
-    throw new Error("Failed to delete level translations");
-  }
-};
-
-const createLevelTranslations = async (levelData) => {
-  try {
-    // name translation
-    const response = await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
-      },
-      body: JSON.stringify({
-        key: `level_name_${levelData._id}`,
-        value: levelData.name,
-        namespace: "levels"
-      })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      console.error("Failed to create translation", data);
-    }
-    // description translation
-    await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
-      },
-      body: JSON.stringify({
-        key: `level_desc_${levelData._id}`,
-        value: levelData.description,
-        namespace: "levels"
-      })
-    });
-    // skill translations
-    for (const skill of levelData.skills) {
-      const key = `${formattedSkillKey(skill)}_${levelData._id}`;
-      await fetch(`https://api.i18nexus.com/project_resources/base_strings.json?api_key=${process.env.I18NEXUS_API_KEY}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.I18NEXUS_PAT}`
-        },
-        body: JSON.stringify({
-          key,
-          value: skill,
-          namespace: "levels"
-        })
-      });
-    }
-  } catch (error) {
-    throw new Error("Failed to create level translations");
-  }
-}
-
-
 //------------------ ENDPOINTS ------------------//
-
-
-/* USER RELATED ENDPOINTS */
-
-// Sign up
-app.post('/api/sign-up', async (req, res) => {
-  try {
-    const { firstName, lastName, email, whatsapp, password, clerkId } = req.body;
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(409).json({ message: 'Email already exists' });
-    }
-
-    // Create new user with separate first/last name fields
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      whatsapp,
-      password,
-      clerkId
-    });
-
-    await newUser.save();
-    res.status(201).json(newUser);
-
-  } catch (error) {
-    console.error('Failed to sign up:', error);
-    res.status(500).json({ message: 'Failed to sign up' });
-  }
-})
-
-// Get Users
-app.get('/api/users', async (req, res) => {
-  try {
-    const users = await User.find();
-    return res.status(200).json(users);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
-
-// Get User
-app.get('/api/user', async (req, res) => {
-  const allowedFields = ['_id', 'email', 'whatsapp']
-  const filters = validateInput(req.query, allowedFields)
-
-  if (Object.keys(filters).length === 0) {
-    res.status(404).send('Error: user not found', err);
-  }
-
-  try {
-    const user = await User.findOne(filters);
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
-
-/* CONTACT RELATED ENDPOINTS */
-
-// Post Contact
-app.post('/api/contact', async (req, res) => {
-  const { name, email, subject, message } = req.body
-
-  try {
-    const newContact = new Contact({
-      name,
-      email,
-      subject,
-      message
-    });
-    await newContact.save();
-
-    // Nodemailer setup
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.ADMIN_EMAIL,
-        pass: process.env.ADMIN_PASSWORD,
-      },
-    });
-
-    transporter.verify((error, success) => {
-      if (error) {
-        console.error('Error initializing transporter:', error);
-      } else {
-        console.log('Transporter is ready to send emails', success);
-      }
-    });
-
-
-    const mailOptions = {
-      from: email,
-      to: process.env.ADMIN_EMAIL,
-      subject: `Contact Form: ${subject}`,
-      html: `
-        <p><strong>From:</strong> ${name} (${email})</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-      `
-    };
-
-    // Send email
-    await transporter.sendMail(mailOptions);
-
-    res.status(201).json({ message: 'Inquiry and email submitted successfully' });
-  }
-  catch (err) {
-    console.error('Error submitting inquiry:', err);
-    res.status(500).json({ message: 'Error submitting inquiry', error: err.message });
-  }
-});
 
 
 /* CLASS RELATED ENDPOINTS */
@@ -280,20 +70,6 @@ app.get('/api/classes', async (req, res) => {
 
     //apply the filters directly to the database query
     const data = await Class.find(filters);
-    res.json(data);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
-
-// Get Levels
-app.get("/api/levels", async (req, res) => {
-  try {
-    const allowedFields = ['level'];
-    const filters = validateInput(req.query, allowedFields);
-
-    const data = await Level.find(filters);
     res.json(data);
   } catch (err) {
     res.status(500).send(err);
@@ -449,22 +225,6 @@ app.post('/api/conversations', async (req, res) => {
     return res.status(500).json({ message: 'Failed to create conversation class' });
   }
 });
-
-// Get Student's classes by ID
-app.get('/api/students-classes/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
-    res.json(data);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
 
 // Get class by ID
 app.get('/api/class/:id', async (req, res) => {
@@ -700,7 +460,7 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
   }
 })
 
-
+// TODO: get rid of
 // Forgot Password
 app.put('/api/users/reset-password', async (req, res) => {
   const { email, password } = req.body;
@@ -716,157 +476,6 @@ app.put('/api/users/reset-password', async (req, res) => {
   } catch (err) {
     console.error('Error resetting password', err);
     res.status(500).json({ success: false, message: "Server error resetting password." });
-  }
-});
-
-// Edit user
-app.put('/api/user/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      updates,
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error('Failed to update user:', error);
-    res.status(500).json({ message: 'Failed to update user' });
-  }
-});
-
-// Get level by ID
-app.get('/api/levels/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const data = await Level.findOne({ _id: id });
-    res.json(data)
-
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
-// Edit Level
-app.put('/api/levels/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const existingLevel = await Level.findOne({ level: updates.level });
-    if (existingLevel && existingLevel._id.toString() !== id.toString()) {
-      return res.status(409).json({
-        message: 'Level with this number already exists',
-        level: existingLevel
-      })
-    }
-
-    const currentLevel = await Level.findOne({ _id: id });
-
-    const updatedLevel = await Level.findByIdAndUpdate(
-      id,
-      updates,
-      { new: true, runValidators: true }
-    );
-
-    // Update translations
-    // delete existing translations 
-    await deleteLevelTranslations(currentLevel);
-    // create new translations
-    await createLevelTranslations(updatedLevel);
-    // translations transferred to MongoDB in updateLevel wrapper
-
-    if (!updatedLevel) {
-      return res.status(404).json({ message: 'Level not found' });
-    }
-
-    res.status(200).json(updatedLevel);
-  } catch (error) {
-    console.error('Failed to update level details:', error);
-    res.status(500).json({ message: 'Failed to update level details' });
-  }
-});
-
-// Delete Level
-app.delete('/api/levels/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const deletedLevel = await Level.findById(id);
-    if (!deletedLevel) {
-      return res.status(404).json({ message: 'Level not found' });
-    }
-
-    // Delete level's translations
-    await deleteLevelTranslations(deletedLevel);
-
-    await Level.findByIdAndDelete(id);
-
-    res.status(204).json({ message: 'Level deleted successfully' });
-  } catch (error) {
-    console.error('Failed to delete level:', error);
-    res.status(500).json({ message: 'Failed to delete level' });
-  }
-});
-
-// Create Level 
-app.post('/api/levels', async (req, res) => {
-  try {
-    const { level, name, description, skills } = req.body;
-
-    // Check if level already exists
-    const query = { level };
-    const existingLevel = await Level.findOne(query);
-
-    if (existingLevel) {
-      return res.status(409).json({
-        message: 'Level with this number already exists',
-        level: existingLevel
-      });
-    } else {
-      const newLevel = new Level({
-        level,
-        name,
-        description,
-        skills,
-      });
-      await newLevel.save();
-
-      // Add level translations to i18nexus
-      await createLevelTranslations(newLevel);
-      // translations transferred to MongoDB in createLevel wrapper
-
-      return res.status(201).json({
-        message: 'Level created successfully',
-        level: newLevel
-      });
-    }
-  } catch (error) {
-    console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Failed to create level' });
   }
 });
 
@@ -964,46 +573,5 @@ app.get('/api/students-export', async (req, res) => {
   } catch (err) {
     console.error('Error exporting students:', err);
     res.status(500).json({ message: 'Error exporting students' });
-  }
-});
-
-// Delete User
-app.delete('/api/user/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const deletedUser = await User.findOne({ _id: id });
-    if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // remove student from enrolled classes' roster
-    await Promise.all(
-      deletedUser.enrolledClasses.map(async (classId) => {
-        try {
-          const classDoc = await Class.findById(classId);
-
-          if (classDoc) {
-            await Class.findByIdAndUpdate(classId, { $pull: { roster: id } });
-          } else {
-            await Conversation.findByIdAndUpdate(classId, { $pull: { roster: id } });
-          }
-        } catch (err) {
-          throw err;
-        }
-      })
-    );
-
-    // delete user
-    await clerkClient.users.deleteUser(deletedUser.clerkId);
-    await User.findByIdAndDelete(id);
-
-    res.status(204).json({ message: 'User deleted successfully' });
-  } catch (error) {
-    console.error('Failed to delete user:', error);
-    res.status(500).json({ message: 'Failed to delete user' });
   }
 });

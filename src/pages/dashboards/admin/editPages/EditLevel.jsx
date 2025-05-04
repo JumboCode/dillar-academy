@@ -158,10 +158,8 @@ const EditLevel = () => {
 
   const handleDeleteLevel = async (shouldDeleteClasses = false) => {
     try {
-      console.log(classes.length)
       await deleteLevel(level._id);
       if (shouldDeleteClasses) {
-        console.log("deleteClass")
         await Promise.all(
           classes.map(cls => deleteClass(cls._id))
         );

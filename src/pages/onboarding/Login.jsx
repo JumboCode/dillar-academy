@@ -90,7 +90,7 @@ export default function Login() {
         <div className="w-full max-w-[96rem] flex justify-center">
           <Form width="lg:w-3/5 xl:w-2/5">
             <h1 className="font-extrabold">{t("login")}</h1>
-            <div className="flex gap-x-2 text-base sm:text-lg mt-3 mb-5">
+            <div className="flex flex-col md:flex-row gap-x-2 text-base sm:text-lg mt-3 mb-5">
               <p className="text-gray-500">{t("dont_have_account")}</p>
               <Link href="/signup" className="font-extrabold text-blue-400">{t("sign_up")}</Link>
             </div>

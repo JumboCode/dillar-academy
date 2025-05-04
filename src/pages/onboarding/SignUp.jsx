@@ -94,9 +94,10 @@ export default function SignUp() {
             width={"lg:w-3/5 xl:w-2/5"}
           >
             <h1 className="font-extrabold">{t("sign_up")}</h1>
-            <p className="text-base sm:text-lg mt-3 mb-5 text-gray-500">{t("already_have_account")}
-              <Link className="ml-2 font-extrabold text-blue-400" href="/login">{t("login")}</Link>
-            </p>
+            <div className="flex flex-col md:flex-row gap-x-2 text-base sm:text-lg mt-3 mb-5">
+              <p className="text-gray-500">{t("already_have_account")}</p>
+              <Link className="font-extrabold text-blue-400" href="/login">{t("login")}</Link>
+            </div>
             {/* Form Values and the Borders */}
             <form method="POST" onSubmit={handleSubmit} className="space-y-3">
               <div className="flex gap-y-3 sm:gap-y-0 sm:gap-x-3 sm:flex-row flex-col">

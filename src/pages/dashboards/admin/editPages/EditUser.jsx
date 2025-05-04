@@ -172,14 +172,14 @@ const EditUser = () => {
       {successMessage !== "" && <Alert message={successMessage} isSuccess />}
       <div className={`page-format max-w-[96rem] space-y-10`}>
         <BackButton label="Back" />
-        <span className="flex items-baseline gap-x-5 mb-1">
-          {allowRender ? <>
-            <h1 title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`} className="font-extrabold truncate">
-              {toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}
-            </h1>
-            <p className="text-blue-500">{toTitleCase(userData.privilege)}</p>
-          </> : showSkeleton && <h1 className="w-full sm:w-1/2"><Skeleton /></h1>}
-        </span>
+        {allowRender ? <div className='flex flex-col sm:flex-row flex-wrap sm:items-end gap-x-5 mb-1'>
+          <h1
+            title={`Name: ${toTitleCase(userData.firstName)} ${toTitleCase(userData.lastName)}`}
+            className='font-extrabold w-fit max-w-full break-words'>
+            {toTitleCase(userData.firstName) + " " + toTitleCase(userData.lastName)}
+          </h1>
+          <p className='text-blue-500'>{toTitleCase(userData.privilege)}</p>
+        </div> : showSkeleton && <h1 className="w-full sm:w-1/2"><Skeleton /></h1>}
         <form onSubmit={handleEditUser} className="w-full lg:w-2/3 space-y-12">
           <div className="flex flex-col gap-y-6 py-3 px-2">
             <div className="sm:flex gap-y-6 sm:gap-y-0 sm:gap-x-6">
