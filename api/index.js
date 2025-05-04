@@ -7,11 +7,9 @@ import mongoSanitize from "express-mongo-sanitize";
 
 // util functions
 import { validateInput } from "./utils/validate-utils.js";
-import { deleteLevelTranslations, createLevelTranslations } from "./utils/translation-utils.js";
 
 // external schemas
 import User from "./schemas/User.js";
-import Level from "./schemas/Level.js";
 import { Class, Conversation } from './schemas/Classes.js';
 
 // external routes
@@ -28,7 +26,7 @@ app.use(mongoSanitize())
 app.use('/api/locales', translationRoutes);
 app.use('/api', emailRoutes);
 app.use('/api', userRoutes);
-app.use('/api', levelRoutes);
+app.use('/api/levels', levelRoutes);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
@@ -227,22 +225,6 @@ app.post('/api/conversations', async (req, res) => {
     return res.status(500).json({ message: 'Failed to create conversation class' });
   }
 });
-
-// Get Student's classes by ID
-app.get('/api/students-classes/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
-    res.json(data);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
 
 // Get class by ID
 app.get('/api/class/:id', async (req, res) => {
@@ -478,7 +460,7 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
   }
 })
 
-
+// TODO: get rid of
 // Forgot Password
 app.put('/api/users/reset-password', async (req, res) => {
   const { email, password } = req.body;
@@ -494,33 +476,6 @@ app.put('/api/users/reset-password', async (req, res) => {
   } catch (err) {
     console.error('Error resetting password', err);
     res.status(500).json({ success: false, message: "Server error resetting password." });
-  }
-});
-
-// Edit user
-app.put('/api/user/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      updates,
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error('Failed to update user:', error);
-    res.status(500).json({ message: 'Failed to update user' });
   }
 });
 

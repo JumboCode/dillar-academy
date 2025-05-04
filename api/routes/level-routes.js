@@ -7,7 +7,7 @@ import { deleteLevelTranslations, createLevelTranslations } from "../utils/trans
 const router = express.Router();
 
 // Get Levels
-router.get("/levels", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const allowedFields = ['level'];
     const filters = validateInput(req.query, allowedFields);
@@ -20,7 +20,7 @@ router.get("/levels", async (req, res) => {
 })
 
 // Get level by ID
-router.get('/levels/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -37,7 +37,7 @@ router.get('/levels/:id', async (req, res) => {
 })
 
 // Create Level 
-router.post('/levels', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { level, name, description, skills } = req.body;
 
@@ -75,7 +75,7 @@ router.post('/levels', async (req, res) => {
 });
 
 // Edit Level
-router.put('/levels/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -119,7 +119,7 @@ router.put('/levels/:id', async (req, res) => {
 });
 
 // Delete Level
-router.delete('/levels/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
