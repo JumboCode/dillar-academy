@@ -113,10 +113,10 @@ const InstructorView = () => {
       <div className="page-format max-w-[96rem] lg:py-24 space-y-12">
         <div>
           {allowRender
-            ? <div className='flex flex-col sm:flex-row sm:items-end gap-x-5 mb-1'>
+            ? <div className='flex flex-col sm:flex-row sm:items-end flex-wrap gap-x-5 mb-1'>
               <h1
                 title={allowRender ? `Name: ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}` : ""}
-                className='font-extrabold w-fit max-w-[80%] break-words'>
+                className='font-extrabold w-fit max-w-full break-words'>
                 {`${t("welcome")} ${toTitleCase(user.firstName)} ${toTitleCase(user.lastName)}!`}
               </h1>
               <p className='text-blue-500'>{allowRender ? t(`${user.privilege}`) : ""}</p>

@@ -78,16 +78,6 @@ const unenrollInClass = async (classId, userId) => {
   }
 }
 
-const getStudentsClasses = async (studentId) => {
-  try {
-    const response = await axios.get(`/api/students-classes/${studentId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching student's classes:", error);
-    throw error;
-  }
-}
-
 const getClassById = async (classId) => {
   try {
     const response = await axios.get(`/api/class/${classId}`);
@@ -203,7 +193,6 @@ export {
   deleteClass,
   enrollInClass,
   unenrollInClass,
-  getStudentsClasses,
   getClassById,
   getLevels,
   deleteLevel,
