@@ -7,18 +7,16 @@ import Button from '@/components/Button/Button';
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
-import { createClass } from '@/api/class-wrapper.js';
+import { createIelts } from '@/api/ielts-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
 
-const AddClass = () => {
+const AddIelts = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [alertMessage, setAlertMessage] = useState("")
-
-  const [classData, setClassData] = useState({
-    level: '',
+  const [ieltsData, setIeltsData] = useState({
     ageGroup: '',
     instructor: '',
     schedule: [
@@ -40,36 +38,36 @@ const AddClass = () => {
   }, [isLoaded, isSignedIn, user]);
 
   const handleInputChange = (e) => {
-    setClassData({
-      ...classData,
+    setIeltsData({
+      ...ieltsData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleAddClass = async (e) => {
+  const handleCreateIelts = async (e) => {
     e.preventDefault();
-    classData.ageGroup = classData.ageGroup.toLowerCase();
-    const allowedAges = ["all", "children", "adult"]
+    ieltsData.ageGroup = ieltsData.ageGroup.toLowerCase();
+    const allowedAges = ["all", "children", "adults"]
     try {
-      if (!allowedAges.includes(classData.ageGroup)) {
+      if (!allowedAges.includes(ieltsData.ageGroup)) {
         setAlertMessage(`Age group must be all, children, or adult`);
         setTimeout(() => {
-          setAlertMessage("");
+          setAlertMessage("")
         }, 4000);
       } else {
         // Filter out any time objects that are empty (i.e., missing a day or time)
-        const filteredClassData = {
-          ...classData,
-          schedule: classData.schedule.filter(time => time.day && time.startTime && time.endTime),
+        const filteredIeltsData = {
+          ...ieltsData,
+          schedule: ieltsData.schedule.filter(time => time.day && time.startTime),
         };
-        await createClass(filteredClassData);
+        await createIelts(filteredIeltsData);
         history.back();
       }
     } catch (error) {
-      console.error('Error creating class:', error);
+      console.error('Error creating IELTS class:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
       setTimeout(() => {
-        setAlertMessage("");
+        setAlertMessage("")
       }, 4000);
     }
   }
@@ -78,77 +76,72 @@ const AddClass = () => {
     return <Unauthorized />;
   }
 
-  // TODO: implement age group check
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}
       <div className="page-format max-w-[96rem] space-y-10">
-        <BackButton label={"All Classs"} />
+        <BackButton label={"All IELTS"} />
         <div className="space-y-2">
-          <h1 className="font-extrabold">Add Class</h1>
-          <p className="font-light text-base sm:text-lg">Fill out new class data</p>
+          <h1 className="font-extrabold">Add IELTS Class</h1>
+          <p className="font-light text-base sm:text-lg">Fill out new IELTS class data</p>
         </div>
-        <form onSubmit={handleAddClass} className="w-full lg:w-2/3">
-          <div className="flex justify-start space-x-10 mb-6">
-            <div className="space-y-3">
-              <label className="mx-1">Level</label>
-              <FormInput
-                type="text"
-                name="level"
-                placeholder="Level"
-                value={classData.level}
-                onChange={handleInputChange}
-                isRequired={true}
-              />
-            </div>
-            <div className="space-y-3">
+        <form onSubmit={handleCreateIelts} className="w-full lg:w-2/3">
+          <div className="flex justify-start space-x-10 w-full mb-6">
+            <div className="w-full space-y-3">
               <label className="mx-1">Age Group</label>
               <FormInput
                 type="text"
                 name="ageGroup"
                 placeholder="Age Group"
-                value={classData.ageGroup}
+                value={ieltsData.ageGroup}
                 onChange={handleInputChange}
                 isRequired={true}
               />
             </div>
-            <div className="space-y-3">
+            <div className="w-full space-y-3">
               <label className="mx-1">Instructor</label>
               <FormInput
                 type="text"
                 name="instructor"
                 placeholder="Instructor"
-                value={classData.instructor}
+                value={ieltsData.instructor}
                 onChange={handleInputChange}
                 isRequired={true}
               />
             </div>
           </div>
           <div className="w-full space-y-3 mb-6">
-            <div className="grid grid-cols-2 gap-x-10">
-              <label className="mx-1">Day</label>
-              <label className="mx-1">Time</label>
+            <div className="flex w-full gap-x-4">
+              <div className="w-full grid grid-cols-2 gap-x-10">
+                <label className="mx-1">Day</label>
+                <label className="mx-1">Time</label>
+              </div>
+              <div className="invisible h-0">
+                <Button
+                  label={<IoTrashBinOutline />}
+                  onClick={null} />
+              </div>
             </div>
             <div className="space-y-4">
-              {classData.schedule.map((time, index) => {
+              {ieltsData.schedule.map((time, index) => {
                 const handleTimeInputChange = (e) => {
-                  const updatedTimeArray = [...classData.schedule];
+                  const updatedTimeArray = [...ieltsData.schedule];
                   updatedTimeArray[index] = {
                     ...updatedTimeArray[index],
                     [e.target.name]: e.target.value,
                   };
-                  setClassData({
-                    ...classData,
+                  setIeltsData({
+                    ...ieltsData,
                     schedule: updatedTimeArray,
                   });
                 };
                 const handleSelectedDay = (day) => {
-                  const updatedTimes = [...classData.schedule];
+                  const updatedTimes = [...ieltsData.schedule];
                   updatedTimes[index] = {
                     ...updatedTimes[index],
                     day,
                   };
-                  setClassData(prev => ({
+                  setIeltsData(prev => ({
                     ...prev,
                     schedule: updatedTimes,
                   }));
@@ -183,7 +176,7 @@ const AddClass = () => {
                       label={<IoTrashBinOutline />}
                       isOutline
                       onClick={() => {
-                        setClassData(prevData => ({
+                        setIeltsData(prevData => ({
                           ...prevData,
                           schedule: prevData.schedule.filter((_, i) => i !== index)
                         }));
@@ -201,7 +194,7 @@ const AddClass = () => {
             label={<div className="flex items-center gap-x-2">Add time<IoAdd /></div>}
             isOutline
             onClick={() => {
-              setClassData(prevData => ({
+              setIeltsData(prevData => ({
                 ...prevData,
                 schedule: [
                   ...prevData.schedule,
@@ -215,7 +208,7 @@ const AddClass = () => {
             <Button
               label="Cancel"
               isOutline={true}
-              onClick={() => setLocation("/admin/levels/classs")} />
+              onClick={() => setLocation("/admin/levels/ielts")} />
           </div>
         </form>
       </div>
@@ -223,4 +216,4 @@ const AddClass = () => {
   )
 }
 
-export default AddClass;
+export default AddIelts;

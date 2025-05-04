@@ -11,7 +11,6 @@ import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import { updateConversation, deleteConversation } from '@/api/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
-import { convertTime } from "@/utils/time-utils";
 import Unauthorized from "@/pages/Unauthorized";
 
 const EditConversation = () => {
@@ -26,6 +25,7 @@ const EditConversation = () => {
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
     instructor: '',
+    link: '',
     schedule: [
       {
         day: '',
@@ -57,6 +57,7 @@ const EditConversation = () => {
       setConversationData({
         ageGroup: data.ageGroup,
         instructor: data.instructor,
+        link: data.link,
         schedule: conversationData.schedule
       });
       if (data.schedule.length !== 0) {
@@ -181,6 +182,17 @@ const EditConversation = () => {
                 isRequired={true}
               />
             </div>
+          </div>
+          <div className="w-full mb-6">
+            <label className="mx-1">Class Link</label>
+            <FormInput
+              type="text"
+              name="link"
+              placeholder="Enter class link"
+              value={conversationData.link}
+              onChange={handleInputChange}
+              isRequired={true}
+            />
           </div>
           <div className="w-full space-y-3 mb-6">
             <div className="flex w-full gap-x-4">

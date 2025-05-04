@@ -12,6 +12,7 @@ import ResetPassword from "@/pages/onboarding/ResetPassword";
 import StudentPortal from '@/pages/dashboards/StudentPortal';
 import AdminLevels from '@/pages/dashboards/admin/AdminLevels';
 import AdminConversations from '@/pages/dashboards/admin/AdminConversations';
+import AdminIelts from '@/pages/dashboards/admin/AdminIelts';
 import AdminStudents from '@/pages/dashboards/admin/AdminStudents';
 import AdminInstructors from '@/pages/dashboards/admin/AdminInstructors';
 import AdminSchedule from '@/pages/dashboards/admin/AdminSchedule';
@@ -20,7 +21,9 @@ import AddLevel from '@/pages/dashboards/admin/editPages/AddLevel';
 import EditClass from '@/pages/dashboards/admin/editPages/EditClass';
 import AddClass from '@/pages/dashboards/admin/editPages/AddClass';
 import EditConversation from '@/pages/dashboards/admin/editPages/EditConversation';
+import EditIelts from '@/pages/dashboards/admin/editPages/EditIelts';
 import AddConversation from '@/pages/dashboards/admin/editPages/AddConversation';
+import AddIelts from '@/pages/dashboards/admin/editPages/AddIelts';
 import EditUser from '@/pages/dashboards/admin/editPages/EditUser';
 import InstructorView from '@/pages/dashboards/InstructorView';
 import AdminTranslations from '@/pages/dashboards/admin/AdminTranslations';
@@ -47,6 +50,9 @@ export default function PageRoutes() {
       <Route path="/admin/levels/conversations" component={AdminConversations} />
       <Route path="/admin/levels/conversations/new" component={AddConversation} />
       <Route path="/admin/levels/conversations/:id" component={EditConversation} />
+      <Route path="/admin/levels/ielts" component={AdminIelts} />
+      <Route path="/admin/levels/ielts/new" component={AddIelts} />
+      <Route path="/admin/levels/ielts/:id" component={EditIelts} />
       <Route path="/admin/levels/new" component={AddLevel} />
       <Route path="/admin/levels/:id" component={EditLevel} />
       <Route path="/admin/levels/class/new" component={AddClass} />

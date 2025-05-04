@@ -85,6 +85,18 @@ const AdminLevels = () => {
                 />
               </div>
             </Link>
+            <Link href="/admin/levels/ielts">
+              <div className="rounded-lg">
+                <Level
+                  level={{
+                    level: "ielts",
+                    name: "",
+                  }}
+                  isSimplified
+                  isArrowRight
+                />
+              </div>
+            </Link>
           </>
         ) : showSkeleton && (
           <SkeletonLevel count={6} isSimplified isArrowRight />

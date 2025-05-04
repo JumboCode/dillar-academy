@@ -17,6 +17,8 @@ import translationRoutes from './routes/translation-routes.js';
 import emailRoutes from './routes/email-routes.js';
 import userRoutes from './routes/user-routes.js';
 import levelRoutes from './routes/level-routes.js';
+import conversationRoutes from './routes/conversation-routes.js';
+import ieltsRoutes from './routes/ielts-routes.js';
 
 const app = express();
 app.use(cors());
@@ -27,6 +29,8 @@ app.use('/api/locales', translationRoutes);
 app.use('/api', emailRoutes);
 app.use('/api', userRoutes);
 app.use('/api/levels', levelRoutes);
+app.use('/api/conversations', conversationRoutes);
+app.use('/api/ielts', ieltsRoutes);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI)
@@ -62,9 +66,12 @@ app.get('/', (req, res) => {
 
 /* CLASS RELATED ENDPOINTS */
 
-// Get Classes
-app.get('/api/classes', async (req, res) => {
+// Get All Classes
+app.get('/api/all-classes', async (req, res) => {
   try {
+    if ('level' in req.query) {
+      req.query.level = Number(req.query.level);
+    }
     const allowedFields = ['level', 'instructor', 'ageGroup'];
     const filters = validateInput(req.query, allowedFields);
 
@@ -76,155 +83,28 @@ app.get('/api/classes', async (req, res) => {
   }
 })
 
-
-// Get Conversation classes
-app.get("/api/conversations", async (req, res) => {
+// Get Classes
+app.get('/api/classes', async (req, res) => {
   try {
-    const data = await Conversation.find();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
-// Get Conversation by ID
-app.get('/api/conversations/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
+    if ('level' in req.query) {
+      req.query.level = Number(req.query.level);
     }
+    const allowedFields = ['level', 'instructor', 'ageGroup'];
+    const filters = validateInput(req.query, allowedFields);
 
-    const data = await Conversation.findOne({ _id: id });
-    res.json(data)
-
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
-// Edit Conversation
-app.put('/api/conversations/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid Conversation Class ID' });
-    }
-
-    const existingConversations = await Conversation.find({ ageGroup: updates.ageGroup, instructor: updates.instructor });
-    if (existingConversations.length !== 0) {
-      const matchingSchedules = existingConversations.filter(convo =>
-        convo.schedule.length === updates.schedule.length &&
-        convo.schedule.every(itemA =>
-          updates.schedule.some(itemB =>
-            itemA.day === itemB.day &&
-            itemA.startTime === itemB.startTime &&
-            itemA.endTime === itemB.endTime
-          )
-        )
-      );
-      const duplicate = matchingSchedules.find(convo => convo._id.toString() !== id.toString());
-
-      if (duplicate) {
-        return res.status(409).json({
-          message: 'Conversation class already exists',
-          class: duplicate
-        });
-      }
-    }
-
-    const updatedConversation = await Conversation.findByIdAndUpdate(
-      id,
-      updates,
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedConversation) {
-      return res.status(404).json({ message: 'Conversation class not found' });
-    }
-
-    res.status(200).json(updatedConversation);
-  } catch (error) {
-    console.error('Failed to update conversation class:', error);
-    res.status(500).json({ message: 'Failed to update conversation class' });
-  }
-});
-
-// Delete Conversation
-app.delete('/api/conversations/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const deletedConversation = await Conversation.findOne({ _id: id });
-    if (!deletedConversation) {
-      return res.status(404).json({ message: 'Conversation not found' });
-    }
-
-    // remove class from student's enrolled classes
-    await Promise.all(
-      deletedConversation.roster.map(studentId =>
-        User.findByIdAndUpdate(studentId, { $pull: { enrolledClasses: id } })
-          .catch(err => console.error(`Failed to update student ${studentId}:`, err)) // TODO: throw error?
-      )
-    );
-
-    // delete conversation
-    await Conversation.findByIdAndDelete(id);
-
-    res.status(204).json({ message: 'Conversation deleted successfully' });
-  } catch (error) {
-    console.error('Failed to delete conversation class:', error);
-    res.status(500).json({ message: 'Failed to delete conversation class' });
-  }
-});
-
-// Create Conversation
-app.post('/api/conversations', async (req, res) => {
-  try {
-    const { ageGroup, instructor, schedule } = req.body;
-
-    // Check if conversation already exists
-    const existingConversations = await Conversation.find({ ageGroup, instructor });
-    const matchingSchedules = existingConversations.filter(convo =>
-      convo.schedule.length === schedule.length &&
-      convo.schedule.every(itemA =>
-        schedule.some(itemB =>
-          itemA.day === itemB.day &&
-          itemA.startTime === itemB.startTime &&
-          itemA.endTime === itemB.endTime
-        )
-      )
-    );
-
-    if (matchingSchedules.length > 0) {
-      return res.status(409).json({
-        message: 'Conversation class already exists',
-        class: matchingSchedules[0]
-      });
+    if (filters.level !== undefined) {
+      filters.level = { $eq: filters.level, $type: 'number' };
     } else {
-      const newConversation = new Conversation({
-        ageGroup,
-        instructor,
-        schedule
-      });
-
-      await newConversation.save();
-      return res.status(201).json({
-        message: 'Conversation created successfully',
-        class: newConversation
-      });
+      filters.level = { $type: 'number' };
     }
-  } catch (error) {
-    console.error('Error creating:', error);
-    return res.status(500).json({ message: 'Failed to create conversation class' });
+
+    //apply the filters directly to the database query
+    const data = await Class.find(filters);
+    res.json(data);
+  } catch (err) {
+    res.status(500).send(err);
   }
-});
+})
 
 // Get class by ID
 app.get('/api/class/:id', async (req, res) => {
@@ -242,7 +122,6 @@ app.get('/api/class/:id', async (req, res) => {
     res.status(500).send(err);
   }
 })
-
 
 // Create Class
 app.post('/api/classes', async (req, res) => {

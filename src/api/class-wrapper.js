@@ -3,6 +3,17 @@ import { transferTranslations } from "@/api/translation-wrapper";
 import { toTitleCase } from '@/utils/formatters';
 
 // query should be a string
+const getAllClasses = async (query = "") => {
+  try {
+    const response = await axios.get(`/api/all-classes?${query}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching courses:', error)
+    throw error;
+  }
+}
+
+// query should be a string
 const getClasses = async (query = "") => {
   try {
     const response = await axios.get(`/api/classes?${query}`);
@@ -142,7 +153,7 @@ const deleteLevel = async (levelId) => {
   }
 }
 
-const getConversationById = async (conversationId = "") => {
+const getConversationById = async (conversationId) => {
   try {
     const response = await axios.get(`/api/conversations/${conversationId}`);
     return response.data;
@@ -181,12 +192,13 @@ const createConversation = async (conversationData) => {
     const response = await axios.post('/api/conversations', conversationData);
     return response.data;
   } catch (error) {
-    console.error('Error creating/updating conversation:', error);
+    console.error('Error updating conversation:', error);
     throw error;
   }
 }
 
 export {
+  getAllClasses,
   getClasses,
   createClass,
   updateClass,

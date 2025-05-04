@@ -185,6 +185,9 @@ const AddConversation = () => {
                 )
               })}
             </div>
+            <div className="w-full grid grid-cols-2">
+              <p className="italic text-blue-500 col-start-2">Enter times in UTC and 24 hour format</p>
+            </div>
           </div>
           <Button
             type="button"
