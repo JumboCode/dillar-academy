@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useSignIn, useClerk } from "@clerk/clerk-react";
-import { resetPassword as updateMongoPassword } from "../../api/user-wrapper";
 import Form from "@/components/Form/Form";
 import FormInput from "@/components/Form/FormInput";
 import Button from "@/components/Button/Button";
@@ -49,25 +48,15 @@ const ResetPassword = () => {
         // Sign the user out using the clerk instance.
         await clerk.signOut();
 
-        // Update MongoDB
-        const email = sessionStorage.getItem("reset_password_email");
-        const response = await updateMongoPassword({ email, password });
-
-        if (response.success) {
-          // Clean up session storage and redirect to the login page.
-          sessionStorage.removeItem("reset_password_code");
-          sessionStorage.removeItem("reset_password_email");
-          setLocation("/login");
-        } else {
-          setError('reset_password_database_failed_alert');
-          console.error("MongoDB update failed:", response.error);
-        }
+        sessionStorage.removeItem("reset_password_code");
+        sessionStorage.removeItem("reset_password_email");
+        setLocation("/login");
       } else {
-        setError('reset_password_update_failed_alert');
+        setError('Reset password failed, contact support');
       }
     } catch (err) {
       console.error("Reset password error:", err);
-      setError(err.errors?.[0]?.longMessage || 'reset_password_error_alert'); // TODO: or lhs translation
+      setError(err.errors?.[0]?.longMessage || 'Reset password failed, contact support'); // TODO: or lhs translation
     } finally {
       setIsSubmitting(false);
     }
