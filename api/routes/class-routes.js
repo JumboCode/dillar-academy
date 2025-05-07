@@ -335,7 +335,7 @@ router.get("/ielts", async (req, res) => {
 })
 
 // Get IETLS by ID
-router.get('/ietls/:id', async (req, res) => {
+router.get('/ielts/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
