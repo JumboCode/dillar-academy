@@ -15,6 +15,10 @@ const UserItem = ({ userData, classes = [], privilege, isShowClass }) => {
     setHighestClass(maxClass);
   }, [classes, userData]);
 
+  if (!userData) {
+    return <></>;
+  }
+
   return (
     <div className="group flex py-3 px-4 justify-between items-center hover:bg-[#ECF7FE] space-x-3 w-full rounded-sm flex-space-between">
       <div className="flex-1 min-w-0 *:truncate *:w-full">
