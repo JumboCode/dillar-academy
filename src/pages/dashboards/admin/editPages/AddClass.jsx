@@ -7,6 +7,7 @@ import Button from '@/components/Button/Button';
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
+import ClassPreview from '@/components/Class/ClassPreview';
 import { createClass } from '@/wrappers/class-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
@@ -88,6 +89,12 @@ const AddClass = () => {
         <div className="space-y-2">
           <h1 className="font-extrabold">Add Class</h1>
           <p className="font-light text-base sm:text-lg">Fill out new class data</p>
+        </div>
+        <div className="w-1/3">
+          <h3 className="mb-2">Class Preview</h3>
+          <ClassPreview
+            classObj={classData}
+          />
         </div>
         <form onSubmit={handleAddClass} className="w-full lg:w-2/3">
           <div className="flex justify-start space-x-10 mb-6">

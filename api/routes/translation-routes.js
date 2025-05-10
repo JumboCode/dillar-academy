@@ -34,7 +34,6 @@ router.put('/:lng/:ns/:key/', async (req, res) => {
     res.status(200).json({ message: 'Successfully updated translation', translation: updated });
   } catch (error) {
     res.status(500).json({ message: "Failed to update translation" });
-    console.error(error)
   }
 })
 

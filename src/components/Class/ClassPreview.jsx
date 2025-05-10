@@ -1,15 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
-import EnrollButton from '@/components/Button/EnrollButton';
-import EditButton from '@/components/Button/EditButton';
-import { useTranslation } from "react-i18next";
-import { localizeNumber } from "@/utils/formatters";
+import Button from '@/components/Button/Button';
 import { convertTime, to12HourFormat } from '@/utils/time-utils';
 
-// possible modes: enroll, unenroll, edit
-// editURL used for edit page URL to navigate to
-const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => {
-  const { t, i18n } = useTranslation();
+const Class = ({ classObj }) => {
   const [showScrollHint, setShowScrollHint] = useState(false);
   const scheduleRef = useRef(null);
 
@@ -28,36 +22,15 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
     return () => window.removeEventListener("resize", checkOverflow);
   }, []);
 
-  return isSimplified ? (
-    <div className={`${!classObj.isEnrollmentOpen ? "bg-neutral-200 cursor-not-allowed" : "hover:shadow-shadow-hover transition-shadow"} shadow-shadow rounded-2xl py-8 px-7 flex gap-x-3 items-center justify-between relative`}>
-      {!classObj.isEnrollmentOpen && <p className='font-extrabold italic text-neutral-700 absolute bottom-2 left-0 right-0 mx-auto w-full'>
-        Enrollment Closed
-      </p>}
-      <div className={`flex items-center gap-x-6`}>
-        <h3 className={`font-extrabold ${classObj.isEnrollmentOpen ? "text-dark-blue-800" : "text-neutral-500"}`}>
-          {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}
-        </h3>
-        <p className='text-neutral-600'>
-          {classObj.ageGroup === "all"
-            ? t(`for_${classObj.ageGroup}`)
-            : t(`${classObj.ageGroup}_class`)}
-        </p>
-      </div>
-      <p className={`sm:text-lg ${classObj.isEnrollmentOpen ? "text-black" : "text-neutral-500"}`}>
-        {t('taught_by_name', { name: classObj.instructor })}
-      </p>
-    </div>
-  ) : (
+  return (
     <div className="p-6 bg-white rounded-lg shadow-shadow overflow-hidden hover:shadow-shadow-hover transition-shadow">
       {/* Header */}
       <div className='mb-4'>
         <h3 className="font-extrabold text-dark-blue-800 mb-1">
-          {classObj.ageGroup === "all"
-            ? t(`for_${classObj.ageGroup}`)
-            : t(`${classObj.ageGroup}_class`)}
+          {classObj.ageGroup === "all" ? 'All Ages' : `${classObj.ageGroup.charAt(0).toUpperCase() + classObj.ageGroup.slice(1)}'s Class`}
         </h3>
         <p className="text-sm text-neutral-400">
-          {t('with_name', { name: classObj.instructor })}
+          with {classObj.instructor}
         </p>
       </div>
 
@@ -93,7 +66,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
                 </p>
               </div>
               <p className="row-start-2 w-max">
-                {t(convertedStartTimeEST.day.toLowerCase())}
+                {schedule.day}
               </p>
 
               {/* Divider */}
@@ -106,17 +79,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
         <p className="text-xs italic text-neutral-400 mb-4">Scroll to see more times →</p>
       )}
 
-      <div className="flex gap-3">
-        {modes.includes("enroll") && (
-          <EnrollButton classObj={classObj} isEnroll={true} />
-        )}
-        {modes.includes("edit") && (
-          <EditButton classId={classObj._id} editURL={editURL} />
-        )}
-        {modes.includes("unenroll") && (
-          <EnrollButton classObj={classObj} isEnroll={false} />
-        )}
-      </div>
+      <Button label="Enroll" />
     </div>
   );
 };
