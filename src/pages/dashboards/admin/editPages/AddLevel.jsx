@@ -9,6 +9,7 @@ import FormInput from '@/components/Form/FormInput';
 import BackButton from "@/components/Button/BackButton";
 import Alert from "@/components/Alert";
 import Unauthorized from "@/pages/Unauthorized";
+import LevelPreview from '@/components/Class/LevelPreview';
 
 const AddLevel = () => {
   const { user } = useContext(UserContext);
@@ -115,6 +116,12 @@ const AddLevel = () => {
         <div>
           <h1 className="font-extrabold mb-2">Add Level</h1>
           <p className="sm:text-lg">Add level information and view all the classes in this level.</p>
+        </div>
+        <div className="w-1/3">
+          <h3 className="mb-2">Level Preview</h3>
+          <LevelPreview
+            level={levelData}
+          />
         </div>
         <form onSubmit={handleAddLevel} className="space-y-6 w-full lg:w-2/3">
           {/* Level and Name fields */}

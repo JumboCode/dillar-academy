@@ -15,6 +15,7 @@ import Alert from '@/components/Alert';
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonClass from "@/components/Skeletons/SkeletonClass";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
+import LevelPreview from '@/components/Class/LevelPreview';
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -199,6 +200,12 @@ const EditLevel = () => {
         <div>
           <h1 className="font-extrabold mb-2">Edit Level</h1>
           <p className="sm:text-lg">Edit Level information and view all the classes in this level.</p>
+        </div>
+        <div className="w-1/3">
+          <h3 className="mb-2">Level Preview</h3>
+          <LevelPreview
+            level={levelData}
+          />
         </div>
         <form onSubmit={handleEditLevel} className="space-y-6 w-full lg:w-2/3">
           {/* Level and Name fields */}
