@@ -80,7 +80,6 @@ const AddClass = () => {
     return <Unauthorized />;
   }
 
-  // TODO: implement age group check
   return (
     <>
       {alertMessage !== "" && <Alert message={alertMessage} />}

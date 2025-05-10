@@ -53,8 +53,9 @@ const EditLevel = () => {
   useEffect(() => {
     if (level) {
       const skills = Array.isArray(level.skills) ? level.skills : [];
+      console.log(level)
       setLevelData({
-        level: level.level || '',
+        level: level.level ?? '',
         name: level.name || '',
         description: level.description || '',
         skills: skills
@@ -178,8 +179,8 @@ const EditLevel = () => {
   const handleReset = () => {
     const skills = Array.isArray(level.skills) ? level.skills : [];
     setLevelData({
-      level: level.level,
-      name: level.name,
+      level: level.level ?? '',
+      name: level.name || '',
       description: level.description || '',
       skills: skills
     });
