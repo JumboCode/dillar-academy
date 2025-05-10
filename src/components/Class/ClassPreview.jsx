@@ -66,7 +66,7 @@ const Class = ({ classObj }) => {
                 </p>
               </div>
               <p className="row-start-2 w-max">
-                {schedule.day}
+                {convertedStartTimeEST.day}
               </p>
 
               {/* Divider */}

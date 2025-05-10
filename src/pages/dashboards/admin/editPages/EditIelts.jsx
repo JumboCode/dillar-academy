@@ -9,6 +9,7 @@ import DeleteButton from "@/components/Button/DeleteButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
+import SupplementaryClassPreview from "@/components/Class/SupplementaryClassPreview";
 import { updateIelts, deleteIelts } from '@/wrappers/ielts-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
@@ -156,6 +157,12 @@ const EditIelts = () => {
         <div className="space-y-2">
           <h1 className="font-extrabold">Edit IELTS Class</h1>
           <h3 className="font-light">Edit IELTS class and student information</h3>
+        </div>
+        <div className="w-1/3">
+          <h3 className="mb-2">Conversation Class Preview</h3>
+          <SupplementaryClassPreview
+            cls={ieltsData}
+          />
         </div>
         <form onSubmit={handleEditIelts} className="w-full lg:w-2/3">
           <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
