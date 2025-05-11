@@ -233,8 +233,6 @@ const TableRow = ({ id, translations, ns, fetchTranslations, setters }) => {
   const handleEditTranslation = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData)
-      console.log(ns)
       await editTranslation(formData.lng, ns, formData.key, formData.translation);
       const updatedTranslations = await fetchTranslations(ns);
       const setTranslations = setters[ns];
@@ -264,7 +262,6 @@ const TableRow = ({ id, translations, ns, fetchTranslations, setters }) => {
             <button
               className='p-2 h-fit'
               onClick={() => {
-                console.log(id)
                 handleOpenOverlay("lng", "en");
                 handleOpenOverlay("key", id);
                 handleOpenOverlay("translation", translations.en[id])
@@ -294,7 +291,6 @@ const TableRow = ({ id, translations, ns, fetchTranslations, setters }) => {
                 <button
                   className='p-2 h-fit'
                   onClick={() => {
-                    console.log(id)
                     handleOpenOverlay("lng", supportedLngs[lng]);
                     handleOpenOverlay("key", id);
                     handleOpenOverlay("translation", translations[supportedLngs[lng]][id])

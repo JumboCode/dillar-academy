@@ -16,6 +16,7 @@ import { convertTime } from "@/utils/time-utils";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
+import ClassPreview from '@/components/Class/ClassPreview';
 
 const EditClass = () => {
   const { user } = useContext(UserContext);
@@ -188,7 +189,13 @@ const EditClass = () => {
         <BackButton label="Back to Level" />
         <div>
           <h1 className="font-extrabold mb-2">Edit Class</h1>
-          <h3 className="font-light">Edit class and student information</h3>
+          <h3 className="font-light text-base sm:text-lg">Edit class and student information</h3>
+        </div>
+        <div className="w-1/3">
+          <h2 className="mb-2">Class Preview</h2>
+          <ClassPreview
+            classObj={classData}
+          />
         </div>
         <form onSubmit={handleEditClass} className="w-full lg:w-2/3">
           <div className="grid grid-cols-3 gap-x-10 w-full mb-6">

@@ -203,7 +203,7 @@ router.get('/conversations/:id', async (req, res) => {
 // Create Conversation
 router.post('/conversations', async (req, res) => {
   try {
-    const { ageGroup, instructor, schedule } = req.body;
+    const { ageGroup, instructor, schedule, image } = req.body;
 
     // Check if conversation already exists
     const existingConversations = await Class.find({ level: "conversation", ageGroup, instructor });
@@ -228,7 +228,8 @@ router.post('/conversations', async (req, res) => {
         level: "conversation",
         ageGroup,
         instructor,
-        schedule
+        schedule,
+        image
       });
 
       await newConversation.save();
@@ -353,7 +354,7 @@ router.get('/ielts/:id', async (req, res) => {
 // Create IETLS
 router.post('/ielts', async (req, res) => {
   try {
-    const { ageGroup, instructor, schedule } = req.body;
+    const { ageGroup, instructor, schedule, image } = req.body;
 
     // Check if IELTS already exists
     const existingIelts = await Class.find({ level: "ielts", ageGroup, instructor });
@@ -378,7 +379,8 @@ router.post('/ielts', async (req, res) => {
         level: "ielts",
         ageGroup,
         instructor,
-        schedule
+        schedule,
+        image
       });
 
       await newIelts.save();

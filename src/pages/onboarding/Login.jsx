@@ -53,7 +53,6 @@ export default function Login() {
       if (!isUseEmail) {
         const userFilter = new URLSearchParams({ whatsapp });
         const userRes = await getUser(userFilter);
-        console.log(userRes)
         email = userRes.data.email;
       }
 

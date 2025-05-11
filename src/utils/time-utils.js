@@ -13,6 +13,10 @@ export const convertTime = (day, time24h, fromZone, toZone) => {
     zone: fromZone,
   }).setZone(toZone)
 
+  if (!dt.isValid) {
+    return { time: '', day: '' };
+  }
+
   return {
     time: dt.toFormat('H:mm'),
     day: dt.toFormat('cccc')
@@ -25,5 +29,11 @@ export const convertTime = (day, time24h, fromZone, toZone) => {
  * @returns {string} time in 12-hour format
  */
 export const to12HourFormat = (time24h) => {
-  return DateTime.fromFormat(time24h, 'H:mm').toFormat('h:mm a');
+  const dt = DateTime.fromFormat(time24h, 'H:mm');
+
+  if (!dt.isValid) {
+    return '';
+  }
+
+  return dt.toFormat('h:mm a');
 }

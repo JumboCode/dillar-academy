@@ -23,6 +23,7 @@ const ClassSchema = new Schema({
   },
   ageGroup: { type: String, required: true },
   instructor: { type: String, required: true },
+  image: { type: String, required: true, default: "level_img_0.webp" },
   link: { type: String, default: "" },
   schedule: { type: [ScheduleSchema], default: [] },
   roster: { type: [Schema.Types.ObjectId], default: [] },

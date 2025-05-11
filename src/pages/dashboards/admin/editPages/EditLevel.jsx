@@ -11,10 +11,13 @@ import BackButton from "@/components/Button/BackButton";
 import Class from '@/components/Class/Class';
 import FormInput from '@/components/Form/FormInput';
 import Overlay from '@/components/Overlay';
+import ImagePicker from "@/components/ImagePicker";
+import { levelImgs } from "@/constants/images";
 import Alert from '@/components/Alert';
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonClass from "@/components/Skeletons/SkeletonClass";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
+import LevelPreview from '@/components/Class/LevelPreview';
 
 const EditLevel = () => {
   const { user } = useContext(UserContext);
@@ -28,8 +31,15 @@ const EditLevel = () => {
 
   const [level, setLevel] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
+  const [levelData, setLevelData] = useState({
+    level: '',
+    name: '',
+    description: '',
+    image: '',
+    skills: []
+  });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
+  const [isOpenImagePicker, setIsOpenImagePicker] = useState(false);
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
   const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -54,9 +64,10 @@ const EditLevel = () => {
     if (level) {
       const skills = Array.isArray(level.skills) ? level.skills : [];
       setLevelData({
-        level: level.level || '',
+        level: level.level ?? '',
         name: level.name || '',
         description: level.description || '',
+        image: level.image || 'level_img_0.webp',
         skills: skills
       });
 
@@ -131,7 +142,7 @@ const EditLevel = () => {
   const handleEditLevel = async (e) => {
     e.preventDefault();
     try {
-      if (!Number(levelData.level)) {
+      if (isNaN(Number(levelData.level))) {
         setAlertMessage(`Error: Level input must be a number`)
         setTimeout(() => {
           setAlertMessage("")
@@ -178,10 +189,11 @@ const EditLevel = () => {
   const handleReset = () => {
     const skills = Array.isArray(level.skills) ? level.skills : [];
     setLevelData({
-      level: level.level,
-      name: level.name,
+      level: level.level ?? '',
+      name: level.name || '',
       description: level.description || '',
-      skills: skills
+      skills: skills,
+      image: level.image
     });
     setSkillsInput(skills.join(', '));
   };
@@ -198,7 +210,14 @@ const EditLevel = () => {
         <BackButton label="All Levels" />
         <div>
           <h1 className="font-extrabold mb-2">Edit Level</h1>
-          <p className="sm:text-lg">Edit Level information and view all the classes in this level.</p>
+          <h3 className="font-light text-base sm:text-lg">Edit Level information and view all the classes in this level.</h3>
+        </div>
+        <div className="w-1/3 space-y-3">
+          <h2>Level Preview</h2>
+          <LevelPreview
+            level={levelData}
+          />
+          <Button label="Select Image" onClick={() => setIsOpenImagePicker(true)} />
         </div>
         <form onSubmit={handleEditLevel} className="space-y-6 w-full lg:w-2/3">
           {/* Level and Name fields */}
@@ -319,6 +338,15 @@ const EditLevel = () => {
             />
           </div>
         </Overlay>}
+
+        {isOpenImagePicker && <ImagePicker
+          images={levelImgs}
+          selectedImage={levelData.image}
+          setImage={(newImage) => {
+            setLevelData(prev => ({ ...prev, image: newImage }));
+          }}
+          setPickerOpen={setIsOpenImagePicker}
+        />}
       </div>
     </>
   );

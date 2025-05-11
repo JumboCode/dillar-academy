@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 // Create Level 
 router.post('/', async (req, res) => {
   try {
-    const { level, name, description, skills } = req.body;
+    const { level, name, description, skills, image } = req.body;
 
     // Check if level already exists
     const query = { level };
@@ -39,6 +39,7 @@ router.post('/', async (req, res) => {
         name,
         description,
         skills,
+        image
       });
       await newLevel.save();
 

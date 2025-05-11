@@ -8,6 +8,9 @@ import DeleteButton from "@/components/Button/DeleteButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
+import SupplementaryClassPreview from "@/components/Class/SupplementaryClassPreview";
+import ImagePicker from "@/components/ImagePicker";
+import { levelImgs } from "@/constants/images";
 import { getConversationById } from "@/wrappers/conversation-wrapper";
 import { updateConversation, deleteConversation } from '@/wrappers/conversation-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
@@ -21,6 +24,7 @@ const EditConversation = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isOpenImagePicker, setIsOpenImagePicker] = useState(false);
   const [conversationObj, setConversationObj] = useState(null);
   const [conversationData, setConversationData] = useState({
     ageGroup: '',
@@ -32,7 +36,8 @@ const EditConversation = () => {
         startTime: '',
         endTime: ''
       }
-    ]
+    ],
+    image: ''
   });
   const params = useParams();
 
@@ -58,7 +63,8 @@ const EditConversation = () => {
         ageGroup: data.ageGroup,
         instructor: data.instructor,
         link: data.link,
-        schedule: conversationData.schedule
+        schedule: conversationData.schedule,
+        image: data.image || "level_img_0.webp"
       });
       if (data.schedule.length !== 0) {
         setConversationData(prev => ({
@@ -139,7 +145,8 @@ const EditConversation = () => {
     setConversationData(prev => ({
       ageGroup: conversationObj.ageGroup,
       instructor: conversationObj.instructor,
-      schedule: conversationObj.schedule.length !== 0 ? conversationObj.schedule : prev.schedule
+      schedule: conversationObj.schedule.length !== 0 ? conversationObj.schedule : prev.schedule,
+      image: conversationObj.image
     }));
   };
 
@@ -155,7 +162,14 @@ const EditConversation = () => {
         <BackButton label="All Conversations" />
         <div className="space-y-2">
           <h1 className="font-extrabold">Edit Conversation Class</h1>
-          <h3 className="font-light">Edit conversation class and student information</h3>
+          <h3 className="font-light text-base sm:text-lg">Edit conversation class and student information</h3>
+        </div>
+        <div className="w-1/3 space-y-3">
+          <h2 className="mb-2">Conversation Class Preview</h2>
+          <SupplementaryClassPreview
+            cls={conversationData}
+          />
+          <Button label="Select Image" onClick={() => setIsOpenImagePicker(true)} />
         </div>
         <form onSubmit={handleEditConversation} className="w-full lg:w-2/3">
           <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
@@ -191,7 +205,6 @@ const EditConversation = () => {
               placeholder="Enter class link"
               value={conversationData.link}
               onChange={handleInputChange}
-              isRequired={true}
             />
           </div>
           <div className="w-full space-y-3 mb-6">
@@ -296,6 +309,14 @@ const EditConversation = () => {
         </form>
         <DeleteButton item="conversation class" onDelete={handleDeleteConversation} />
       </div>
+      {isOpenImagePicker && <ImagePicker
+        images={levelImgs}
+        selectedImage={conversationData.image}
+        setImage={(newImage) => {
+          setConversationData(prev => ({ ...prev, image: newImage }));
+        }}
+        setPickerOpen={setIsOpenImagePicker}
+      />}
     </>
   )
 }

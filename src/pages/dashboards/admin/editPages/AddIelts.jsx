@@ -7,6 +7,9 @@ import Button from '@/components/Button/Button';
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
+import SupplementaryClassPreview from "@/components/Class/SupplementaryClassPreview";
+import ImagePicker from "@/components/ImagePicker";
+import { levelImgs } from "@/constants/images";
 import { createIelts } from '@/wrappers/ielts-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
@@ -25,8 +28,10 @@ const AddIelts = () => {
         startTime: '',
         endTime: ''
       }
-    ]
+    ],
+    image: "level_img_0.webp"
   });
+  const [isOpenImagePicker, setIsOpenImagePicker] = useState(false);
 
   useEffect(() => {
     if (isLoaded) {
@@ -84,6 +89,13 @@ const AddIelts = () => {
         <div className="space-y-2">
           <h1 className="font-extrabold">Add IELTS Class</h1>
           <p className="font-light text-base sm:text-lg">Fill out new IELTS class data</p>
+        </div>
+        <div className="w-1/3 space-y-3">
+          <h2 className="mb-2">Conversation Class Preview</h2>
+          <SupplementaryClassPreview
+            cls={ieltsData}
+          />
+          <Button label="Select Image" onClick={() => setIsOpenImagePicker(true)} />
         </div>
         <form onSubmit={handleCreateIelts} className="w-full lg:w-2/3">
           <div className="flex justify-start space-x-10 w-full mb-6">
@@ -212,6 +224,14 @@ const AddIelts = () => {
           </div>
         </form>
       </div>
+      {isOpenImagePicker && <ImagePicker
+        images={levelImgs}
+        selectedImage={ieltsData.image}
+        setImage={(newImage) => {
+          setIeltsData(prev => ({ ...prev, image: newImage }));
+        }}
+        setPickerOpen={setIsOpenImagePicker}
+      />}
     </>
   )
 }

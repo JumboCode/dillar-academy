@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import EditButton from '@/components/Button/EditButton';
-import EnrollButton from '@/components/Button/EnrollButton'
-import { useTranslation } from "react-i18next";
-import { convertTime, to12HourFormat } from '@/utils/time-utils';
+import Button from '@/components/Button/Button';
 import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
+import { convertTime, to12HourFormat } from '@/utils/time-utils';
 
 // possible modes: enroll, unenroll, or edit
-const SupplementaryClass = ({ cls, modes = ["enroll"], editURL = "" }) => {
-  const { t } = useTranslation();
+const SupplementaryClass = ({ cls }) => {
   const [showScrollHint, setShowScrollHint] = useState(false);
   const scheduleRef = useRef(null);
 
@@ -32,8 +29,8 @@ const SupplementaryClass = ({ cls, modes = ["enroll"], editURL = "" }) => {
         style={{ backgroundImage: `url('/images/${cls.image}')` }}
         className="bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
       <div className="bg-white px-6 py-5 row-start-2 space-y-1 overflow-scroll">
-        <h3 className='font-extrabold'>{t('talk_to_name', { name: cls.instructor })}</h3>
-        <p className="text-sm">{t(`for_${cls.ageGroup}`)}</p>
+        <h3 className='font-extrabold'>Talk to {cls.instructor}</h3>
+        <p className="text-sm">{cls.ageGroup === "all" ? "All Ages" : "For " + cls.ageGroup.charAt(0).toUpperCase() + cls.ageGroup.slice(1)}</p>
         <div ref={scheduleRef} className="grid grid-rows-[auto_auto] auto-cols-min overflow-scroll items-center gap-x-4 gap-y-3 mb-1 pb-4">
           <IoTimeOutline className="text-xl row-start-1" />
           <IoCalendarOutline className="text-xl row-start-2" />
@@ -65,7 +62,7 @@ const SupplementaryClass = ({ cls, modes = ["enroll"], editURL = "" }) => {
                   </p>
                 </div>
                 <p className="row-start-2 w-max">
-                  {t(convertedStartTimeEST.day.toLowerCase())} (EST) | {t(convertedStartTimeIST.day.toLowerCase())} (Istanbul)
+                  {convertedStartTimeEST.day} (EST) | {convertedStartTimeIST.day} (Istanbul)
                 </p>
 
                 {/* Divider */}
@@ -78,21 +75,7 @@ const SupplementaryClass = ({ cls, modes = ["enroll"], editURL = "" }) => {
           <p className="text-xs italic text-neutral-400 mb-4">Scroll to see more times →</p>
         )}
       </div>
-      <div className='flex gap-3 mb-4 ml-5'>
-        {modes.includes("edit") && <EditButton classId={cls._id} editURL={editURL} />}
-        {modes.includes("enroll") &&
-          <EnrollButton
-            classObj={cls}
-            isEnroll={true}
-          />
-        }
-        {modes.includes("unenroll") &&
-          <EnrollButton
-            classObj={cls}
-            isEnroll={false}
-          />
-        }
-      </div>
+      <div className="mb-4 ml-5"><Button label="Enroll" /></div>
     </div>
   )
 }
