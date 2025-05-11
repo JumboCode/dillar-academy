@@ -91,7 +91,7 @@ const AddClass = () => {
           <p className="font-light text-base sm:text-lg">Fill out new class data</p>
         </div>
         <div className="w-1/3">
-          <h3 className="mb-2">Class Preview</h3>
+          <h2 className="mb-2">Class Preview</h2>
           <ClassPreview
             classObj={classData}
           />

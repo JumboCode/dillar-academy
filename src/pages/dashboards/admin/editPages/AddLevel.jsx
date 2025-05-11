@@ -8,6 +8,8 @@ import Button from '@/components/Button/Button';
 import FormInput from '@/components/Form/FormInput';
 import BackButton from "@/components/Button/BackButton";
 import Alert from "@/components/Alert";
+import ImagePicker from "@/components/ImagePicker";
+import { levelImgs } from "@/constants/images";
 import Unauthorized from "@/pages/Unauthorized";
 import LevelPreview from '@/components/Class/LevelPreview';
 
@@ -15,10 +17,17 @@ const AddLevel = () => {
   const { user } = useContext(UserContext);
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
-  const [levelData, setLevelData] = useState({ level: '', name: '', description: '', skills: [] });
+  const [levelData, setLevelData] = useState({
+    level: '',
+    name: '',
+    description: '',
+    skills: [],
+    image: "level_img_0.webp"
+  });
   const [skillsInput, setSkillsInput] = useState(''); // Separate state for skills input field
   const [alertMessage, setAlertMessage] = useState("")
   const [isSaving, setIsSaving] = useState(false);
+  const [isOpenImagePicker, setIsOpenImagePicker] = useState(false);
   const { i18n } = useTranslation();
 
   useEffect(() => {
@@ -115,13 +124,14 @@ const AddLevel = () => {
         <BackButton label="All Levels" />
         <div>
           <h1 className="font-extrabold mb-2">Add Level</h1>
-          <p className="sm:text-lg">Add level information and view all the classes in this level.</p>
+          <h3 className="font-light text-base sm:text-lg">Add level information and view all the classes in this level.</h3>
         </div>
-        <div className="w-1/3">
-          <h3 className="mb-2">Level Preview</h3>
+        <div className="w-1/3 space-y-3">
+          <h2>Level Preview</h2>
           <LevelPreview
             level={levelData}
           />
+          <Button label="Select Image" onClick={() => setIsOpenImagePicker(true)} />
         </div>
         <form onSubmit={handleAddLevel} className="space-y-6 w-full lg:w-2/3">
           {/* Level and Name fields */}
@@ -196,6 +206,14 @@ const AddLevel = () => {
           <Button label={isSaving ? "Saving..." : "Save"} type="submit" isDisabled={isSaving} />
         </form>
       </div>
+      {isOpenImagePicker && <ImagePicker
+        images={levelImgs}
+        selectedImage={levelData.image}
+        setImage={(newImage) => {
+          setLevelData(prev => ({ ...prev, image: newImage }));
+        }}
+        setPickerOpen={setIsOpenImagePicker}
+      />}
     </>
   );
 };

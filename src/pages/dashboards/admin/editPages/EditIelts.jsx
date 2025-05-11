@@ -10,6 +10,8 @@ import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
 import Alert from '@/components/Alert';
 import SupplementaryClassPreview from "@/components/Class/SupplementaryClassPreview";
+import ImagePicker from "@/components/ImagePicker";
+import { levelImgs } from "@/constants/images";
 import { updateIelts, deleteIelts } from '@/wrappers/ielts-wrapper.js';
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
@@ -21,6 +23,7 @@ const EditIelts = () => {
   const [allowRender, setAllowRender] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isOpenImagePicker, setIsOpenImagePicker] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [ieltsObj, setIeltsObj] = useState(null);
   const [ieltsData, setIeltsData] = useState({
@@ -33,7 +36,8 @@ const EditIelts = () => {
         startTime: '',
         endTime: ''
       }
-    ]
+    ],
+    image: ''
   });
   const params = useParams();
 
@@ -59,7 +63,8 @@ const EditIelts = () => {
         ageGroup: data.ageGroup,
         instructor: data.instructor,
         link: data.link,
-        schedule: ieltsData.schedule
+        schedule: ieltsData.schedule,
+        image: data.image || "level_img_0.webp"
       });
       if (data.schedule.length !== 0) {
         setIeltsData(prev => ({
@@ -140,7 +145,8 @@ const EditIelts = () => {
     setIeltsData(prev => ({
       ageGroup: ieltsObj.ageGroup,
       instructor: ieltsObj.instructor,
-      schedule: ieltsObj.schedule.length !== 0 ? ieltsObj.schedule : prev.schedule
+      schedule: ieltsObj.schedule.length !== 0 ? ieltsObj.schedule : prev.schedule,
+      image: conversationObj.image
     }));
   };
 
@@ -155,14 +161,15 @@ const EditIelts = () => {
       <div className="page-format max-w-[96rem] space-y-10">
         <BackButton label="All IELTS classes" />
         <div className="space-y-2">
-          <h1 className="font-extrabold">Edit IELTS Class</h1>
-          <h3 className="font-light">Edit IELTS class and student information</h3>
+          <h2 className="font-extrabold">Edit IELTS Class</h2>
+          <h3 className="font-light text-base sm:text-lg">Edit IELTS class and student information</h3>
         </div>
-        <div className="w-1/3">
+        <div className="w-1/3 space-y-3">
           <h3 className="mb-2">Conversation Class Preview</h3>
           <SupplementaryClassPreview
             cls={ieltsData}
           />
+          <Button label="Select Image" onClick={() => setIsOpenImagePicker(true)} />
         </div>
         <form onSubmit={handleEditIelts} className="w-full lg:w-2/3">
           <div className="grid grid-cols-2 gap-x-10 w-full mb-6">
@@ -302,6 +309,14 @@ const EditIelts = () => {
         </form>
         <DeleteButton item="IELTS class" onDelete={handleDeleteIelts} />
       </div>
+      {isOpenImagePicker && <ImagePicker
+        images={levelImgs}
+        selectedImage={ieltsData.image}
+        setImage={(newImage) => {
+          setIeltsData(prev => ({ ...prev, image: newImage }));
+        }}
+        setPickerOpen={setIsOpenImagePicker}
+      />}
     </>
   )
 }

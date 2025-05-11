@@ -28,7 +28,9 @@ const SupplementaryClass = ({ cls, modes = ["enroll"], editURL = "" }) => {
 
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden shadow-shadow hover:shadow-shadow-hover transition-shadow grid grid-rows-[2fr_3fr]">
-      <div className="bg-[url('/images/blue_mountains.png')] bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
+      <div
+        style={{ backgroundImage: `url('/images/${cls.image}')` }}
+        className="bg-no-repeat bg-cover bg-center rounded-t-2xl"></div>
       <div className="bg-white px-6 py-5 row-start-2 space-y-1 overflow-scroll">
         <h3 className='font-extrabold'>{t('talk_to_name', { name: cls.instructor })}</h3>
         <p className="text-sm">{t(`for_${cls.ageGroup}`)}</p>

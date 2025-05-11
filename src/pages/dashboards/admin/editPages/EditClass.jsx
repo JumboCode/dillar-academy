@@ -189,10 +189,10 @@ const EditClass = () => {
         <BackButton label="Back to Level" />
         <div>
           <h1 className="font-extrabold mb-2">Edit Class</h1>
-          <h3 className="font-light">Edit class and student information</h3>
+          <h3 className="font-light text-base sm:text-lg">Edit class and student information</h3>
         </div>
         <div className="w-1/3">
-          <h3 className="mb-2">Class Preview</h3>
+          <h2 className="mb-2">Class Preview</h2>
           <ClassPreview
             classObj={classData}
           />
