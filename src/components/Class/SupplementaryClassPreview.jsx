@@ -62,7 +62,7 @@ const SupplementaryClass = ({ cls }) => {
                   </p>
                 </div>
                 <p className="row-start-2 w-max">
-                  {convertedStartTimeEST.day}
+                  {convertedStartTimeEST.day} (EST) | {convertedStartTimeIST.day} (Istanbul)
                 </p>
 
                 {/* Divider */}

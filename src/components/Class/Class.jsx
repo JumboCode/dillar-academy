@@ -93,7 +93,7 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
                 </p>
               </div>
               <p className="row-start-2 w-max">
-                {t(convertedStartTimeEST.day.toLowerCase())}
+                {t(convertedStartTimeEST.day.toLowerCase())} (EST) | {t(convertedStartTimeIST.day.toLowerCase())} (Istanbul)
               </p>
 
               {/* Divider */}
