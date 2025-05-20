@@ -3,7 +3,7 @@ import { IoTimeOutline, IoCalendarOutline } from "react-icons/io5";
 import EnrollButton from '@/components/Button/EnrollButton';
 import EditButton from '@/components/Button/EditButton';
 import { useTranslation } from "react-i18next";
-import { localizeNumber } from "@/utils/formatters";
+import { localizeNumber, toTitleCase } from "@/utils/formatters";
 import { convertTime, to12HourFormat } from '@/utils/time-utils';
 
 // possible modes: enroll, unenroll, edit
@@ -34,8 +34,14 @@ const Class = ({ classObj, modes = ["enroll"], editURL = "", isSimplified }) => 
         Enrollment Closed
       </p>}
       <div className={`flex items-center gap-x-6`}>
-        <h3 className={`font-extrabold ${classObj.isEnrollmentOpen ? "text-dark-blue-800" : "text-neutral-500"}`}>
-          {t('level_num', { num: localizeNumber(classObj.level, i18n.language), ns: "levels" })}
+        <h3 className={`font-extrabold text-left ${classObj.isEnrollmentOpen ? "text-dark-blue-800" : "text-neutral-500"}`}>
+          {t('level_num', {
+            num: typeof classObj.level === 'number'
+              ? localizeNumber(classObj.level, i18n.language)
+              : classObj.level === "ielts"
+                ? "IELTS" : toTitleCase(classObj.level),
+            ns: 'levels'
+          })}
         </h3>
         <p className='text-neutral-600'>
           {classObj.ageGroup === "all"

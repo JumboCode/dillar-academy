@@ -3,7 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { updateUser, getUser, deleteUser } from '@/wrappers/user-wrapper.js';
-import { getClassById, getClasses, enrollInClass, unenrollInClass } from '@/wrappers/class-wrapper';
+import { getClassById, getAllClasses, enrollInClass, unenrollInClass } from '@/wrappers/class-wrapper';
 import FormInput from '@/components/Form/FormInput';
 import PhoneInput from '@/components/Form/PhoneInput/PhoneInput';
 import Button from '@/components/Button/Button';
@@ -58,7 +58,7 @@ const EditUser = () => {
 
   const fetchData = async () => {
     try {
-      const allClasses = await getClasses();
+      const allClasses = await getAllClasses();
       setClasses(allClasses);
       const userFilter = new URLSearchParams(`_id=${params.id}`);
       const userData = await getUser(userFilter);
@@ -78,7 +78,7 @@ const EditUser = () => {
           })
         );
       } else {
-        userClasses = await getClasses(`instructor=${toTitleCase(userData.data.firstName)}`)
+        userClasses = await getAllClasses(`instructor=${toTitleCase(userData.data.firstName)}`)
       }
       setUserClasses(userClasses);
       setUserData(userData.data);
@@ -278,14 +278,27 @@ const EditUser = () => {
           <div className="grid grid-cols-3 gap-6">
             {allowRender
               ? userClasses.map((classObj) => (
-                <Class key={classObj._id} classObj={classObj} modes={["edit"]} editURL="/admin/levels/class" />
+                <Class
+                  key={classObj._id}
+                  classObj={classObj}
+                  modes={["edit"]}
+                  editURL={(() => {
+                    switch (true) {
+                      case typeof classObj.level === "number":
+                        return `/admin/levels/class`;
+                      case classObj.level === "conversation":
+                        return `/admin/levels/conversations`;
+                      case classObj.level === "ielts":
+                        return `/admin/levels/ielts`;
+                    }
+                  })()} />
               ))
               : showSkeleton && <SkeletonClass count={3} />}
           </div>
         </div>
 
-        {showOverlay && <Overlay width={'w-[96%] sm:w-4/5 lg:w-1/2'}>
-          <h3>Search for class</h3>
+        {showOverlay && <Overlay width={'w-[96%] md:w-4/5 lg:w-2/3'}>
+          <h3 className="font-extrabold">Search for class</h3>
           <SearchBar input={searchInput} setInput={setSearchInput} placeholder="Search for class by level, age, instructor" />
           <div className="h-[50vh] overflow-y-auto mt-4 flex flex-col gap-y-3">
             {filteredClasses
