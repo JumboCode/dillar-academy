@@ -54,11 +54,6 @@ mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
 
-app.get('/', (req, res) => {
-  res.send('Server is running!')
-});
-
-
 //------------------ ENDPOINTS ------------------//
 
 

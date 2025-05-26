@@ -49,6 +49,7 @@ const AdminStudents = () => {
 
     let allLevels = new Set();
 
+    // replace enrolled class ids with full class info
     const studentsWithClasses = await Promise.all(
       students.map(async (student) => {
         const classRef = await getStudentsClasses(student._id);
