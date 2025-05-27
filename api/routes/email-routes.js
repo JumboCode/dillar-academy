@@ -1,32 +1,23 @@
 import "dotenv/config";
 import express from "express";
 import nodemailer from "nodemailer";
-import Contact from "../schemas/Contact.js";
 
 const router = express.Router();
+
+// Nodemailer setup
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.ADMIN_EMAIL,
+    pass: process.env.ADMIN_PASSWORD,
+  },
+});
 
 // Post Contact
 router.post('/contact', async (req, res) => {
   const { name, email, subject, message } = req.body
 
   try {
-    const newContact = new Contact({
-      name,
-      email,
-      subject,
-      message
-    });
-    await newContact.save();
-
-    // Nodemailer setup
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.ADMIN_EMAIL,
-        pass: process.env.ADMIN_PASSWORD,
-      },
-    });
-
     transporter.verify((error, success) => {
       if (error) {
         console.error('Error initializing transporter:', error);
@@ -37,8 +28,9 @@ router.post('/contact', async (req, res) => {
 
 
     const mailOptions = {
-      from: email,
+      from: `"${name}" <${process.env.ADMIN_EMAIL}>`,
       to: process.env.ADMIN_EMAIL,
+      replyTo: email,
       subject: `Contact Form: ${subject}`,
       html: `
         <p><strong>From:</strong> ${name} (${email})</p>
