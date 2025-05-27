@@ -20,7 +20,6 @@ const getClasses = async (query = "") => {
   } catch (error) {
     console.error('Error fetching courses:', error)
     throw error;
-
   }
 }
 

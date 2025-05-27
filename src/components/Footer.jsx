@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="max-w-[96rem] w-full">
         <h1 className="font-extrabold mb-5">Dillar Academy</h1>
         <div className="flex flex-col gap-y-2 sm:gap-y-3 lg:text-lg">
-          <a href="mailto:dillaracademy@gmail.com">{t("email")}: dillaracademy@gmail.com</a>
+          <a href="mailto:info@dillaracademy.org">{t("email")}: info@dillaracademy.org</a>
           <a href={'https://www.instagram.com/dillaracademy/'} target="_blank" rel="noreferrer noopener">{t("instagram")}: @dillaracademy</a>
           <Link href="/contact" className="underline">{t("contact_text")}</Link>
         </div>
