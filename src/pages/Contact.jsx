@@ -62,10 +62,7 @@ const Contact = () => {
             <p className="text-base sm:text-lg mb-4 text-gray-600 opacity-70">
               {t("contact_form_description")}
             </p >
-            <a href="mailto:info@dillaracademy.org">{t("email")}: info@dillaracademy.org</a>
-
-
-            {/* <form
+            <form
               onSubmit={handleSubmit}
               className="space-y-3"
             >
@@ -106,7 +103,7 @@ const Contact = () => {
                 label={t("submit_button")}
                 isDisabled={isSending}
               />
-            </form> */}
+            </form>
           </Form>
         </div>
       </div >
