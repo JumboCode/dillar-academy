@@ -93,6 +93,34 @@ router.put('/user/:id', async (req, res) => {
       return res.status(400).json({ error: 'Invalid ID' });
     }
 
+    const originalUser = await User.findById(id);
+
+    if (!originalUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // add new email address to Clerk and delete old one
+    if (originalUser.email !== updates.email) {
+      await clerkClient.emailAddresses.createEmailAddress({
+        userId: originalUser.clerkId,
+        emailAddress: updates.email,
+        verified: true,
+        primary: true
+      });
+
+      await clerkClient.users
+        .getUser(originalUser.clerkId)
+        .then(async (data) => {
+          const userEmailData = data.emailAddresses.find(
+            (emailData) => emailData.emailAddress === originalUser.email
+          );
+          return userEmailData.id;
+        })
+        .then(
+          async (userEmailId) => await clerkClient.emailAddresses.deleteEmailAddress(userEmailId)
+        )
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       id,
       updates,
