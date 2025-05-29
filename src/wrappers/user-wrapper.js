@@ -33,6 +33,7 @@ const getUser = async (query = "") => {
   }
 };
 
+// fetch full details of all of student's classes
 const getStudentsClasses = async (studentId) => {
   try {
     const response = await axios.get(`/api/students-classes/${studentId}`);
