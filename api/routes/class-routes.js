@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import User from "../schemas/User.js";
 import Class from '../schemas/Class.js';
 import { validateInput } from "../../src/utils/backend/validate-utils.js";
 
@@ -42,6 +43,24 @@ router.get('/classes/:id', async (req, res) => {
     const data = await Class.findOne({ _id: id });
     res.json(data)
 
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Get student's classes full details
+router.get('/students-classes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const classDetails = await User.findById(id)
+      .select('enrolledClasses')
+      .populate('enrolledClasses')
+    res.json(classDetails);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -172,7 +191,7 @@ router.delete('/classes/:id', async (req, res) => {
 });
 
 
-/* CONVERSATION RELATED ENDPOINTS */
+/* CONVERSATION SPECIFIC ENDPOINTS */
 
 // Get Conversation classes
 router.get("/conversations", async (req, res) => {
@@ -323,7 +342,7 @@ router.delete('/conversations/:id', async (req, res) => {
 });
 
 
-/* IELTS RELATED ENDPOINTS */
+/* IELTS SPECIFIC ENDPOINTS */
 
 // Get IELTS classes
 router.get("/ielts", async (req, res) => {

@@ -66,23 +66,6 @@ router.get('/user', async (req, res) => {
   }
 })
 
-
-// Get Student's classes by ID
-router.get('/students-classes/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
-    res.json(data);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
 // Edit user
 router.put('/user/:id', async (req, res) => {
   try {

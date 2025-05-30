@@ -12,7 +12,7 @@ const UserSchema = new Schema({
     privilege: { type: String, default: "student", enum: ["admin", "instructor", "student"] },
     clerkId: { type: String, required: true },
     creationDate: { type: Date, default: Date.now },
-    enrolledClasses: { type: [Schema.Types.ObjectId], default: [] }
+    enrolledClasses: { type: [Schema.Types.ObjectId], default: [], ref: 'Class' }
 }, { collection: 'users' });
 
 const User = mongoose.model("User", UserSchema);
