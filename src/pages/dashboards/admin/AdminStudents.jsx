@@ -4,7 +4,7 @@ import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { IoPersonOutline } from "react-icons/io5";
 import { getUsers, getStudentsForExport } from '@/wrappers/user-wrapper.js';
-import { getClasses, getClassById } from '@/wrappers/class-wrapper';
+import { getAllClasses, getClassById } from '@/wrappers/class-wrapper';
 import { getStudentsClasses } from '@/wrappers/user-wrapper';
 import Unauthorized from "@/pages/Unauthorized";
 import Dropdown from '@/components/Dropdown/Dropdown';
@@ -44,7 +44,7 @@ const AdminStudents = () => {
   const fetchUsers = async () => {
     const userData = await getUsers();
     const students = userData.data.filter((user) => user.privilege === "student");
-    const classData = await getClasses();
+    const classData = await getAllClasses();
     setClasses(classData);
 
     let allLevels = new Set();
