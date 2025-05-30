@@ -364,7 +364,6 @@ const EditClass = () => {
                   <UserItem
                     userData={student}
                     privilege="admin"
-                    classes={classes}
                   />
                 </Link>
               ))
