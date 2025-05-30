@@ -3,7 +3,7 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
 import { updateUser } from '@/wrappers/user-wrapper';
-import { getClasses } from '@/wrappers/class-wrapper'
+import { getAllClasses } from '@/wrappers/class-wrapper'
 import { IoCreateOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import Button from '@/components/Button/Button';
@@ -42,7 +42,7 @@ const InstructorView = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        let instructorClasses = await getClasses(`instructor=${toTitleCase(user.firstName)}`); // TODO: should use first and last name
+        let instructorClasses = await getAllClasses(`instructor=${toTitleCase(user.firstName)}`); // TODO: should use first and last name
         setClasses(instructorClasses);
         setAllowRender(true);
       }

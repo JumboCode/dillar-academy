@@ -10,9 +10,8 @@ import DayDropdown from '@/components/Dropdown/DayDropdown';
 import UserItem from "@/components/UserItem";
 import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
-import { updateClass, deleteClass, getClasses } from '@/wrappers/class-wrapper';
+import { updateClass, deleteClass, getClasses, getClassById } from '@/wrappers/class-wrapper';
 import { getUser } from '@/wrappers/user-wrapper';
-import { convertTime } from "@/utils/time-utils";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
@@ -28,7 +27,6 @@ const EditClass = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const params = useParams();
-  const [classes, setClasses] = useState(null);
   const [classObj, setClassObj] = useState(null);
   const [classData, setClassData] = useState({
     level: '',
@@ -61,9 +59,7 @@ const EditClass = () => {
 
   const fetchClass = async () => {
     if (user) {
-      const data = await getClasses();
-      setClasses(data);
-      const classObj = data.find(c => c._id === params.classId);
+      const classObj = await getClassById(params.classId);
       setClassObj(classObj);
       setClassData({
         level: classObj.level,
@@ -364,7 +360,6 @@ const EditClass = () => {
                   <UserItem
                     userData={student}
                     privilege="admin"
-                    classes={classes}
                   />
                 </Link>
               ))

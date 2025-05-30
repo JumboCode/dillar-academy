@@ -2,18 +2,27 @@ import { useState, useEffect } from "react";
 import { LuPencil } from "react-icons/lu";
 import { toTitleCase } from '@/utils/formatters';
 
-const UserItem = ({ userData, classes = [], privilege, isShowClass }) => {
+const UserItem = ({ userData, privilege, isShowClass }) => {
   const [highestClass, setHighestClass] = useState(undefined);
 
   useEffect(() => {
-    const filteredClasses = classes.filter(cls =>
-      userData.enrolledClasses.some(enrolled => enrolled._id === cls._id));
+    const maxClass = userData.enrolledClasses.length > 0
+      ? userData.enrolledClasses
+        .slice()
+        .sort((a, b) => {
+          // order IELTS > numbers > conversation
+          const getPriority = (cls) => {
+            if (cls.level === "ielts") return 1000;
+            if (typeof cls.level === "number") return 500 + cls.level;
+            if (cls.level === "conversation") return 0;
+            return -1; // handle unknown levels
+          };
 
-    const maxClass = filteredClasses.length > 0
-      ? filteredClasses.reduce((prev, curr) => (curr.level > prev.level ? curr : prev))
+          return getPriority(b) - getPriority(a); // sort in descending order
+        })[0]
       : null;
     setHighestClass(maxClass);
-  }, [classes, userData]);
+  }, [userData]);
 
   if (!userData) {
     return <></>;
@@ -38,13 +47,17 @@ const UserItem = ({ userData, classes = [], privilege, isShowClass }) => {
         <div>
           {userData.privilege !== "instructor" && isShowClass && (
             <p className="text-gray-500 text-sm">
+              {/* Level ${toTitleCase(highestClass.level)}: */}
               {highestClass ? (
-                highestClass.ageGroup === "all" ? (
-                  `Level ${highestClass.level}: All Ages`
-                ) : (
-                  `Level ${highestClass.level}: ${highestClass.ageGroup.charAt(0).toUpperCase() +
-                  highestClass.ageGroup.slice(1)}'s Class`
-                )
+                `Level ${highestClass.level === "ielts"
+                  ? "IELTS"
+                  : highestClass.level === "conversation"
+                    ? "Conversation"
+                    : highestClass.level}: 
+                ${highestClass.ageGroup === "all"
+                  ? "All Ages"
+                  : `${highestClass.ageGroup.charAt(0).toUpperCase() +
+                  highestClass.ageGroup.slice(1)}'s Class`}`
               ) : (
                 "No Enrollment"
               )}

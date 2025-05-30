@@ -8,7 +8,6 @@ import Schedule from '@/components/Schedule';
 import SkeletonSchedule from '@/components/Skeletons/SkeletonSchedule';
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 import Unauthorized from "@/pages/Unauthorized";
-import { toTitleCase } from '@/utils/formatters';
 
 const AdminSchedule = () => {
   const { user } = useContext(UserContext);
@@ -69,7 +68,7 @@ const AdminSchedule = () => {
               hover:bg-gray-50`}
               onClick={() => handleAddFilter(level)}
             >
-              {typeof level === "string" ? toTitleCase(level) : `Level ${level}`}
+              {level === "ielts" ? "IELTS" : level === "conversation" ? "Conversation" : `Level ${level}`}
             </button>
           ))}
         </Dropdown>

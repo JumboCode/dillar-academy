@@ -1,20 +1,24 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
-import { useLocation, useParams } from 'wouter';
+import { useLocation, useParams, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import DeleteButton from "@/components/Button/DeleteButton";
 import DayDropdown from '@/components/Dropdown/DayDropdown';
 import BackButton from "@/components/Button/BackButton";
+import UserItem from "@/components/UserItem";
 import Alert from '@/components/Alert';
 import SupplementaryClassPreview from "@/components/Class/SupplementaryClassPreview";
 import ImagePicker from "@/components/ImagePicker";
 import { levelImgs } from "@/constants/images";
 import { getConversationById } from "@/wrappers/conversation-wrapper";
 import { updateConversation, deleteConversation } from '@/wrappers/conversation-wrapper.js';
-import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import { getUser } from '@/wrappers/user-wrapper';
+import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
+import SkeletonUser from "@/components/Skeletons/SkeletonUser";
+import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
 
 const EditConversation = () => {
   const { user } = useContext(UserContext);
@@ -39,7 +43,9 @@ const EditConversation = () => {
     ],
     image: ''
   });
+  const [students, setStudents] = useState([]);
   const params = useParams();
+  const showSkeleton = useDelayedSkeleton(!allowRender);
 
   useEffect(() => {
     if (!params.id) {
@@ -72,6 +78,13 @@ const EditConversation = () => {
           schedule: data.schedule
         }))
       }
+      const students = await Promise.all(
+        data.roster.map(async (studentId) => {
+          const studentRes = await getUser(`_id=${studentId}`);
+          return studentRes.data
+        })
+      );
+      setStudents(students);
       setAllowRender(true);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -122,6 +135,21 @@ const EditConversation = () => {
       setIsSaving(false);
       console.error('Error updating conversation:', error);
       setAlertMessage(`Error: ${error.response.data.message}`);
+      setTimeout(() => {
+        setAlertMessage("");
+      }, 4000);
+    }
+  }
+
+  const handleOpenOrCloseEnrollment = async () => {
+    try {
+      await updateConversation(conversationObj._id, {
+        isEnrollmentOpen: !conversationObj.isEnrollmentOpen
+      });
+      await fetchConversation();
+    } catch (error) {
+      console.error('Error changing enrollment status:', error);
+      setAlertMessage(`Error changing enrollment status`);
       setTimeout(() => {
         setAlertMessage("");
       }, 4000);
@@ -307,6 +335,33 @@ const EditConversation = () => {
               onClick={handleReset} />
           </div>
         </form>
+        <div>
+          <div className="flex items-center gap-8 mb-2">
+            <h2>List of Students</h2>
+            {allowRender && <Button
+              label={conversationObj.isEnrollmentOpen ? "Close Enrollment" : "Open Enrollment"}
+              isOutline={!conversationObj.isEnrollmentOpen}
+              onClick={handleOpenOrCloseEnrollment}
+            />}
+          </div>
+          <div className="text-indigo-900 inline-flex gap-x-2 items-center mb-6">
+            <IoPersonOutline />
+            <p>{students.length} enrolled</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-14 gap-y-3">
+            {allowRender
+              ? (students.map(student => (
+                <Link key={student._id} href={`/admin/user/${encodeURIComponent(student._id)}`}>
+                  <UserItem
+                    userData={student}
+                    privilege="admin"
+                  />
+                </Link>
+              ))
+              )
+              : showSkeleton && <SkeletonUser count={3} />}
+          </div>
+        </div>
         <DeleteButton item="conversation class" onDelete={handleDeleteConversation} />
       </div>
       {isOpenImagePicker && <ImagePicker
