@@ -12,7 +12,6 @@ import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import { updateClass, deleteClass, getClasses } from '@/wrappers/class-wrapper';
 import { getUser } from '@/wrappers/user-wrapper';
-import { convertTime } from "@/utils/time-utils";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
@@ -63,7 +62,7 @@ const EditClass = () => {
     if (user) {
       const data = await getClasses();
       setClasses(data);
-      const classObj = data.find(c => c._id === params.classId);
+      const classObj = data.find(c => c._id === params.classId); //TODO: just use getClassById?
       setClassObj(classObj);
       setClassData({
         level: classObj.level,
