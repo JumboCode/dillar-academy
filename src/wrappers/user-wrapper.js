@@ -52,6 +52,18 @@ const updateUser = async (userId, userData) => {
   }
 };
 
+// fetch full details of all of student's classes
+const getStudentsClasses = async (studentId) => {
+  try {
+    const response = await axios.get(`/api/classes/students-classes/${studentId}`);
+    console.log("response:", response)
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching student's classes:", error);
+    throw error;
+  }
+}
+
 const getStudentsForExport = async () => {
   try {
     const response = await axios.get('/api/students-export');
@@ -78,6 +90,7 @@ export {
   getUsers,
   getUser,
   updateUser,
+  getStudentsClasses,
   getStudentsForExport,
   deleteUser
 };

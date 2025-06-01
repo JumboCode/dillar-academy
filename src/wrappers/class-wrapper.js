@@ -34,18 +34,6 @@ const getClassById = async (classId) => {
   }
 }
 
-// fetch full details of all of student's classes
-const getStudentsClasses = async (studentId) => {
-  try {
-    const response = await axios.get(`/api/classes/students-classes/${studentId}`);
-    console.log("response:", response)
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching student's classes:", error);
-    throw error;
-  }
-}
-
 const createClass = async (classData) => {
   classData.instructor = toTitleCase(classData.instructor);
   try {
@@ -104,7 +92,6 @@ export {
   getAllClasses,
   getClasses,
   getClassById,
-  getStudentsClasses,
   createClass,
   updateClass,
   deleteClass,

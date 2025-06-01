@@ -162,4 +162,22 @@ router.delete('/user/:id', async (req, res) => {
   }
 });
 
+// Get student's classes full details
+router.get('/students-classes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const classDetails = await User.findById(id)
+      .select('enrolledClasses')
+      .populate('enrolledClasses')
+    res.json(classDetails.enrolledClasses); // return array of class objects
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
 export default router;
