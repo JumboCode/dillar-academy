@@ -10,9 +10,7 @@ import DayDropdown from '@/components/Dropdown/DayDropdown';
 import UserItem from "@/components/UserItem";
 import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
-import { updateClass, deleteClass, getClasses } from '@/wrappers/class-wrapper';
-import { getUser } from '@/wrappers/user-wrapper';
-import { convertTime } from "@/utils/time-utils";
+import { updateClass, deleteClass, getClasses, getClassStudents } from '@/wrappers/class-wrapper';
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
@@ -78,12 +76,7 @@ const EditClass = () => {
           schedule: classObj.schedule
         }))
       }
-      const students = await Promise.all(
-        classObj.roster.map(async (studentId) => {
-          const studentRes = await getUser(`_id=${studentId}`);
-          return studentRes.data
-        })
-      );
+      const students = await getClassStudents(classObj._id);
       setStudents(students);
       setAllowRender(true);
     }

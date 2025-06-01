@@ -48,6 +48,24 @@ router.get('/classes/:id', async (req, res) => {
   }
 })
 
+// Get full details of students in class's roster
+router.get('/class-students/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const studentDetails = await Class.findById(id)
+      .select("roster")
+      .populate("roster")
+    res.json(studentDetails.roster);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
 // Create Class
 router.post('/classes', async (req, res) => {
   try {
@@ -158,7 +176,10 @@ router.delete('/classes/:id', async (req, res) => {
     await Promise.all(
       deletedClass.roster.map(studentId =>
         User.findByIdAndUpdate(studentId, { $pull: { enrolledClasses: id } })
-          .catch(err => console.error(`Failed to update student ${studentId}:`, err)) // TODO: throw error?
+          .catch(err => {
+            console.error(`Failed to remove class from student ${studentId}'s enrolled classes:`, err)
+            throw err;
+          })
       )
     );
 

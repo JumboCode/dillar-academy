@@ -34,6 +34,15 @@ const getClassById = async (classId) => {
   }
 }
 
+const getClassStudents = async (classId) => {
+  try {
+    const response = await axios.get(`/api/classes/class-students/${classId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 const createClass = async (classData) => {
   classData.instructor = toTitleCase(classData.instructor);
   try {
@@ -92,6 +101,7 @@ export {
   getAllClasses,
   getClasses,
   getClassById,
+  getClassStudents,
   createClass,
   updateClass,
   deleteClass,

@@ -56,7 +56,6 @@ const updateUser = async (userId, userData) => {
 const getStudentsClasses = async (studentId) => {
   try {
     const response = await axios.get(`/api/students-classes/${studentId}`);
-    console.log("response:", response)
     return response.data;
   } catch (error) {
     console.error("Error fetching student's classes:", error);

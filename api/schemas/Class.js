@@ -26,7 +26,7 @@ const ClassSchema = new Schema({
   image: { type: String, required: true, default: "level_img_0.webp" },
   link: { type: String, default: "" },
   schedule: { type: [ScheduleSchema], default: [] },
-  roster: { type: [Schema.Types.ObjectId], default: [] },
+  roster: { type: [Schema.Types.ObjectId], default: [], ref: "User" },
   isEnrollmentOpen: { type: Boolean, default: true }
 }, { collection: 'classes' });
 
