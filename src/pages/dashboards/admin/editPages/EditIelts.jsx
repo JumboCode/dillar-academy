@@ -13,8 +13,8 @@ import Alert from '@/components/Alert';
 import SupplementaryClassPreview from "@/components/Class/SupplementaryClassPreview";
 import ImagePicker from "@/components/ImagePicker";
 import { levelImgs } from "@/constants/images";
+import { getClassStudents } from '@/wrappers/class-wrapper';
 import { updateIelts, deleteIelts } from '@/wrappers/ielts-wrapper.js';
-import { getUser } from '@/wrappers/user-wrapper';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
@@ -78,12 +78,7 @@ const EditIelts = () => {
           schedule: data.schedule
         }))
       }
-      const students = await Promise.all(
-        data.roster.map(async (studentId) => {
-          const studentRes = await getUser(`_id=${studentId}`);
-          return studentRes.data
-        })
-      );
+      const students = await getClassStudents(data._id);
       setStudents(students);
       setAllowRender(true);
     } catch (error) {
@@ -192,11 +187,13 @@ const EditIelts = () => {
           <h2 className="font-extrabold">Edit IELTS Class</h2>
           <h3 className="font-light text-base sm:text-lg">Edit IELTS class and student information</h3>
         </div>
-        <div className="w-1/3 space-y-3">
-          <h3 className="mb-2">Conversation Class Preview</h3>
-          <SupplementaryClassPreview
-            cls={ieltsData}
-          />
+        <div className="space-y-3">
+          <h3>IELTS Class Preview</h3>
+          <div className="w-full md:w-1/3">
+            <SupplementaryClassPreview
+              cls={ieltsData}
+            />
+          </div>
           <Button label="Select Image" onClick={() => setIsOpenImagePicker(true)} />
         </div>
         <form onSubmit={handleEditIelts} className="w-full lg:w-2/3">

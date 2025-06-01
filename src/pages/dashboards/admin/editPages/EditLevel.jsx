@@ -212,11 +212,13 @@ const EditLevel = () => {
           <h1 className="font-extrabold mb-2">Edit Level</h1>
           <h3 className="font-light text-base sm:text-lg">Edit Level information and view all the classes in this level.</h3>
         </div>
-        <div className="w-1/3 space-y-3">
+        <div className="space-y-3">
           <h2>Level Preview</h2>
-          <LevelPreview
-            level={levelData}
-          />
+          <div className="w-full md:w-1/3">
+            <LevelPreview
+              level={levelData}
+            />
+          </div>
           <Button label="Select Image" onClick={() => setIsOpenImagePicker(true)} />
         </div>
         <form onSubmit={handleEditLevel} className="space-y-6 w-full lg:w-2/3">
