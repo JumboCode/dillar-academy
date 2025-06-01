@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import User from "../schemas/User.js";
 import Class from '../schemas/Class.js';
 import { validateInput } from "../../src/utils/backend/validate-utils.js";
 
@@ -42,6 +43,24 @@ router.get('/classes/:id', async (req, res) => {
     const data = await Class.findOne({ _id: id });
     res.json(data)
 
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
+
+// Get full details of students in class's roster
+router.get('/class-students/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const studentDetails = await Class.findById(id)
+      .select("roster")
+      .populate("roster")
+    res.json(studentDetails.roster);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -157,7 +176,10 @@ router.delete('/classes/:id', async (req, res) => {
     await Promise.all(
       deletedClass.roster.map(studentId =>
         User.findByIdAndUpdate(studentId, { $pull: { enrolledClasses: id } })
-          .catch(err => console.error(`Failed to update student ${studentId}:`, err)) // TODO: throw error?
+          .catch(err => {
+            console.error(`Failed to remove class from student ${studentId}'s enrolled classes:`, err)
+            throw err;
+          })
       )
     );
 
@@ -172,7 +194,7 @@ router.delete('/classes/:id', async (req, res) => {
 });
 
 
-/* CONVERSATION RELATED ENDPOINTS */
+/* CONVERSATION SPECIFIC ENDPOINTS */
 
 // Get Conversation classes
 router.get("/conversations", async (req, res) => {
@@ -323,7 +345,7 @@ router.delete('/conversations/:id', async (req, res) => {
 });
 
 
-/* IELTS RELATED ENDPOINTS */
+/* IELTS SPECIFIC ENDPOINTS */
 
 // Get IELTS classes
 router.get("/ielts", async (req, res) => {

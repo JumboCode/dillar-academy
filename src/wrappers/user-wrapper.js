@@ -33,16 +33,6 @@ const getUser = async (query = "") => {
   }
 };
 
-const getStudentsClasses = async (studentId) => {
-  try {
-    const response = await axios.get(`/api/students-classes/${studentId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching student's classes:", error);
-    throw error;
-  }
-}
-
 const updateUser = async (userId, userData) => {
   try {
     if (Object.hasOwn(userData, "firstName")) {
@@ -61,6 +51,17 @@ const updateUser = async (userId, userData) => {
     throw error;
   }
 };
+
+// fetch full details of all of student's classes
+const getStudentsClasses = async (studentId) => {
+  try {
+    const response = await axios.get(`/api/students-classes/${studentId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching student's classes:", error);
+    throw error;
+  }
+}
 
 const getStudentsForExport = async () => {
   try {
@@ -87,8 +88,8 @@ export {
   postUser,
   getUsers,
   getUser,
-  getStudentsClasses,
   updateUser,
+  getStudentsClasses,
   getStudentsForExport,
   deleteUser
 };

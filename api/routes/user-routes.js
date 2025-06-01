@@ -66,23 +66,6 @@ router.get('/user', async (req, res) => {
   }
 })
 
-
-// Get Student's classes by ID
-router.get('/students-classes/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: 'Invalid ID' });
-    }
-
-    const data = await User.findOne({ _id: id }, { enrolledClasses: 1, _id: 0 });
-    res.json(data);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-})
-
 // Edit user
 router.put('/user/:id', async (req, res) => {
   try {
@@ -91,6 +74,34 @@ router.put('/user/:id', async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const originalUser = await User.findById(id);
+
+    if (!originalUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // add new email address to Clerk and delete old one
+    if (originalUser.email !== updates.email) {
+      await clerkClient.emailAddresses.createEmailAddress({
+        userId: originalUser.clerkId,
+        emailAddress: updates.email,
+        verified: true,
+        primary: true
+      });
+
+      await clerkClient.users
+        .getUser(originalUser.clerkId)
+        .then(async (data) => {
+          const userEmailData = data.emailAddresses.find(
+            (emailData) => emailData.emailAddress === originalUser.email
+          );
+          return userEmailData.id;
+        })
+        .then(
+          async (userEmailId) => await clerkClient.emailAddresses.deleteEmailAddress(userEmailId)
+        )
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -150,5 +161,23 @@ router.delete('/user/:id', async (req, res) => {
     res.status(500).json({ message: 'Failed to delete user' });
   }
 });
+
+// Get student's classes full details
+router.get('/students-classes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const classDetails = await User.findById(id)
+      .select('enrolledClasses')
+      .populate('enrolledClasses')
+    res.json(classDetails.enrolledClasses); // return array of class objects
+  } catch (err) {
+    res.status(500).send(err);
+  }
+})
 
 export default router;

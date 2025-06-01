@@ -3,10 +3,8 @@ import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { IoPersonOutline } from "react-icons/io5";
-import { getUsers, getStudentsForExport } from '@/wrappers/user-wrapper.js';
-import { getClassById } from '@/wrappers/class-wrapper';
+import { getUsers, getStudentsClasses, getStudentsForExport } from '@/wrappers/user-wrapper.js';
 import { getLevels } from '@/wrappers/level-wrapper';
-import { getStudentsClasses } from '@/wrappers/user-wrapper';
 import Unauthorized from "@/pages/Unauthorized";
 import Dropdown from '@/components/Dropdown/Dropdown';
 import Button from '@/components/Button/Button';
@@ -45,16 +43,10 @@ const AdminStudents = () => {
     const userData = await getUsers();
     const students = userData.data.filter((user) => user.privilege === "student");
 
+    // replace enrolled class ids with full class info
     const studentsWithClasses = await Promise.all(
       students.map(async (student) => {
-        const classRef = await getStudentsClasses(student._id);
-        const classes = await Promise.all(
-          (classRef.enrolledClasses || []).map(async (classID) => {
-            const classData = await getClassById(classID);
-            return classData;
-          })
-        );
-
+        const classes = await getStudentsClasses(student._id);
         return { ...student, enrolledClasses: classes };
       })
     );

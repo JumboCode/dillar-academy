@@ -2,11 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { getClassById } from "@/wrappers/class-wrapper";
+import { getClassById, getClassStudents } from "@/wrappers/class-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import { updateClass } from '@/wrappers/class-wrapper.js';
-import { getUser } from '@/wrappers/user-wrapper.js';
 import BackButton from "@/components/Button/BackButton";
 import UserItem from "@/components/UserItem";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
@@ -41,12 +40,8 @@ const InstructorEditClass = () => {
     try {
       const data = await getClassById(params.id);
       setLink(data.link || '');
-      const students = await Promise.all(
-        data.roster.map(async (studentId) => {
-          const studentRes = await getUser(`_id=${studentId}`);
-          return studentRes.data
-        })
-      );
+      const students = await getClassStudents(data._id);
+      console.log(students)
       setStudents(students);
       setAllowRender(true);
     } catch (error) {

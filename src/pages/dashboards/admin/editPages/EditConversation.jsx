@@ -12,9 +12,8 @@ import Alert from '@/components/Alert';
 import SupplementaryClassPreview from "@/components/Class/SupplementaryClassPreview";
 import ImagePicker from "@/components/ImagePicker";
 import { levelImgs } from "@/constants/images";
-import { getConversationById } from "@/wrappers/conversation-wrapper";
-import { updateConversation, deleteConversation } from '@/wrappers/conversation-wrapper.js';
-import { getUser } from '@/wrappers/user-wrapper';
+import { getClassStudents } from '@/wrappers/class-wrapper';
+import { getConversationById, updateConversation, deleteConversation } from '@/wrappers/conversation-wrapper.js';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
@@ -78,12 +77,7 @@ const EditConversation = () => {
           schedule: data.schedule
         }))
       }
-      const students = await Promise.all(
-        data.roster.map(async (studentId) => {
-          const studentRes = await getUser(`_id=${studentId}`);
-          return studentRes.data
-        })
-      );
+      const students = await getClassStudents(data._id);
       setStudents(students);
       setAllowRender(true);
     } catch (error) {
@@ -192,11 +186,13 @@ const EditConversation = () => {
           <h1 className="font-extrabold">Edit Conversation Class</h1>
           <h3 className="font-light text-base sm:text-lg">Edit conversation class and student information</h3>
         </div>
-        <div className="w-1/3 space-y-3">
-          <h2 className="mb-2">Conversation Class Preview</h2>
-          <SupplementaryClassPreview
-            cls={conversationData}
-          />
+        <div className="space-y-3">
+          <h2>Conversation Class Preview</h2>
+          <div className="w-full md:w-1/3">
+            <SupplementaryClassPreview
+              cls={conversationData}
+            />
+          </div>
           <Button label="Select Image" onClick={() => setIsOpenImagePicker(true)} />
         </div>
         <form onSubmit={handleEditConversation} className="w-full lg:w-2/3">

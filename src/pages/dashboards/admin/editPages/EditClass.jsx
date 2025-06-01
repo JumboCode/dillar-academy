@@ -10,8 +10,7 @@ import DayDropdown from '@/components/Dropdown/DayDropdown';
 import UserItem from "@/components/UserItem";
 import Alert from '@/components/Alert';
 import { IoAdd, IoTrashBinOutline, IoPersonOutline } from "react-icons/io5";
-import { updateClass, deleteClass, getClasses, getClassById } from '@/wrappers/class-wrapper';
-import { getUser } from '@/wrappers/user-wrapper';
+import { updateClass, deleteClass, getClassById, getClassStudents } from '@/wrappers/class-wrapper';
 import Unauthorized from "@/pages/Unauthorized";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";
 import useDelayedSkeleton from '@/hooks/useDelayedSkeleton';
@@ -74,12 +73,7 @@ const EditClass = () => {
           schedule: classObj.schedule
         }))
       }
-      const students = await Promise.all(
-        classObj.roster.map(async (studentId) => {
-          const studentRes = await getUser(`_id=${studentId}`);
-          return studentRes.data
-        })
-      );
+      const students = await getClassStudents(classObj._id);
       setStudents(students);
       setAllowRender(true);
     }
@@ -187,11 +181,13 @@ const EditClass = () => {
           <h1 className="font-extrabold mb-2">Edit Class</h1>
           <h3 className="font-light text-base sm:text-lg">Edit class and student information</h3>
         </div>
-        <div className="w-1/3">
-          <h2 className="mb-2">Class Preview</h2>
-          <ClassPreview
-            classObj={classData}
-          />
+        <div className="space-y-3">
+          <h2>Class Preview</h2>
+          <div className="w-full md:w-1/3">
+            <ClassPreview
+              classObj={classData}
+            />
+          </div>
         </div>
         <form onSubmit={handleEditClass} className="w-full lg:w-2/3">
           <div className="grid grid-cols-3 gap-x-10 w-full mb-6">
