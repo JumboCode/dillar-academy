@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation, useParams } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
-import { updateUser, getUser, deleteUser } from '@/wrappers/user-wrapper.js';
+import { updateUser, getUser, deleteUser, getStudentsClasses } from '@/wrappers/user-wrapper.js';
 import { getClassById, getAllClasses, enrollInClass, unenrollInClass } from '@/wrappers/class-wrapper';
 import FormInput from '@/components/Form/FormInput';
 import PhoneInput from '@/components/Form/PhoneInput/PhoneInput';
@@ -71,12 +71,7 @@ const EditUser = () => {
       });
       let userClasses;
       if (userData.data.privilege === "student") {
-        userClasses = await Promise.all(
-          userData.data.enrolledClasses.map(async (classID) => {
-            const classResponse = await getClassById(classID);
-            return classResponse; // Return the class details
-          })
-        );
+        userClasses = await getStudentsClasses(userData.data._id);
       } else {
         userClasses = await getAllClasses(`instructor=${toTitleCase(userData.data.firstName)}`)
       }

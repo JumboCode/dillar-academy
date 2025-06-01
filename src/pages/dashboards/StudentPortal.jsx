@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { getClassById } from '@/wrappers/class-wrapper';
-import { updateUser } from '@/wrappers/user-wrapper';
+import { updateUser, getStudentsClasses } from '@/wrappers/user-wrapper';
 import { UserContext } from '@/contexts/UserContext.jsx';
 import { useLocation } from 'wouter';
 import { useAuth } from '@clerk/clerk-react'
@@ -44,12 +43,7 @@ const StudentPortal = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
-        const userClasses = await Promise.all(
-          user.enrolledClasses.map(async (classID) => {
-            const classResponse = await getClassById(classID);
-            return classResponse; // Return the class details
-          })
-        );
+        const userClasses = await getStudentsClasses(user._id);
         setClasses(userClasses);
         setAllowRender(true);
       }
