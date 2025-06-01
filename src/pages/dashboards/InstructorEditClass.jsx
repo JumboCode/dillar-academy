@@ -6,7 +6,6 @@ import { getClassById, getClassStudents } from "@/wrappers/class-wrapper";
 import FormInput from '@/components/Form/FormInput'
 import Button from '@/components/Button/Button';
 import { updateClass } from '@/wrappers/class-wrapper.js';
-import { getUser } from '@/wrappers/user-wrapper.js';
 import BackButton from "@/components/Button/BackButton";
 import UserItem from "@/components/UserItem";
 import SkeletonUser from "@/components/Skeletons/SkeletonUser";

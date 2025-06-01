@@ -4,6 +4,7 @@ import Button from '@/components/Button/Button';
 import EditButton from '@/components/Button/EditButton';
 import { useTranslation } from "react-i18next";
 import { localizeNumber, toTitleCase, ensureHttps } from "@/utils/formatters";
+import { convertTime, to12HourFormat } from '@/utils/time-utils';
 
 const Schedule = ({ privilege, classes, filters = [] }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
@@ -121,9 +122,27 @@ const Schedule = ({ privilege, classes, filters = [] }) => {
 const ScheduleClass = ({ privilege, classObj, isMobile }) => {
   const { t, i18n } = useTranslation();
 
+  const convertedStartTimeEST = classObj?.startTime
+    ? convertTime(classObj.day, classObj.startTime, "Etc/UTC", "America/New_York")
+    : { time: '', day: '' };
+  const convertedEndTimeEST = classObj?.endTime
+    ? convertTime(classObj.day, classObj.endTime, "Etc/UTC", "America/New_York")
+    : { time: '', day: '' };
+  const convertedStartTimeIST = classObj?.startTime
+    ? convertTime(classObj.day, classObj.startTime, "Etc/UTC", "Europe/Istanbul")
+    : { time: '', day: '' };
+  const convertedEndTimeIST = classObj?.endTime
+    ? convertTime(classObj.day, classObj.endTime, "Etc/UTC", "Europe/Istanbul")
+    : { time: '', day: '' };
+
   return (
     <div className="bg-blue-100 rounded-xs sm:rounded-sm border-[0.5px] border-gray-200 p-1 sm:p-3 mb-1 sm:mb-2">
-      <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem] text-balance">{classObj.startTime || "N/A"}-{classObj.endTime || "N/A"}</p>
+      <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem] text-balance">
+        {to12HourFormat(convertedStartTimeEST.time)}-{to12HourFormat(convertedEndTimeEST.time)} (EST)
+      </p>
+      <p className="text-blue-700 text-[0.75rem] sm:text-[0.875rem] text-balance">
+        {convertedStartTimeIST.time}-{convertedEndTimeIST.time} (Ist)
+      </p>
       <p
         title={t('level_num', {
           num: typeof classObj.level === 'number'

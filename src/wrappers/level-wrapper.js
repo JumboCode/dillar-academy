@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { transferTranslations } from "@/wrappers/translation-wrapper";
-import { toTitleCase } from '@/utils/formatters';
 
 // query should be a string
 const getLevels = async (query = "") => {

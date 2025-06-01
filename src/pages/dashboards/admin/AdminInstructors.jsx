@@ -4,7 +4,6 @@ import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { getUsers } from '@/wrappers/user-wrapper.js'
 import { IoPersonOutline } from "react-icons/io5";
-import { getClasses } from '@/wrappers/class-wrapper';
 import UserItem from '@/components/UserItem'
 import SearchBar from '@/components/SearchBar';
 import SkeletonUser from '@/components/Skeletons/SkeletonUser';
@@ -18,7 +17,6 @@ const AdminInstructors = () => {
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-  const [classes, setClasses] = useState([]);
   const [users, setUsers] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const showSkeleton = useDelayedSkeleton(!allowRender);
@@ -37,8 +35,6 @@ const AdminInstructors = () => {
   const fetchUsers = async () => {
     const userData = await getUsers();
     setUsers(userData.data.filter((user) => user.privilege === "instructor"));
-    const classData = await getClasses();
-    setClasses(classData);
     setAllowRender(true);
   }
 
@@ -75,7 +71,7 @@ const AdminInstructors = () => {
         {allowRender
           ? filteredUsers.map((userData, userIndex) => (
             <Link key={userIndex} href={`/admin/user/${encodeURIComponent(userData._id)}`}>
-              <UserItem userData={userData} privilege="admin" classes={classes} />
+              <UserItem userData={userData} privilege="admin" />
             </Link>
           ))
           : showSkeleton && <SkeletonUser count={9} />}

@@ -4,7 +4,7 @@ import { useLocation, Link } from 'wouter';
 import { useAuth } from '@clerk/clerk-react';
 import { IoPersonOutline } from "react-icons/io5";
 import { getUsers, getStudentsClasses, getStudentsForExport } from '@/wrappers/user-wrapper.js';
-import { getClasses } from '@/wrappers/class-wrapper';
+import { getLevels } from '@/wrappers/level-wrapper';
 import Unauthorized from "@/pages/Unauthorized";
 import Dropdown from '@/components/Dropdown/Dropdown';
 import Button from '@/components/Button/Button';
@@ -22,7 +22,6 @@ const AdminStudents = () => {
   const [, setLocation] = useLocation();
   const { isSignedIn, isLoaded } = useAuth();
   const [allowRender, setAllowRender] = useState(false);
-  const [classes, setClasses] = useState([]);
   const [users, setUsers] = useState([]);
   const [levels, setLevels] = useState([]);
   const [currFilter, setCurrFilter] = useState(null);
@@ -43,10 +42,6 @@ const AdminStudents = () => {
   const fetchUsers = async () => {
     const userData = await getUsers();
     const students = userData.data.filter((user) => user.privilege === "student");
-    const classData = await getClasses();
-    setClasses(classData);
-
-    let allLevels = new Set();
 
     // replace enrolled class ids with full class info
     const studentsWithClasses = await Promise.all(
@@ -55,10 +50,9 @@ const AdminStudents = () => {
         return { ...student, enrolledClasses: classes };
       })
     );
-
-    const uniqueLevels = Array.from(allLevels).sort((a, b) => a - b);
     setUsers(studentsWithClasses);
-    setLevels(uniqueLevels);
+    const levels = await getLevels();
+    setLevels(levels);
     setAllowRender(true);
   }
 
@@ -87,8 +81,9 @@ const AdminStudents = () => {
     const matchesName =
       fullName1.includes(search) || fullName2.includes(search);
 
+    const filter = isNaN(Number(currFilter)) ? currFilter : Number(currFilter);
     const matchesLevel =
-      !currFilter || user.enrolledClasses?.some(cls => cls.level === parseInt(currFilter));
+      !currFilter || user.enrolledClasses?.some(cls => cls.level === filter);
 
     const matchesClass =
       user.enrolledClasses?.some(cls =>
@@ -133,15 +128,32 @@ const AdminStudents = () => {
             All Levels
           </button>
 
+          {/* Level filter for numbered levels */}
           {levels.map((level) => (
             <button
               key={level}
-              className={`w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100 ${currFilter === level ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}`}
-              onClick={() => handleOptionClick(level)} /* Handle click here */
+              className={`w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100 ${currFilter === level.level ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}`}
+              onClick={() => handleOptionClick(level.level)}
             >
-              Level {level}
+              Level {level.level}
             </button>
           ))}
+
+          {/* Level filter for supp classes */}
+          <button
+            key="conversation"
+            className={`w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100 ${currFilter === "conversation" ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}`}
+            onClick={() => handleOptionClick("conversation")}
+          >
+            Conversation
+          </button>
+          <button
+            key="ietls"
+            className={`w-full text-left px-4 py-2 text-base font-normal text-black hover:bg-gray-100 ${currFilter === "ielts" ? 'text-blue-500 bg-gray-50' : 'text-gray-700'}`}
+            onClick={() => handleOptionClick("ielts")}
+          >
+            IELTS
+          </button>
         </Dropdown>
       </div>
       <div className="text-indigo-900 inline-flex items-center gap-x-2">
@@ -152,7 +164,7 @@ const AdminStudents = () => {
         {allowRender
           ? filteredUsers.map((userData) => (
             <Link key={userData._id} to={`/admin/user/${encodeURIComponent(userData._id)}`}>
-              <UserItem key={userData._id} privilege="admin" userData={userData} classes={classes} isShowClass />
+              <UserItem key={userData._id} privilege="admin" userData={userData} isShowClass />
             </Link>
           ))
           : showSkeleton && <SkeletonUser count={12} />}

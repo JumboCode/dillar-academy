@@ -7,7 +7,7 @@ import Button from '@/components/Button/Button';
 import Alert from "@/components/Alert";
 import { useTranslation } from 'react-i18next';
 
-export default function Contact() {
+const Contact = () => {
   const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
@@ -18,7 +18,7 @@ export default function Contact() {
   });
   const [alertMessage, setAlertMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
-
+  const [isSending, setIsSending] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,6 +27,7 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setIsSending(true);
       await postContact(formData);
       setSuccessMessage('contact_success_alert');
       setTimeout(() => {
@@ -40,10 +41,12 @@ export default function Contact() {
       });
     } catch (err) {
       console.error('Error submitting message:', err);
-      setAlertMessage(`Error: ${err.response.data.message}`); // TODO: translations
+      setAlertMessage(`Error: ${err.response.data.message}`);
       setTimeout(() => {
         setAlertMessage("");
       }, 4000);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -98,6 +101,7 @@ export default function Contact() {
               <Button
                 type="submit"
                 label={t("submit_button")}
+                isDisabled={isSending}
               />
             </form>
           </Form>
@@ -107,6 +111,4 @@ export default function Contact() {
   );
 }
 
-
-
-
+export default Contact;
