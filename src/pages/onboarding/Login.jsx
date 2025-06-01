@@ -75,7 +75,7 @@ export default function Login() {
         }, 4000)
       }
     } catch (error) {
-      setAlertMessage(`Error: ${error?.response?.data?.message ?? "Failed to login"}`); // TODO: translation
+      setAlertMessage(`Error: ${error.message ?? "Failed to login"}`); // TODO: translation
       setTimeout(() => {
         setAlertMessage("");
       }, 4000)

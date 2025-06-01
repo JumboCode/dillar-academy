@@ -154,6 +154,7 @@ app.put('/api/users/:id/unenroll', async (req, res) => {
 })
 
 // Get Students Export Data
+// Get Students Export Data
 app.get('/api/students-export', async (req, res) => {
   try {
     // Get all students with privilege "student"
@@ -161,47 +162,48 @@ app.get('/api/students-export', async (req, res) => {
 
     // Get all classes for reference
     const classes = await Class.find();
+
     // Create a map for quick access to class details
     const classMap = new Map(classes.map(c => [c._id.toString(), c]));
+
+    // Helper to format time in 12-hour clock with am/pm
+    const formatTime = (hours, minutes) => {
+      const period = hours >= 12 ? 'pm' : 'am';
+      const hour12 = hours % 12 || 12; // Convert 0 to 12
+      return `${hour12}:${minutes.toString().padStart(2, '0')}${period}`;
+    };
 
     // Format student data for export
     const formattedStudents = [];
 
     for (const student of students) {
-      // Get enrolled classes for student
-      const enrolledClasses = student.enrolledClasses
+      const enrolledClasses = (student.enrolledClasses || [])
         .map(classId => {
           const classInfo = classMap.get(classId.toString());
-          if (!classInfo) return null;
+          if (!classInfo || !Array.isArray(classInfo.schedule)) return null;
 
-          // Format schedules
-          const scheduleEST = classInfo.schedule.map(s => `${s.day} ${s.startTime}-${s.endTime}`).join('\n');
+          // Format schedules in EST
+          const scheduleEST = classInfo.schedule
+            .map(s => `${s.day} ${s.startTime}-${s.endTime}`)
+            .join('\n');
 
           // Convert EST to Istanbul time (EST + 7 hours)
-          const scheduleIstanbul = classInfo.schedule.map(s => {
-            // Parse the time string (e.g., "10:00am")
-            const [startHourStr, startMinuteStr] = s.startTime.split(':');
-            const [startHour, startMinute] = [parseInt(startHourStr), parseInt(startMinuteStr || 0)];
-            const [endHourStr, endMinuteStr] = s.endTime.split(':');
-            const [endHour, endMinute] = [parseInt(endHourStr), parseInt(endMinuteStr || 0)];
+          const scheduleIstanbul = classInfo.schedule
+            .map(s => {
+              const [startHour, startMin] = s.startTime.split(':').map(Number);
+              const [endHour, endMin] = s.endTime.split(':').map(Number);
 
-            // Create date objects for conversion
-            const estStartTime = new Date();
-            const estEndTime = new Date();
-            estStartTime.setHours(startHour, startMinute);
-            estEndTime.setHours(endHour, endMinute);
+              const estStart = new Date();
+              const estEnd = new Date();
+              estStart.setHours(startHour, startMin || 0);
+              estEnd.setHours(endHour, endMin || 0);
 
-            // Istanbul is EST + 7 hours
-            // TODO: fix for DST
-            const istStartTime = new Date(estStartTime.getTime() + (7 * 60 * 60 * 1000));
-            const istStartHours = istStartTime.getHours();
-            const istStartMinutes = istStartTime.getMinutes();
-            const istEndTime = new Date(estEndTime.getTime() + (7 * 60 * 60 * 1000));
-            const istEndHours = istEndTime.getHours();
-            const istEndMinutes = istEndTime.getMinutes();
+              const istStart = new Date(estStart.getTime() + 7 * 60 * 60 * 1000);
+              const istEnd = new Date(estEnd.getTime() + 7 * 60 * 60 * 1000);
 
-            return `${s.day} ${istStartHours}:${istStartMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}-${istEndHours}:${istEndMinutes.toString().padStart(2, '0')}${hour >= 12 ? 'pm' : 'am'}`;
-          }).join('\n');
+              return `${s.day} ${formatTime(istStart.getHours(), istStart.getMinutes())}-${formatTime(istEnd.getHours(), istEnd.getMinutes())}`;
+            })
+            .join('\n');
 
           return {
             level: classInfo.level,
@@ -212,7 +214,7 @@ app.get('/api/students-export', async (req, res) => {
             scheduleIstanbul
           };
         })
-        .filter(Boolean);
+        .filter(Boolean); // Remove nulls
 
       // If student has no classes, add one row with empty class info
       if (enrolledClasses.length === 0) {
@@ -245,7 +247,7 @@ app.get('/api/students-export', async (req, res) => {
     // Return data in the format expected by export-xlsx
     res.json({ student_data: formattedStudents });
   } catch (err) {
-    console.error('Error exporting students:', err);
+    console.error('Error exporting students:', err.stack || err);
     res.status(500).json({ message: 'Error exporting students' });
   }
 });
