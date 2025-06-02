@@ -79,7 +79,7 @@ export default function SignUp() {
       }
     } catch (error) {
       console.log(error)
-      setAlertMessage(`Error: ${error?.response?.data?.message ?? "Failed to sign up"}`);
+      setAlertMessage(`Error: ${error.message ?? error?.response?.data?.message ?? "Failed to sign up"}`);
       setTimeout(() => {
         setAlertMessage("");
       }, 4000)
