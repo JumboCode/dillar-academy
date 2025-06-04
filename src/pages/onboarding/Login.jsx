@@ -63,10 +63,6 @@ export default function Login() {
 
       if (userLogin.status === "complete") {
         await setActive({ session: userLogin.createdSessionId });
-        setUser(userRes.data)
-        const dashboardURL = userRes.data.privilege === "admin" ? "/admin/levels" : `/${userRes.data.privilege}`;
-
-        setLocation(dashboardURL);
       } else {
         console.log("Failed to sign in through Clerk", JSON.stringify(createUser, null, 2));
         setAlertMessage(`Error: ${JSON.stringify(createUser, null, 2)}`); // TODO: translation
