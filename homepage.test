@@ -1,0 +1,7 @@
+import { render, screen } from '@testing-library/react';
+import Home from './Home'; // Change this path if your Home component is in a different location
+
+test('renders Summer Enrollment Closes at Midnight on June 8th', () => {
+  render(<Home />);
+  expect(screen.getByText(/Summer Enrollment Closes at Midnight on June 8th/i)).toBeInTheDocument();
+});
